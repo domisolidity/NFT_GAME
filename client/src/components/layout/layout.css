@@ -4,6 +4,7 @@
 
 .layout__content {
   padding-left: var(--sidebar-width);
+  padding-right: var(--sidebar-width);
   background-color: var(--second-bg);
   min-height: 100vh;
 }
@@ -11,4 +12,9 @@
 .layout__content-main {
   padding: 30px;
   margin: 0px 50px;
+}
+
+.layout__wallet {
+  float:right;
+  margin-right:100px;
 }
