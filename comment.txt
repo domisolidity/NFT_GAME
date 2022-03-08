@@ -1,0 +1,16 @@
+프리티어 설정 적용
+npx prettier --write .
+npx prettier -w .
+
+-> npm run format:fix
+
+프리티어 설정 적용 확인
+npx prettier --check .
+npx prettier -c .
+
+-> npm run format
+
+프리티어 미적용 파일 이름 보기
+npx prettier --list-different .
+npx prettier -l .
+

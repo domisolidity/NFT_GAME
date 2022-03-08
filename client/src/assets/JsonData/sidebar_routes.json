@@ -1,0 +1,26 @@
+[
+  {
+    "display_name": "main",
+    "route": "/"
+  },
+  {
+    "display_name": "Game",
+    "route": "/game"
+  },
+  {
+    "display_name": "Rank",
+    "route": "/rank"
+  },
+  {
+    "display_name": "Claim",
+    "route": "/claim"
+  },
+  {
+    "display_name": "Nft",
+    "route": "/nft"
+  },
+  {
+    "display_name": "Mypage",
+    "route": "/mypage"
+  }
+]

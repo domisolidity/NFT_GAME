@@ -1,0 +1,29 @@
+.CustomInput {
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* height: var(--CustomInput-height); */
+}
+
+.CustomInput__search {
+  position: relative;
+  height: 100%;
+  /* background-color: var(--main-bg); */
+  display: flex;
+  align-items: center;
+  /* box-shadow: var(--box-shadow); */
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.CustomInput__search > input {
+  height: 100%;
+  width: 100%;
+  padding: 10px 60px 10px 20px;
+  margin: 1rem;
+  font-size: 1rem;
+  border-radius: var(--border-radius);
+  color: var(--txt-color);
+  background-color: var(--second-bg);
+}
