@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const passport = require('passport');
+const passport = require("passport");
 const { User } = require("../../../models");
 
 router.post("/", async (req, res, next) => {
   const login = await User.findOne({
     where: {
       address: req.body.address,
-    }
-  })
+    },
+  });
 
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate("local", (err, user, info) => {
     if (err) {
       console.error(err);
       res.status(401).json({ success: false, message: err });
@@ -27,10 +27,10 @@ router.post("/", async (req, res, next) => {
         return res.status(400).json({ success: false, message: "login error" });
       }
       //로그인 성공
-      return res.status(200).json({ success: true, message: "로그인 확인되었습니다. 페이지이동합니다.", userAddress: login.address });
+      return res
+        .status(200)
+        .json({ success: true, message: "로그인 확인되었습니다. 페이지이동합니다.", userAddress: login.address });
     });
-
-
   })(req, res, next);
 });
 

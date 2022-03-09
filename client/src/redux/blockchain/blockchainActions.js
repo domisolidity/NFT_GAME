@@ -32,8 +32,6 @@ const updateAccountRequest = (payload) => {
   };
 };
 
-
-
 export const connect = () => {
   return async (dispatch) => {
     dispatch(connectRequest());
@@ -43,19 +41,15 @@ export const connect = () => {
         const accounts = await window.ethereum.request({
           method: "eth_accounts",
         });
-        console.log(accounts)
+        console.log(accounts);
         const networkId = await window.ethereum.request({
           method: "net_version",
         });
-        console.log("networkId : ",networkId);
+        console.log("networkId : ", networkId);
         const NetworkData = await SimpleStorage.networks[networkId];
-        console.log(NetworkData.address)
+        console.log(NetworkData.address);
         if (networkId) {
-     
-          const simpleStorage = new web3.eth.Contract(
-            SimpleStorage.abi,
-            NetworkData.address
-          );
+          const simpleStorage = new web3.eth.Contract(SimpleStorage.abi, NetworkData.address);
           dispatch(
             connectSuccess({
               account: accounts[0],
@@ -75,7 +69,7 @@ export const connect = () => {
           dispatch(connectFailed("Change network"));
         }
       } catch (err) {
-        dispatch(connectFailed("Something went wrong."));
+        dispatch(connectFailed("메타마스크 로그인을 해주세요."));
       }
     } else {
       dispatch(connectFailed("Install Metamask."));

@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
 // const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
+const path = require("path");
+const Sequelize = require("sequelize");
 // const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
+const env = process.env.NODE_ENV || "development";
+const config = require(__dirname + "/../config/config.js")[env];
 
-const User = require('./User')
+const User = require("./User");
 
 const db = {};
 
@@ -24,7 +24,7 @@ Object.keys(db).forEach((modelName) => {
   db[modelName].init(sequelize);
 });
 
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }

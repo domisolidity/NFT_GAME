@@ -13,7 +13,6 @@ module.exports = () => {
       },
       async (address, password, done) => {
         try {
-
           const exUser = await User.findOne({ where: { address } });
 
           if (exUser) {

@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require('../../../models');
-const bcrypt = require('bcrypt');
+const { User } = require("../../../models");
+const bcrypt = require("bcrypt");
 
 router.post("/", async (req, res) => {
   try {
     const exUser = await User.findOne({
       where: {
         address: req.body.address,
-      }
+      },
     });
 
     if (exUser) {
@@ -25,9 +25,9 @@ router.post("/", async (req, res) => {
     });
 
     return res.status(200).json({
-      success: true, message: "sucessfully registered"
+      success: true,
+      message: "sucessfully registered",
     });
-
   } catch (error) {
     return res.json({ success: false, message: error });
   }

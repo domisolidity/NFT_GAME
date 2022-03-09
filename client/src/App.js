@@ -4,10 +4,7 @@ import "./assets/css/app.css";
 import "./App.css";
 import AllRoutes from "./pages/AllRoutes";
 
-
 const App = () => {
-
-
   // const loadWeb3Contract = async (web3) => {
   //   const networkId = await web3.eth.net.getId();
   //   const networkData = SimpleStorageContract.networks[networkId];

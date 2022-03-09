@@ -1,16 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-const Game = () => {
+const BlockGame = () => {
   const blockchain = useSelector(state=>state.blockchain);
-
+  const { account } = blockchain;
   return (
     <div>
       {console.log("Game.jsx 렌더")}
 
-      <p>address : {blockchain.account}</p>
+      <p>address : {account}</p>
     </div>
   );
 };
 
-export default Game;
+export default BlockGame;

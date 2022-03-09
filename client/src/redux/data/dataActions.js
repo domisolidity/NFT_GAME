@@ -25,14 +25,8 @@ export const fetchData = (account) => {
   return async (dispatch) => {
     dispatch(fetchDataRequest());
     try {
-      let allLips = await store
-        .getState()
-        .blockchain.lipToken.methods.getLips()
-        .call();
-      let allOwnerLips = await store
-        .getState()
-        .blockchain.lipToken.methods.getOwnerLips(account)
-        .call();
+      let allLips = await store.getState().blockchain.lipToken.methods.getLips().call();
+      let allOwnerLips = await store.getState().blockchain.lipToken.methods.getOwnerLips(account).call();
 
       dispatch(
         fetchDataSuccess({

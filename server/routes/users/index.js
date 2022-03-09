@@ -5,7 +5,7 @@ const register = require("./log/register");
 const login = require("./log/login");
 const logout = require("./log/logout");
 
-const { isLoggedIn, isNotLoggedIn } = require('../../middleware/middwares');
+const { isLoggedIn, isNotLoggedIn } = require("../../middleware/middwares");
 
 /* 사용자 정보 */
 router.use("/register", isNotLoggedIn, register);

@@ -1,13 +1,11 @@
 import React from "react";
+import { Box } from "@chakra-ui/react";
 
-
-const Nft = (props) => {
-
-
+const Nft = () => {
   return (
     <div>
       {console.log("Nft.jsx 렌더")}
-    NFT 페이지
+      NFT 페이지
     </div>
   );
 };

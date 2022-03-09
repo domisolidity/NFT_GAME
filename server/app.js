@@ -1,13 +1,13 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 const { sequelize } = require("./models");
 const session = require("express-session");
 const dotenv = require("dotenv");
 dotenv.config();
 const passportConfig = require("./middleware/passport");
 
-const indexRouter = require('./routes/index');
+const indexRouter = require("./routes/index");
 const passport = require("passport");
 
 const app = express();
@@ -45,7 +45,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //라우터 연결
-app.use('/api', indexRouter);
+app.use("/api", indexRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -58,11 +58,11 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.send('error');
+  res.send("error");
 });
 
 module.exports = app;
