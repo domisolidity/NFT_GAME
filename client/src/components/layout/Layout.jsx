@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import "./layout.css";
 import TopNav from "./topnav/TopNav";
-import AllRoutes from "../../pages/AllRoutes";
 
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "../../redux/blockchain/blockchainActions.js";
+import App from "../../App";
 
 const Layout = () => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
+  console.log(blockchain);
+
   const { account, errorMsg } = blockchain;
-  console.log(errorMsg);
+
   const walletConnect = (e) => {
     e.preventDefault();
     if (errorMsg != "") {
@@ -20,6 +22,10 @@ const Layout = () => {
     }
     dispatch(connect());
   };
+
+  useEffect(() => {
+    dispatch(connect());
+  }, [dispatch]);
 
   return (
     <div className="layout">
@@ -40,9 +46,7 @@ const Layout = () => {
             </>
           )}
         </div>
-        <div className="layout__content-main">
-          <AllRoutes />
-        </div>
+        <App />
       </div>
     </div>
   );
