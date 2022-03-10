@@ -73,7 +73,9 @@ export const connect = () => {
           });
           // Add listeners end
         } else {
-          dispatch(connectFailed(`현재 networkId 는 ${networkId} 입니다.\nnetworkId : 1337 (로컬호스트)로 변경이 필요합니다.`));
+          dispatch(
+            connectFailed(`현재 networkId 는 ${networkId} 입니다.\nnetworkId : 1337 (로컬호스트)로 변경이 필요합니다.`)
+          );
         }
       } catch (err) {
         console.log(err);
