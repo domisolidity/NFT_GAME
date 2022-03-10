@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import "./layout.css";
 import TopNav from "./topnav/TopNav";
@@ -10,18 +10,22 @@ import { connect } from "../../redux/blockchain/blockchainActions.js";
 const Layout = () => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
-  const { account,errorMsg } = blockchain;
-  console.log(errorMsg)
+  console.log(blockchain);
+
+  const { account, errorMsg } = blockchain;
+
   const walletConnect = (e) => {
     e.preventDefault();
     if (errorMsg != "") {
-      alert(errorMsg)
-      return
+      alert(errorMsg);
+      return;
     }
-     dispatch(connect())
+    dispatch(connect());
   };
 
-
+  useEffect(() => {
+    dispatch(connect());
+  }, [dispatch]);
 
   return (
     <div className="layout">
@@ -33,15 +37,13 @@ const Layout = () => {
             <div className="layout__wallet">{account}</div>
           ) : (
             <>
-            <div className="layout__wallet">
-              <button onClick={walletConnect}>지갑 연결</button>
-            </div>
-            {blockchain.errorMsg != "" ?
-              <div>{alert(blockchain.errorMsg)}</div> :
-              null
-              }
+              <div className="layout__wallet">
+                <button onClick={walletConnect}>지갑 연결</button>
+              </div>
+              {blockchain.errorMsg != "" ? (
+                <div>{alert(blockchain.errorMsg)}</div>
+              ) : null}
             </>
-            
           )}
         </div>
         <div className="layout__content-main">

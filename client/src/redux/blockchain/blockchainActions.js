@@ -46,10 +46,16 @@ export const connect = () => {
           method: "net_version",
         });
         console.log("networkId : ", networkId);
-        const NetworkData = await SimpleStorage.networks[networkId];
-        console.log(NetworkData.address);
-        if (networkId) {
+
+        if (networkId == 1337) {
+          const NetworkData = await SimpleStorage.networks[networkId];
           const simpleStorage = new web3.eth.Contract(SimpleStorage.abi, NetworkData.address);
+
+          if (accounts[0] == null) {
+            dispatch(connectFailed("메타마스크 로그인이 필요합니다."));
+            return;
+          }
+
           dispatch(
             connectSuccess({
               account: accounts[0],
@@ -57,6 +63,7 @@ export const connect = () => {
               web3: web3,
             })
           );
+
           // Add listeners start
           window.ethereum.on("accountsChanged", (accounts) => {
             dispatch(updateAccount(accounts[0]));
@@ -66,10 +73,11 @@ export const connect = () => {
           });
           // Add listeners end
         } else {
-          dispatch(connectFailed("Change network"));
+          dispatch(connectFailed(`현재 networkId 는 ${networkId} 입니다.\nnetworkId : 1337 (로컬호스트)로 변경이 필요합니다.`));
         }
       } catch (err) {
-        dispatch(connectFailed("메타마스크 로그인을 해주세요."));
+        console.log(err);
+        dispatch(connectFailed("Something went wrong."));
       }
     } else {
       dispatch(connectFailed("Install Metamask."));
