@@ -1,17 +1,15 @@
 .layout {
-  color: var(--txt-color);
+  color: black;
+  background-color: hsl(0, 2%, 32%);
 }
 
 .layout__content {
-  padding-left: var(--sidebar-width);
-  padding-right: var(--sidebar-width);
-  background-color: var(--second-bg);
   min-height: 100vh;
 }
 
 .layout__content-main {
+  width: 100%;
   padding: 30px;
-  margin: 0px 50px;
 }
 
 .layout__wallet {
