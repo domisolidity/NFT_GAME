@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import "./layout.css";
 import TopNav from "./topnav/TopNav";
-import AllRoutes from "../../pages/AllRoutes";
 
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "../../redux/blockchain/blockchainActions.js";
+import App from "../../App";
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -46,9 +46,7 @@ const Layout = () => {
             </>
           )}
         </div>
-        <div className="layout__content-main">
-          <AllRoutes />
-        </div>
+        <App />
       </div>
     </div>
   );
