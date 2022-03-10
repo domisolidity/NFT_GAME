@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract SmartContract is ERC721, Ownable {
+contract NftContract is ERC721, Ownable {
   constructor() ERC721("Smart Contract", "SC") {}
 
   using Counters for Counters.Counter; //이건 뭐지?

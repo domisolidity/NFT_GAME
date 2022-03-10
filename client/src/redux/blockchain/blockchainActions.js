@@ -1,6 +1,6 @@
 // constants
 import Web3 from "web3";
-import SimpleStorage from "../../contracts/SimpleStorage.json";
+import NftContract from "../../contracts/NftContract.json";
 
 // log
 import { fetchData } from "../data/dataActions";
@@ -48,8 +48,8 @@ export const connect = () => {
         console.log("networkId : ", networkId);
 
         if (networkId == 1337) {
-          const NetworkData = await SimpleStorage.networks[networkId];
-          const simpleStorage = new web3.eth.Contract(SimpleStorage.abi, NetworkData.address);
+          const NetworkData = await NftContract.networks[networkId];
+          const nftContract = new web3.eth.Contract(NftContract.abi, NetworkData.address);
 
           if (accounts[0] == null) {
             dispatch(connectFailed("메타마스크 로그인이 필요합니다."));
@@ -59,7 +59,7 @@ export const connect = () => {
           dispatch(
             connectSuccess({
               account: accounts[0],
-              simpleStorage: simpleStorage,
+              nftContract: nftContract,
               web3: web3,
             })
           );

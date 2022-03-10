@@ -1,7 +1,7 @@
 const initialState = {
   loading: false,
   account: null,
-  simpleStorage: null,
+  nftContract: null,
   web3: null,
   errorMsg: "",
 };
@@ -18,7 +18,7 @@ const blockchainReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         account: action.payload.account,
-        simpleStorage: action.payload.simpleStorage,
+        nftContract: action.payload.nftContract,
         web3: action.payload.web3,
       };
     case "CONNECTION_FAILED":
