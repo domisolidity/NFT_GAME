@@ -1,6 +1,17 @@
 const initialState = {
   loading: false,
   allLips: [],
+  mintingTier: [
+    { grade: "purple", price: 1 },
+    {
+      grade: "green",
+      price: 0.7,
+    },
+    {
+      grade: "red",
+      price: 0.5,
+    },
+  ],
   allOwnerLips: [],
   error: false,
   errorMsg: "",

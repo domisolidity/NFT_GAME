@@ -1,7 +1,6 @@
 import React from "react";
 
 const Market = () => {
-
   return (
     <div>
       {console.log("Market.jsx 렌더")}

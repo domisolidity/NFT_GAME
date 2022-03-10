@@ -1,6 +1,6 @@
 // constants
 import Web3 from "web3";
-import SimpleStorage from "../../contracts/SimpleStorage.json";
+import NftContract from "../../contracts/NftContract.json";
 
 // log
 import { fetchData } from "../data/dataActions";
@@ -46,14 +46,14 @@ export const connect = () => {
           method: "net_version",
         });
         console.log("networkId : ", networkId);
-        const NetworkData = await SimpleStorage.networks[networkId];
+        const NetworkData = await NftContract.networks[networkId];
         console.log(NetworkData.address);
         if (networkId) {
-          const simpleStorage = new web3.eth.Contract(SimpleStorage.abi, NetworkData.address);
+          const nftContract = new web3.eth.Contract(NftContract.abi, NetworkData.address);
           dispatch(
             connectSuccess({
               account: accounts[0],
-              simpleStorage: simpleStorage,
+              nftContract: nftContract,
               web3: web3,
             })
           );
