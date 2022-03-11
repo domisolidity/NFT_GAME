@@ -8,6 +8,11 @@
   top: 58.5%;
   transform: translate(-50%, -50%);
 }
+.chance-box {
+  position: absolute;
+  right: 45px;
+  top: 30px;
+}
 #blockGameContainer {
   overflow: hidden;
   position: relative;
