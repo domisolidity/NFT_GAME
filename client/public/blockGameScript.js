@@ -250,19 +250,17 @@ var Game = /** @class */ (function () {
     console.log(this.scoreContainer.innerHTML);
     this.tick();
     this.updateState(this.STATES.READY);
-    // // 스페이스바 누르면 액션 발동
-    // document.addEventListener('keydown', function (e) {
-    //   if (e.keyCode == 32) _this.onAction();
-    // });
+
     this.startButton.addEventListener("click", function (e) {
       if (_this.state != "ready") return;
+      if (!confirm(`횟수가 차감됩니다. 게임을 시작 하시겠습니까?`)) return;
       _this.startGame();
     });
     this.placeBlockButton.addEventListener("click", function (e) {
       _this.placeBlock();
     });
     this.restartGameButton.addEventListener("click", function (e) {
-      console.log(123123);
+      if (!confirm(`횟수가 차감됩니다. 게임을 시작 하시겠습니까?`)) return;
       _this.restartGame();
     });
   }
