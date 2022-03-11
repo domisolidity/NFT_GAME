@@ -11,8 +11,8 @@
 #blockGameContainer {
   overflow: hidden;
   position: relative;
-  width: 872px;
-  height: 736px;
+  width: 90vw;
+  height: 70vh;
   margin: 0 auto;
 }
 #blockGameContainer #score {
