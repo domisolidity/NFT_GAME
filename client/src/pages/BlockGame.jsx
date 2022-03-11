@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import axios from "axios";
 import "./BlockGame.css";
 
@@ -9,31 +9,56 @@ const BlockGame = () => {
   const { account } = blockchain;
 
   const [score, setScore] = useState("");
+  const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
 
-  const getGameState = () => {
-    if (
-      document.querySelector("#blockGameContainer.playing") ||
-      document.querySelector("#blockGameContainer.resetting")
-    ) {
-      setGameEnded(false);
-    } else {
+  // 게임 기회 차감하기
+  const minusGameCount = async () => {
+    console.log("왜 안돼?");
+    console.log(document.querySelector("#blockGameContainer.playing"));
+
+    if (document.querySelector("#blockGameContainer.playing") == null) return;
+    console.log("들어옴");
+    await axios
+      .get(`http://localhost:5000/game/minus-chance`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+    await giveMeChance();
+  };
+
+  // 게임상태 설정(게임 시작,재시작 누를때 종료상태 풀어주기)
+  const setGameStateOn = () => {
+    setGameEnded(false);
+    setTimeout(() => {
+      minusGameCount();
+    }, 500);
+  };
+
+  // 블록쌓기
+  const stackingBlock = () => {
+    // 멈춰 버튼 누를때마다 점수useState에 담기
+    setScore(document.querySelector("#score").innerHTML);
+    // 게임이 종료됐을때 게임상태useState 종료로 해주기
+    if (document.querySelector("#blockGameContainer.playing") == null) {
       setGameEnded(true);
     }
   };
 
-  const getGameScore = () => {
-    setScore(document.querySelector("#score").innerHTML);
-    if (!document.querySelector("#blockGameContainer.playing"))
-      setGameEnded(true);
-  };
-
+  // 점수 전송
   const sendScore = async () => {
     await axios
       .post(`http://localhost:5000/game/send-score`, { score: parseInt(score) })
-      .then((res) => {
-        console.log(res);
-      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
+  // 남은 기회 가져오기
+  const giveMeChance = async () => {
+    await axios
+      .get(`http://localhost:5000/game/chance`)
+      .then((res) => setChance(res.data[0].chance))
       .catch((err) => console.log(err));
   };
 
@@ -55,7 +80,7 @@ const BlockGame = () => {
       // 문서 body에 추가해준다
       document.body.appendChild(scripts[i]);
     }
-
+    giveMeChance();
     return () => {
       scripts.forEach((script) => {
         // 스크립트 태그 지워주는 녀석
@@ -72,22 +97,29 @@ const BlockGame = () => {
         블록을 높이 쌓으세요
       </Box>
       <div className="game-over">
-        <Button id="restart-button" onClick={getGameState}>
+        <Button id="restart-button" onClick={setGameStateOn}>
           다시시작
         </Button>
         <h2>게임 종료</h2>
         <p>대~단합니다</p>
       </div>
       <div className="game-ready">
-        <Button id="start-button" onClick={getGameState}>
+        <Button id="start-button" onClick={setGameStateOn}>
           시작
         </Button>
         <div></div>
       </div>
+      {/* <GameCountBox chance={chance} /> */}
+      <Box color={"#333344"} className="chance-box">
+        남은기회
+        <Text fontWeight={"bold"} textAlign={"center"}>
+          {chance}
+        </Text>
+      </Box>
       <Button
         colorScheme={"blue"}
         w={100}
-        onClick={getGameScore}
+        onClick={stackingBlock}
         disabled={gameEnded}
         className="placeBlock-button"
       >
@@ -96,10 +128,18 @@ const BlockGame = () => {
       <Button
         colorScheme={"orange"}
         onClick={sendScore}
+        disabled={document.querySelector("#blockGameContainer.ended") == null}
         className="score-registration-button"
       >
         점수 등록
       </Button>
+      {/* <Button
+        colorScheme={"orange"}
+        onClick={minusGameCount}
+        className="score-registration-button"
+      >
+        기회
+      </Button> */}
     </div>
   );
 };
