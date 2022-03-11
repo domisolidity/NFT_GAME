@@ -47,7 +47,7 @@ export const connect = () => {
         });
         console.log("networkId : ", networkId);
 
-        if (networkId == 1337) {
+        if (networkId == 1337 || 5777) {
           const NetworkData = await NftContract.networks[networkId];
           const nftContract = new web3.eth.Contract(NftContract.abi, NetworkData.address);
 
