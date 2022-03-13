@@ -1,23 +1,36 @@
 import React, { useEffect, useState } from "react";
 
 import "./layout.css";
-import TopNav from "./topnav/TopNav";
 
 import { useSelector, useDispatch } from "react-redux";
-import { connect } from "../../redux/blockchain/blockchainActions.js";
+import {
+  connect,
+  // connectMetamask,
+} from "../../redux/blockchain/blockchainActions.js";
 import App from "../../App";
-import Login from "../login/Login";
-import Profile from "../login/Profile";
+import TopNav from "./topnav/TopNav";
+import Login from "../log/Login";
+import Profile from "../log/Profile";
+import { Box, Button, Flex, Input, useClipboard } from "@chakra-ui/react";
+import Register from "../register/Register";
+import Theme from "../../components/layout/Theme";
+import Logo from "../../components/layout/Logo";
+import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
+import Logout from "../log/Logout";
 
 const Layout = () => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   console.log(blockchain);
 
-  const { account, errorMsg } = blockchain;
+  const { account, errorMsg, web3 } = blockchain;
+
+  console.log(account);
 
   const LS_KEY = "login-with-metamask:auth";
   const [state, setState] = useState({});
+
+  const { hasCopied, onCopy } = useClipboard(account);
 
   const walletConnect = (e) => {
     e.preventDefault();
@@ -26,6 +39,7 @@ const Layout = () => {
       return;
     }
     dispatch(connect());
+    console.log(web3);
   };
 
   useEffect(() => {
@@ -52,32 +66,43 @@ const Layout = () => {
   const { auth } = state;
 
   return (
-    <div className="layout">
-      {console.log("Layout.js 렌더")}
-      <div className="layout__content">
+    <Box className="layout">
+      <Flex className="layout__header">
+        <Logo />
         <TopNav />
-        {auth ? (
-          <Profile auth={auth} onLoggedOut={handleLoggedOut} />
-        ) : (
-          <Login onLoggedIn={handleLoggedIn} />
-        )}
-        <div>
-          {account ? (
-            <div className="layout__wallet">{account}</div>
+        <Box>
+          {auth ? (
+            // <Profile auth={auth} onLoggedOut={handleLoggedOut} />
+            <Logout onLoggedOut={handleLoggedOut} />
+          ) : (
+            <Login onLoggedIn={handleLoggedIn} />
+          )}
+
+          {/* <ConnectWallet /> */}
+        </Box>
+        <Theme />
+      </Flex>
+      <Box className="layout__content">
+        {/* {account ? (
+            <>{account}</>
           ) : (
             <>
-              <div className="layout__wallet">
-                <button onClick={walletConnect}>지갑 연결</button>
-              </div>
+              <Button onClick={walletConnect}>메타마스크 연결</Button>
               {blockchain.errorMsg != "" ? (
-                <div>{alert(blockchain.errorMsg)}</div>
-              ) : null}
+                <Box>{alert(blockchain.errorMsg)}</Box>
+              ) : // <Alert status="warning">
+              //   <AlertIcon />
+              //   {blockchain.errorMsg}
+              //   <CloseButton position="absolute" right="8px" top="8px" />
+              // </Alert>
+              null}
             </>
-          )}
-        </div>
+          )} */}
+
+        {/* <Register /> */}
         <App />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

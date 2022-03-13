@@ -1,18 +1,27 @@
 .layout {
-  color: black;
-  background-color: hsl(0, 2%, 32%);
-}
-
-.layout__content {
   min-height: 100vh;
 }
 
-.layout__content-main {
-  width: 100%;
-  padding: 30px;
+.layout__header {
+  min-height: 100px;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 1.5rem;
+}
+.layout__header-item {
+  width: 400px;
+  justify-items: center;
 }
 
-.layout__wallet {
+.layout__content {
+}
+
+/* .layout__content-main {
+  width: 100%;
+  padding: 30px;
+} */
+
+/* .layout__wallet {
   float: right;
   margin-right: 100px;
-}
+} */
