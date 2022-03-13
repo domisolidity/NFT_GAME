@@ -6,7 +6,7 @@ import { connect } from "../../redux/blockchain/blockchainActions.js";
 import App from "../../App";
 import TopNav from "./topnav/TopNav";
 import Login from "../log/Login";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import Theme from "../../components/layout/Theme";
 import Logo from "../../components/layout/Logo";
 import Logout from "../log/Logout";
@@ -64,7 +64,9 @@ const Layout = () => {
             // <Profile auth={auth} onLoggedOut={handleLoggedOut} />
             <Logout onLoggedOut={handleLoggedOut} />
           ) : (
-            <Login onLoggedIn={handleLoggedIn} />
+            <>
+              <Login onLoggedIn={handleLoggedIn} />
+            </>
           )}
 
           {/* <ConnectWallet /> */}
@@ -72,21 +74,21 @@ const Layout = () => {
         <Theme />
       </Flex>
       <Box className="layout__content">
-        {/* {account ? (
-            <>{account}</>
-          ) : (
-            <>
-              <Button onClick={walletConnect}>메타마스크 연결</Button>
-              {blockchain.errorMsg != "" ? (
-                <Box>{alert(blockchain.errorMsg)}</Box>
-              ) : // <Alert status="warning">
-              //   <AlertIcon />
-              //   {blockchain.errorMsg}
-              //   <CloseButton position="absolute" right="8px" top="8px" />
-              // </Alert>
-              null}
-            </>
-          )} */}
+        {account ? (
+          <>{account}</>
+        ) : (
+          <>
+            <Button onClick={walletConnect}>메타마스크 연결</Button>
+            {blockchain.errorMsg != "" ? (
+              <Box>{alert(blockchain.errorMsg)}</Box>
+            ) : // <Alert status="warning">
+            //   <AlertIcon />
+            //   {blockchain.errorMsg}
+            //   <CloseButton position="absolute" right="8px" top="8px" />
+            // </Alert>
+            null}
+          </>
+        )}
 
         {/* <Register /> */}
         <App />
