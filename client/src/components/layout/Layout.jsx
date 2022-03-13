@@ -1,17 +1,14 @@
 import React, { useEffect } from "react";
 
 import "./layout.css";
-import TopNav from "./topnav/TopNav";
-
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "../../redux/blockchain/blockchainActions.js";
 import App from "../../App";
+import TopNav from "./topnav/TopNav";
 
 const Layout = () => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
-  console.log(blockchain);
-
   const { account, errorMsg } = blockchain;
 
   const walletConnect = (e) => {
