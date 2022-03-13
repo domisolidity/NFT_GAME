@@ -1,17 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import "./assets/css/index.css";
 import * as serviceWorker from "./serviceWorker";
 
 import store from "./redux/store";
 import { Provider } from "react-redux";
 import Layout from "./components/layout/Layout.jsx";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import theme from "./assets/theme";
 
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <ChakraProvider>
         <Layout />
       </ChakraProvider>
