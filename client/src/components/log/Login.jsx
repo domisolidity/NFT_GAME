@@ -1,9 +1,9 @@
+import { Box, Button } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 
 const Login = (props) => {
-  const dispatch = useDispatch();
   const { web3 } = useSelector((state) => state.blockchain);
 
   const [loading, setLoading] = useState(false); // Loading button state
@@ -68,9 +68,9 @@ const Login = (props) => {
   };
 
   return (
-    <div>
-      <button onClick={handleClick}>로그인버튼</button>
-    </div>
+    <Box>
+      <Button onClick={handleClick}>Connect Wallet</Button>
+    </Box>
   );
 };
 
