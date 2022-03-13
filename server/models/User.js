@@ -5,27 +5,25 @@ module.exports = class User extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        address: {
-          type: Sequelize.STRING(200),
-          allowNull: true,
+        publicAddress: {
+          type: Sequelize.STRING,
+          allowNull: false,
           unique: true, // unique: true - 고유하게
+          validate: { isLowercase: true },
         },
-        password: {
+        userName: {
           type: Sequelize.STRING(200),
           allowNull: false,
         },
-        nationality: {
-          type: Sequelize.STRING(200),
-          allowNull: true,
-        },
-        favorite: {
-          type: Sequelize.STRING(200),
-          allowNull: true,
+        nonce: {
+          type: Sequelize.INTEGER.UNSIGNED,
+          allowNull: false,
+          defaultValue: () => Math.floor(Math.random() * 10 ** 5)
         },
       },
       {
         sequelize,
-        timestamps: true,
+        timestamps: false,
         underscored: false,
         modelName: "User",
         tableName: "users",
@@ -36,5 +34,5 @@ module.exports = class User extends Sequelize.Model {
     );
   }
 
-  static associate(db) {}
+  static associate(db) { }
 };
