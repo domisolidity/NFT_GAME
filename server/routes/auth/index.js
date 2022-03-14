@@ -1,22 +1,19 @@
 const express = require("express");
 const router = express.Router();
 
-const jwt = require('jsonwebtoken');
-const { User } = require('../../models')
+const jwt = require("jsonwebtoken");
+const { User } = require("../../models");
 
-const { config } = require('../../config');
+const { config } = require("../../config");
 
-
-const { recoverPersonalSignature } = require('eth-sig-util');
-const { bufferToHex } = require('ethereumjs-util');
+const { recoverPersonalSignature } = require("eth-sig-util");
+const { bufferToHex } = require("ethereumjs-util");
 
 router.post("/", (req, res, next) => {
   const { signature, publicAddress } = req.body;
 
   if (!signature || !publicAddress) {
-    return res
-      .status(400)
-      .send({ error: 'Request should have signature and publicAddress' })
+    return res.status(400).send({ error: "Request should have signature and publicAddress" });
   }
 
   return (
@@ -39,18 +36,16 @@ router.post("/", (req, res, next) => {
       // Step 2: Verify digital signature
       ////////////////////////////////////////////////////
       .then((user) => {
-        if (!(user)) {
+        if (!user) {
           // Should not happen, we should have already sent the response
-          throw new Error(
-            'User is not defined in "Verify digital signature".'
-          );
+          throw new Error('User is not defined in "Verify digital signature".');
         }
 
         const msg = `I am signing my one-time nonce: ${user.nonce}`;
 
         // We now are in possession of msg, publicAddress and signature. We
         // will use a helper from eth-sig-util to extract the address from the signature
-        const msgBufferHex = bufferToHex(Buffer.from(msg, 'utf8'));
+        const msgBufferHex = bufferToHex(Buffer.from(msg, "utf8"));
         const address = recoverPersonalSignature({
           data: msgBufferHex,
           sig: signature,
@@ -62,7 +57,7 @@ router.post("/", (req, res, next) => {
           return user;
         } else {
           res.status(401).send({
-            error: 'Signature verification failed',
+            error: "Signature verification failed",
           });
 
           return null;
@@ -72,12 +67,10 @@ router.post("/", (req, res, next) => {
       // Step 3: Generate a new nonce for the user
       ////////////////////////////////////////////////////
       .then((user) => {
-        if (!(user)) {
+        if (!user) {
           // Should not happen, we should have already sent the response
 
-          throw new Error(
-            'User is not defined in "Generate a new nonce for the user".'
-          );
+          throw new Error('User is not defined in "Generate a new nonce for the user".');
         }
 
         user.nonce = Math.floor(Math.random() * 10 ** 5);
@@ -105,7 +98,7 @@ router.post("/", (req, res, next) => {
                 return reject(err);
               }
               if (!token) {
-                return new Error('Empty token');
+                return new Error("Empty token");
               }
 
               console.log(token);
@@ -119,12 +112,10 @@ router.post("/", (req, res, next) => {
         //   httpOnly: true,
         //   expires: 0 // 브라우저를 닫을시 사라짐
         // })
-        res.json({ accessToken })
+        res.json({ accessToken });
       })
       .catch(next)
   );
-
 });
-
 
 module.exports = router;

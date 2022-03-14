@@ -33,7 +33,7 @@ const bcrypt = require("bcrypt");
 //   }
 // });
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const exUser = await User.findOne({
       where: {
@@ -57,7 +57,6 @@ router.post('/', async (req, res) => {
   } catch (error) {
     return res.json({ success: false, message: error });
   }
-
-})
+});
 
 module.exports = router;

@@ -53,7 +53,6 @@ app.use(passport.session());
 //라우터 연결
 app.use("/api", indexRouter); //csrfProtection, csrfProtectionF, indexRouter);
 
-
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

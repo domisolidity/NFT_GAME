@@ -10,6 +10,7 @@ import { Box, Button, Flex } from "@chakra-ui/react";
 import Theme from "../../components/layout/Theme";
 import Logo from "../../components/layout/Logo";
 import Logout from "../log/Logout";
+import Register from "../register/Register";
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -90,7 +91,7 @@ const Layout = () => {
           </>
         )}
 
-        {/* <Register /> */}
+        <Register />
         <App />
       </Box>
     </Box>
