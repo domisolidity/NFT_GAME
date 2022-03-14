@@ -1,38 +1,32 @@
 const Sequelize = require("sequelize");
 
-/* 사용자 정보 DB */
-module.exports = class User extends Sequelize.Model {
+/* 소유 아이템과 사용자 정보 DB */
+module.exports = class UserItem extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        userId: {
+        userItemId: {
           primaryKey: true,
           autoIncrement: true,
-          allowNull: false,
           type: Sequelize.INTEGER,
+          unique: true, // unique: true - 고유하게
         },
-        publicAddress: {
+        user_address: {
           type: Sequelize.STRING,
           allowNull: true,
           unique: true, // unique: true - 고유하게
-          validate: { isLowercase: true },
         },
-        userName: {
-          type: Sequelize.STRING,
+        item_itemId: {
+          type: Sequelize.INTEGER,
           allowNull: true,
-        },
-        nonce: {
-          type: Sequelize.INTEGER.UNSIGNED,
-          allowNull: true,
-          defaultValue: () => Math.floor(Math.random() * 10 ** 5),
         },
       },
       {
         sequelize,
         timestamps: true,
         underscored: false,
-        modelName: "User",
-        tableName: "users",
+        modelName: "UserItem",
+        tableName: "user_items",
         paranoid: false,
         charset: "utf8",
         collate: "utf8_general_ci",
@@ -41,13 +35,13 @@ module.exports = class User extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.User.hasMany(db.InGameUser, {
+    db.UserItem.belongsTo(db.User, {
       foreignKey: "user_address",
-      sourceKey: "publicAddress",
+      targetKey: "publicAddress",
     });
-    db.User.hasMany(db.UserItem, {
-      foreignKey: "user_address",
-      sourceKey: "publicAddress",
+    db.UserItem.belongsTo(db.Item, {
+      foreignKey: "item_itemId",
+      targetKey: "itemId",
     });
   }
 };
