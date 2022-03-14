@@ -100,8 +100,6 @@ router.post("/", (req, res, next) => {
               if (!token) {
                 return new Error("Empty token");
               }
-
-              console.log(token);
               return resolve(token);
             }
           )
