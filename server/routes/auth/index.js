@@ -85,7 +85,7 @@ router.post("/", (req, res, next) => {
           jwt.sign(
             {
               payload: {
-                id: user.id,
+                id: user.userId,
                 publicAddress,
               },
             },
