@@ -12,20 +12,36 @@ const BlockGame = () => {
   const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
 
+  // 처음 한번 게임 관련 스크립트를 html에 넣어준다
+  useEffect(async () => {
+    getStackingBlocksGame();
+  }, []);
+  // 계정이 있으면 해당계정의 남은 기회를 불러온다
+  useEffect(() => {
+    if (!account) return;
+    giveMeChance();
+  }, [account]);
+
+  // 남은 기회 가져오기
+  const giveMeChance = async () => {
+    await axios
+      .post(`http://localhost:5000/game/my-count`, { account: account })
+      .then((res) => {
+        setChance(res.data.gameCount);
+      })
+      .catch((err) => console.log(err));
+  };
+
   // 게임 기회 차감하기
   const minusGameCount = async () => {
-    console.log("왜 안돼?");
-    console.log(document.querySelector("#blockGameContainer.playing"));
-
+    if (!account) return;
     if (document.querySelector("#blockGameContainer.playing") == null) return;
-    console.log("들어옴");
     await axios
-      .get(`http://localhost:5000/game/minus-chance`)
+      .post(`http://localhost:5000/game/minus-count`, { account: account })
       .then((res) => {
         console.log(res);
       })
       .catch((err) => console.log(err));
-    await giveMeChance();
   };
 
   // 게임상태 설정(게임 시작,재시작 누를때 종료상태 풀어주기)
@@ -46,7 +62,7 @@ const BlockGame = () => {
     }
   };
 
-  // 점수 전송
+  // 점수 등록(전송)
   const sendScore = async () => {
     await axios
       .post(`http://localhost:5000/game/send-score`, { score: parseInt(score) })
@@ -54,16 +70,8 @@ const BlockGame = () => {
       .catch((err) => console.log(err));
   };
 
-  // 남은 기회 가져오기
-  const giveMeChance = async () => {
-    await axios
-      .get(`http://localhost:5000/game/chance`)
-      .then((res) => setChance(res.data[0].chance))
-      .catch((err) => console.log(err));
-  };
-
-  // 랜더 될 때 게임 관련 스크립트를 html에 넣어준다
-  useEffect(() => {
+  // 블록쌓기 게임 불러오기
+  const getStackingBlocksGame = async () => {
     // <script>에 들어갈 js들의 src
     const scriptSrc = [
       "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
@@ -80,14 +88,14 @@ const BlockGame = () => {
       // 문서 body에 추가해준다
       document.body.appendChild(scripts[i]);
     }
-    giveMeChance();
+
     return () => {
       scripts.forEach((script) => {
         // 스크립트 태그 지워주는 녀석
         document.body.removeChild(script);
       });
     };
-  }, []);
+  };
 
   return (
     <div id="blockGameContainer">
