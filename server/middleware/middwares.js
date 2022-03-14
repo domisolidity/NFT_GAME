@@ -25,3 +25,18 @@ exports.isNotLoggedIn = (req, res, next) => {
     });
   }
 };
+
+// exports.csrfProtectionF = (req, res, next) => {
+
+//   // 모든 요청에 CSRF 토큰을 저장
+//   res.cookie('XSRF-TOKEN', req.csrfToken(), {
+//     expires: new Date(Date.now() + 3 * 3600000) // 3시간 동안 유효
+//   });
+
+//   // 데이터 리턴
+//   res.json();
+
+//   next();
+
+// };
+
