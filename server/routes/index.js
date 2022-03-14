@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const user = require("./users");
-const music = require("./musics");
+const auth = require("./auth");
 
 /* 사용자 정보 */
-router.use("/users", user);
+router.use("/auth", auth);
 
 /* 음악 정보 */
-router.use("/musics", music);
+router.use("/users", user);
 
 module.exports = router;

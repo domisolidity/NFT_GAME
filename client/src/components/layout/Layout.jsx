@@ -1,18 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./layout.css";
-import TopNav from "./topnav/TopNav";
-
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "../../redux/blockchain/blockchainActions.js";
 import App from "../../App";
+import TopNav from "./topnav/TopNav";
+import Login from "../log/Login";
+import { Box, Button, Flex } from "@chakra-ui/react";
+import Theme from "../../components/layout/Theme";
+import Logo from "../../components/layout/Logo";
+import Logout from "../log/Logout";
+import Register from "../register/Register";
 
 const Layout = () => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   console.log(blockchain);
 
-  const { account, errorMsg } = blockchain;
+  const { account, errorMsg, web3 } = blockchain;
+
+  const LS_KEY = "login-with-metamask:auth";
+  const [state, setState] = useState({});
 
   const walletConnect = (e) => {
     e.preventDefault();
@@ -21,34 +29,72 @@ const Layout = () => {
       return;
     }
     dispatch(connect());
+    console.log(web3);
   };
 
   useEffect(() => {
     dispatch(connect());
   }, [dispatch]);
 
+  useEffect(() => {
+    // Access token is stored in localstorage
+    const ls = window.localStorage.getItem(LS_KEY);
+    const auth = ls && JSON.parse(ls);
+    setState({ auth });
+  }, []);
+
+  const handleLoggedIn = (auth) => {
+    localStorage.setItem(LS_KEY, JSON.stringify(auth));
+    setState({ auth });
+  };
+
+  const handleLoggedOut = () => {
+    localStorage.removeItem(LS_KEY);
+    setState({ auth: undefined });
+  };
+
+  const { auth } = state;
+
   return (
-    <div className="layout">
-      {console.log("Layout.js 렌더")}
-      <div className="layout__content">
+    <Box className="layout">
+      <Flex className="layout__header">
+        <Logo />
         <TopNav />
-        <div>
-          {account ? (
-            <div className="layout__wallet">{account}</div>
+        <Box>
+          {auth ? (
+            // <Profile auth={auth} onLoggedOut={handleLoggedOut} />
+            <Logout onLoggedOut={handleLoggedOut} />
           ) : (
             <>
-              <div className="layout__wallet">
-                <button onClick={walletConnect}>지갑 연결</button>
-              </div>
-              {blockchain.errorMsg != "" ? (
-                <div>{alert(blockchain.errorMsg)}</div>
-              ) : null}
+              <Login onLoggedIn={handleLoggedIn} />
             </>
           )}
-        </div>
+
+          {/* <ConnectWallet /> */}
+        </Box>
+        <Theme />
+      </Flex>
+      <Box className="layout__content">
+        {account ? (
+          <>{account}</>
+        ) : (
+          <>
+            <Button onClick={walletConnect}>메타마스크 연결</Button>
+            {blockchain.errorMsg != "" ? (
+              <Box>{alert(blockchain.errorMsg)}</Box>
+            ) : // <Alert status="warning">
+            //   <AlertIcon />
+            //   {blockchain.errorMsg}
+            //   <CloseButton position="absolute" right="8px" top="8px" />
+            // </Alert>
+            null}
+          </>
+        )}
+
+        <Register />
         <App />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

@@ -9,6 +9,8 @@ const passportConfig = require("./middleware/passport");
 
 const indexRouter = require("./routes/index");
 const passport = require("passport");
+//const csrf = require('csurf');
+// const { csrfProtectionF } = require("./middleware/middwares");
 
 const app = express();
 
@@ -41,11 +43,15 @@ app.use(
   })
 );
 
+// // CSRF 미들웨어 인스턴스 생성
+// const csrfProtection = csrf({ cookie: true });
+//app.use(csrf({ cookie: true }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 //라우터 연결
-app.use("/api", indexRouter);
+app.use("/api", indexRouter); //csrfProtection, csrfProtectionF, indexRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

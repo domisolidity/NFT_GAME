@@ -47,7 +47,7 @@ export const connect = () => {
         });
         console.log("networkId : ", networkId);
 
-        if (networkId == 1337 || 5777) {
+        if (networkId == 1337 || networkId == 5777) {
           const NetworkData = await NftContract.networks[networkId];
           const nftContract = new web3.eth.Contract(NftContract.abi, NetworkData.address);
 
@@ -66,7 +66,7 @@ export const connect = () => {
 
           // Add listeners start
           window.ethereum.on("accountsChanged", (accounts) => {
-            dispatch(updateAccount(accounts[0]));
+            dispatch(updateAccount(accounts));
           });
           window.ethereum.on("chainChanged", () => {
             window.location.reload();
@@ -90,6 +90,6 @@ export const connect = () => {
 export const updateAccount = (account) => {
   return async (dispatch) => {
     dispatch(updateAccountRequest({ account: account }));
-    // dispatch(fetchData(account));
+    dispatch(fetchData(account));
   };
 };
