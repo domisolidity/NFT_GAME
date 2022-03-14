@@ -1,5 +1,5 @@
 "use strict";
-console.clear();
+
 // 게임 스테이지
 var Stage = /** @class */ (function () {
   function Stage() {
@@ -217,9 +217,10 @@ var Block = /** @class */ (function () {
   };
   return Block;
 })();
-var Game = /** @class */ (function () {
+
+var StackingBlocksGame = /** @class */ (function () {
   // 게임 초기화
-  function Game() {
+  function StackingBlocksGame() {
     var _this = this;
     // 게임 상태
     this.STATES = {
@@ -265,13 +266,13 @@ var Game = /** @class */ (function () {
     });
   }
   // 게임 상태 업데이트
-  Game.prototype.updateState = function (newState) {
+  StackingBlocksGame.prototype.updateState = function (newState) {
     for (var key in this.STATES) this.mainContainer.classList.remove(this.STATES[key]);
     this.mainContainer.classList.add(newState);
     this.state = newState;
   };
   // 액션 발동시 게임 상태에 따라 반응
-  Game.prototype.onAction = function () {
+  StackingBlocksGame.prototype.onAction = function () {
     switch (this.state) {
       // 준비됐으면 게임시작
       case this.STATES.READY:
@@ -288,14 +289,14 @@ var Game = /** @class */ (function () {
     }
   };
 
-  Game.prototype.startGame = function () {
+  StackingBlocksGame.prototype.startGame = function () {
     if (this.state != this.STATES.PLAYING) {
       this.scoreContainer.innerHTML = "0";
       this.updateState(this.STATES.PLAYING);
       this.addBlock();
     }
   };
-  Game.prototype.restartGame = function () {
+  StackingBlocksGame.prototype.restartGame = function () {
     var _this = this;
     this.updateState(this.STATES.RESETTING);
     var oldBlocks = this.placedBlocks.children;
@@ -336,7 +337,7 @@ var Game = /** @class */ (function () {
     }, cameraMoveSpeed * 1000);
   };
   // 블록 놓기
-  Game.prototype.placeBlock = function () {
+  StackingBlocksGame.prototype.placeBlock = function () {
     var _this = this;
     var currentBlock = this.blocks[this.blocks.length - 1];
     var newBlocks = currentBlock.place();
@@ -369,7 +370,7 @@ var Game = /** @class */ (function () {
     this.addBlock();
   };
   // 블록 추가
-  Game.prototype.addBlock = function () {
+  StackingBlocksGame.prototype.addBlock = function () {
     // 마지막 블록은 blocks배열 길이-1번째 인덱스 요소
     var lastBlock = this.blocks[this.blocks.length - 1];
     // 블록을 놓았을 때 마지막 블록 위에 놓지 못하고 허공에 놓으면 게임오버
@@ -387,12 +388,12 @@ var Game = /** @class */ (function () {
   };
 
   // 게임오버 됐을 때 게임상태 '끝남'으로 변경
-  Game.prototype.endGame = function () {
+  StackingBlocksGame.prototype.endGame = function () {
     this.updateState(this.STATES.ENDED);
   };
 
   // 블록
-  Game.prototype.tick = function () {
+  StackingBlocksGame.prototype.tick = function () {
     var _this = this;
     // 블록 놓는 녀석
     this.blocks[this.blocks.length - 1].tick();
@@ -403,6 +404,6 @@ var Game = /** @class */ (function () {
     });
   };
 
-  return Game;
+  return StackingBlocksGame;
 })();
-var game = new Game();
+var stackingBlocksGame = new StackingBlocksGame();
