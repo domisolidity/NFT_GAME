@@ -8,26 +8,45 @@ const BlockGame = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
 
-  const [score, setScore] = useState("");
+  const [score, setScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
   const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
 
   // 처음 한번 게임 관련 스크립트를 html에 넣어준다
   useEffect(async () => {
     getStackingBlocksGame();
-  }, []);
-  // 계정이 있으면 해당계정의 남은 기회를 불러온다
+  }, [account]);
+  // 계정이 있으면 해당계정의 남은 기회와 점수를 불러온다
   useEffect(() => {
     if (!account) return;
-    giveMeChance();
+    getMyChance();
+    getMyBestScore();
   }, [account]);
 
+  // 게임이 끝나서 점수가 State에 들어오면 게임기록 서버에 전송
+  useEffect(() => {
+    if (document.querySelector("#blockGameContainer.ended")) {
+      sendScore(score);
+    }
+  }, [score]);
+
   // 남은 기회 가져오기
-  const giveMeChance = async () => {
+  const getMyChance = async () => {
     await axios
-      .post(`http://localhost:5000/game/my-count`, { account: account })
+      .post(`/api/games/stacking-blocks/my-count`, { account: account })
       .then((res) => {
         setChance(res.data.gameCount);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // 최고기록 가져오기
+  const getMyBestScore = async () => {
+    await axios
+      .post(`/api/games/stacking-blocks/my-best-score`, { account: account })
+      .then((res) => {
+        setBestScore(res.data.gameScore);
       })
       .catch((err) => console.log(err));
   };
@@ -35,38 +54,35 @@ const BlockGame = () => {
   // 게임 기회 차감하기
   const minusGameCount = async () => {
     if (!account) return;
-    if (document.querySelector("#blockGameContainer.playing") == null) return;
+
     await axios
-      .post(`http://localhost:5000/game/minus-count`, { account: account })
-      .then((res) => {
-        console.log(res);
-      })
+      .post(`/api/games/stacking-blocks/minus-count`, { account: account })
+      .then((res) => setChance(res.data.gameCount)) // 차감 후 화면에 횟수 갱신
       .catch((err) => console.log(err));
   };
 
-  // 게임상태 설정(게임 시작,재시작 누를때 종료상태 풀어주기)
-  const setGameStateOn = () => {
-    setGameEnded(false);
-    setTimeout(() => {
-      minusGameCount();
-    }, 500);
+  // 게임시작
+  const playGame = () => {
+    setGameEnded(false); // 게임상태 변경
+    minusGameCount(); // 횟수 차감
   };
 
   // 블록쌓기
   const stackingBlock = () => {
-    // 멈춰 버튼 누를때마다 점수useState에 담기
-    setScore(document.querySelector("#score").innerHTML);
-    // 게임이 종료됐을때 게임상태useState 종료로 해주기
-    if (document.querySelector("#blockGameContainer.playing") == null) {
+    if (document.querySelector("#blockGameContainer.ended")) {
       setGameEnded(true);
+      setScore(document.querySelector("#score").innerHTML);
     }
   };
 
   // 점수 등록(전송)
-  const sendScore = async () => {
+  const sendScore = async (score) => {
     await axios
-      .post(`http://localhost:5000/game/send-score`, { score: parseInt(score) })
-      .then((res) => console.log(res))
+      .post(`/api/games/stacking-blocks/send-score`, {
+        account: account,
+        score: parseInt(score),
+      })
+      .then((res) => setBestScore(res.data.gameScore))
       .catch((err) => console.log(err));
   };
 
@@ -98,57 +114,60 @@ const BlockGame = () => {
   };
 
   return (
-    <div id="blockGameContainer">
-      <div id="game"></div>
-      <div id="score">0</div>
-      <Box color={"#333344"} id="instructions">
-        블록을 높이 쌓으세요
-      </Box>
-      <div className="game-over">
-        <Button id="restart-button" onClick={setGameStateOn}>
-          다시시작
-        </Button>
-        <h2>게임 종료</h2>
-        <p>대~단합니다</p>
-      </div>
-      <div className="game-ready">
-        <Button id="start-button" onClick={setGameStateOn}>
-          시작
-        </Button>
-        <div></div>
-      </div>
-      {/* <GameCountBox chance={chance} /> */}
-      <Box color={"#333344"} className="chance-box">
-        남은기회
-        <Text fontWeight={"bold"} textAlign={"center"}>
-          {chance}
-        </Text>
-      </Box>
-      <Button
-        colorScheme={"blue"}
-        w={100}
-        onClick={stackingBlock}
-        disabled={gameEnded}
-        className="placeBlock-button"
-      >
-        멈춰!
-      </Button>
-      <Button
-        colorScheme={"orange"}
-        onClick={sendScore}
-        disabled={document.querySelector("#blockGameContainer.ended") == null}
-        className="score-registration-button"
-      >
-        점수 등록
-      </Button>
-      {/* <Button
-        colorScheme={"orange"}
-        onClick={minusGameCount}
-        className="score-registration-button"
-      >
-        기회
-      </Button> */}
-    </div>
+    <>
+      {account ? (
+        <div id="blockGameContainer">
+          <div id="game"></div>
+          <div id="score">0</div>
+          <Box color={"#333344"} id="instructions">
+            블록을 높이 쌓으세요
+          </Box>
+          <div className="game-over">
+            <Button id="restart-button" onClick={playGame}>
+              다시시작
+            </Button>
+            <h2>게임 종료</h2>
+            <p>대~단합니다</p>
+          </div>
+          <div className="game-ready">
+            <Button id="start-button" onClick={playGame} disabled={!gameEnded}>
+              시작
+            </Button>
+            <div></div>
+          </div>
+          <Box color={"#333344"} className="my-score-box">
+            최고점수
+            <Text fontWeight={"bold"} textAlign={"center"}>
+              {bestScore}
+            </Text>
+          </Box>
+          <Box color={"#333344"} className="chance-box">
+            남은기회
+            <Text fontWeight={"bold"} textAlign={"center"}>
+              {chance}
+            </Text>
+          </Box>
+          <Button
+            colorScheme={"blue"}
+            w={100}
+            onClick={stackingBlock}
+            disabled={gameEnded}
+            className="placeBlock-button"
+          >
+            멈춰!
+          </Button>
+          <Button
+            colorScheme={"orange"}
+            onClick={minusGameCount}
+            className="score-registration-button"
+          >
+            기회
+          </Button>
+        </div>
+      ) : (
+        <div>로그인 해주세요</div>
+      )}
+    </>
   );
 };
 
