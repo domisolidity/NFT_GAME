@@ -13,7 +13,7 @@ module.exports = class User extends Sequelize.Model {
         },
         publicAddress: {
           type: Sequelize.STRING,
-          allowNull: true,
+          allowNull: false,
           unique: true, // unique: true - 고유하게
           validate: { isLowercase: true },
         },
@@ -23,7 +23,7 @@ module.exports = class User extends Sequelize.Model {
         },
         nonce: {
           type: Sequelize.INTEGER.UNSIGNED,
-          allowNull: true,
+          allowNull: false,
           defaultValue: () => Math.floor(Math.random() * 10 ** 5),
         },
       },
