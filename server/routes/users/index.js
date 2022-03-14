@@ -12,9 +12,8 @@ router.use("/register", register);
 // router.use("/login", isNotLoggedIn, login);
 // router.use("/logout", isLoggedIn, logout);
 
-
 //////////////////
-const users = require('./log/users');
-router.use('/', users)
+const users = require("./log/users");
+router.use("/", users);
 
 module.exports = router;
