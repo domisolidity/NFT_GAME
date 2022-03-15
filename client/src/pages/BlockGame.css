@@ -8,11 +8,21 @@
   top: 58.5%;
   transform: translate(-50%, -50%);
 }
+.chance-box {
+  position: absolute;
+  right: 45px;
+  top: 30px;
+}
+.my-score-box {
+  position: absolute;
+  left: 45px;
+  top: 30px;
+}
 #blockGameContainer {
   overflow: hidden;
   position: relative;
-  width: 872px;
-  height: 736px;
+  width: 90vw;
+  height: 70vh;
   margin: 0 auto;
 }
 #blockGameContainer #score {
@@ -85,6 +95,7 @@
 }
 #blockGameContainer .game-ready #start-button,
 #blockGameContainer .game-over #restart-button {
+  cursor: default;
   -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
   transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
   transition: opacity 0.5s ease, transform 0.5s ease;
@@ -131,6 +142,7 @@
 }
 #blockGameContainer.ready .game-ready #start-button,
 #blockGameContainer.ended .game-over #restart-button {
+  cursor: pointer;
   opacity: 1;
   -webkit-transform: translatey(0);
   transform: translatey(0);

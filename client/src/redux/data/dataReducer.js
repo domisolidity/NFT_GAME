@@ -1,7 +1,7 @@
 const initialState = {
   loading: false,
   myNftId: null,
-  myNftUri:null,
+  myNftUri: null,
   error: false,
   errorMsg: "",
 };

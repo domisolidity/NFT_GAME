@@ -10,22 +10,21 @@ const ipfsClient = create("https://ipfs.infura.io:5001/api/v0");
 
 const NftDetail = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account,  nftContract } = blockchain;
+  const { account, nftContract } = blockchain;
 
-  
   const name = "doremifaSolidity-purple";
   const description = "IPFS minted nft woooooo.";
   const ipfsBaseUrl = "https://ipfs.infura.io/ipfs/";
-  
-  const mintingProcess = async(e) =>{
+
+  const mintingProcess = async (e) => {
     e.preventDefault();
-    await createMetaDataAndMint(name, description, getImageData())  
-  }
-  
+    await createMetaDataAndMint(name, description, getImageData());
+  };
+
   const getImageData = () => {
-    const img = new Buffer.from(nftImg)
-    console.log(img)
-    return img
+    const img = new Buffer.from(nftImg);
+    console.log(img);
+    return img;
   };
 
   const createMetaDataAndMint = async (_name, _des, _imgBuffer) => {
@@ -49,8 +48,11 @@ const NftDetail = () => {
   };
 
   const mint = (_uri) => {
-    console.log(nftContract)
-    nftContract.methods.mint(account, _uri).send({ from: account }).once("error", (err) => {
+    console.log(nftContract);
+    nftContract.methods
+      .mint(account, _uri)
+      .send({ from: account })
+      .once("error", (err) => {
         console.log(err);
         // setLoading(false);
         // setStatus("Error");
@@ -67,9 +69,7 @@ const NftDetail = () => {
     <Grid templateColumns="repeat(6, 1fr)" gap={5}>
       <GridItem colSpan={2} bg="tomato" h="500px">
         <NftCard />
-        <Button onClick={mintingProcess}>
-          민팅
-        </Button>
+        <Button onClick={mintingProcess}>민팅</Button>
       </GridItem>
       <GridItem colSpan={4} bg="tomato" h={"100%"}>
         <Box h={1200}></Box>

@@ -8,6 +8,10 @@ const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.js")[env];
 
 const User = require("./User");
+const Game = require("./Game");
+const InGameUser = require("./InGameUser");
+const Item = require("./Item");
+const UserItem = require("./UserItem");
 
 const db = {};
 
@@ -19,6 +23,10 @@ if (config.use_env_variable) {
 }
 
 db.User = User;
+db.Game = Game;
+db.InGameUser = InGameUser;
+db.Item = Item;
+db.UserItem = UserItem;
 
 Object.keys(db).forEach((modelName) => {
   db[modelName].init(sequelize);

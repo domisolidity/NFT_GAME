@@ -11,7 +11,6 @@ import NftDetail from "./pages/NftDetail.jsx";
 import { Route, Routes } from "react-router-dom";
 
 const App = () => {
-
   return (
     <Routes>
       <Route path="/" element={<Main />} />
@@ -26,4 +25,3 @@ const App = () => {
 };
 
 export default App;
-

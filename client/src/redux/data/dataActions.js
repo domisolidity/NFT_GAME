@@ -38,14 +38,15 @@ export const fetchData = (account) => {
   return async (dispatch) => {
     dispatch(fetchDataRequest());
     try {
-      console.log(account)
-      let myNft = await store.getState().blockchain.nftContract.methods.getMyToken().call({from:account.toString()});
-      console.log(myNft.uri)
-      console.log(myNft.id)
+      console.log(account);
+      let myNft = await store.getState().blockchain.nftContract.methods.getMyToken().call({ from: account.toString() });
+      console.log(myNft.uri);
+      console.log(myNft.id);
       dispatch(
         fetchDataSuccess({
-          myNftId:myNft.id,
-          myNftUri:myNft.uri.slice(6)})
+          myNftId: myNft.id,
+          myNftUri: myNft.uri.slice(6),
+        })
       );
     } catch (err) {
       console.log(err);
@@ -79,7 +80,7 @@ export const fetchData = (account) => {
 //         fetchDataSuccess({myNft:myNft})
 //       );
 //     } catch (error) {
-      
+
 //     }
 //   }
 // }
