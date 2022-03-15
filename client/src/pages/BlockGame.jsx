@@ -63,10 +63,16 @@ const BlockGame = () => {
 
   // 게임시작
   const playGame = () => {
+    if (
+      !(
+        document.querySelector("#blockGameContainer.playing") ||
+        document.querySelector("#blockGameContainer.resetting")
+      )
+    )
+      return;
     setGameEnded(false); // 게임상태 변경
     minusGameCount(); // 횟수 차감
   };
-
   // 블록쌓기
   const stackingBlock = () => {
     if (document.querySelector("#blockGameContainer.ended")) {
