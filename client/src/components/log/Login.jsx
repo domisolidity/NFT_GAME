@@ -69,7 +69,7 @@ const Login = (props) => {
   };
 
   return (
-    <Box>
+    <Box bg="#F93B8B">
       <Button onClick={handleClick}>Connect Wallet</Button>
     </Box>
   );

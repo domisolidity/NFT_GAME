@@ -1,12 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c:wght@500;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c:wght@500;800&family=Raleway:ital,wght@1,300&display=swap");
+* {
+  font-family: "Lato", sans-serif;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-family: "Raleway", sans-serif;
+  /* font-family: 'Lato', sans-serif;
+  font-family: 'M PLUS Rounded 1c', sans-serif; */
+  /* background: #bae2cd; */
+  /* font-family: 'M PLUS Rounded 1c', sans-serif; */
+}
+
 .layout {
+  margin: 0;
   min-height: 100vh;
+  background: #1e315f;
+  flex-direction: column;
 }
 
 .layout__header {
+  width: 85vw;
+  margin: 0 5%;
   min-height: 100px;
   align-items: center;
-  justify-content: space-around;
-  margin: 1rem;
 }
 .layout__header-right {
   justify-content: end;
@@ -14,6 +30,7 @@
 }
 
 .layout__content {
+  margin-top: 150px;
 }
 
 /* .layout__content-main {
