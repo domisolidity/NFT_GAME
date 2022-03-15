@@ -24,14 +24,10 @@ import { SearchIcon } from "@chakra-ui/icons";
 import "./layout.css";
 import App from "../../App";
 import TopNav from "./topnav/TopNav";
-import Login from "../log/Login";
 import Theme from "../../components/layout/Theme";
 import Logo from "../../components/layout/Logo";
 import Logout from "../log/Logout";
 import Register from "../register/Register.jsx";
-
-import jwtDecode from "jwt-decode";
-import AlertCard from "../AlertCard";
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -45,31 +41,21 @@ const Layout = () => {
 
   const { account, errorMsg, web3, auth } = blockchain;
 
-  const walletConnect = (e) => {
-    e.preventDefault();
-    if (errorMsg != "") {
-      alert(errorMsg);
+  useEffect(async () => {
+    if (account) {
+      // && (await getNetworkId()) == 1337) {
+      setIsOpen(false);
       return;
     }
-    // dispatch(connect());
-    console.log(web3);
-  };
+    setIsOpen(true);
+    //dispatch(connectWallet());
+    //dispatch(connectWallet());
+    //dispatch(disconnectWallet());
+  }, [account]);
 
   useEffect(() => {
-    // dispatch(connect());
-  }, [dispatch]);
-
-  useEffect(() => {
-    // dispatch(authenticate());
     getReconnect();
   }, []);
-
-  // useEffect(() => {
-  //   // Access token is stored in localstorage
-  //   const ls = window.localStorage.getItem(LS_KEY);
-  //   const auth = ls && JSON.parse(ls);
-  //   setState({ auth });
-  // }, []);
 
   const getConnectWallet = () => {
     dispatch(connectWallet());
@@ -83,20 +69,24 @@ const Layout = () => {
     dispatch(reconnect());
   };
 
-  // const handleLoggedIn = (auth) => {
-  //   localStorage.setItem(LS_KEY, JSON.stringify(auth));
-  //   setState({ auth });
-  // };
-
-  // const handleLoggedOut = () => {
-  //   localStorage.removeItem(LS_KEY);
-  //   setState({ auth: undefined });
-  // };
-
-  //const { auth } = state;
-
   return (
     <Flex className="layout" justify="center" direction="column">
+      {isOpen ? (
+        <Alert status="error">
+          <AlertIcon />
+          <Box flex="1">
+            <AlertDescription display="block">
+              {blockchain.errorMsg}
+            </AlertDescription>
+          </Box>
+          <CloseButton
+            position="absolute"
+            right="8px"
+            top="8px"
+            onClick={onClose}
+          />
+        </Alert>
+      ) : null}
       <Flex
         className="layout__header"
         justify="space-around"
@@ -139,21 +129,10 @@ const Layout = () => {
         </Flex>
       </Flex>
       <Box className="layout__content">
-        {account ? (
-          <>{account}</>
-        ) : (
-          <>
-            {/* <Button onClick={walletConnect}>메타마스크 연결</Button> */}
-            {blockchain.errorMsg != "" ? (
-              <Box>{alert(blockchain.errorMsg)}</Box>
-            ) : // <Alert status="warning">
-            //   <AlertIcon />
-            //   {blockchain.errorMsg}
-            //   <CloseButton position="absolute" right="8px" top="8px" />
-            // </Alert>
-            null}
-          </>
-        )}
+        {blockchain.errorMsg != "" ? (
+          <Box>{console.log(blockchain.errorMsg)}</Box>
+        ) : null}
+        {/* <Register /> */}
       </Box>
       <App />
     </Flex>

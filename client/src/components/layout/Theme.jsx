@@ -6,6 +6,7 @@ const Theme = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Button
+      ml={2}
       variant="outline"
       onClick={toggleColorMode}
       bg={colorMode === "light" ? "#fff" : "#F93B8B"}
