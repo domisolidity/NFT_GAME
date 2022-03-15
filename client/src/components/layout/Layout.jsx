@@ -70,8 +70,8 @@ const Layout = () => {
   };
 
   return (
-    <Flex className="layout" justify="center" direction="column">
-      {isOpen ? (
+    <Flex className="layout">
+      {/* {isOpen ? (
         <Alert status="error">
           <AlertIcon />
           <Box flex="1">
@@ -86,7 +86,7 @@ const Layout = () => {
             onClick={onClose}
           />
         </Alert>
-      ) : null}
+      ) : null} */}
       <Flex
         className="layout__header"
         justify="space-around"
@@ -129,12 +129,9 @@ const Layout = () => {
         </Flex>
       </Flex>
       <Box className="layout__content">
-        {blockchain.errorMsg != "" ? (
-          <Box>{console.log(blockchain.errorMsg)}</Box>
-        ) : null}
         {/* <Register /> */}
+        <App />
       </Box>
-      <App />
     </Flex>
   );
 };
