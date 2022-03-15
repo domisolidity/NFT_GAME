@@ -15,7 +15,11 @@ import {
   Button,
   CloseButton,
   Flex,
+  Input,
+  InputRightElement,
+  InputGroup,
 } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 
 import "./layout.css";
 import App from "../../App";
@@ -41,34 +45,19 @@ const Layout = () => {
 
   const { account, errorMsg, web3, auth } = blockchain;
 
-  const getNetworkId = async () => {
-    const networkId = await window.ethereum.request({
-      method: "net_version",
-    });
-    return networkId;
-  };
-
-  // const walletConnect = (e) => {
-  //   e.preventDefault();
-  //   if (errorMsg != "") {
-  //     alert(errorMsg);
-  //     return;
-  //   }
-  //   dispatch(connect());
-  //   console.log(web3);
-  // };
-
-  useEffect(async () => {
-    if (account) {
-      // && (await getNetworkId()) == 1337) {
-      setIsOpen(false);
+  const walletConnect = (e) => {
+    e.preventDefault();
+    if (errorMsg != "") {
+      alert(errorMsg);
       return;
     }
-    setIsOpen(true);
-    //dispatch(connectWallet());
-    //dispatch(connectWallet());
-    //dispatch(disconnectWallet());
-  }, [account]);
+    // dispatch(connect());
+    console.log(web3);
+  };
+
+  useEffect(() => {
+    // dispatch(connect());
+  }, [dispatch]);
 
   useEffect(() => {
     // dispatch(authenticate());
@@ -107,28 +96,33 @@ const Layout = () => {
   //const { auth } = state;
 
   return (
-    <Box className="layout">
-      {isOpen ? (
-        <Alert status="error">
-          <AlertIcon />
-          <Box flex="1">
-            <AlertDescription display="block">
-              {blockchain.errorMsg}
-            </AlertDescription>
-          </Box>
-          <CloseButton
-            position="absolute"
-            right="8px"
-            top="8px"
-            onClick={onClose}
-          />
-        </Alert>
-      ) : null}
-
-      <Flex className="layout__header">
-        <Logo />
-        <TopNav />
-        <Flex className="layout__header-right">
+    <Flex className="layout" justify="center" direction="column">
+      <Flex
+        className="layout__header"
+        justify="space-around"
+        position="fixed"
+        top={0}
+      >
+        <Box>
+          <Logo />
+        </Box>
+        <Box>
+          <InputGroup size="md">
+            <Input
+              placeholder="search"
+              _placeholder={{ opacity: 1, color: "gray.500" }}
+            />
+            <InputRightElement>
+              <Button variant="ghost">
+                <SearchIcon />
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </Box>
+        <Box>
+          <TopNav />
+        </Box>
+        <Flex direction="row">
           {auth ? (
             // <Profile auth={auth} onLoggedOut={handleLoggedOut} />/
             // <Logout onLoggedOut={handleLoggedOut} />
@@ -139,20 +133,17 @@ const Layout = () => {
               {/* <Login onLoggedIn={handleLoggedIn} /> */}
             </>
           )}
-
-          {/* <ConnectWallet /> */}
-          <Theme />
+          <Box>
+            <Theme />
+          </Box>
         </Flex>
       </Flex>
       <Box className="layout__content">
-        {blockchain.errorMsg != "" ? (
-          <Box>{console.log(blockchain.errorMsg)}</Box>
-        ) : null}
-        {/* {account ? (
+        {account ? (
           <>{account}</>
         ) : (
           <>
-            <Button onClick={walletConnect}>메타마스크 연결</Button>
+            {/* <Button onClick={walletConnect}>메타마스크 연결</Button> */}
             {blockchain.errorMsg != "" ? (
               <Box>{alert(blockchain.errorMsg)}</Box>
             ) : // <Alert status="warning">
@@ -162,12 +153,10 @@ const Layout = () => {
             // </Alert>
             null}
           </>
-        )} */}
-
-        {/* <Register /> */}
-        <App />
+        )}
       </Box>
-    </Box>
+      <App />
+    </Flex>
   );
 };
 

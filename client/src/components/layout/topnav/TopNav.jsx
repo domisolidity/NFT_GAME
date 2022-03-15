@@ -4,7 +4,6 @@ import { useLocation, Link } from "react-router-dom";
 import { Box, Flex, Image } from "@chakra-ui/react";
 
 import topbar_items from "../../../assets/JsonData/topbar_router.json";
-import logo from "../../../assets/logo.png";
 
 const TopNav = () => {
   const location = useLocation();
@@ -33,7 +32,7 @@ const TopItem = (props) => {
   return (
     <Box className="topnav__item">
       <Box className={`topnav__item-inner ${active}`}>
-        <span>{props.title}</span>
+        <span style={{fontSize:18}}>{props.title}</span>
       </Box>
     </Box>
   );

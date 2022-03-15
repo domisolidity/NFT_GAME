@@ -36,24 +36,6 @@ const NftTransfer = (props) => {
         console.log(result);
       });
   };
-  // @ my Nft 찾기 (민팅함수 하위)
-  const getMyNft = async () => {
-    try {
-      await nftContract.methods
-        .getMyToken()
-        .call({ from: account.toString() })
-        .then((result) => {
-          setNft({
-            id: result.id,
-            uri: result.uri,
-            metadata: `${baseUri}${result.uri.slice(6)}/${result.id}.json`,
-          });
-          console.log(result);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // @ my Nft 찾기(detail) (getMyNft 정보 참조해서 사용하는 함수)
   const getMyNftDetail = async () => {
@@ -71,13 +53,13 @@ const NftTransfer = (props) => {
     }
   };
 
-  useEffect(async () => {
-    if (!account) {
-      return false;
-    }
-    console.log("불러오기");
-    await getMyNft();
-  }, [account]);
+  // useEffect(async () => {
+  //   if (!account) {
+  //     return false;
+  //   }
+  //   console.log("불러오기");
+  //   await getMyNft();
+  // }, [account]);
 
   useEffect(async () => {
     if (!account) {
