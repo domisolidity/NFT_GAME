@@ -4,6 +4,7 @@ const initialState = {
   nftContract: null,
   web3: null,
   errorMsg: "",
+  auth: false,
 };
 
 const blockchainReducer = (state = initialState, action) => {
@@ -20,6 +21,7 @@ const blockchainReducer = (state = initialState, action) => {
         account: action.payload.account,
         nftContract: action.payload.nftContract,
         web3: action.payload.web3,
+        errorMsg: "",
       };
     case "CONNECTION_FAILED":
       return {
@@ -31,6 +33,11 @@ const blockchainReducer = (state = initialState, action) => {
       return {
         ...state,
         account: action.payload.account,
+      };
+    case "AUTH":
+      return {
+        ...state,
+        auth: action.payload
       };
     default:
       return state;
