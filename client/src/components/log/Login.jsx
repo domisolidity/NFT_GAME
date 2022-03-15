@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 const Login = (props) => {
+  const dispatch = useDispatch();
   const { web3 } = useSelector((state) => state.blockchain);
 
   const [loading, setLoading] = useState(false); // Loading button state

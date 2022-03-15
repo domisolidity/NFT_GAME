@@ -5,12 +5,12 @@
 .layout__header {
   min-height: 100px;
   align-items: center;
-  justify-content: flex-start;
-  margin: 1.5rem;
+  justify-content: space-around;
+  margin: 1rem;
 }
-.layout__header-item {
-  width: 400px;
-  justify-items: center;
+.layout__header-right {
+  justify-content: end;
+  margin: 0 0 0 1rem;
 }
 
 .layout__content {

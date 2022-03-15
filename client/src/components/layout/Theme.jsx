@@ -5,7 +5,7 @@ import React from "react";
 const Theme = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Button variant="ghost" onClick={toggleColorMode}>
+    <Button ml={2} variant="ghost" onClick={toggleColorMode}>
       {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
     </Button>
   );
