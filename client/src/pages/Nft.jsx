@@ -28,16 +28,11 @@ const Nft = () => {
   // @ 민팅 함수
   const minting = async() =>{
     try {
-      await nftContract.methods.create(account.toString() , process.env.REACT_APP_METADATA).send({from:account.toString()}).then((result)=>{
+      await nftContract.methods.create(account.toString() , process.env.REACT_APP_METADATA).send({from:account.toString()})
         setLoading(true);
-        if (result) {
-          
-        }  
+      
         getMyNft()
         console.log(nft.metadata)
-      })
-
-      
     } catch (error) {
       console.log("-에러 내용- \n",error);
       setLoading(false)
@@ -108,12 +103,7 @@ const Nft = () => {
   const toTransferJSX = { account, nftContract}
   return (
     <Box align="center" pb={20}>
-      <Box w="100%" h="300" bg="yellow">
-        {console.log("Nft.jsx 렌더")}
-        NFT 페이지
-      </Box>
-      <Box w="400px">
-        <Heading as='h2' size='2xl'>NFT</Heading>
+      <Box w="400px" mb={70}>
         <Flex justifyContent="space-evenly" borderRadius="30" bg="whiteAlpha.400" mt={10}>
           <Button onClick={onMint} variant="ghost" isActive={MintOrTransfer ? 0 : 1}>NFT 구매</Button>
           <Button onClick={onTransfer} variant="ghost" isActive={MintOrTransfer ? 1 : 0}>NFT 선물</Button>

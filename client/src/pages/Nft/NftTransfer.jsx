@@ -21,7 +21,7 @@ const NftTransfer = (props) => {
     // @ nft 선물하기
     const transferMyNft = async(toAddr) =>{
         // ## toAddr 잘못되면 에러 메세지 날리기
-        await nftContract.methods.safeTransferFrom(account,toAddr,nft.id).send({from:account.toString()}).then(result=>{
+        await nftContract.methods.safeTransferFrom(account.toString(),toAddr,nft.id).send({from:account.toString()}).then(result=>{
             console.log(result)
         })
     }

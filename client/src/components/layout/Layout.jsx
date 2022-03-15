@@ -6,10 +6,12 @@ import { connect } from "../../redux/blockchain/blockchainActions.js";
 import App from "../../App";
 import TopNav from "./topnav/TopNav";
 import Login from "../log/Login";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Input, Flex,InputRightElement,InputGroup, Button } from "@chakra-ui/react";
+import {SearchIcon } from "@chakra-ui/icons";
 import Theme from "../../components/layout/Theme";
 import Logo from "../../components/layout/Logo";
 import Logout from "../log/Logout";
+
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -27,12 +29,12 @@ const Layout = () => {
       alert(errorMsg);
       return;
     }
-    dispatch(connect());
+    // dispatch(connect());
     console.log(web3);
   };
 
   useEffect(() => {
-    dispatch(connect());
+    // dispatch(connect());
   }, [dispatch]);
 
   useEffect(() => {
@@ -55,45 +57,58 @@ const Layout = () => {
   const { auth } = state;
 
   return (
-    <Box className="layout">
-      <Flex className="layout__header">
-        <Logo />
-        <TopNav />
+    <Flex className="layout" justify="center" direction="column">
+      <Flex className="layout__header" justify="space-around" position="fixed" top={0} >
+        <Box ><Logo /></Box>
         <Box>
+          <InputGroup size='md'>
+            <Input
+              placeholder='search'
+              _placeholder={{ opacity: 1, color: 'gray.500' }}
+              />
+            <InputRightElement >
+              <Button variant="ghost">
+                <SearchIcon/>
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </Box>
+        <Box><TopNav /></Box>
+        <Flex direction="row">
           {auth ? (
             // <Profile auth={auth} onLoggedOut={handleLoggedOut} />
             <Logout onLoggedOut={handleLoggedOut} />
+            ) : (
+              
+              <Login onLoggedIn={handleLoggedIn} />
+              
+              )}
+          <Box>
+            <Theme/>
+          </Box>
+        </Flex>
+      </Flex>
+        <Box className="layout__content">
+          {account ? (
+            <>{account}</>
           ) : (
             <>
-              <Login onLoggedIn={handleLoggedIn} />
+              {/* <Button onClick={walletConnect}>메타마스크 연결</Button> */}
+              {blockchain.errorMsg != "" ? (
+                <Box>{alert(blockchain.errorMsg)}</Box>
+              ) : // <Alert status="warning">
+              //   <AlertIcon />
+              //   {blockchain.errorMsg}
+              //   <CloseButton position="absolute" right="8px" top="8px" />
+              // </Alert>
+              null}
             </>
           )}
-
-          {/* <ConnectWallet /> */}
         </Box>
-        <Theme />
-      </Flex>
-      <Box className="layout__content">
-        {account ? (
-          <>{account}</>
-        ) : (
-          <>
-            <Button onClick={walletConnect}>메타마스크 연결</Button>
-            {blockchain.errorMsg != "" ? (
-              <Box>{alert(blockchain.errorMsg)}</Box>
-            ) : // <Alert status="warning">
-            //   <AlertIcon />
-            //   {blockchain.errorMsg}
-            //   <CloseButton position="absolute" right="8px" top="8px" />
-            // </Alert>
-            null}
-          </>
-        )}
+          <App />
 
-        {/* <Register /> */}
-        <App />
-      </Box>
-    </Box>
+
+    </Flex>
   );
 };
 
