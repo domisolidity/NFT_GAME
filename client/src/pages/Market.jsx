@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import ItemCard from "../components/ItemCard";
+=======
+import React from "react";
+import { Box, Flex, Grid, GridItem } from "@chakra-ui/react";
+>>>>>>> e602e326a48e3083e3956946b37ed3c2d56630ca
 
 const Market = () => {
   const blockchain = useSelector((state) => state.blockchain);
