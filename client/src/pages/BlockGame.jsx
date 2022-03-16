@@ -8,12 +8,14 @@ import InventoryBox from "../components/InventoryBox";
 const BlockGame = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
+  const gameTitle = "블록쌓기";
 
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
   const [gameItems, setGameItems] = useState([]);
+  // const [itemInUse, setItemInUse] = useState(false)
 
   // 아이템 목록 가져오기
   const getGameItems = async () =>
@@ -176,16 +178,22 @@ const BlockGame = () => {
             </Button>
             {/* <Button
               colorScheme={"orange"}
-              onClick={minusGameCount}
+              onClick={asdf}
               className="score-registration-button"
             >
-              기회
+              테스트
             </Button> */}
           </div>
           <Flex justifyContent={"center"}>
             {gameItems &&
               gameItems.map((item) => {
-                return <InventoryBox key={item.itemId} item={item} />;
+                return (
+                  <InventoryBox
+                    key={item.itemId}
+                    item={item}
+                    gameTitle={gameTitle}
+                  />
+                );
               })}
           </Flex>
         </>

@@ -7,6 +7,7 @@ const InventoryBox = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
   const item = props.item;
+  const gameTitle = props.gameTitle;
 
   // 내 소유 아이템 목록
   const [myItemQuantity, setMyItemQuantity] = useState(0);
@@ -26,8 +27,10 @@ const InventoryBox = (props) => {
       .post(`/api/items/game-items/using-item`, {
         account: account,
         itemName: item.itemName,
+        gameTitle: gameTitle,
       })
       .then((res) => {
+        console.log(res);
         // 아이템 사용됐으면 수량 갱신
         getMyItemQuantity();
       })

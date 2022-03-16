@@ -3,6 +3,8 @@ const router = express.Router();
 const { User, Game, InGameUser, Item, UserItem } = require("../../../models");
 const bcrypt = require("bcrypt");
 
+const databaseConfig = require("../../../config");
+
 // 아이템 목록 가져오기
 router.get("/", async (req, res) => {
   const response = await Item.findAll().catch((err) => console.log(err));
@@ -39,6 +41,10 @@ router.post("/buy-item", async (req, res) => {
 router.post("/using-item", async (req, res) => {
   const account = req.body.account;
   const itemName = req.body.itemName;
+  const gameTitle = req.body.gameTitle;
+
+  databaseConfig.usingItem(account, itemName, gameTitle);
+
   const myItemData = await UserItem.findOne({
     order: [["updatedAt", "asc"]], // 구입시기가 오래된거
     where: { user_address: account, item_itemName: itemName },
