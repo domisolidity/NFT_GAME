@@ -1,33 +1,38 @@
 import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Grid, GridItem, Image } from "@chakra-ui/react";
+import EthereumCoin from "../../../src/assets/EthereumCoin.png";
+import GameCoin from "../../../src/assets/GameCoin3.png";
 
 const NetworkCard = (props) => {
   return (
-    <Box w={300} borderWidth="2px" borderRadius="lg" bg={"gray"} mr={4}>
-      <Box p="6">
-        <Box display="flex" alignItems="center">
-          <Box color="white" fontWeight="semibold" fontSize="xl">
-            {props.title}
-          </Box>
-        </Box>
-        <Flex mt={5}>
-          <Flex mr={6} alignItems="center">
-            <Box>{props.icon}</Box>
-            <Flex ml={4} flexDirection={"column"} alignItems={"center"}>
-              <Box>10000</Box>
-              <Box>{props.unit}</Box>
-            </Flex>
-          </Flex>
-          <Flex alignItems="center">
-            <Box>{props.tokenName}</Box>
-            <Flex ml={4} flexDirection={"column"} alignItems={"center"}>
-              <Box>10000</Box>
-              <Box>{props.tokenUnit}</Box>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Box>
-    </Box>
+    <Grid
+      // padding="0 4vw"
+      templateColumns="repeat(4, 1fr)" //가로
+      templateRows="repeat(3, 1fr)" //세로
+      gap={2}
+    >
+      <GridItem bg="whiteAlpha.100" colSpan={4} rowSpan={1}>
+        이더리움 네트워크
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={2}>
+        <Image src={EthereumCoin} />
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+        {props.ethBalance}
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={2}>
+        <Image src={GameCoin} />
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+        토큰 양
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+        ETH
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+        SOL
+      </GridItem>
+    </Grid>
   );
 };
 
