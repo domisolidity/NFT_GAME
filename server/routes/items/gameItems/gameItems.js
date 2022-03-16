@@ -35,4 +35,23 @@ router.post("/buy-item", async (req, res) => {
     .catch((err) => console.log(err));
 });
 
+// 아이템 사용하기
+router.post("/using-item", async (req, res) => {
+  const account = req.body.account;
+  const itemName = req.body.itemName;
+  const myItemData = await UserItem.findOne({
+    order: [["updatedAt", "asc"]], // 구입시기가 오래된거
+    where: { user_address: account, item_itemName: itemName },
+  });
+  await UserItem.destroy({
+    where: {
+      user_address: account,
+      item_itemName: itemName,
+      userItemId: myItemData.userItemId,
+    },
+  })
+    .then(res.send("아이템 사용"))
+    .catch((err) => console.log(err));
+});
+
 module.exports = router;
