@@ -1,16 +1,27 @@
 import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Grid, GridItem, Image } from "@chakra-ui/react";
 
-const InventoryCard = () => {
+const InventoryCard = (props) => {
   return (
-    <Box
-      w={250}
-      h={250}
-      borderWidth="2px"
-      borderRadius="lg"
-      bg={"gray"}
-      mr={4}
-    ></Box>
+    <Grid
+      padding="0 1vw"
+      templateColumns="repeat(2, 1fr)" //가로
+      templateRows="repeat(6, 1fr)" //세로
+      gap={2}
+    >
+      <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={3}>
+        <Image src={props.img} />
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+        {props.type}
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+        {props.amount} 개
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={2}>
+        {props.description}
+      </GridItem>
+    </Grid>
   );
 };
 
