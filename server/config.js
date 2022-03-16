@@ -8,9 +8,10 @@ const config = {
 
 const { sequelize, User, InGameUser, Game, Item, UserItem, Ranking } = require("./models");
 const schedule = require("node-schedule");
-/* DB 기본 구성 */
+
 // DB 초기 세팅 (테스트 계정, 블록게임, 아이템 생성)
 
+/* truffle develop 테스트계정 */
 const testAddressArray = [
   "0xfa55215946f348d884b8c017448416a55c840404",
   "0x861efdf405b70b30388bdf2ad1ff3940e2d0b838",
@@ -23,20 +24,72 @@ const testAddressArray = [
   "0x6c72a8b6f288a9880ed5ecec8c95f0608edcdd73",
   "0xa5cb4186dd3102e87fc9e5af9e3b04217f0768ab",
 ];
+
+/* 게임 목록 */
 const gameList = [
   {
     title: "블록쌓기",
     description: "스르륵 움직이는 블록을 단단히 고정된 블록에 정확한 순간에 착 놓아서 쑥쑥 높게 쌓아올리는 게임",
   },
 ];
+
+/* 아이템 목록 */
 const itemList = [
-  { itemName: "아쉬워", itemPrice: 1, itemDescription: "잔여 횟수가 1 증가한다" },
-  { itemName: "겜돌이", itemPrice: 4, itemDescription: "잔여 횟수가 5 증가한다" },
-  { itemName: "중독자", itemPrice: 7, itemDescription: "잔여 횟수가 10 증가한다" },
-  { itemName: "자본의 맛", itemPrice: 1, itemDescription: "게임결과에 5%만큼 점수가 가산된다" },
-  { itemName: "자본주의", itemPrice: 5, itemDescription: "게임결과에 10%만큼 점수가 가산된다" },
-  { itemName: "자낳괴", itemPrice: 15, itemDescription: "게임결과에 15%만큼 점수가 가산된다" },
+  { itemName: "아쉬워", itemPrice: 1, itemDescription: "잔여 횟수가 1 증가합니다" },
+  { itemName: "겜돌이", itemPrice: 4, itemDescription: "잔여 횟수가 5 증가합니다" },
+  { itemName: "중독자", itemPrice: 7, itemDescription: "잔여 횟수가 10 증가합니다" },
+  { itemName: "자본의 맛", itemPrice: 1, itemDescription: "게임결과에 5%만큼 점수가 가산됩니다" },
+  { itemName: "자본주의", itemPrice: 5, itemDescription: "게임결과에 10%만큼 점수가 가산됩니다" },
+  { itemName: "자낳괴", itemPrice: 15, itemDescription: "게임결과에 15%만큼 점수가 가산됩니다" },
 ];
+
+/* 아이템 사용에 따른 효과 */
+const usingItem = async (account, itemName, gameTitle) => {
+  const myPlayingGame = await InGameUser.findOne({ where: { user_address: account, game_title: gameTitle } });
+  switch (itemName) {
+    case itemList[0].itemName:
+      await InGameUser.update(
+        {
+          gameCount: myPlayingGame.gameCount + 1,
+        },
+        {
+          where: { user_address: account, game_title: gameTitle },
+        }
+      );
+      break;
+    case itemList[1].itemName:
+      await InGameUser.update(
+        {
+          gameCount: myPlayingGame.gameCount + 5,
+        },
+        {
+          where: { user_address: account, game_title: gameTitle },
+        }
+      );
+      break;
+    case itemList[2].itemName:
+      await InGameUser.update(
+        {
+          gameCount: myPlayingGame.gameCount + 10,
+        },
+        {
+          where: { user_address: account, game_title: gameTitle },
+        }
+      );
+      break;
+    case itemList[3].itemName:
+      console.log("4번아이템");
+      break;
+    case itemList[4].itemName:
+      console.log("5번아이템");
+      break;
+    case itemList[5].itemName:
+      console.log("6번아이템");
+      break;
+  }
+};
+
+/* DB 초기 데이터 입력 */
 const getDatabaseConfig = async () => {
   if (
     (await User.findAll()).length == 0 &&
@@ -90,7 +143,7 @@ const getDatabaseConfig = async () => {
   }
 };
 
-// 순위 집계
+/* 순위 집계 */
 const rankAggregation = async () => {
   /* InGameUser 테이블에서 TOP 5를 찾아 순위 테이블에 기록하고 
      InGameUser 테이블 초기화하기                            */
@@ -124,7 +177,7 @@ const rankAggregation = async () => {
   console.log(`순위 집계가 끝났습니다`);
 };
 
-// 주간 랭킹 갱신
+/* 매주 순위 집계 시행하기 */
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
@@ -136,4 +189,4 @@ const weeklySchedule = async () => {
   });
 };
 
-module.exports = { config, getDatabaseConfig, rankAggregation, gameList, weeklySchedule };
+module.exports = { config, getDatabaseConfig, rankAggregation, gameList, weeklySchedule, itemList, usingItem };
