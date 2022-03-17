@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 
 /* 게임에 대한 사용자 정보 DB */
-module.exports = class Score extends Sequelize.Model {
+module.exports = class InGameUser extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -14,13 +14,11 @@ module.exports = class Score extends Sequelize.Model {
         user_address: {
           type: Sequelize.STRING,
           allowNull: true,
-          unique: true, // unique: true - 고유하게
           validate: { isLowercase: true },
         },
         game_title: {
           type: Sequelize.STRING,
-          // allowNull: false,
-          unique: true, // 고유하게,
+          allowNull: false,
         },
         gameScore: {
           type: Sequelize.INTEGER.UNSIGNED,
@@ -55,9 +53,5 @@ module.exports = class Score extends Sequelize.Model {
       foreignKey: "game_title",
       targetKey: "title",
     });
-    // db.User.hasMany(db.user, {
-    //   foreignKey: "team_leaderId",
-    //   sourceKey: "user_id",
-    // });
   }
 };

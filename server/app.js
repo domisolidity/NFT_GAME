@@ -1,11 +1,12 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-const { sequelize, User, InGameUser, Game, Item, UserItem } = require("./models");
+const { sequelize, User, InGameUser, Game, Item, UserItem, Ranking } = require("./models");
 const session = require("express-session");
 const dotenv = require("dotenv");
 dotenv.config();
 const passportConfig = require("./middleware/passport");
+const databaseConfig = require("./config");
 
 const indexRouter = require("./routes/index");
 const passport = require("passport");
@@ -21,34 +22,8 @@ sequelize
   .sync({ force: false })
   .then(async () => {
     console.log(`디비 서버 포트 : ${process.env.MYSQL_PORT_DEVELOPMENT} 연결`);
-    // DB 초기 세팅 (테스트 계정, 블록게임, 아이템 생성)
-    if ((await User.findAll()).length == 0)
-      await User.create({
-        userName: "고길동",
-        publicAddress: "0xfa55215946f348d884b8c017448416a55c840404",
-      });
-    if ((await Game.findAll()).length == 0)
-      await Game.create({
-        title: "블록쌓기",
-        description: "스르륵 움직이는 블록을 단단히 고정된 블록에 정확한 순간에 착 놓아서 쑥쑥 높게 쌓아올리는 게임",
-      });
-    if ((await InGameUser.findAll()).length == 0)
-      await InGameUser.create({
-        user_address: "0xfa55215946f348d884b8c017448416a55c840404",
-        game_title: "블록쌓기",
-      });
-    if ((await Item.findAll()).length == 0) {
-      await Item.create({
-        itemName: "한번더",
-        itemPrice: 1,
-        itemDescription: "이번 게임에 횟수가 차감되지 않는다",
-      });
-      await Item.create({
-        itemName: "추가점수",
-        itemPrice: 1,
-        itemDescription: "이번 게임에 추가점수 10을 얻는다",
-      });
-    }
+    databaseConfig.getDatabaseConfig(); // 기본 데이터베이스 세팅 (테스트용 포함)
+    databaseConfig.weeklySchedule(); // 주간 순위 집계
   })
   .catch((err) => {
     console.error(err);

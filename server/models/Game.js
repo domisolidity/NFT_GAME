@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 
 /* 게임 정보 DB */
-module.exports = class Score extends Sequelize.Model {
+module.exports = class Game extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -37,9 +37,9 @@ module.exports = class Score extends Sequelize.Model {
       foreignKey: "game_title",
       sourceKey: "title",
     });
-    // db.User.hasMany(db.user, {
-    //   foreignKey: "team_leaderId",
-    //   sourceKey: "user_id",
-    // });
+    db.Game.hasMany(db.Ranking, {
+      foreignKey: "game_title",
+      sourceKey: "title",
+    });
   }
 };

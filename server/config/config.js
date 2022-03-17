@@ -11,6 +11,7 @@ const config = {
     dialect: "mysql",
     port: process.env.MYSQL_PORT_DEVELOPMENT,
     logging: false,
+    timezone: "+09:00",
   },
   test: {
     username: process.env.MYSQL_USERNAME_TEST,

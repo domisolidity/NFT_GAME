@@ -1,22 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
 import "./BlockGame.css";
+import InventoryBox from "../components/InventoryBox";
 
 const BlockGame = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
+  const gameTitle = "블록쌓기";
 
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
+  const [gameItems, setGameItems] = useState([]);
+  // const [itemInUse, setItemInUse] = useState(false)
 
-  // 처음 한번 게임 관련 스크립트를 html에 넣어준다
-  useEffect(async () => {
-    getStackingBlocksGame();
+  // 아이템 목록 가져오기
+  const getGameItems = async () =>
+    await axios
+      .get(`/api/items/game-items`)
+      .then((res) => setGameItems(res.data));
+
+  useEffect(() => {
+    getGameItems();
   }, [account]);
+
   // 계정이 있으면 해당계정의 남은 기회와 점수를 불러온다
   useEffect(() => {
     if (!account) return;
@@ -93,8 +103,7 @@ const BlockGame = () => {
   };
 
   // 블록쌓기 게임 불러오기
-  const getStackingBlocksGame = async () => {
-    // <script>에 들어갈 js들의 src
+  useEffect(() => {
     const scriptSrc = [
       "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
       "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js",
@@ -117,59 +126,77 @@ const BlockGame = () => {
         document.body.removeChild(script);
       });
     };
-  };
+  }, [account]);
 
   return (
     <>
       {account ? (
-        <div id="blockGameContainer">
-          <div id="game"></div>
-          <div id="score">0</div>
-          <Box color={"#333344"} id="instructions">
-            블록을 높이 쌓으세요
-          </Box>
-          <div className="game-over">
-            <Button id="restart-button" onClick={playGame}>
-              다시시작
+        <>
+          <div id="blockGameContainer">
+            <div id="game"></div>
+            <div id="score">0</div>
+            <Box color={"#333344"} id="instructions">
+              블록을 높이 쌓으세요
+            </Box>
+            <div className="game-over">
+              <Button id="restart-button" onClick={playGame}>
+                다시시작
+              </Button>
+              <h2>게임 종료</h2>
+              <p>대~단합니다</p>
+            </div>
+            <div className="game-ready">
+              <Button
+                id="start-button"
+                onClick={playGame}
+                disabled={!gameEnded}
+              >
+                시작
+              </Button>
+              <div></div>
+            </div>
+            <Box color={"#333344"} className="my-score-box">
+              최고점수
+              <Text fontWeight={"bold"} textAlign={"center"}>
+                {bestScore}
+              </Text>
+            </Box>
+            <Box color={"#333344"} className="chance-box">
+              남은기회
+              <Text fontWeight={"bold"} textAlign={"center"}>
+                {chance}
+              </Text>
+            </Box>
+            <Button
+              colorScheme={"blue"}
+              w={100}
+              onClick={stackingBlock}
+              disabled={gameEnded}
+              className="placeBlock-button"
+            >
+              멈춰!
             </Button>
-            <h2>게임 종료</h2>
-            <p>대~단합니다</p>
+            {/* <Button
+              colorScheme={"orange"}
+              onClick={asdf}
+              className="score-registration-button"
+            >
+              테스트
+            </Button> */}
           </div>
-          <div className="game-ready">
-            <Button id="start-button" onClick={playGame} disabled={!gameEnded}>
-              시작
-            </Button>
-            <div></div>
-          </div>
-          <Box color={"#333344"} className="my-score-box">
-            최고점수
-            <Text fontWeight={"bold"} textAlign={"center"}>
-              {bestScore}
-            </Text>
-          </Box>
-          <Box color={"#333344"} className="chance-box">
-            남은기회
-            <Text fontWeight={"bold"} textAlign={"center"}>
-              {chance}
-            </Text>
-          </Box>
-          <Button
-            colorScheme={"blue"}
-            w={100}
-            onClick={stackingBlock}
-            disabled={gameEnded}
-            className="placeBlock-button"
-          >
-            멈춰!
-          </Button>
-          <Button
-            colorScheme={"orange"}
-            onClick={minusGameCount}
-            className="score-registration-button"
-          >
-            기회
-          </Button>
-        </div>
+          <Flex justifyContent={"center"}>
+            {gameItems &&
+              gameItems.map((item) => {
+                return (
+                  <InventoryBox
+                    key={item.itemId}
+                    item={item}
+                    gameTitle={gameTitle}
+                  />
+                );
+              })}
+          </Flex>
+        </>
       ) : (
         <div>로그인 해주세요</div>
       )}

@@ -14,10 +14,9 @@ module.exports = class UserItem extends Sequelize.Model {
         user_address: {
           type: Sequelize.STRING,
           allowNull: true,
-          unique: true, // unique: true - 고유하게
         },
-        item_itemId: {
-          type: Sequelize.INTEGER,
+        item_itemName: {
+          type: Sequelize.STRING,
           allowNull: true,
         },
       },
@@ -40,8 +39,8 @@ module.exports = class UserItem extends Sequelize.Model {
       targetKey: "publicAddress",
     });
     db.UserItem.belongsTo(db.Item, {
-      foreignKey: "item_itemId",
-      targetKey: "itemId",
+      foreignKey: "item_itemName",
+      targetKey: "itemName",
     });
   }
 };

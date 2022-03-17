@@ -40,8 +40,7 @@ const Layout = () => {
   const onClose = () => setIsOpen(false);
 
   const { account, errorMsg, web3, auth } = blockchain;
-
-  useEffect(() => {
+  useEffect(async () => {
     if (account) {
       // && (await getNetworkId()) == 1337) {
       setIsOpen(false);
@@ -55,7 +54,7 @@ const Layout = () => {
 
   useEffect(() => {
     getReconnect();
-    getConnectWallet();
+    //getConnectWallet();
   }, []);
 
   const getConnectWallet = async () => {
@@ -78,7 +77,7 @@ const Layout = () => {
 
   return (
     <Flex className="layout">
-      {/* {isOpen ? (
+      {isOpen ? (
         <Alert status="error">
           <AlertIcon />
           <Box flex="1">
@@ -93,7 +92,7 @@ const Layout = () => {
             onClick={onClose}
           />
         </Alert>
-      ) : null} */}
+      ) : null}
       <Flex
         className="layout__header"
         justify="space-around"

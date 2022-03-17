@@ -49,5 +49,9 @@ module.exports = class User extends Sequelize.Model {
       foreignKey: "user_address",
       sourceKey: "publicAddress",
     });
+    db.User.hasMany(db.Ranking, {
+      foreignKey: "user_address",
+      sourceKey: "publicAddress",
+    });
   }
 };
