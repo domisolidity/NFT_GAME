@@ -54,7 +54,7 @@ const Layout = () => {
 
   useEffect(() => {
     getReconnect();
-    getConnectWallet();
+    //getConnectWallet();
   }, []);
 
   const getConnectWallet = async () => {
