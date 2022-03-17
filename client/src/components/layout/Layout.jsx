@@ -32,8 +32,8 @@ import Register from "../register/Register.jsx";
 const Layout = () => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
-  const authState = useSelector((state) => state.auth);
-  console.log(authState);
+  // const authState = useSelector((state) => state.auth);
+  // console.log(authState);
   console.log(blockchain);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -54,9 +54,16 @@ const Layout = () => {
 
   useEffect(() => {
     getReconnect();
+    //getConnectWallet();
   }, []);
 
-  const getConnectWallet = () => {
+  const getConnectWallet = async () => {
+    if (errorMsg == "메타마스크 로그인이 필요합니다.") {
+      console.log(11);
+      const popUp = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+    }
     dispatch(connectWallet());
   };
 
@@ -113,13 +120,10 @@ const Layout = () => {
         </Box>
         <Flex direction="row">
           {auth ? (
-            // <Profile auth={auth} onLoggedOut={handleLoggedOut} />/
-            // <Logout onLoggedOut={handleLoggedOut} />
             <Logout onLoggedOut={getDisConnectWallet} />
           ) : (
             <>
               <Button onClick={getConnectWallet}>로그인</Button>
-              {/* <Login onLoggedIn={handleLoggedIn} /> */}
             </>
           )}
           <Box>

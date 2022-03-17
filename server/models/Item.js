@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 
 /* 아이템 정보 DB */
-module.exports = class UserItem extends Sequelize.Model {
+module.exports = class Item extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -40,8 +40,8 @@ module.exports = class UserItem extends Sequelize.Model {
 
   static associate(db) {
     db.Item.hasMany(db.UserItem, {
-      foreignKey: "item_itemId",
-      sourceKey: "itemId",
+      foreignKey: "item_itemName",
+      sourceKey: "itemName",
     });
   }
 };

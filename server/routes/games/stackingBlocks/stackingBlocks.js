@@ -3,13 +3,24 @@ const router = express.Router();
 const { User, Game, InGameUser, Item, UserItem } = require("../../../models");
 const bcrypt = require("bcrypt");
 
+const databaseConfig = require("../../../config");
+const gameTitle = databaseConfig.gameList[0].title;
+
 // 게임 남은 기회 조회
 router.post("/my-count", async (req, res) => {
   const account = req.body.account;
-  const response = await InGameUser.findOne({
+  let response = await InGameUser.findOne({
     attributes: ["gameCount"],
-    where: { user_address: account, game_title: "블록쌓기" },
+    where: { user_address: account, game_title: gameTitle },
   }).catch((err) => console.log(err));
+  // 이번 주 차 게임에 참여한 기록이 없으면 DB에 생성해주기
+  if (response == null) {
+    await InGameUser.create({ user_address: account, game_title: gameTitle });
+    response = await InGameUser.findOne({
+      attributes: ["gameCount"],
+      where: { user_address: account, game_title: gameTitle },
+    });
+  }
   res.send(response);
 });
 

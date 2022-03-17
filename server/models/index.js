@@ -12,6 +12,7 @@ const Game = require("./Game");
 const InGameUser = require("./InGameUser");
 const Item = require("./Item");
 const UserItem = require("./UserItem");
+const Ranking = require("./Ranking");
 
 const db = {};
 
@@ -27,6 +28,7 @@ db.Game = Game;
 db.InGameUser = InGameUser;
 db.Item = Item;
 db.UserItem = UserItem;
+db.Ranking = Ranking;
 
 Object.keys(db).forEach((modelName) => {
   db[modelName].init(sequelize);
