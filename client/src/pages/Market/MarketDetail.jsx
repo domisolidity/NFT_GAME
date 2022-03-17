@@ -1,6 +1,5 @@
 import React from 'react'
-import { Box, Grid, GridItem, Flex, Image, Button,Heading, Text
- } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Flex, Image, Button,Heading, Text } from "@chakra-ui/react";
 
 const MarketDetail = () => {
   return (
