@@ -39,7 +39,7 @@ const blockchainReducer = (state = initialState, action) => {
     case "AUTH":
       return {
         ...state,
-        auth: action.payload
+        auth: action.payload,
       };
     default:
       return state;

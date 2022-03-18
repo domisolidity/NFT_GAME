@@ -32,7 +32,7 @@ const TopItem = (props) => {
   return (
     <Box className="topnav__item">
       <Box className={`topnav__item-inner ${active}`}>
-        <span style={{fontSize:18}}>{props.title}</span>
+        <span style={{ fontSize: 18 }}>{props.title}</span>
       </Box>
     </Box>
   );
