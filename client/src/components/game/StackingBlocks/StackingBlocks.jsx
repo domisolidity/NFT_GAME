@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
-import "./BlockGame.css";
-import InventoryBox from "../components/InventoryBox";
+import "./StackingBlocks.css";
+import InventoryBox from "./InventoryBox";
 
 const StackingBlocks = () => {
   const blockchain = useSelector((state) => state.blockchain);
