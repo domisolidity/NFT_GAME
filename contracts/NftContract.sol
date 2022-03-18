@@ -158,19 +158,3 @@ contract NftContract is ERC721Enumerable {
 //ipfs://QmegNmnxoh6gQWvk1xkbq45dGWt8dzpiTzHSxrp5WAwChS (pinata)
 //ipfs://QmaGTbhBGBfdH6gXLoC4V5GScY1mtxac4Ye6ynA1Djw6mZ (localhost)
 
-/*
-  구매 로직
-
-  1) 민팅 계약 배포
-  2) 1)의 address 인수로 받아 거래 계약 배포
----------------------
-  3) 2)의 address 가지고 setApprovalForAll( 2) , true)함수 실행
-  =>    function setApprovalForAll(address operator, bool approved) public virtual override {
-        _setApprovalForAll(_msgSender(), operator, approved);
-        }
-  (내부에 msgsender도 있어서 호출한 주소에 한해 2)의 거래계약에 대한 권한 넘겨주는 개념)
-  4) 2) 내부에 판매함수에 대한 권한을 얻게 된다. (판매가능)
-
-
-*/
-

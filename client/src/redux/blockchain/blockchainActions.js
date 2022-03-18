@@ -1,6 +1,7 @@
 // constants
 import Web3 from "web3";
 import NftContract from "../../contracts/NftContract.json";
+import NftDealContract from "../../contracts/NftDealContract.json";
 
 import jwtDecode from "jwt-decode";
 
@@ -166,13 +167,16 @@ export const reconnect = () => {
       });
       console.log("networkId : ", networkId);
 
-      const NetworkData = await NftContract.networks[networkId];
-      const nftContract = new web3.eth.Contract(NftContract.abi, NetworkData.address);
+      const nftNetwork = await NftContract.networks[networkId];
+      const nftDealNetworkData = await NftDealContract.networks[networkId];
+      const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
+      const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
 
       dispatch(
         connectSuccess({
           account: accounts[0],
           nftContract: nftContract,
+          nftDealContract: nftDealContract,
           web3: web3,
         })
       );
@@ -218,8 +222,10 @@ export const connectWallet = () => {
 
 
         if (networkId == 1337 || networkId == 5777) {
-          const NetworkData = await NftContract.networks[networkId];
-          const nftContract = new web3.eth.Contract(NftContract.abi, NetworkData.address);
+          const nftNetwork = await NftContract.networks[networkId];
+          const nftDealNetworkData = await NftDealContract.networks[networkId];
+          const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
+          const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
 
           const coinbase = await web3.eth.getCoinbase();
 
@@ -293,6 +299,7 @@ export const connectWallet = () => {
             connectSuccess({
               account: accounts[0],
               nftContract: nftContract,
+              nftDealContract: nftDealContract,
               web3: web3,
             })
           );
