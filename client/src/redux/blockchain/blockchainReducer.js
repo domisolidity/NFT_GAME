@@ -2,6 +2,7 @@ const initialState = {
   loading: false,
   account: null,
   nftContract: null,
+  nftDealContract: null,
   web3: null,
   errorMsg: "",
   auth: false,
@@ -20,6 +21,7 @@ const blockchainReducer = (state = initialState, action) => {
         loading: false,
         account: action.payload.account,
         nftContract: action.payload.nftContract,
+        nftDealContract: action.payload.nftDealContract,
         web3: action.payload.web3,
         errorMsg: "",
       };
@@ -37,7 +39,7 @@ const blockchainReducer = (state = initialState, action) => {
     case "AUTH":
       return {
         ...state,
-        auth: action.payload
+        auth: action.payload,
       };
     default:
       return state;

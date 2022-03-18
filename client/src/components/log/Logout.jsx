@@ -10,7 +10,7 @@ const Logout = (props) => {
   const { hasCopied, onCopy } = useClipboard(account);
 
   return (
-    <Flex >
+    <Flex>
       <Input value={account} isReadOnly placeholder={`${account}`} />
       <Button onClick={onCopy} ml={2} bg="#F93B8B">
         {hasCopied ? <CheckIcon /> : <CopyIcon />}

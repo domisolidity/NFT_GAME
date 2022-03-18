@@ -1,41 +1,42 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Flex, Image, Button } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import ItemCard from "../components/ItemCard";
+import Market_nft from "./Market/Market_nft.jsx";
+import Market_item from "./Market/Market_item.jsx";
 
 const Market = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
-  // 아이템 목록
-  const [gameItems, setGameItems] = useState([]);
-
-  // 아이템 목록 가져오기
-  const getGameItems = async () =>
-    await axios
-      .get(`/api/items/game-items`)
-      .then((res) => setGameItems(res.data));
-
-  useEffect(() => {
-    getGameItems();
-  }, [account]);
+  const [isTrue, setIsTrue] = useState(false);
 
   return (
-    <div>
-      {console.log("Market.jsx 렌더")}
-      MarketPage
-      <Grid
-        templateRows={`auto`}
-        templateColumns={`repeat(3, 1fr)`}
-        gap={5}
-        justifyItems="center"
+    <>
+      <Box bg="whiteAlpha.100" h="40vh" align="center" lineHeight="40vh">
+        배너
+      </Box>
+      <Box
+        bg="whiteAlpha.100"
+        h="10vh"
+        align="center"
+        lineHeight="10vh"
+        mt="10"
       >
-        {gameItems &&
-          gameItems.map((item) => {
-            return <ItemCard key={item.itemId} item={item} />;
-          })}
+        Market Place
+      </Box>
+      <Grid
+        mt="2%"
+        h="85%"
+        padding="0 4vw"
+        templateRows="repeat(6, 1fr)" //세로
+        templateColumns="repeat(5, 1fr)" //가로
+        align="center"
+        gap={1}
+      >
+        {!isTrue ? <Market_nft /> : <Market_item />}
       </Grid>
-    </div>
+    </>
   );
 };
 
