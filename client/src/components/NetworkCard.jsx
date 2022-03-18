@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, GridItem, Image } from "@chakra-ui/react";
-import EthereumCoin from "../../../src/assets/EthereumCoin.png";
-import GameCoin from "../../../src/assets/GameCoin3.png";
+import EthereumCoin from "../../src/assets/EthereumCoin.png";
+import GameCoin from "../../src/assets/GameCoin3.png";
 
 const NetworkCard = (props) => {
   return (
