@@ -4,11 +4,11 @@ import React from "react";
 const GameCard = (props) => {
   // 해당 게임 선택 시 상위 컴포넌트(Game)의 함수selectGame에 게임명 전달
   const selectGame = () => {
-    props.selectGame(props.gameTitle);
+    props.selectGame(props.game.gameTitle);
   };
   return (
     <Box w={`30%`} position={`relative`} onClick={selectGame}>
-      <Img w={`100%`} src={`./images/game_1.png`} />
+      <Img w={`100%`} src={`./images/game_${props.game.id}.png`} />
       <Flex
         w={`100%`}
         h={`100%`}
@@ -25,7 +25,7 @@ const GameCard = (props) => {
         alignItems={`center`}
       >
         <Text color={`#1e315f`} fontSize={`50px`} fontWeight={`bold`}>
-          {props.gameTitle}
+          {props.game.gameTitle}
         </Text>
       </Flex>
     </Box>
