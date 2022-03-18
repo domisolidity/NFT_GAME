@@ -2,10 +2,11 @@ import axios from "axios";
 
 const gameList = [
   {
+    id: 1,
     gameTitle: "블록쌓기",
     requestAddress: "stacking-blocks",
   },
-  { gameTitle: "테트리스", requestAddress: "tetris" },
+  { id: 2, gameTitle: "테트리스", requestAddress: "tetris" },
 ];
 
 const getReqAddress = (gameTitle) => {
