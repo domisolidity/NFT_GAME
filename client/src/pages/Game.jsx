@@ -2,6 +2,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GameCard from "../components/game/GameCard";
+import GameInterface from "../components/game/GameInterface";
 import GameListSidebar from "../components/game/GameListSidebar";
 import StackingBlocks from "../components/game/StackingBlocks/StackingBlocks";
 import Tetris from "../components/game/Tetris/Tetris";
@@ -9,8 +10,6 @@ import Tetris from "../components/game/Tetris/Tetris";
 const Game = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
-
-  const gameList = ["블록쌓기", "테트리스"];
 
   // 실행중인 게임
   const [runningGame, setRunningGame] = useState("");
@@ -25,9 +24,9 @@ const Game = () => {
     switch (runningGame) {
       case "":
         break;
-      case gameList[0]:
+      case GameInterface.gameList[0].gameTitle:
         return <StackingBlocks />;
-      case gameList[1]:
+      case GameInterface.gameList[1].gameTitle:
         return <Tetris />;
 
       default:
@@ -44,18 +43,21 @@ const Game = () => {
       {account && auth ? (
         <Flex>
           {runningGame != "" ? (
-            <GameListSidebar gameList={gameList} selectGame={selectGame} />
-          ) : null}
+            <GameListSidebar selectGame={selectGame} />
+          ) : // 실행중인 게임이 없으면 사이드바 표시 안하기
+          null}
           <Box w={"100%"}>
-            {runningGame == ""
-              ? gameList.map((gameCard, index) => (
-                  <GameCard
-                    key={index}
-                    gameTitle={gameCard}
-                    selectGame={selectGame}
-                  />
-                ))
-              : settingGame()}
+            {runningGame == "" ? (
+              // 실행중인 게임이 없을 땐 게임선택칸 크게
+              <Flex justifyContent={"space-evenly"}>
+                {GameInterface.gameList.map((game, index) => (
+                  <GameCard key={index} game={game} selectGame={selectGame} />
+                ))}
+              </Flex>
+            ) : (
+              // 실행중인 게임 있으면 해당게임 컴포넌트 출력
+              settingGame()
+            )}
           </Box>
         </Flex>
       ) : (
