@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { createStage, didCollide } from "./gameHelpers";
 
@@ -16,15 +16,25 @@ import StartButton from "./StartButton";
 // Styled Components
 import { StyledTetrisWrapper, StyledTetris } from "./styles/StyledTetris";
 
+import GameInterface from "../GameInterface";
+import { useSelector } from "react-redux";
+
 const Tetris = () => {
+  const blockchain = useSelector((state) => state.blockchain);
+  const { account, auth } = blockchain;
+  const { gameTitle, requestAddress } = GameInterface.gameList[1];
+  const [chance, setChance] = useState("");
+
+  //   useEffect(() => {
+  //     setChance(GameInterface.getMyChance(account, auth, requestAddress));
+  //   }, [account, auth]);
+
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
   const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
-
-  console.log("re-render");
 
   // left-right
   const movePlayer = (dir) => {
@@ -33,6 +43,7 @@ const Tetris = () => {
   };
 
   const startGame = () => {
+    // minusGameCount(); // 횟수 차감
     //reset everything
     setStage(createStage());
     setDropTime(1000); // 1 sec
@@ -53,7 +64,6 @@ const Tetris = () => {
 
     if (didCollide(player, stage, { x: 0, y: 1 })) {
       if (player.pos.y < 1) {
-        console.log("game over");
         setGameOver(true);
         setDropTime(null);
       }
@@ -100,19 +110,21 @@ const Tetris = () => {
 
   return (
     // style wrapper to cover whole of the page to catch key presses
-    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
-      <StyledTetris>
-        <Stage stage={stage} gameOver={gameOver} />
-        <aside>
-          <div>
-            <Display text={`Score: ${score}`} />
-            <Display text={`Rows: ${rows}`} />
-            <Display text={`Level: ${level}`} />
-          </div>
-          <StartButton callback={startGame} />
-        </aside>
-      </StyledTetris>
-    </StyledTetrisWrapper>
+    <>
+      <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
+        <StyledTetris>
+          <Stage stage={stage} gameOver={gameOver} />
+          <aside>
+            <div>
+              <Display text={`Score: ${score}`} />
+              <Display text={`Rows: ${rows}`} />
+              <Display text={`Level: ${level}`} />
+            </div>
+            <StartButton callback={startGame} />
+          </aside>
+        </StyledTetris>
+      </StyledTetrisWrapper>
+    </>
   );
 };
 
