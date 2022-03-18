@@ -24,8 +24,8 @@ const NftTransfer = () => {
     metadata: null
   });
 
-  const baseUri = "https://ipfs.infura.io/ipfs";
-  const Uri = "http://127.0.0.1:8080/ipfs";
+  // const baseUri = "https://ipfs.infura.io/ipfs";
+  const baseUri = "http://127.0.0.1:8080/ipfs";
 
   // @ nft 선물하기
   const transferMyNft = async (toAddr) => {
@@ -49,7 +49,7 @@ const NftTransfer = () => {
     console.log("selectNum",selectNum)
   }
 
-   // @ my Nft 찾기 (민팅함수 하위)
+   // @ my Nft 찾기
   const getMyNft = async () => {
     await nftContract.methods
       .getMyToken()
@@ -60,11 +60,11 @@ const NftTransfer = () => {
         let myNfts = []; 
         for (const info of result) {
           if (info.uri == '')  continue;
-          const response = await axios.get(`${Uri}${info.uri.slice(6)}/${info.id}.json`);
+          const response = await axios.get(`${baseUri}${info.uri.slice(6)}/${info.id}.json`);
           myNfts.push({
             id: info.id,
             name: response.data.name,
-            image: `${Uri}${response.data.image.slice(6)}`,
+            image: `${baseUri}${response.data.image.slice(6)}`,
             description: response.data.description,
           })
         }
@@ -74,17 +74,14 @@ const NftTransfer = () => {
   };
 
   useEffect(async () => {
-    if (!account) {
-      return false;
-    }
+    if (!account) return false;
+ 
     console.log(typeof nft)
-    console.log("불러오기");
     await getMyNft();
   }, [account]);
 
   useEffect(async () => {
     if (!account || nft == undefined) return false;
-    console.log("불러오기2");
     await getMyNft();
   }, [nft.id]);
 
