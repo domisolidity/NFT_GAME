@@ -78,14 +78,11 @@ const usingItem = async (account, itemName, gameTitle) => {
       );
       break;
     case itemList[3].itemName:
-      console.log("4번아이템");
-      break;
+      return "1.05";
     case itemList[4].itemName:
-      console.log("5번아이템");
-      break;
+      return "1.1";
     case itemList[5].itemName:
-      console.log("6번아이템");
-      break;
+      return "1.15";
   }
 };
 

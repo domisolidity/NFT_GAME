@@ -42,13 +42,17 @@ router.post("/using-item", async (req, res) => {
   const account = req.body.account;
   const itemName = req.body.itemName;
   const gameTitle = req.body.gameTitle;
-
-  databaseConfig.usingItem(account, itemName, gameTitle);
-
   const myItemData = await UserItem.findOne({
     order: [["updatedAt", "asc"]], // 구입시기가 오래된거
     where: { user_address: account, item_itemName: itemName },
   });
+  if (myItemData == null) {
+    return;
+  }
+
+  const itemEffect = await databaseConfig.usingItem(account, itemName, gameTitle);
+  console.log(itemEffect);
+
   await UserItem.destroy({
     where: {
       user_address: account,
@@ -56,7 +60,7 @@ router.post("/using-item", async (req, res) => {
       userItemId: myItemData.userItemId,
     },
   })
-    .then(res.send("아이템 사용"))
+    .then(res.send(itemEffect))
     .catch((err) => console.log(err));
 });
 
