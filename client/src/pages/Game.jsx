@@ -1,10 +1,10 @@
 import { Box, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, Route, Routes } from "react-router-dom";
 import GameCard from "../components/game/GameCard";
 import GameListSidebar from "../components/game/GameListSidebar";
 import StackingBlocks from "../components/game/StackingBlocks/StackingBlocks";
+import Tetris from "../components/game/Tetris/Tetris";
 
 const Game = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -27,6 +27,8 @@ const Game = () => {
         break;
       case gameList[0]:
         return <StackingBlocks />;
+      case gameList[1]:
+        return <Tetris />;
 
       default:
         break;
@@ -44,7 +46,7 @@ const Game = () => {
           {runningGame != "" ? (
             <GameListSidebar gameList={gameList} selectGame={selectGame} />
           ) : null}
-          <Box>
+          <Box w={"100%"}>
             {runningGame == ""
               ? gameList.map((gameCard, index) => (
                   <GameCard

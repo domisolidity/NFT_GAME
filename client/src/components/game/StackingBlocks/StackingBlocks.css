@@ -27,7 +27,6 @@
 #blockGameContainer {
   overflow: hidden;
   position: relative;
-  width: 90vw;
   height: 70vh;
   margin: 0 auto;
 }

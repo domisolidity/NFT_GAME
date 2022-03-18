@@ -6,7 +6,7 @@ const GameListSidebar = (props) => {
     props.selectGame(e.target.innerHTML);
   };
   return (
-    <Flex flexDirection={"column"}>
+    <Flex flexDirection={"column"} m={"0 10px"}>
       {props.gameList.map((game, index) => (
         <Button key={index} onClick={selectGame}>
           {game}
