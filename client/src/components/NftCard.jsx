@@ -1,8 +1,8 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Image, Button } from "@chakra-ui/react";
 import ethLogo from "../assets/logo/eth.svg";
 import { useSelector } from "react-redux";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 const NftCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -11,37 +11,37 @@ const NftCard = () => {
   const [redNfts, setRedNft] = useState();
   const [greenNft, setGreenNft] = useState();
   const [purpleNft, setPurpleNft] = useState();
-  const [success,setSuccess] = useState("ss");
+  const [success, setSuccess] = useState("ss");
 
   // @ 민팅 함수
   const minting = async (grade) => {
-    console.log(grade)
+    console.log(grade);
     try {
       setLoading(true);
-      console.log(grade)
+      console.log(grade);
       let price;
       if (grade == "red") {
         price = "0.3";
-      } else if(grade == "green"){
+      } else if (grade == "green") {
         price = "0.5";
       } else if (grade == "purple") {
-        console.log(grade)
-        console.log("purple")
+        console.log(grade);
+        console.log("purple");
         price = "1";
       }
-      console.log(price)
-      const response= await nftContract.methods
-      .create(account, process.env.REACT_APP_METADATA,grade)
-      .send({ from: account,value: web3.utils.toWei(price,"ether") });
+      console.log(price);
+      const response = await nftContract.methods
+        .create(account, process.env.REACT_APP_METADATA, grade)
+        .send({ from: account, value: web3.utils.toWei(price, "ether") });
       if (response) {
         setLoading(false);
-        success=="ss" ? setSuccess("qq") :setSuccess("ss") ;
+        success == "ss" ? setSuccess("qq") : setSuccess("ss");
         Swal.fire({
-          icon: 'success',
-          title: 'Minting Success',
-          text: '정상 적으로 민팅 되었습니다.',
-          footer: `<a href="/mypage">마이페이지에서 확인</a>`
-        })
+          icon: "success",
+          title: "Minting Success",
+          text: "정상 적으로 민팅 되었습니다.",
+          footer: `<a href="/mypage">마이페이지에서 확인</a>`,
+        });
       }
     } catch (error) {
       console.log("-에러 내용- \n", error);
@@ -56,10 +56,10 @@ const NftCard = () => {
         .remainNfts()
         .call()
         .then((result) => {
-          console.log(result)
-          setRedNft(result[0])
-          setGreenNft(result[1])
-          setPurpleNft(result[2])
+          console.log(result);
+          setRedNft(result[0]);
+          setGreenNft(result[1]);
+          setPurpleNft(result[2]);
         });
     } catch (error) {
       console.log("-에러 내용- \n", error);
@@ -76,15 +76,15 @@ const NftCard = () => {
   useEffect(async () => {
     if (!account) {
       // await getMyNftDetail();
-      return false
+      return false;
     }
     await remainedNft();
   }, [success]);
 
   return (
     // 있으면 전체내용 없으면 카드만
-    < >
-      <Box w={400} h={500} bgGradient="linear(to-br, whiteAlpha.200,#b42020)" >
+    <>
+      <Box w={400} h={500} bgGradient="linear(to-br, whiteAlpha.200,#b42020)">
         <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
           Nfts : {redNfts} / 60
         </Text>
@@ -102,12 +102,14 @@ const NftCard = () => {
               mr={10}
               boxSize="2rem"
               bg="whiteAlpha.100"
-              borderRadius={50} />
+              borderRadius={50}
+            />
             <Text
               display="inline"
               verticalAlign={8}
               fontSize="xl"
-              fontWeight="700">
+              fontWeight="700"
+            >
               0.3 ETH
             </Text>
           </Box>
@@ -119,13 +121,14 @@ const NftCard = () => {
             loadingText="Minting.."
             colorScheme="teal"
             variant="solid"
-            onClick={()=>minting("red")}>
+            onClick={() => minting("red")}
+          >
             MINT
           </Button>
         </Box>
-        </Box>
+      </Box>
       {/* Green  */}
-      <Box w={400} h={500} bgGradient="linear(to-br, whiteAlpha.200,#549254)" >
+      <Box w={400} h={500} bgGradient="linear(to-br, whiteAlpha.200,#549254)">
         <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
           Nfts : {greenNft} / 30
         </Text>
@@ -162,13 +165,13 @@ const NftCard = () => {
             loadingText="Minting.."
             colorScheme="teal"
             variant="solid"
-            onClick={()=>minting("green")}
+            onClick={() => minting("green")}
           >
             MINT
           </Button>
         </Box>
       </Box>
-      <Box w={400} h={500} bgGradient="linear(to-br, whiteAlpha.200,#9b61ca)" >
+      <Box w={400} h={500} bgGradient="linear(to-br, whiteAlpha.200,#9b61ca)">
         <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
           Nfts : {purpleNft} / 10
         </Text>
@@ -194,7 +197,6 @@ const NftCard = () => {
               fontSize="xl"
               fontWeight="700"
             >
-
               1 ETH
             </Text>
           </Box>
@@ -206,7 +208,7 @@ const NftCard = () => {
             loadingText="Minting.."
             colorScheme="teal"
             variant="solid"
-            onClick={()=>minting("purple")}
+            onClick={() => minting("purple")}
           >
             MINT
           </Button>
@@ -216,4 +218,3 @@ const NftCard = () => {
   );
 };
 export default NftCard;
-

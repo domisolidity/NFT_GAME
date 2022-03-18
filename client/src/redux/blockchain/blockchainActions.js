@@ -5,7 +5,6 @@ import NftDealContract from "../../contracts/NftDealContract.json";
 
 import jwtDecode from "jwt-decode";
 
-
 // log
 import { fetchData } from "../data/dataActions";
 
@@ -46,10 +45,9 @@ const updateAccountRequest = (payload) => {
 };
 
 export const authenticate = () => {
-
   const accessToken = localStorage.getItem(LS_KEY);
   // const auth = accessToken && JSON.parse(accessToken);
-  const auth = accessToken && JSON.parse(accessToken).accessToken
+  const auth = accessToken && JSON.parse(accessToken).accessToken;
 
   //토큰이 있을때 if문 실행
   if (auth) {
@@ -69,16 +67,15 @@ export const authenticate = () => {
       return {
         type: "AUTH",
         payload: true,
-      }
+      };
     }
   }
   //토큰인 없을 때
   return {
     type: "AUTH",
     payload: false,
-  }
-}
-
+  };
+};
 
 // //test
 // const login = (payload) => {
@@ -179,7 +176,7 @@ export const reconnect = () => {
           web3: web3,
         })
       );
-      dispatch(authenticate())
+      dispatch(authenticate());
       // Add listeners start
       window.ethereum.on("accountsChanged", (accounts) => {
         dispatch(updateAccount(accounts));
@@ -192,7 +189,7 @@ export const reconnect = () => {
       console.log(err);
       dispatch(connectFailed("Something went wrong."));
     }
-  }
+  };
 };
 
 export const updateAccount = (account) => {
@@ -206,7 +203,7 @@ export const connectWallet = () => {
   return async (dispatch) => {
     dispatch(connectRequest());
     if (window.ethereum) {
-      dispatch(authenticate())
+      dispatch(authenticate());
       let web3 = new Web3(window.ethereum);
       try {
         const accounts = await window.ethereum.request({
@@ -218,15 +215,13 @@ export const connectWallet = () => {
         });
         console.log("networkId : ", networkId);
 
-
-
         if (networkId == 1337 || networkId == 5777) {
           const nftNetwork = await NftContract.networks[networkId];
           const nftDealNetworkData = await NftDealContract.networks[networkId];
           const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
           const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
 
-          const coinbase = await web3.eth.getCoinbase();//계정
+          const coinbase = await web3.eth.getCoinbase(); //계정
 
           if (!coinbase) {
             dispatch(connectFailed("메타마스크 로그인이 필요합니다."));
@@ -234,7 +229,7 @@ export const connectWallet = () => {
           }
 
           const publicAddress = coinbase.toLowerCase();
-          dispatch(connectRequest())
+          dispatch(connectRequest());
 
           const handleAuthenticate = async ({ publicAddress, signature }) =>
             fetch(`/api/auth`, {
@@ -271,10 +266,9 @@ export const connectWallet = () => {
             localStorage.setItem(LS_KEY, JSON.stringify(auth));
 
             //const access_token = localStorage.getItem(LS_KEY);
-            dispatch(authenticate())
+            dispatch(authenticate());
             // dispatch(login({ access_token: JSON.parse(access_token).accessToken, refresh_token: null }))
           };
-
 
           // Look if user with current publicAddress is already present on backend
           fetch(`/api/users?publicAddress=${publicAddress}`)
@@ -321,16 +315,16 @@ export const connectWallet = () => {
       dispatch(connectFailed("Install Metamask."));
     }
   };
-}
+};
 
 export const disconnectWallet = () => {
   return async (dispatch) => {
     localStorage.removeItem(LS_KEY);
-    localStorage.setItem('logout', Date.now())
+    localStorage.setItem("logout", Date.now());
 
-    dispatch(authenticate())
-    dispatch(connectFailed("로그아웃"))
+    dispatch(authenticate());
+    dispatch(connectFailed("로그아웃"));
     // dispatch(logoutToken())
     // cookies.remove('accessToken');
-  }
-}
+  };
+};

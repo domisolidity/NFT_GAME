@@ -6,19 +6,24 @@ import { useSelector } from "react-redux";
 import Market_nft from "./Market/Market_nft.jsx";
 import Market_item from "./Market/Market_item.jsx";
 
-
 const Market = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
-  const [isTrue,setIsTrue] = useState(false)
+  const [isTrue, setIsTrue] = useState(false);
 
   return (
     <>
       <Box bg="whiteAlpha.100" h="40vh" align="center" lineHeight="40vh">
-          배너
+        배너
       </Box>
-      <Box bg="whiteAlpha.100" h="10vh" align="center" lineHeight="10vh" mt="10">
-          Market Place
+      <Box
+        bg="whiteAlpha.100"
+        h="10vh"
+        align="center"
+        lineHeight="10vh"
+        mt="10"
+      >
+        Market Place
       </Box>
       <Grid
         mt="2%"
@@ -29,7 +34,7 @@ const Market = () => {
         align="center"
         gap={1}
       >
-      {!isTrue ? <Market_nft/> : <Market_item/>}
+        {!isTrue ? <Market_nft /> : <Market_item />}
       </Grid>
     </>
   );

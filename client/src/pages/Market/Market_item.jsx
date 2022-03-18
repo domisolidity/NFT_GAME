@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 // import ItemCard from "../components/ItemCard";
 const Market_item = () => {
-    // ===== 상민 =====
+  // ===== 상민 =====
   // // 아이템 목록
   // const [gameItems, setGameItems] = useState([]);
   // // 아이템 목록 가져오기
@@ -15,8 +15,8 @@ const Market_item = () => {
   // }, [account]);
   return (
     <>
-    dd
-        {/* // ===== 상민 =====
+      dd
+      {/* // ===== 상민 =====
         // <div>
         //   {console.log("Market.jsx 렌더")}
         //   MarketPage
@@ -33,7 +33,7 @@ const Market_item = () => {
         //   </Grid>
         // </div> */}
     </>
-  )
-}
+  );
+};
 
-export default Market_item
+export default Market_item;
