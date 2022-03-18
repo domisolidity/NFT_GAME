@@ -5,7 +5,7 @@ import axios from "axios";
 import "./BlockGame.css";
 import InventoryBox from "../components/InventoryBox";
 
-const BlockGame = () => {
+const StackingBlocks = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
   const gameTitle = "블록쌓기";
@@ -15,7 +15,7 @@ const BlockGame = () => {
   const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
   const [gameItems, setGameItems] = useState([]);
-  // const [itemInUse, setItemInUse] = useState(false)
+  const [itemEffect, setItemEffect] = useState(undefined);
 
   // 아이템 목록 가져오기
   const getGameItems = async () =>
@@ -23,15 +23,12 @@ const BlockGame = () => {
       .get(`/api/items/game-items`)
       .then((res) => setGameItems(res.data));
 
-  useEffect(() => {
-    getGameItems();
-  }, [account]);
-
   // 계정이 있으면 해당계정의 남은 기회와 점수를 불러온다
   useEffect(() => {
     if (!account) return;
     getMyChance();
     getMyBestScore();
+    getGameItems();
   }, [account]);
 
   // 게임이 끝나서 점수가 State에 들어오면 게임기록 서버에 전송
@@ -82,6 +79,7 @@ const BlockGame = () => {
       return;
     setGameEnded(false); // 게임상태 변경
     minusGameCount(); // 횟수 차감
+    setItemEffect(undefined); // 이전판 아이템 효과 제거
   };
   // 블록쌓기
   const stackingBlock = () => {
@@ -91,12 +89,18 @@ const BlockGame = () => {
     }
   };
 
+  // 아이템 효과 담기
+  const getItemEffect = async (recivedItemEffect) => {
+    setItemEffect(recivedItemEffect);
+  };
+
   // 점수 등록(전송)
   const sendScore = async (score) => {
     await axios
       .post(`/api/games/stacking-blocks/send-score`, {
         account: account,
         score: parseInt(score),
+        itemEffect: itemEffect,
       })
       .then((res) => setBestScore(res.data.gameScore))
       .catch((err) => console.log(err));
@@ -167,6 +171,11 @@ const BlockGame = () => {
                 {chance}
               </Text>
             </Box>
+            {itemEffect ? (
+              <Box color={"#333344"} className="item-effect-box">
+                x {itemEffect}!
+              </Box>
+            ) : null}
             <Button
               colorScheme={"blue"}
               w={100}
@@ -192,6 +201,8 @@ const BlockGame = () => {
                     key={item.itemId}
                     item={item}
                     gameTitle={gameTitle}
+                    getItemEffect={getItemEffect}
+                    gameEnded={gameEnded}
                   />
                 );
               })}
@@ -204,4 +215,4 @@ const BlockGame = () => {
   );
 };
 
-export default BlockGame;
+export default StackingBlocks;

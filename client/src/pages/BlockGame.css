@@ -18,6 +18,12 @@
   left: 45px;
   top: 30px;
 }
+.item-effect-box {
+  position: absolute;
+  left: 60%;
+  top: 9%;
+  font-size: 5vh;
+}
 #blockGameContainer {
   overflow: hidden;
   position: relative;

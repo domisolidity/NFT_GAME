@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Button, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import ItemImage from "./ItemImage";
 
 const InventoryBox = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -30,9 +31,10 @@ const InventoryBox = (props) => {
         gameTitle: gameTitle,
       })
       .then((res) => {
-        console.log(res);
+        props.getItemEffect(res.data);
         // 아이템 사용됐으면 수량 갱신
         getMyItemQuantity();
+        alert("아이템이 적용되었습니다");
       })
       .catch((err) => console.log(err));
   };
@@ -48,10 +50,15 @@ const InventoryBox = (props) => {
       width={"70px"}
       height={"70px"}
       margin={"10px 5px 0px"}
+      padding={"0"}
       display={"block"}
+      position={"relative"}
+      disabled={myItemQuantity == 0 || (item.itemId > 3 && props.gameEnded)}
     >
-      <>아이테 미미지</>
-      <Box>{myItemQuantity}개</Box>
+      <ItemImage itemId={item.itemId} />
+      <Box position={"absolute"} right={"2px"} top={"0"}>
+        {myItemQuantity}
+      </Box>
       {/* <Box>{item.itemName}</Box>
         <Box>{item.itemDescription}</Box> */}
     </Button>
