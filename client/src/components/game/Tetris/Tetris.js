@@ -89,7 +89,7 @@ const Tetris = () => {
         dropPlayer();
       } else if (keyCode === 38) {
         // up
-        playerRotate(stage, 1);
+        playerRotate(stage, -1);
       }
     }
   };
@@ -102,17 +102,13 @@ const Tetris = () => {
     // style wrapper to cover whole of the page to catch key presses
     <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
       <StyledTetris>
-        <Stage stage={stage} />
+        <Stage stage={stage} gameOver={gameOver} />
         <aside>
-          {gameOver ? (
-            <Display gameOver={gameOver} text="Game Over" />
-          ) : (
-            <div>
-              <Display text={`Score: ${score}`} />
-              <Display text={`Rows: ${rows}`} />
-              <Display text={`Level: ${level}`} />
-            </div>
-          )}
+          <div>
+            <Display text={`Score: ${score}`} />
+            <Display text={`Rows: ${rows}`} />
+            <Display text={`Level: ${level}`} />
+          </div>
           <StartButton callback={startGame} />
         </aside>
       </StyledTetris>
