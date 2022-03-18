@@ -48,18 +48,18 @@ const updateAccountRequest = (payload) => {
 export const authenticate = () => {
 
   const accessToken = localStorage.getItem(LS_KEY);
-  const auth = accessToken && JSON.parse(accessToken);
-  const parsedAccessToken = accessToken && JSON.parse(accessToken).accessToken
+  // const auth = accessToken && JSON.parse(accessToken);
+  const auth = accessToken && JSON.parse(accessToken).accessToken
 
   //토큰이 있을때 if문 실행
   if (auth) {
     const {
       payload: { id },
-    } = jwtDecode(parsedAccessToken);
+    } = jwtDecode(auth);
 
     const isAuth = fetch(`/api/users/${id}`, {
       headers: {
-        Authorization: `Bearer ${parsedAccessToken}`,
+        Authorization: `Bearer ${auth}`,
       },
     })
       .then((response) => response.json().ok)
@@ -161,7 +161,6 @@ export const reconnect = () => {
       const accounts = await window.ethereum.request({
         method: "eth_accounts",
       });
-      console.log(accounts);
       const networkId = await window.ethereum.request({
         method: "net_version",
       });
@@ -227,7 +226,7 @@ export const connectWallet = () => {
           const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
           const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
 
-          const coinbase = await web3.eth.getCoinbase();
+          const coinbase = await web3.eth.getCoinbase();//계정
 
           if (!coinbase) {
             dispatch(connectFailed("메타마스크 로그인이 필요합니다."));
@@ -253,7 +252,6 @@ export const connectWallet = () => {
                 publicAddress,
                 "" // MetaMask will ignore the password argument here
               );
-              console.log(signature);
               return { publicAddress, signature };
             } catch (err) {
               throw new Error("You need to sign the message to be able to log in.");
@@ -272,8 +270,7 @@ export const connectWallet = () => {
           const handleLoggedIn = (auth) => {
             localStorage.setItem(LS_KEY, JSON.stringify(auth));
 
-            const access_token = localStorage.getItem(LS_KEY);
-            console.log(JSON.parse(access_token).accessToken);
+            //const access_token = localStorage.getItem(LS_KEY);
             dispatch(authenticate())
             // dispatch(login({ access_token: JSON.parse(access_token).accessToken, refresh_token: null }))
           };
