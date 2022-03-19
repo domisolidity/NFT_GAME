@@ -9,6 +9,7 @@ const InventoryCard = (props) => {
       templateRows="repeat(6, 1fr)" //세로
       gap={2}
       width="10vw"
+      key={props.key}
     >
       <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={3}>
         <Image src={props.img} />
