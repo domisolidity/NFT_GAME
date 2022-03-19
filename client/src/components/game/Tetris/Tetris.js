@@ -18,16 +18,33 @@ import { StyledTetrisWrapper, StyledTetris } from "./styles/StyledTetris";
 
 import GameInterface from "../GameInterface";
 import { useSelector } from "react-redux";
+import GameItem from "../GameItem";
 
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
-  const { gameTitle, requestAddress } = GameInterface.gameList[1];
-  const [chance, setChance] = useState("");
+  const { gameTitle } = GameInterface.gameList[1];
 
-  //   useEffect(() => {
-  //     setChance(GameInterface.getMyChance(account, auth, requestAddress));
-  //   }, [account, auth]);
+  const [chance, setChance] = useState(0);
+  const [gameItems, setGameItems] = useState("");
+  const [itemEffect, setItemEffect] = useState(undefined);
+
+  // 아이템 효과 담기
+  const getItemEffect = async (recivedItemEffect) => {
+    setItemEffect(recivedItemEffect);
+  };
+
+  useEffect(() => {
+    console.log(itemEffect);
+  }, [itemEffect]);
+
+  useEffect(async () => {
+    if (!(account && auth && gameTitle)) return;
+    await GameInterface.setParticipant(account, auth, gameTitle);
+
+    setChance(await GameInterface.getMyChance(account, auth, gameTitle));
+    setGameItems(await GameInterface.getGameItems());
+  }, [account, auth]);
 
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
@@ -42,8 +59,9 @@ const Tetris = () => {
     updatePlayerPos({ x: dir, y: 0 });
   };
 
-  const startGame = () => {
-    // minusGameCount(); // 횟수 차감
+  const startGame = async () => {
+    if (!window.confirm("횟수가 차감됩니다. 게임을 시작하시겠읍니까?")) return;
+    setChance(await GameInterface.minusGameCount(account, gameTitle)); // 횟수 차감
     //reset everything
     setStage(createStage());
     setDropTime(1000); // 1 sec
@@ -66,6 +84,7 @@ const Tetris = () => {
       if (player.pos.y < 1) {
         setGameOver(true);
         setDropTime(null);
+        GameInterface.sendScore(account, gameTitle, score, itemEffect);
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
     } else {
@@ -116,12 +135,25 @@ const Tetris = () => {
           <Stage stage={stage} gameOver={gameOver} />
           <aside>
             <div>
+              <Display text={`Chance: ${chance}`} />
               <Display text={`Score: ${score}`} />
               <Display text={`Rows: ${rows}`} />
               <Display text={`Level: ${level}`} />
             </div>
             <StartButton callback={startGame} />
           </aside>
+          <div>
+            {gameItems &&
+              gameItems.map((item) => (
+                <GameItem
+                  key={item.itemId}
+                  item={item}
+                  gameTitle={gameTitle}
+                  getItemEffect={getItemEffect}
+                  // gameEnded={gameEnded}
+                />
+              ))}
+          </div>
         </StyledTetris>
       </StyledTetrisWrapper>
     </>
