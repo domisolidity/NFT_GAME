@@ -31,6 +31,10 @@ const gameList = [
     title: "블록쌓기",
     description: "스르륵 움직이는 블록을 단단히 고정된 블록에 정확한 순간에 착 놓아서 쑥쑥 높게 쌓아올리는 게임",
   },
+  {
+    title: "테트리스",
+    description: "긴 거 필요할 때 꼭 안 나오는 게임",
+  },
 ];
 
 /* 아이템 목록 */
@@ -43,49 +47,6 @@ const itemList = [
   { itemName: "자낳괴", itemPrice: 15, itemDescription: "게임결과에 15%만큼 점수가 가산됩니다" },
 ];
 
-/* 아이템 사용에 따른 효과 */
-const usingItem = async (account, itemName, gameTitle) => {
-  const myPlayingGame = await InGameUser.findOne({ where: { user_address: account, game_title: gameTitle } });
-  switch (itemName) {
-    case itemList[0].itemName:
-      await InGameUser.update(
-        {
-          gameCount: myPlayingGame.gameCount + 1,
-        },
-        {
-          where: { user_address: account, game_title: gameTitle },
-        }
-      );
-      break;
-    case itemList[1].itemName:
-      await InGameUser.update(
-        {
-          gameCount: myPlayingGame.gameCount + 5,
-        },
-        {
-          where: { user_address: account, game_title: gameTitle },
-        }
-      );
-      break;
-    case itemList[2].itemName:
-      await InGameUser.update(
-        {
-          gameCount: myPlayingGame.gameCount + 10,
-        },
-        {
-          where: { user_address: account, game_title: gameTitle },
-        }
-      );
-      break;
-    case itemList[3].itemName:
-      return "1.05";
-    case itemList[4].itemName:
-      return "1.1";
-    case itemList[5].itemName:
-      return "1.15";
-  }
-};
-
 /* DB 초기 데이터 입력 */
 const getDatabaseConfig = async () => {
   if (
@@ -96,6 +57,7 @@ const getDatabaseConfig = async () => {
     (await UserItem.findAll()).length == 0 &&
     (await Ranking.findAll()).length == 0
   ) {
+    // 아이템 추가
     for (let i = 0; i < itemList.length; i++) {
       await Item.create({
         itemName: itemList[i].itemName,
@@ -103,31 +65,33 @@ const getDatabaseConfig = async () => {
         itemDescription: itemList[i].itemDescription,
       });
     }
-
-    await Game.create({
-      title: gameList[0].title,
-      description: gameList[0].description,
-    });
-
+    // 게임 추가
+    for (let i = 0; i < gameList.length; i++) {
+      await Game.create({
+        title: gameList[i].title,
+        description: gameList[i].description,
+      });
+    }
+    // 테스트 계정 추가
     for (let i = 0; i < testAddressArray.length; i++) {
       await User.create({
         publicAddress: testAddressArray[i],
       });
-
+      // 테스트 계정들 0번인덱스 게임(블록쌓기)에 임의로 참여 기록 입력
       await InGameUser.create({
         user_address: testAddressArray[i],
         game_title: gameList[0].title,
         gameScore: Math.floor(Math.random() * 10),
       });
     }
-
+    // 테스트 0번 계정에 아이템 임의로 추가
     for (let i = 0; i < Math.floor(Math.random() * 5) + 6; i++) {
       await UserItem.create({
         user_address: testAddressArray[0],
         item_itemName: itemList[Math.floor(Math.random() * 6)].itemName,
       });
     }
-
+    // 테스트 계정들 0주차 랭킹에 임의 기록
     for (let i = 0; i < 5; i++) {
       await Ranking.create({
         weeks: 0,
@@ -141,9 +105,10 @@ const getDatabaseConfig = async () => {
 };
 
 /* 순위 집계 */
+/* InGameUser 테이블에서 게임별로 TOP 5를 찾아 순위 테이블에 기록하고 
+   InGameUser 테이블 초기화하기                                     */
 const rankAggregation = async () => {
-  /* InGameUser 테이블에서 TOP 5를 찾아 순위 테이블에 기록하고 
-     InGameUser 테이블 초기화하기                            */
+  // 게임별 TOP 5 찾기
   for (let i = 0; i < gameList.length; i++) {
     const latestWeekData = await Ranking.findOne({ attributes: ["weeks"], limit: 1, order: [["weeks", "desc"]] });
     const latestWeek = latestWeekData.weeks; // 최신 주(week)
@@ -159,8 +124,8 @@ const rankAggregation = async () => {
       where: { game_title: gameTitle },
     });
 
-    // TOP 5 를 순위테이블에 넣어주기
-    for (let i = 0; i < thisWeekRankData.length; i++) {
+    // 찾은 TOP 5를 순위테이블에 넣어주기
+    for (let i = 0; i < thisWeekRankData.length; i++)
       await Ranking.create({
         weeks: latestWeek + 1,
         game_title: gameTitle,
@@ -168,7 +133,6 @@ const rankAggregation = async () => {
         ranking: i + 1,
         user_address: thisWeekRankData[i].user_address,
       });
-    }
   }
   await InGameUser.sync({ force: true });
   console.log(`순위 집계가 끝났습니다`);
@@ -178,12 +142,12 @@ const rankAggregation = async () => {
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
-  rule.hour = 7;
+  rule.hour = 7; // 07시
   rule.tz = "Etc/UTC";
 
   const job = schedule.scheduleJob(rule, function () {
-    rankAggregation();
+    rankAggregation(); // 순위집계 시행
   });
 };
 
-module.exports = { config, getDatabaseConfig, rankAggregation, gameList, weeklySchedule, itemList, usingItem };
+module.exports = { config, itemList, getDatabaseConfig, rankAggregation, gameList, weeklySchedule, itemList };
