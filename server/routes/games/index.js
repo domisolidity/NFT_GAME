@@ -4,16 +4,12 @@ const { User, Game, InGameUser, Item, UserItem } = require("../../models");
 
 const ranking = require("./ranking/ranking");
 const stackingBlocks = require("./stackingBlocks/stackingBlocks");
-const tetris = require("./tetris/tetris");
 
 /* 랭킹 */
 router.use("/ranking", ranking);
 
 /* 블록쌓기게임 */
 router.use("/stacking-blocks", stackingBlocks);
-
-/* 테트리스 게임 */
-router.use("/tetris", tetris);
 
 /* 첫 참여 때 InGameUser 테이블에 참여자 행 초기화 해주기 */
 router.post("/", async (req, res) => {
