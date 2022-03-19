@@ -4,11 +4,12 @@ import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
 import "./StackingBlocks.css";
 import InventoryBox from "./InventoryBox";
+import GameInterface from "../GameInterface";
 
-const StackingBlocks = () => {
+const StackingBlocks = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account } = blockchain;
-  const gameTitle = "블록쌓기";
+  const { account, auth } = blockchain;
+  const { gameTitle } = GameInterface.gameList[0];
 
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
@@ -17,46 +18,28 @@ const StackingBlocks = () => {
   const [gameItems, setGameItems] = useState([]);
   const [itemEffect, setItemEffect] = useState(undefined);
 
-  // 아이템 목록 가져오기
-  const getGameItems = async () =>
-    await axios
-      .get(`/api/items/game-items`)
-      .then((res) => setGameItems(res.data));
-
-  // 계정이 있으면 해당계정의 남은 기회와 점수를 불러온다
-  useEffect(() => {
-    if (!account) return;
-    getMyChance();
-    getMyBestScore();
-    getGameItems();
-  }, [account]);
+  // 로그인 되어있으면 해당계정의 남은 기회와 점수를 불러온다
+  useEffect(async () => {
+    if (!(account && auth && props.runningGame)) return;
+    await GameInterface.setParticipant(account, auth, gameTitle);
+    setChance(await GameInterface.getMyChance(account, auth, gameTitle));
+    setBestScore(await GameInterface.getMyBestScore(account, auth, gameTitle));
+    setGameItems(await GameInterface.getGameItems());
+  }, [props.runningGame]);
 
   // 게임이 끝나서 점수가 State에 들어오면 게임기록 서버에 전송
-  useEffect(() => {
+  useEffect(async () => {
     if (document.querySelector("#blockGameContainer.ended")) {
+      // await GameInterface.sendScore(
+      //   account,
+      //   auth,
+      //   gameTitle,
+      //   score,
+      //   itemEffect
+      // );
       sendScore(score);
     }
   }, [score]);
-
-  // 남은 기회 가져오기
-  const getMyChance = async () => {
-    await axios
-      .post(`/api/games/stacking-blocks/my-count`, { account: account })
-      .then((res) => {
-        setChance(res.data.gameCount);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  // 최고기록 가져오기
-  const getMyBestScore = async () => {
-    await axios
-      .post(`/api/games/stacking-blocks/my-best-score`, { account: account })
-      .then((res) => {
-        setBestScore(res.data.gameScore);
-      })
-      .catch((err) => console.log(err));
-  };
 
   // 게임 기회 차감하기
   const minusGameCount = async () => {
@@ -81,10 +64,13 @@ const StackingBlocks = () => {
     minusGameCount(); // 횟수 차감
     setItemEffect(undefined); // 이전판 아이템 효과 제거
   };
+
   // 블록쌓기
   const stackingBlock = () => {
+    // 게임이 끝나면
     if (document.querySelector("#blockGameContainer.ended")) {
-      setGameEnded(true);
+      setGameEnded(true); // 게임상태 변경
+      // 현재 점수 useState에 담기
       setScore(document.querySelector("#score").innerHTML);
     }
   };
@@ -185,27 +171,18 @@ const StackingBlocks = () => {
             >
               멈춰!
             </Button>
-            {/* <Button
-              colorScheme={"orange"}
-              onClick={asdf}
-              className="score-registration-button"
-            >
-              테스트
-            </Button> */}
           </div>
           <Flex justifyContent={"center"}>
             {gameItems &&
-              gameItems.map((item) => {
-                return (
-                  <InventoryBox
-                    key={item.itemId}
-                    item={item}
-                    gameTitle={gameTitle}
-                    getItemEffect={getItemEffect}
-                    gameEnded={gameEnded}
-                  />
-                );
-              })}
+              gameItems.map((item) => (
+                <InventoryBox
+                  key={item.itemId}
+                  item={item}
+                  gameTitle={gameTitle}
+                  getItemEffect={getItemEffect}
+                  gameEnded={gameEnded}
+                />
+              ))}
           </Flex>
         </>
       ) : (

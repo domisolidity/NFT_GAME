@@ -10,7 +10,7 @@ const GameListSidebar = (props) => {
   return (
     <Flex flexDirection={"column"} m={"0 10px"}>
       {GameInterface.gameList.map((game, index) => (
-        <Button key={index} onClick={selectGame}>
+        <Button key={index} onClick={selectGame} mb={"10px"}>
           {game.gameTitle}
         </Button>
       ))}
