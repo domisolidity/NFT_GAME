@@ -11,6 +11,8 @@ contract NftDealContract {
     nftContractAddres = NftContract(_nftContractAddres);
   }
 
+  event submitSell (uint tokenId,uint price,address tokenOwner,string tokenUri);
+
   //토큰별 가격
   mapping(uint256 => uint256) public nftPrices;
 
@@ -36,14 +38,17 @@ contract NftDealContract {
 
     // 판매중인 토큰에 매개변수 넣음
     onSaleNftArray.push(_tokenId);
+
+    emit submitSell(_tokenId,_price,nftTokenOwner,nftContractAddres.tokenURI(_tokenId));
   }
 
+
   function buyNft(uint256 _tokenId) public payable {
-    uint256 price = nftPrices[_tokenId];
+    // uint256 price = nftPrices[_tokenId];
     address seller = nftContractAddres.ownerOf(_tokenId);
-    require(price > 0, " token not sale.");
-    require(price <= msg.value, "not enought price");
-    require(seller != msg.sender, "you are not token owner.");
+    // require(nftPrices[_tokenId]; > 0, " token not sale.");
+    // require(nftPrices[_tokenId]; <= msg.value, "not enought price");
+    // require(seller != msg.sender, "you are not token owner.");
 
     payable(seller).transfer(msg.value);
 
@@ -62,6 +67,11 @@ contract NftDealContract {
   // 길이를 통해 for문 돌려서 프론트에 판매중인 리스트 가져올 용도
   function getOnSaleNftArrayLength() public view returns (uint256) {
     return onSaleNftArray.length;
+  }
+
+  //
+  function getOnSaleNftArray() public view returns (uint256[] memory) {
+    return onSaleNftArray;
   }
 
   function getNftTokenPrice(uint256 _tokenId) public view returns (uint256) {
