@@ -33,7 +33,11 @@ const gameList = [
   },
   {
     title: "테트리스",
-    description: "긴 거 필요할 때 꼭 안 나오는 게임",
+    description: "긴 거 필요할 때 꼭 안 나오는 그 게임",
+  },
+  {
+    title: "보물찾기",
+    description: "운으로 승부하는 운빨 존망겜",
   },
 ];
 

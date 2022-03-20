@@ -7,6 +7,7 @@ const gameList = [
     requestAddress: "stacking-blocks",
   },
   { id: 2, gameTitle: "테트리스", requestAddress: "tetris" },
+  { id: 3, gameTitle: "보물찾기", requestAddress: "asdf" },
 ];
 
 // const getReqAddress = (gameTitle) => {

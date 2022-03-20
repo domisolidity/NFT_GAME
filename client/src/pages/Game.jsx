@@ -1,6 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import TreasureHunt from "../components/game/FindTheRing/containers/App/TreasureHunt";
 import GameCard from "../components/game/GameCard";
 import GameInterface from "../components/game/GameInterface";
 import GameListSidebar from "../components/game/GameListSidebar";
@@ -41,6 +42,8 @@ const Game = () => {
         return <StackingBlocks runningGame={runningGame} />;
       case GameInterface.gameList[1].gameTitle:
         return <Tetris runningGame={runningGame} />;
+      case GameInterface.gameList[2].gameTitle:
+        return <TreasureHunt runningGame={runningGame} />;
 
       default:
         break;
@@ -53,7 +56,7 @@ const Game = () => {
         <GameListSidebar selectGame={selectGame} />
       ) : // 실행중인 게임이 없으면 사이드바 표시 안하기
       null}
-      <Box w={"100%"}>
+      <Box w={"100%"} minHeight={"400px"}>
         {runningGame == "" ? (
           // 실행중인 게임이 없을 땐 게임선택창 표시
           <Flex justifyContent={"space-evenly"}>
