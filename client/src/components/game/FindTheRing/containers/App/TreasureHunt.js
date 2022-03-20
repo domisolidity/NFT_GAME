@@ -59,7 +59,14 @@ const TreasureHunt = () => {
         <div className="App__container">
           <h1 className="App__heading">최소한의 횟수로 링을 찾으세요</h1>
           {isPlaying ? (
-            <Game gameStart={gameStart} getAttemptsMade={getAttemptsMade} />
+            <Game
+              account={account}
+              gameTitle={gameTitle}
+              score={score}
+              itemEffect={itemEffect}
+              gameStart={gameStart}
+              getAttemptsMade={getAttemptsMade}
+            />
           ) : (
             <Menu gameStart={gameStart} />
           )}

@@ -1,6 +1,6 @@
-import { OPEN_CHEST, RESTART_GAME } from './actionTypes';
-import { CHEST_COUNT, MAX_ATTEMPTS, GameStatus } from '../consts';
-import { createChests, countOpenedChests, getChestWithRing } from '../utils';
+import { OPEN_CHEST, GIVE_UP, RESTART_GAME } from "./actionTypes";
+import { CHEST_COUNT, MAX_ATTEMPTS, GameStatus } from "../consts";
+import { createChests, countOpenedChests, getChestWithRing } from "../utils";
 
 const reducer = (state, { type, payload }) => {
   switch (type) {
@@ -18,6 +18,10 @@ const reducer = (state, { type, payload }) => {
         return newState;
       }
       return state;
+    case GIVE_UP:
+      const newState = { ...state };
+      newState.gameStatus = GameStatus.DEFEAT;
+      return newState;
 
     case RESTART_GAME:
       return {

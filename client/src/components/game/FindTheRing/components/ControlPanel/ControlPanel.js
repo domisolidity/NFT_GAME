@@ -1,10 +1,11 @@
 import { MAX_ATTEMPTS, DANGER_ATTEMPTS, GameStatus } from "../../consts";
 import React, { useContext, useEffect } from "react";
 import { Context } from "../../store/contextProvider";
-import { restartGame } from "../../store/actions";
+import { restartGame, giveUpGame } from "../../store/actions";
 import { countOpenedChests } from "../../utils";
 import Button from "../UI/Button/Button";
 import "./ControlPanel.css";
+import GameInterface from "../../../GameInterface";
 
 const ControlPanel = (props) => {
   const [state, dispatch] = useContext(Context);
@@ -15,6 +16,10 @@ const ControlPanel = (props) => {
   const reStart = () => {
     dispatch(restartGame());
     props.gameStart();
+  };
+  const giveUp = () => {
+    dispatch(giveUpGame());
+    GameInterface.sendScore(props.account, props.gameTitle, props.score / 2, props.itemEffect);
   };
 
   useEffect(() => {
@@ -32,9 +37,14 @@ const ControlPanel = (props) => {
       <p className="ControlPanel__text">
         남은 열쇠: {attemptsMade}/{MAX_ATTEMPTS}
       </p>
-      <Button disabled={gameStatus == GameStatus.IN_PROGRESS} onClick={() => reStart()}>
-        재시작
-      </Button>
+      <div>
+        <Button disabled={gameStatus == GameStatus.IN_PROGRESS} onClick={() => reStart()}>
+          재시작
+        </Button>
+        <Button disabled={attemptsMade > MAX_ATTEMPTS - MAX_ATTEMPTS / 3} onClick={() => giveUp()}>
+          포기하기
+        </Button>
+      </div>
     </div>
   );
 };

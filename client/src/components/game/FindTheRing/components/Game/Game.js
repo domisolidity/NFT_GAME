@@ -6,7 +6,14 @@ const Game = (props) => {
   return (
     <>
       <ChestContainer />
-      <ControlPanel gameStart={props.gameStart} getAttemptsMade={props.getAttemptsMade} />
+      <ControlPanel
+        account={props.account}
+        gameTitle={props.gameTitle}
+        score={props.score}
+        itemEffect={props.itemEffect}
+        gameStart={props.gameStart}
+        getAttemptsMade={props.getAttemptsMade}
+      />
     </>
   );
 };
