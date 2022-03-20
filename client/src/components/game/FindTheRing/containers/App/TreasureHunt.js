@@ -34,21 +34,21 @@ const TreasureHunt = () => {
     setItemEffect(undefined);
     setIsPlaying(true);
     setChance(await GameInterface.minusGameCount(account, gameTitle));
-
-    console.log("syasya");
   };
 
   const getAttemptsMade = (attemptsMade) => {
     setScore(attemptsMade);
   };
-  // useEffect(() => {
-  //   GameInterface.sendScore(account, gameTitle, score, itemEffect);
-  // }, [score]);
+  // 게임 끝났을 때 링 찾은 상태면 서버에 점수 전송
+  useEffect(() => {
+    if (state.gameStatus == GameStatus.VICTORY) {
+      GameInterface.sendScore(account, gameTitle, score, itemEffect);
+    }
+  }, [state.gameStatus]);
 
   useEffect(async () => {
     if (!(account && auth && gameTitle)) return;
     await GameInterface.setParticipant(account, auth, gameTitle);
-
     setChance(await GameInterface.getMyChance(account, auth, gameTitle));
     setGameItems(await GameInterface.getGameItems());
   }, [account, auth]);
