@@ -94,29 +94,32 @@ const StackingBlocks = (props) => {
 
   // 블록쌓기 게임 불러오기
   useEffect(() => {
-    const scriptSrc = [
-      "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js",
-      "./blockGameScript.js",
-    ];
-    const scripts = [, ,];
-    for (let i = 0; i < scriptSrc.length; i++) {
-      // <script> 태그를 만들어 배열에 넣고
-      scripts[i] = document.createElement("script");
-      // 그 태그의 src 정보를 넣어
-      scripts[i].src = scriptSrc[i];
-      scripts[i].async = true;
-      // 문서 body에 추가해준다
-      document.body.appendChild(scripts[i]);
-    }
+    if (!(account && auth)) return;
+    setTimeout(() => {
+      const scriptSrc = [
+        "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js",
+        "./blockGameScript.js",
+      ];
+      const scripts = [, ,];
+      for (let i = 0; i < scriptSrc.length; i++) {
+        // <script> 태그를 만들어 배열에 넣고
+        scripts[i] = document.createElement("script");
+        // 그 태그의 src 정보를 넣어
+        scripts[i].src = scriptSrc[i];
+        scripts[i].async = true;
+        // 문서 body에 추가해준다
+        document.body.appendChild(scripts[i]);
+      }
 
-    return () => {
-      scripts.forEach((script) => {
-        // 스크립트 태그 지워주는 녀석
-        document.body.removeChild(script);
-      });
-    };
-  }, [account]);
+      return () => {
+        scripts.forEach((script) => {
+          // 스크립트 태그 지워주는 녀석
+          document.body.removeChild(script);
+        });
+      };
+    }, 500);
+  }, [account, auth]);
 
   return (
     <>
@@ -181,6 +184,7 @@ const StackingBlocks = (props) => {
                   gameTitle={gameTitle}
                   getItemEffect={getItemEffect}
                   gameEnded={gameEnded}
+                  itemEffect={itemEffect}
                 />
               ))}
           </Flex>

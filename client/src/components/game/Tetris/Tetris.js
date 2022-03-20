@@ -4,7 +4,7 @@ import { createStage, didCollide } from "./gameHelpers";
 
 // Custom Hooks
 import { useInterval } from "./hooks/useInterval";
-import { usePlayer } from "./hooks/userPlayer";
+import { usePlayer } from "./hooks/usePlayer";
 import { useStage } from "./hooks/useStage";
 import { useGameStatus } from "./hooks/useGameStatus";
 
@@ -28,15 +28,12 @@ const Tetris = () => {
   const [chance, setChance] = useState(0);
   const [gameItems, setGameItems] = useState("");
   const [itemEffect, setItemEffect] = useState(undefined);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // 아이템 효과 담기
   const getItemEffect = async (recivedItemEffect) => {
     setItemEffect(recivedItemEffect);
   };
-
-  useEffect(() => {
-    console.log(itemEffect);
-  }, [itemEffect]);
 
   useEffect(async () => {
     if (!(account && auth && gameTitle)) return;
@@ -61,6 +58,8 @@ const Tetris = () => {
 
   const startGame = async () => {
     if (!window.confirm("횟수가 차감됩니다. 게임을 시작하시겠읍니까?")) return;
+    setIsPlaying(true);
+    setItemEffect(undefined); // 아이템 효과 초기화
     setChance(await GameInterface.minusGameCount(account, gameTitle)); // 횟수 차감
     //reset everything
     setStage(createStage());
@@ -85,6 +84,7 @@ const Tetris = () => {
         setGameOver(true);
         setDropTime(null);
         GameInterface.sendScore(account, gameTitle, score, itemEffect);
+        setIsPlaying(false);
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
     } else {
@@ -140,7 +140,7 @@ const Tetris = () => {
               <Display text={`Rows: ${rows}`} />
               <Display text={`Level: ${level}`} />
             </div>
-            <StartButton callback={startGame} />
+            <StartButton callback={startGame} isPlaying={isPlaying} />
           </aside>
           <div>
             {gameItems &&
@@ -150,7 +150,7 @@ const Tetris = () => {
                   item={item}
                   gameTitle={gameTitle}
                   getItemEffect={getItemEffect}
-                  // gameEnded={gameEnded}
+                  itemEffect={itemEffect}
                 />
               ))}
           </div>

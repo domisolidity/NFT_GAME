@@ -85,7 +85,7 @@ const getDatabaseConfig = async () => {
       });
     }
     // 테스트 0번 계정에 아이템 임의로 추가
-    for (let i = 0; i < Math.floor(Math.random() * 5) + 6; i++) {
+    for (let i = 0; i < 30; i++) {
       await UserItem.create({
         user_address: testAddressArray[0],
         item_itemName: itemList[Math.floor(Math.random() * 6)].itemName,

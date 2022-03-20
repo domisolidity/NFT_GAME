@@ -6,6 +6,7 @@ import GameInterface from "../components/game/GameInterface";
 import GameListSidebar from "../components/game/GameListSidebar";
 import StackingBlocks from "../components/game/StackingBlocks/StackingBlocks";
 import Tetris from "../components/game/Tetris/Tetris";
+import usePrompt from "../hooks/PageMoveBlocker";
 
 const Game = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -13,6 +14,12 @@ const Game = () => {
 
   /* 실행중인 게임 */
   const [runningGame, setRunningGame] = useState("");
+
+  /* 게임이 선택되어있는 상태에서 페이지 이동 시 확인창 출력 */
+  usePrompt(
+    "진행중인 게임정보가 사라집니다. 정말로 페이지를 이동하시겠읍니까?",
+    runningGame
+  );
 
   /* 게임 선택 */
   const selectGame = async (selectedGame) => {
@@ -48,7 +55,7 @@ const Game = () => {
       null}
       <Box w={"100%"}>
         {runningGame == "" ? (
-          // 실행중인 게임이 없을 땐 게임선택칸 크게
+          // 실행중인 게임이 없을 땐 게임선택창 표시
           <Flex justifyContent={"space-evenly"}>
             {GameInterface.gameList.map((game, index) => (
               <GameCard key={index} game={game} selectGame={selectGame} />

@@ -4,15 +4,23 @@ import React from "react";
 const GameCard = (props) => {
   // 해당 게임 선택 시 상위 컴포넌트(Game)의 함수selectGame에 게임명 전달
   const selectGame = () => {
-    props.selectGame(props.game.gameTitle);
+    const selectedGame = props.game.gameTitle;
+    if (window.confirm(`${selectedGame} 게임으로 이동합니다`))
+      props.selectGame(selectedGame);
   };
   return (
-    <Box w={`30%`} position={`relative`} onClick={selectGame}>
+    <Box
+      overflow={`hidden`}
+      borderRadius={`15px`}
+      w={`30%`}
+      position={`relative`}
+      onClick={selectGame}
+    >
       <Img w={`100%`} src={`./images/game_${props.game.id}.png`} />
       <Flex
         w={`100%`}
         h={`100%`}
-        _hover={{ opacity: `0.5` }}
+        _hover={{ opacity: `0.5`, cursor: `pointer` }}
         transition={`0.5s ease`}
         opacity={`0`}
         position={`absolute`}

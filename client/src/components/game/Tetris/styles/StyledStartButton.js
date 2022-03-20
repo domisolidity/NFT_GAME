@@ -3,9 +3,9 @@ import styled from "styled-components";
 export const StyledStartButton = styled.div`
   box-sizing: border-box;
   margin: 0 0 20px 0;
-  padding: 20px;
   min-height: 30px;
   width: 100%;
+  height: 60px;
   border-radius: 20px;
   border: none;
   color: white;
@@ -13,5 +13,12 @@ export const StyledStartButton = styled.div`
   font-family: Pixel, Arial, Helvetica, sans-serif;
   font-size: 1rem;
   outline: none;
-  cursor: pointer;
+  button {
+    width: 100%;
+    height: 100%;
+  }
+  button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
 `;

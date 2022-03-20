@@ -53,7 +53,11 @@ const InventoryBox = (props) => {
       padding={"0"}
       display={"block"}
       position={"relative"}
-      disabled={myItemQuantity == 0 || (item.itemId > 3 && props.gameEnded)}
+      disabled={
+        myItemQuantity == 0 ||
+        (item.itemId > 3 && props.gameEnded) ||
+        (item.itemId > 3 && props.itemEffect)
+      }
     >
       <ItemImage itemId={item.itemId} />
       <Box position={"absolute"} right={"2px"} top={"0"}>
