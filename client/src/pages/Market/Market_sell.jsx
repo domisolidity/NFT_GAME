@@ -7,47 +7,17 @@ import { useSelector } from "react-redux";
 const Market_sell = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { nftContract, account } = blockchain;
-  const [nft, setNft] = useState({
-    id: null,
-    metadata: null,
-  });
+ 
 
-  const baseUri = "http://127.0.0.1:8080/ipfs";
 
-  // @ my Nft 찾기
-  const getMyNft = async () => {
-    await nftContract.methods
-      .getMyToken()
-      .call({ from: account })
-      .then(async (result) => {
-        let myNfts = [];
-        for (const info of result) {
-          if (info.uri == "") continue;
-          const response = await axios.get(
-            `${baseUri}${info.uri.slice(6)}/${info.id}.json`
-          );
-          myNfts.push({
-            id: info.id,
-            name: response.data.name,
-            image: `${baseUri}${response.data.image.slice(6)}`,
-            description: response.data.description,
-          });
-        }
-        console.log("myNft", myNfts);
-        setNft(myNfts);
-      });
-  };
 
   useEffect(async () => {
     if (!account) return false;
-    console.log("유즈이펙트");
-    await getMyNft();
   }, [account]);
   return (
     <Box>
-      {console.log(nft)}
-      {nft[0] &&
-        nft.map((item, i) => {
+      {nfts&&
+        nfts.map((item, i) => {
           return (
             <Box w="15vw" h="40vh" bg="whiteAlpha.500" key={i}>
               <Box h="75%" bg="navy">
