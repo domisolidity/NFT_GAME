@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { Box, Grid, GridItem, Flex, Image, Button } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import React,{useState} from "react";
+import {  Grid,Text,Flex } from "@chakra-ui/react";
+
 import Market_nft from "./Market/Market_nft.jsx";
 import Market_item from "./Market/Market_item.jsx";
 
 const Market = () => {
-  const blockchain = useSelector((state) => state.blockchain);
-  const { account } = blockchain;
   const [isTrue, setIsTrue] = useState(false);
 
   return (
     <>
-      <Box bg="whiteAlpha.100" h="40vh" align="center" lineHeight="40vh">
-        배너
-      </Box>
-      <Box
+      <Flex justify="space-around" bg="whiteAlpha.100" h="40vh" align="center" >
+        <Text lineHeight="40vh" fontSize="40" fontWeight="bold" bgGradient='linear(to-r, #ffffff, #666565)' bgClip='text'> Welcome To MarketPlace ! </Text> 
+  
+      </Flex>
+      {/* <Box
         bg="whiteAlpha.100"
         h="10vh"
         align="center"
@@ -24,13 +21,13 @@ const Market = () => {
         mt="10"
       >
         Market Place
-      </Box>
+      </Box> */}
       <Grid
         mt="2%"
         h="85%"
-        padding="0 4vw"
+        padding="0"
         templateRows="repeat(6, 1fr)" //세로
-        templateColumns="repeat(5, 1fr)" //가로
+        templateColumns="repeat(6, 1fr)" //가로
         align="center"
         gap={1}
       >

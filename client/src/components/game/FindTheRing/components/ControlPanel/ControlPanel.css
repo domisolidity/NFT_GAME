@@ -1,0 +1,9 @@
+.ControlPanel__text {
+  text-align: center;
+  margin: 0 0 25px;
+  font-size: 14px;
+}
+
+.ControlPanel__text--danger {
+  color: #EA2027;
+}

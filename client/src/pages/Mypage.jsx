@@ -1,29 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { Button, Flex, Grid, GridItem, Image, Text } from "@chakra-ui/react";
+import { Link} from "react-router-dom";
+import { Flex, Grid, GridItem, Text, Box } from "@chakra-ui/react";
+import { useSelector,useDispatch } from "react-redux";
+import axios from "axios";
 import NetworkCard from "../components/NetworkCard";
 import InventoryCard from "../components/InventoryCard";
-import { useSelector } from "react-redux";
-import axios from "axios";
 import MyNftsCard from "../components/MyNftsCard";
+import NftDetail_my from "./MyPage/NftDetail";
+
 
 const Mypage = () => {
   const blockchain = useSelector((state) => state.blockchain);
+  const { web3, account, nftContract, auth } = blockchain;
+  // const { myNfts } = data;
+  const [myNfts, setMyNfts] = useState({
+    id:null,
+    name:null,
+    image:null,
+    description:null
+  })
 
-  const baseUri = "https://ipfs.infura.io/ipfs";
-  const Uri = "http://127.0.0.1:8080/ipfs";
+  const baseUri = "http://127.0.0.1:8080/ipfs";
 
   // 게임 아이템 목록
   const [gameItems, setGameItems] = useState([]);
-
-  const { web3, account, nftContract, auth } = blockchain;
   const [ethBalance, setEthBalance] = useState("");
-  const [nft, setNft] = useState({
-    id: null,
-    metadata: null,
-  });
+
 
   //잔액
   const getEthBalance = async (account) => {
+    console.log(account)
     let balance;
     await web3.eth.getBalance(account).then((balanceInWei) => {
       balance = web3.utils.fromWei(balanceInWei);
@@ -31,65 +37,45 @@ const Mypage = () => {
     });
   };
 
+  const getMyNfts = async() =>{
+    await nftContract.methods.getMyToken(account).call({from:account}).then(async(result)=>{
+      console.log("getMyToken",result)
+      let mynfts = [];
+
+      for (const info of result) {
+        if(info.uri == "") continue;
+        const response = await axios.get( `${baseUri}${info.uri.slice(6)}/${info.id}.json`)
+        console.log(response.data)
+        mynfts.push({
+          id: info.id,
+          grade: response.data.grade,
+          attributes: response.data.attributes,
+          name: response.data.name,
+          image: `${baseUri}${response.data.image.slice(6)}`,
+          description: response.data.description,
+        })
+      }
+      console.log("myNft", mynfts);
+      setMyNfts(mynfts)
+    })
+  }
+
   // 아이템 목록 가져오기
   const getGameItems = async () =>
     await axios
       .get(`/api/items/game-items`)
       .then((res) => setGameItems(res.data));
-
+      
   useEffect(() => {
-    if (!account) {
-      return false;
-    }
+    if (!account ) return false;
+    console.log(account)
     getEthBalance(account);
     getGameItems();
+    getMyNfts();
   }, [account]);
-
-  ///////////////////////
-
-  // 내 nft 가져오기
-  const getMyNft = async () => {
-    await nftContract.methods
-      .getMyToken()
-      .call({ from: account })
-      .then(async (result) => {
-        console.log("getMyNft");
-        let myNfts = [];
-        for (const info of result) {
-          if (info.uri == "") continue;
-          const response = await axios.get(
-            `${Uri}${info.uri.slice(6)}/${info.id}.json`
-          );
-          myNfts.push({
-            id: info.id,
-            name: response.data.name,
-            image: response.data.image,
-            // image: `${Uri}${response.data.image.slice(6)}`,
-            description: response.data.description,
-          });
-          console.log(response);
-        }
-        console.log("myNft", myNfts);
-        setNft(myNfts);
-      });
-  };
-
-  useEffect(async () => {
-    if (!account) {
-      return false;
-    }
-    console.log(typeof nft);
-    console.log("불러오기");
-    await getMyNft();
-  }, [account]);
-
-  useEffect(async () => {
-    if (!account || nft == undefined) return false;
-    console.log("불러오기2");
-    await getMyNft();
-  }, [nft.id]);
-
-  return (
+      
+      
+      return (
     <>
       <Grid
         height="85vh"
@@ -126,12 +112,13 @@ const Mypage = () => {
             {gameItems[0] &&
               gameItems.map((item, index) => {
                 return (
-                  <InventoryCard
-                    key={index}
-                    // img={item.img}
-                    itemName={item.itemName}
-                    itemDescription={item.itemDescription}
-                  />
+                  <Box key={index}>
+                    <InventoryCard
+                      // img={item.img}
+                      itemName={item.itemName}
+                      itemDescription={item.itemDescription}
+                    />
+                  </Box>
                 );
               })}
           </Flex>
@@ -159,18 +146,19 @@ const Mypage = () => {
         <GridItem bg="whiteAlpha.100" colSpan={6} rowSpan={2}>
           내 Nfts
           <Flex flexDir={"row"}>
-            {nft[0] ? (
+            {myNfts && myNfts[0] ? (
               <>
-                {nft.map((mynft, index) => {
-                  return (
-                    <>
-                      <MyNftsCard
-                        key={index}
-                        img={mynft.image}
-                        name={mynft.name}
-                        description={mynft.description}
-                      />
-                    </>
+                {myNfts.map((mynft, index) => {
+                  return (    
+                    <Box key={index}>
+                      <Link  to={mynft.id} state={{nftInfo:myNfts[index]}}>  
+                        <MyNftsCard
+                          img={mynft.image}
+                          name={mynft.name}
+                          description={mynft.description}
+                          />              
+                      </Link>
+                    </Box> 
                   );
                 })}
               </>

@@ -2,8 +2,51 @@ const express = require("express");
 const router = express.Router();
 const { User, Game, InGameUser, Item, UserItem } = require("../../../models");
 const bcrypt = require("bcrypt");
-
 const databaseConfig = require("../../../config");
+const itemList = databaseConfig.itemList;
+
+/* 아이템 사용에 따른 효과 */
+const usingItem = async (account, itemName, gameTitle) => {
+  const myPlayingGame = await InGameUser.findOne({ where: { user_address: account, game_title: gameTitle } });
+  switch (itemName) {
+    case itemList[0].itemName:
+      await InGameUser.update(
+        {
+          gameCount: myPlayingGame.gameCount + 1,
+        },
+        {
+          where: { user_address: account, game_title: gameTitle },
+        }
+      );
+      break;
+    case itemList[1].itemName:
+      await InGameUser.update(
+        {
+          gameCount: myPlayingGame.gameCount + 5,
+        },
+        {
+          where: { user_address: account, game_title: gameTitle },
+        }
+      );
+      break;
+    case itemList[2].itemName:
+      await InGameUser.update(
+        {
+          gameCount: myPlayingGame.gameCount + 10,
+        },
+        {
+          where: { user_address: account, game_title: gameTitle },
+        }
+      );
+      break;
+    case itemList[3].itemName:
+      return "1.05";
+    case itemList[4].itemName:
+      return "1.1";
+    case itemList[5].itemName:
+      return "1.15";
+  }
+};
 
 // 아이템 목록 가져오기
 router.get("/", async (req, res) => {
@@ -42,22 +85,23 @@ router.post("/using-item", async (req, res) => {
   const account = req.body.account;
   const itemName = req.body.itemName;
   const gameTitle = req.body.gameTitle;
-
-  databaseConfig.usingItem(account, itemName, gameTitle);
-
   const myItemData = await UserItem.findOne({
     order: [["updatedAt", "asc"]], // 구입시기가 오래된거
     where: { user_address: account, item_itemName: itemName },
   });
+  if (!myItemData) return;
+
+  const itemEffect = await usingItem(account, itemName, gameTitle);
+  console.log(itemEffect);
+
   await UserItem.destroy({
     where: {
       user_address: account,
       item_itemName: itemName,
       userItemId: myItemData.userItemId,
     },
-  })
-    .then(res.send("아이템 사용"))
-    .catch((err) => console.log(err));
+  }).catch((err) => console.log(err));
+  res.send(itemEffect);
 });
 
 module.exports = router;

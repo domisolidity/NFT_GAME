@@ -1,46 +1,89 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { Box, Grid, GridItem, Flex, Image, Button } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Flex, Image, Button,Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import axios  from "axios";
 
 const Market_nft = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { nftContract, account } = blockchain;
+  const { web3, account,nftDealContract } = blockchain;
+  
+  const [saleLength, setSaleLength] = useState(0);
+  const [saleNft, setSaleNft] = useState({
+    data:null,
+    tokenId:null
+  });
+
+
+
+  const baseUrl = "http://127.0.0.1:8080/ipfs/"
+  
+  useEffect(async() => {
+    try {
+      if (!account ) return;
+      
+      console.log("이벤트촐력할곳")
+
+      
+      await nftDealContract.methods.getOnSaleNftArray().call({from:account}).then( async (result)=>{
+        console.log(result)
+        setSaleLength(result.length)
+        const salenft = [];
+        for (let i = 0; i < result.length; i++) {
+
+          const price = await nftDealContract.methods.getNftTokenPrice(result[i]).call({from:account})
+          console.log("가격",web3.utils.fromWei(price,"ether"))
+          await axios.get(`${baseUrl}${process.env.REACT_APP_METADATA_HASH}/${result[i]}.json`).then(metadata=>{
+            salenft.push({
+              data: metadata.data,
+              image:`${baseUrl}${metadata.data.image.slice(6)}`,
+              tokenId: result[i],
+              price:web3.utils.fromWei(price,"ether")
+            })
+          })
+        }
+        setSaleNft(salenft)
+      })
+      
+    } catch (error) {
+    }  
+  }, [account])
+  
 
   return (
     <>
       <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={5}>
-        왼쪽바 <br /> Nft 판매 등록 / 필터
-        <Link to="/market/sell">
-          <Button>판매 등록</Button>
-        </Link>
+        왼쪽바 <br />  메뉴(아이템/nft)  / 필터       
       </GridItem>
-      <GridItem bg="whiteAlpha.100" colSpan={4} rowSpan={5}>
+      <GridItem bg="whiteAlpha.100" colSpan={5} rowSpan={5}>
+          <Text align="left">{saleLength} Nfts</Text>
         <Grid templateColumns="repeat(4, 1fr)" ml="5" gap={10} padding="5">
-          {/* {nft && nft.map((item,i)=>{
-                return (
-                <Box w="15vw" h="40vh" bg="whiteAlpha.500" key={i}>
-                    <Box h="75%" bg="navy">이미지</Box>
+          {saleNft[0] && saleNft.map((nft,i)=>{
+            return (
+              <Box w="300px" h="500" bg="blackAlpha.300" key={i} border="2px solid #2E8F8B" _hover={{boxShadow:'dark-lg' }}>
+                    <Image src={nft.image} w="320" h="290" padding="5"/>
                     <Flex h="15%" justify="space-between">
-                      <Box  bg="green.400">
-                        ㅈㅈㅈ{item.name}
-                      <Box bg="purple" borderRadius="30">ㅇㅇㅇㅇ{item.grade}</Box> 
+                      <Box>
+                       {nft.data.name}
                       </Box>
-                      <Box >
-                        price {item.price}
-                      </Box>
+                      <Box borderRadius="30">{nft.data.grade}</Box> 
                     </Flex>
-                    <Box h="10%">
-                        <Link to="/market/:wdwd">
-                      <Button bg="blue.400">
-                          Buy now
-                      </Button>
-                        </Link>
+                    <Text align="left">
+                    {nft.data.price}
+                    </Text>
+                    <Text>
+                    {nft.price} ETH
+                    </Text>
+                    <Box h="10%" mt="30">
+                      <Link to={nft.tokenId} state={{nftInfo:saleNft[i]}}>
+                        <Button bg="blue.400" >
+                            Buy now
+                        </Button>
+                      </Link>
                     </Box>
                 </Box>
                 )
-              })}  */}
+              })} 
         </Grid>
       </GridItem>
     </>

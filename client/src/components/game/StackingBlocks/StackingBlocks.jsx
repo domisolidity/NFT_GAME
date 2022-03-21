@@ -2,64 +2,44 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
-import "./BlockGame.css";
-import InventoryBox from "../components/InventoryBox";
+import "./StackingBlocks.css";
+import InventoryBox from "./InventoryBox";
+import GameInterface from "../GameInterface";
 
-const BlockGame = () => {
+const StackingBlocks = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account } = blockchain;
-  const gameTitle = "블록쌓기";
+  const { account, auth } = blockchain;
+  const { gameTitle } = GameInterface.gameList[0];
 
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
   const [gameItems, setGameItems] = useState([]);
-  // const [itemInUse, setItemInUse] = useState(false)
+  const [itemEffect, setItemEffect] = useState(undefined);
 
-  // 아이템 목록 가져오기
-  const getGameItems = async () =>
-    await axios
-      .get(`/api/items/game-items`)
-      .then((res) => setGameItems(res.data));
-
-  useEffect(() => {
-    getGameItems();
-  }, [account]);
-
-  // 계정이 있으면 해당계정의 남은 기회와 점수를 불러온다
-  useEffect(() => {
-    if (!account) return;
-    getMyChance();
-    getMyBestScore();
-  }, [account]);
+  // 로그인 되어있으면 해당계정의 남은 기회와 점수를 불러온다
+  useEffect(async () => {
+    if (!(account && auth && props.runningGame)) return;
+    await GameInterface.setParticipant(account, auth, gameTitle);
+    setChance(await GameInterface.getMyChance(account, auth, gameTitle));
+    setBestScore(await GameInterface.getMyBestScore(account, auth, gameTitle));
+    setGameItems(await GameInterface.getGameItems());
+  }, [props.runningGame]);
 
   // 게임이 끝나서 점수가 State에 들어오면 게임기록 서버에 전송
-  useEffect(() => {
+  useEffect(async () => {
     if (document.querySelector("#blockGameContainer.ended")) {
+      // await GameInterface.sendScore(
+      //   account,
+      //   auth,
+      //   gameTitle,
+      //   score,
+      //   itemEffect
+      // );
       sendScore(score);
     }
   }, [score]);
-
-  // 남은 기회 가져오기
-  const getMyChance = async () => {
-    await axios
-      .post(`/api/games/stacking-blocks/my-count`, { account: account })
-      .then((res) => {
-        setChance(res.data.gameCount);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  // 최고기록 가져오기
-  const getMyBestScore = async () => {
-    await axios
-      .post(`/api/games/stacking-blocks/my-best-score`, { account: account })
-      .then((res) => {
-        setBestScore(res.data.gameScore);
-      })
-      .catch((err) => console.log(err));
-  };
 
   // 게임 기회 차감하기
   const minusGameCount = async () => {
@@ -82,13 +62,22 @@ const BlockGame = () => {
       return;
     setGameEnded(false); // 게임상태 변경
     minusGameCount(); // 횟수 차감
+    setItemEffect(undefined); // 이전판 아이템 효과 제거
   };
+
   // 블록쌓기
   const stackingBlock = () => {
+    // 게임이 끝나면
     if (document.querySelector("#blockGameContainer.ended")) {
-      setGameEnded(true);
+      setGameEnded(true); // 게임상태 변경
+      // 현재 점수 useState에 담기
       setScore(document.querySelector("#score").innerHTML);
     }
+  };
+
+  // 아이템 효과 담기
+  const getItemEffect = async (recivedItemEffect) => {
+    setItemEffect(recivedItemEffect);
   };
 
   // 점수 등록(전송)
@@ -97,6 +86,7 @@ const BlockGame = () => {
       .post(`/api/games/stacking-blocks/send-score`, {
         account: account,
         score: parseInt(score),
+        itemEffect: itemEffect,
       })
       .then((res) => setBestScore(res.data.gameScore))
       .catch((err) => console.log(err));
@@ -104,29 +94,32 @@ const BlockGame = () => {
 
   // 블록쌓기 게임 불러오기
   useEffect(() => {
-    const scriptSrc = [
-      "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js",
-      "./blockGameScript.js",
-    ];
-    const scripts = [, ,];
-    for (let i = 0; i < scriptSrc.length; i++) {
-      // <script> 태그를 만들어 배열에 넣고
-      scripts[i] = document.createElement("script");
-      // 그 태그의 src 정보를 넣어
-      scripts[i].src = scriptSrc[i];
-      scripts[i].async = true;
-      // 문서 body에 추가해준다
-      document.body.appendChild(scripts[i]);
-    }
+    if (!(account && auth)) return;
+    setTimeout(() => {
+      const scriptSrc = [
+        "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js",
+        "./blockGameScript.js",
+      ];
+      const scripts = [, ,];
+      for (let i = 0; i < scriptSrc.length; i++) {
+        // <script> 태그를 만들어 배열에 넣고
+        scripts[i] = document.createElement("script");
+        // 그 태그의 src 정보를 넣어
+        scripts[i].src = scriptSrc[i];
+        scripts[i].async = true;
+        // 문서 body에 추가해준다
+        document.body.appendChild(scripts[i]);
+      }
 
-    return () => {
-      scripts.forEach((script) => {
-        // 스크립트 태그 지워주는 녀석
-        document.body.removeChild(script);
-      });
-    };
-  }, [account]);
+      return () => {
+        scripts.forEach((script) => {
+          // 스크립트 태그 지워주는 녀석
+          document.body.removeChild(script);
+        });
+      };
+    }, 500);
+  }, [account, auth]);
 
   return (
     <>
@@ -167,6 +160,11 @@ const BlockGame = () => {
                 {chance}
               </Text>
             </Box>
+            {itemEffect ? (
+              <Box color={"#333344"} className="item-effect-box">
+                x {itemEffect}!
+              </Box>
+            ) : null}
             <Button
               colorScheme={"blue"}
               w={100}
@@ -176,25 +174,19 @@ const BlockGame = () => {
             >
               멈춰!
             </Button>
-            {/* <Button
-              colorScheme={"orange"}
-              onClick={asdf}
-              className="score-registration-button"
-            >
-              테스트
-            </Button> */}
           </div>
           <Flex justifyContent={"center"}>
             {gameItems &&
-              gameItems.map((item) => {
-                return (
-                  <InventoryBox
-                    key={item.itemId}
-                    item={item}
-                    gameTitle={gameTitle}
-                  />
-                );
-              })}
+              gameItems.map((item) => (
+                <InventoryBox
+                  key={item.itemId}
+                  item={item}
+                  gameTitle={gameTitle}
+                  getItemEffect={getItemEffect}
+                  gameEnded={gameEnded}
+                  itemEffect={itemEffect}
+                />
+              ))}
           </Flex>
         </>
       ) : (
@@ -204,4 +196,4 @@ const BlockGame = () => {
   );
 };
 
-export default BlockGame;
+export default StackingBlocks;
