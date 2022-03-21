@@ -15,6 +15,9 @@
 .main__top_item {
   margin: 5rem;
 }
+.main__top_item > img {
+  width: 16rem;
+}
 
 .main__top_item-head {
   font-size: 2.3rem;
@@ -72,4 +75,8 @@
     inset 0 0 0.5rem #2695ff, 0 0 0.1rem #2695ff, inset 0 0 0.1rem #2695ff;
   padding: 0 3rem;
   margin-right: 2.5rem;
+}
+.main__bottom {
+  grid-row: 3/5;
+  grid-column: 1/5;
 }

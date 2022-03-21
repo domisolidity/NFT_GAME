@@ -2,7 +2,6 @@ import React from "react";
 import "./neonCard.css";
 
 const NeonCard = (props) => {
-  console.log(props.type === "first");
   return (
     <div className="neon">
       {props.type == 1 ? (

@@ -4,6 +4,7 @@ import "./main.css";
 
 import RetroGames from "../assets/retro_games_blur.png";
 import NeonCard from "../components/NeonCard";
+import GameInfoCard from "../components/GameInfoCard";
 
 const Main = () => {
   return (
@@ -35,6 +36,9 @@ const Main = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="main__bottom">
+        <GameInfoCard />
       </div>
     </div>
   );

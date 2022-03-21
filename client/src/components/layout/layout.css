@@ -33,6 +33,7 @@
   min-height: 100vh;
   background: #1e315f;
   flex-direction: column; */
+  /* background: #000428; */
   background: linear-gradient(to top, #004e92, #000428);
   display: grid;
   width: 100%;
@@ -41,8 +42,8 @@
   grid-template-columns: repeat(10, 1fr);
   grid-template-areas:
     "header header header header header header header header header header"
-    "content content content content content content content content content content"
-    "content content content content content content content content content content"
+    "header header header header header header header header header header"
+    "header header header header header header header header header header"
     "content content content content content content content content content content"
     "content content content content content content content content content content"
     "content content content content content content content content content content"
@@ -69,6 +70,9 @@ footer {
 .layout__header {
   /* position: sticky;
   top: 0px; */
+  backdrop-filter: blur(2rem);
+  position: fixed;
+  z-index: 10;
 }
 .layout__content {
 }
