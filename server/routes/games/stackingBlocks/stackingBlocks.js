@@ -58,7 +58,10 @@ router.post("/minus-count", async (req, res) => {
 // 점수 등록(게임 점수 받아서 해당 유저 점수 업데이트)
 router.post("/send-score", async (req, res) => {
   const account = req.body.account;
-  const score = req.body.score;
+  let score = req.body.score;
+  const itemEffect = req.body.itemEffect;
+  if (itemEffect) score = Math.ceil(score * itemEffect);
+
   const before = await InGameUser.findOne({
     attributes: ["gameScore"],
     where: { user_address: account, game_title: "블록쌓기" },

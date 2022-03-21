@@ -1,7 +1,7 @@
 import React from "react";
 
 import Main from "./pages/Main";
-import BlockGame from "./pages/BlockGame";
+import Game from "./pages/Game";
 import Rank from "./pages/Rank";
 import Market from "./pages/Market";
 import MarketDetail from "./pages/Market/MarketDetail";
@@ -16,7 +16,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Main />} />
-      <Route path="/game" element={<BlockGame />} />
+      <Route path="/game" element={<Game />} />
       <Route path="/rank" element={<Rank />} />
       <Route path="/market" element={<Market />} />
       <Route path="/market/:id" element={<MarketDetail />} />

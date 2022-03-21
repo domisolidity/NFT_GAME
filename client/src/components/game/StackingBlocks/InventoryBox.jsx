@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Button, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import ItemImage from "./ItemImage";
+import ItemImage from "../../ItemImage";
 
 const InventoryBox = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -53,7 +53,11 @@ const InventoryBox = (props) => {
       padding={"0"}
       display={"block"}
       position={"relative"}
-      disabled={myItemQuantity == 0 || (item.itemId > 3 && props.gameEnded)}
+      disabled={
+        myItemQuantity == 0 ||
+        (item.itemId > 3 && props.gameEnded) ||
+        (item.itemId > 3 && props.itemEffect)
+      }
     >
       <ItemImage itemId={item.itemId} />
       <Box position={"absolute"} right={"2px"} top={"0"}>
