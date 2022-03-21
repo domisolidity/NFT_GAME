@@ -13,6 +13,7 @@ router.use("/stacking-blocks", stackingBlocks);
 
 /* 첫 참여 때 InGameUser 테이블에 참여자 행 초기화 해주기 */
 router.post("/", async (req, res) => {
+  console.log("참여자 초기화");
   if (!req.body) return;
   const account = req.body.account;
   const gameTitle = req.body.gameTitle;
@@ -27,6 +28,7 @@ router.post("/", async (req, res) => {
 
 /* 게임 남은 기회 가져오기 */
 router.post("/my-count", async (req, res) => {
+  console.log("횟수 불러오기");
   const account = req.body.account;
   const gameTitle = req.body.gameTitle;
   const response = await InGameUser.findOne({
@@ -38,6 +40,7 @@ router.post("/my-count", async (req, res) => {
 
 /* 최고기록 가져오기 */
 router.post("/my-best-score", async (req, res) => {
+  console.log("기록 불러오기");
   const account = req.body.account;
   const gameTitle = req.body.gameTitle;
   const response = await InGameUser.findOne({
@@ -49,6 +52,7 @@ router.post("/my-best-score", async (req, res) => {
 
 /* 기회 1회 차감 */
 router.post("/minus-count", async (req, res) => {
+  console.log("횟수 차감");
   const account = req.body.account;
   const gameTitle = req.body.gameTitle;
   // 차감 전 횟수 DB에서 가져오기
@@ -71,13 +75,13 @@ router.post("/minus-count", async (req, res) => {
 
 /* 점수 등록 */
 router.post("/send-score", async (req, res) => {
-  console.log("들어옴?");
+  console.log("점수 등록");
   // (게임 점수 받아서 해당 유저 점수 업데이트)
   const account = req.body.account;
   const gameTitle = req.body.gameTitle;
   let score = req.body.score;
   const itemEffect = req.body.itemEffect;
-  console.log(account, gameTitle, score, itemEffect);
+
   // 추가점수 주는 아이템 사용한 경우 입력된 점수에 가산
   if (itemEffect) score = Math.ceil(score * itemEffect);
 

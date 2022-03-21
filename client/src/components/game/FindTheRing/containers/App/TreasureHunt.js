@@ -10,6 +10,7 @@ import Menu from "../../components/Menu/Menu";
 import "./TreasureHunt.css";
 import GameInterface from "../../../GameInterface";
 import { useSelector } from "react-redux";
+import GameItem from "../../../GameItem";
 
 const TreasureHunt = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -73,6 +74,18 @@ const TreasureHunt = () => {
           ) : (
             <Menu gameStart={gameStart} />
           )}
+        </div>
+        <div>
+          {gameItems &&
+            gameItems.map((item) => (
+              <GameItem
+                key={item.itemId}
+                item={item}
+                gameTitle={gameTitle}
+                getItemEffect={getItemEffect}
+                itemEffect={itemEffect}
+              />
+            ))}
         </div>
         <div className="score__box">
           점수

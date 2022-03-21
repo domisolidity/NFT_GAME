@@ -128,7 +128,7 @@ const Tetris = () => {
   }, dropTime);
 
   return (
-    // style wrapper to cover whole of the page to catch key presses
+    // 키 누름을 감지하기 위해 감싸는 스타일 래퍼
     <>
       <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
         <StyledTetris>
