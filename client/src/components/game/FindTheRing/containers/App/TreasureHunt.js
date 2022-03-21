@@ -24,6 +24,7 @@ const TreasureHunt = () => {
   const [itemEffect, setItemEffect] = useState(undefined);
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
 
   const getItemEffect = async (recivedItemEffect) => {
     setItemEffect(recivedItemEffect);
@@ -40,10 +41,11 @@ const TreasureHunt = () => {
     setScore(attemptsMade);
   };
   // 게임 끝났을 때 링 찾은 상태면 서버에 점수 전송
-  useEffect(() => {
+  useEffect(async () => {
     if (state.gameStatus == GameStatus.VICTORY) {
-      GameInterface.sendScore(account, gameTitle, score, itemEffect);
+      await GameInterface.sendScore(account, gameTitle, score, itemEffect);
     }
+    setBestScore(await GameInterface.getMyBestScore(account, auth, gameTitle));
   }, [state.gameStatus]);
 
   useEffect(async () => {
@@ -51,6 +53,7 @@ const TreasureHunt = () => {
     await GameInterface.setParticipant(account, auth, gameTitle);
     setChance(await GameInterface.getMyChance(account, auth, gameTitle));
     setGameItems(await GameInterface.getGameItems());
+    setBestScore(await GameInterface.getMyBestScore(account, auth, gameTitle));
   }, [account, auth]);
 
   return (
@@ -75,6 +78,11 @@ const TreasureHunt = () => {
           점수
           <br />
           {score}
+        </div>
+        <div className="best_score__box">
+          최고기록
+          <br />
+          {bestScore}
         </div>
         <div className="chance__box">
           남은 기회

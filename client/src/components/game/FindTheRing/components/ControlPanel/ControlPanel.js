@@ -18,6 +18,7 @@ const ControlPanel = (props) => {
     props.gameStart();
   };
   const giveUp = () => {
+    if (!window.confirm(`현재 점수의 반만 얻고 게임을 포기합니다.`)) return;
     dispatch(giveUpGame());
     GameInterface.sendScore(props.account, props.gameTitle, props.score / 2, props.itemEffect);
   };
@@ -41,7 +42,10 @@ const ControlPanel = (props) => {
         <Button disabled={gameStatus == GameStatus.IN_PROGRESS} onClick={() => reStart()}>
           재시작
         </Button>
-        <Button disabled={attemptsMade > MAX_ATTEMPTS - MAX_ATTEMPTS / 3} onClick={() => giveUp()}>
+        <Button
+          disabled={attemptsMade > MAX_ATTEMPTS - MAX_ATTEMPTS / 3 || gameStatus != GameStatus.IN_PROGRESS}
+          onClick={() => giveUp()}
+        >
           포기하기
         </Button>
       </div>
