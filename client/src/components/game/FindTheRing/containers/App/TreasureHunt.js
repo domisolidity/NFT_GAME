@@ -27,10 +27,12 @@ const TreasureHunt = () => {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
 
+  // 사용 아이템 효과 담기
   const getItemEffect = async (recivedItemEffect) => {
     setItemEffect(recivedItemEffect);
   };
 
+  // 게임 시작
   const gameStart = async () => {
     if (!window.confirm("게임기회가 차감됩니다. 게임을 시작하시겠나이까?")) return;
     setItemEffect(undefined);
@@ -38,9 +40,11 @@ const TreasureHunt = () => {
     setChance(await GameInterface.minusGameCount(account, gameTitle));
   };
 
+  // 남은 횟수는 점수가 될 것임
   const getAttemptsMade = (attemptsMade) => {
     setScore(attemptsMade);
   };
+
   // 게임 끝났을 때 링 찾은 상태면 서버에 점수 전송
   useEffect(async () => {
     if (state.gameStatus == GameStatus.VICTORY) {

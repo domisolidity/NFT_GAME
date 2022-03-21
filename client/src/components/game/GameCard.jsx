@@ -13,6 +13,7 @@ const GameCard = (props) => {
       overflow={`hidden`}
       borderRadius={`15px`}
       w={`30%`}
+      h={`100%`}
       position={`relative`}
       onClick={selectGame}
     >
