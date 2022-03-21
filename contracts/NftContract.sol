@@ -9,10 +9,6 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract NftContract is ERC721Enumerable {
   using Counters for Counters.Counter;
-  // Counters.Counter private tokenIds; //잠깐만 public 사용중
-  // Counters.Counter private tokenIds_red; //잠깐만 public 사용중
-  // Counters.Counter private tokenIds_green; //잠깐만 public 사용중
-  // Counters.Counter private tokenIds_purple; //잠깐만 public 사용중
 
   uint16 public tokenIds_red;
   uint16 public tokenIds_green = 60;
@@ -25,7 +21,6 @@ contract NftContract is ERC721Enumerable {
 
   // uint8 public constant totalSupply = 100;
   mapping(uint => string) tokenURIs;
-
 
   struct RenderToken {
     uint16 id;
@@ -67,8 +62,7 @@ contract NftContract is ERC721Enumerable {
       uint16 tokenId = uint16(tokenOfOwnerByIndex(_tokenOwner, i));
       string memory tokenUri = tokenURI(tokenId);
 
-      renderToken[i] = RenderToken(tokenId,tokenUri);
-
+      renderToken[i] = RenderToken(tokenId, tokenUri);
     }
     return renderToken;
   }
@@ -123,7 +117,7 @@ contract NftContract is ERC721Enumerable {
 
     //setApprovalForAll(배포한 거래 계약 주소, true); => 에러모음에 적기
   }
-
+}
 
 //remixd -s . --remix-ide https://remix.ethereum.org
 //ipfs://QmegNmnxoh6gQWvk1xkbq45dGWt8dzpiTzHSxrp5WAwChS (pinata)
