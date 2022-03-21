@@ -1,10 +1,27 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c:wght@500;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c:wght@500;800&family=Raleway:ital,wght@1,300&display=swap");
+@font-face {
+  font-family: "neontubes";
+  src: url("https://bitbucket.org/kennethjensen/webfonts/raw/fc13c1cb430a0e9462da56fe3f421ff7af72db71/neontubes/neontubes-webfont.eot");
+  src: url("https://bitbucket.org/kennethjensen/webfonts/raw/fc13c1cb430a0e9462da56fe3f421ff7af72db71/neontubes/neontubes-webfont.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://bitbucket.org/kennethjensen/webfonts/raw/fc13c1cb430a0e9462da56fe3f421ff7af72db71/neontubes/neontubes-webfont.woff2")
+      format("woff2"),
+    url("https://bitbucket.org/kennethjensen/webfonts/raw/fc13c1cb430a0e9462da56fe3f421ff7af72db71/neontubes/neontubes-webfont.woff")
+      format("woff"),
+    url("https://bitbucket.org/kennethjensen/webfonts/raw/fc13c1cb430a0e9462da56fe3f421ff7af72db71/neontubes/neontubes-webfont.ttf")
+      format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   font-family: "Lato", sans-serif;
   font-family: "M PLUS Rounded 1c", sans-serif;
   font-family: "Raleway", sans-serif;
+  font-family: "neontubes";
+
   /* font-family: 'Lato', sans-serif;
   font-family: 'M PLUS Rounded 1c', sans-serif; */
   /* background: #bae2cd; */
@@ -12,33 +29,52 @@
 }
 
 .layout {
-  margin: 0;
+  /* margin: 0;
   min-height: 100vh;
   background: #1e315f;
-  flex-direction: column;
+  flex-direction: column; */
+  /* background: #000428; */
+  background: linear-gradient(to top, #004e92, #000428);
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-rows: repeat(10, minmax(4rem, auto));
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-areas:
+    "header header header header header header header header header header"
+    "header header header header header header header header header header"
+    "header header header header header header header header header header"
+    "content content content content content content content content content content"
+    "content content content content content content content content content content"
+    "content content content content content content content content content content"
+    "content content content content content content content content content content"
+    "content content content content content content content content content content"
+    "content content content content content content content content content content"
+    "footer footer footer footer footer footer footer footer footer footer";
+}
+
+/* .layout > * {
+  background-color: var(--chakra-colors-whiteAlpha-200);
+} */
+
+header {
+  grid-area: header;
+}
+content {
+  grid-area: content;
+}
+footer {
+  grid-area: footer;
 }
 
 .layout__header {
-  width: 85vw;
-  margin: 0 5%;
-  min-height: 100px;
-  align-items: center;
+  /* position: sticky;
+  top: 0px; */
+  backdrop-filter: blur(2rem);
+  position: fixed;
+  z-index: 10;
 }
-.layout__header-right {
-  justify-content: end;
-  margin: 0 0 0 1rem;
-}
-
 .layout__content {
-  margin-top: 100px;
 }
-
-/* .layout__content-main {
-  width: 100%;
-  padding: 30px;
-} */
-
-/* .layout__wallet {
-  float: right;
-  margin-right: 100px;
-} */
+.layout__footer {
+}
