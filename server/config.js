@@ -28,15 +28,15 @@ const testAddressArray = [
 /* 게임 목록 */
 const gameList = [
   {
-    title: "블록쌓기",
+    gameTitle: "블록쌓기",
     description: "스르륵 움직이는 블록을 단단히 고정된 블록에 정확한 순간에 착 놓아서 쑥쑥 높게 쌓아올리는 게임",
   },
   {
-    title: "테트리스",
+    gameTitle: "테트리스",
     description: "긴 거 필요할 때 꼭 안 나오는 그 게임",
   },
   {
-    title: "보물찾기",
+    gameTitle: "보물찾기",
     description: "운으로 승부하는 운빨 존망겜",
   },
 ];
@@ -72,7 +72,7 @@ const getDatabaseConfig = async () => {
     // 게임 추가
     for (let i = 0; i < gameList.length; i++) {
       await Game.create({
-        title: gameList[i].title,
+        gameTitle: gameList[i].gameTitle,
         description: gameList[i].description,
       });
     }
@@ -84,7 +84,7 @@ const getDatabaseConfig = async () => {
       // 테스트 계정들 0번인덱스 게임(블록쌓기)에 임의로 참여 기록 입력
       await InGameUser.create({
         user_address: testAddressArray[i],
-        game_title: gameList[0].title,
+        game_title: gameList[0].gameTitle,
         gameScore: Math.floor(Math.random() * 10),
       });
     }
@@ -99,7 +99,7 @@ const getDatabaseConfig = async () => {
     for (let i = 0; i < 5; i++) {
       await Ranking.create({
         weeks: 0,
-        game_title: gameList[0].title,
+        game_title: gameList[0].gameTitle,
         gameScore: 10 - i,
         ranking: i + 1,
         user_address: testAddressArray[i],
@@ -116,7 +116,7 @@ const rankAggregation = async () => {
   for (let i = 0; i < gameList.length; i++) {
     const latestWeekData = await Ranking.findOne({ attributes: ["weeks"], limit: 1, order: [["weeks", "desc"]] });
     const latestWeek = latestWeekData.weeks; // 최신 주(week)
-    const gameTitle = gameList[i].title; // 게임명
+    const gameTitle = gameList[i].gameTitle; // 게임명
     // 이번 주 차 TOP 5 정보
     const thisWeekRankData = await InGameUser.findAll({
       raw: true,

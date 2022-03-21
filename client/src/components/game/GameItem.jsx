@@ -7,28 +7,59 @@ import GameInterface from "./GameInterface";
 const GameItem = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
-  const item = props.item;
-  const gameTitle = props.gameTitle;
+  const {
+    item,
+    gameTitle,
+    getItemEffect,
+    itemEffect,
+    isPlaying,
+    updateChance,
+  } = props;
+  // const gameTitle = props.gameTitle;
 
   // 내 소유 아이템 목록
   const [myItemQuantity, setMyItemQuantity] = useState(0);
 
   // 아이템 사용하기
   const usingItem = async () => {
-    props.getItemEffect(
-      await GameInterface.usingItem(account, item.itemName, gameTitle)
+    if (myItemQuantity == 0) return;
+    // 아이템 효과
+    const recivedItemEffect = await GameInterface.getItemEffect(
+      account,
+      item.itemName,
+      gameTitle
     );
-    // 아이템 사용됐으면 수량 갱신
-    setMyItemQuantity(
-      await GameInterface.getMyItemQuantity(account, item.itemName)
-    );
-    alert("아이템이 적용되었습니다");
+    if (recivedItemEffect) {
+      // 아이템 사용
+      await GameInterface.usingItem(account, item.itemName);
+      // 사용 후 갱신된 수량
+      const recivedQuantity = await GameInterface.getMyItemQuantity(
+        account,
+        item.itemName
+      );
+      if (recivedItemEffect == 1) {
+        const updatedChance = await GameInterface.getMyChance(
+          account,
+          gameTitle
+        );
+        updateChance(updatedChance);
+      } else {
+        getItemEffect(recivedItemEffect);
+      }
+
+      setMyItemQuantity(recivedQuantity);
+      alert("아이템이 적용되었습니다");
+    } else {
+      alert("아이템 사용에 실패하였습니다");
+    }
   };
 
   useEffect(async () => {
-    setMyItemQuantity(
-      await GameInterface.getMyItemQuantity(account, item.itemName)
+    const recivedQuantity = await GameInterface.getMyItemQuantity(
+      account,
+      item.itemName
     );
+    setMyItemQuantity(recivedQuantity);
   }, [account]);
 
   return (
@@ -43,8 +74,8 @@ const GameItem = (props) => {
       position={"relative"}
       disabled={
         myItemQuantity == 0 ||
-        (item.itemId > 3 && props.itemEffect) ||
-        (item.itemId > 3 && !props.isPlaying)
+        (item.itemId > 3 && itemEffect != 1) ||
+        (item.itemId > 3 && !isPlaying)
       }
     >
       <ItemImage itemId={item.itemId} />

@@ -1,47 +1,49 @@
 import axios from "axios";
 
-const gameList = [
-  {
-    id: 1, // 사진 출력용
-    gameTitle: "블록쌓기",
-    requestAddress: "stacking-blocks",
-  },
-  { id: 2, gameTitle: "테트리스", requestAddress: "tetris" },
-  { id: 3, gameTitle: "보물찾기", requestAddress: "asdf" },
-];
+const gameList = [];
 
-// const getReqAddress = (gameTitle) => {
-//   switch (gameTitle) {
-//     case gameList[0].gameTitle:
-//       return gameList[0].requestAddress;
-//     case gameList[1].gameTitle:
-//       return gameList[1].requestAddress;
-//     default:
-//       break;
-//   }
-// };
+const getGameList = async () => {
+  const response = await axios.get(`/api/games/game-list`);
+  const receivedGameList = response.data;
+  if (gameList.length == receivedGameList.length) return;
+
+  for (let i = gameList.length; i < receivedGameList.length; i++) {
+    gameList.push(receivedGameList[i]);
+  }
+};
 
 /* 첫참여 시 참여자 행 초기화 */
-const setParticipant = async (account, auth, gameTitle) => {
-  if (!(account && auth && gameTitle)) return;
+const setParticipant = async (account, gameTitle) => {
+  console.log("참여자 초기화");
+  if (!(account && gameTitle)) return;
   const response = await axios
-    .post(`/api/games`, { account: account, gameTitle: gameTitle })
+    .post(`/api/games/set-participant`, {
+      account: account,
+      gameTitle: gameTitle,
+    })
     .catch((err) => console.log(err));
-  return response;
+  if (response) {
+    console.log("참여자 초기화 됨");
+  } else {
+    console.log("이미 참여자 초기화 되어있음");
+  }
+  return;
 };
 
 /* 남은 기회 가져오기 */
-const getMyChance = async (account, auth, gameTitle) => {
-  if (!(account && auth && gameTitle)) return;
+const getMyChance = async (account, gameTitle) => {
+  console.log("횟수 불러오기");
+  if (!(account && gameTitle)) return;
   const response = await axios
     .post(`/api/games/my-count`, { account: account, gameTitle: gameTitle })
     .catch((err) => console.log(err));
+
   return response.data.gameCount;
 };
 
 /* 최고기록 가져오기 */
-const getMyBestScore = async (account, auth, gameTitle) => {
-  if (!(account && auth && gameTitle)) return;
+const getMyBestScore = async (account, gameTitle) => {
+  if (!(account && gameTitle)) return;
   const response = await axios
     .post(`/api/games/my-best-score`, {
       account: account,
@@ -63,38 +65,60 @@ const getMyItemQuantity = async (account, itemName) => {
     account: account,
     itemName: itemName,
   });
+
   return response.data.count;
 };
 
 /* 아이템 사용하기 */
-const usingItem = async (account, itemName, gameTitle) => {
+const usingItem = async (account, itemName) => {
   const response = await axios
     .post(`/api/items/game-items/using-item`, {
+      account: account,
+      itemName: itemName,
+    })
+    .catch((err) => console.log(err));
+  if (response) {
+    console.log("아이템 사용함");
+    return true;
+  } else {
+    console.log("아이템이 없음");
+    return false;
+  }
+};
+
+/* 아이템 효과 받아오기 */
+const getItemEffect = async (account, itemName, gameTitle) => {
+  const response = await axios
+    .post(`/api/items/game-items/get-item-effect`, {
       account: account,
       itemName: itemName,
       gameTitle: gameTitle,
     })
     .catch((err) => console.log(err));
-  return response.data;
-};
 
-/* 아이템 효과 받아오기 */
-// const getItemEffect = async (recivedItemEffect) => {
-//   setItemEffect(recivedItemEffect);
-// };
+  if (response.data) {
+    return response.data;
+  } else {
+    console.log("아이템효과 받아오기 실패");
+    return response.data;
+  }
+};
 
 /* 게임 기회 차감하기 */
 const minusGameCount = async (account, gameTitle) => {
   if (!(account && gameTitle)) return;
-
   const response = await axios
     .post(`/api/games/minus-count`, {
       account: account,
       gameTitle: gameTitle,
     })
     .catch((err) => console.log(err));
-
-  return response.data.gameCount;
+  if (response) {
+    console.log("게임 기회 차감됨");
+  } else {
+    console.log("게임 기회가 이미 0임");
+  }
+  return;
 };
 
 /* 점수 등록(전송) */
@@ -114,12 +138,14 @@ const sendScore = async (account, gameTitle, score, itemEffect) => {
 };
 
 export default {
+  getGameList,
   gameList,
   setParticipant,
   getMyChance,
   getMyBestScore,
   getGameItems,
   usingItem,
+  getItemEffect,
   getMyItemQuantity,
   minusGameCount,
   sendScore,

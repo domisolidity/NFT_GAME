@@ -53,7 +53,7 @@ module.exports = class Ranking extends Sequelize.Model {
     });
     db.Ranking.belongsTo(db.Game, {
       foreignKey: "game_title",
-      targetKey: "title",
+      targetKey: "gameTitle",
     });
   }
 };

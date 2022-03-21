@@ -51,7 +51,7 @@ module.exports = class InGameUser extends Sequelize.Model {
     });
     db.InGameUser.belongsTo(db.Game, {
       foreignKey: "game_title",
-      targetKey: "title",
+      targetKey: "gameTitle",
     });
   }
 };
