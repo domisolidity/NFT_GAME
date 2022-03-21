@@ -26,6 +26,7 @@ contract NftContract is ERC721Enumerable {
   // uint8 public constant totalSupply = 100;
   mapping(uint => string) tokenURIs;
 
+
   struct RenderToken {
     uint16 id;
     string uri;
@@ -55,11 +56,22 @@ contract NftContract is ERC721Enumerable {
     myNfts[_to].push(RenderToken(_tokenId, tokenUri));
   }
 
-  function getMyToken() public view returns (RenderToken[] memory) {
-    return myNfts[msg.sender];
-  }
+  function getMyToken(address _tokenOwner) public view returns (RenderToken[] memory) {
+    uint balanceLength = balanceOf(_tokenOwner);
 
-  //=> getAllToken()에서 Transfer
+    require(balanceLength != 0, "Owner did not have token.");
+
+    RenderToken[] memory renderToken = new RenderToken[](balanceLength);
+
+    for (uint256 i = 0; i < balanceLength; i++) {
+      uint16 tokenId = uint16(tokenOfOwnerByIndex(_tokenOwner, i));
+      string memory tokenUri = tokenURI(tokenId);
+
+      renderToken[i] = RenderToken(tokenId,tokenUri);
+
+    }
+    return renderToken;
+  }
 
   function remainNfts()
     public
@@ -112,61 +124,6 @@ contract NftContract is ERC721Enumerable {
     //setApprovalForAll(배포한 거래 계약 주소, true); => 에러모음에 적기
   }
 
-  //========================================================================
-
-  //토큰별 가격
-  mapping(uint256 => uint256) public nftPrices;
-
-  //판매중 nft
-  uint256[] public onSaleNftArray;
-
-  // @ 판매 함수
-  function sellNft(uint256 _tokenId, uint256 _price) public {
-    // 토큰 주인
-    //주인이어야 등록
-    require(ownerOf(_tokenId) == msg.sender, "you are not token owner.");
-    require(_price > 0, "price is zero or lower");
-    require(nftPrices[_tokenId] == 0, "this nft is already on a sale");
-    // 토큰 소유자에게 판매 권한을 받아야 됨
-    require(isApprovedForAll(ownerOf(_tokenId), address(this)), "Animal token owner did not approve token.");
-
-    nftPrices[_tokenId] = _price;
-
-    // 판매중인 토큰에 매개변수 넣음
-    onSaleNftArray.push(_tokenId);
-  }
-
-  // // 구매 함수
-  function buyNft(uint256 _tokenId) public payable {
-    uint256 price = nftPrices[_tokenId];
-    address seller = ownerOf(_tokenId);
-    require(price > 0, " token not sale.");
-    require(price <= msg.value, "not enought price");
-    require(seller != msg.sender, "you are not token owner.");
-
-    payable(seller).transfer(msg.value);
-
-    safeTransferFrom(seller, msg.sender, _tokenId); //토큰 구매자에게 이동
-
-    nftPrices[_tokenId] = 0;
-
-    for (uint256 i = 0; i < onSaleNftArray.length; i++) {
-      if (nftPrices[onSaleNftArray[i]] == 0) {
-        onSaleNftArray[i] = onSaleNftArray[onSaleNftArray.length - 1];
-        onSaleNftArray.pop();
-      }
-    }
-  }
-
-  // 길이를 통해 for문 돌려서 프론트에 판매중인 리스트 가져올 용도
-  function getOnSaleNftArrayLength() public view returns (uint256) {
-    return onSaleNftArray.length;
-  }
-
-  function getNftTokenPrice(uint256 _tokenId) public view returns (uint256) {
-    return nftPrices[_tokenId];
-  }
-}
 
 //remixd -s . --remix-ide https://remix.ethereum.org
 //ipfs://QmegNmnxoh6gQWvk1xkbq45dGWt8dzpiTzHSxrp5WAwChS (pinata)

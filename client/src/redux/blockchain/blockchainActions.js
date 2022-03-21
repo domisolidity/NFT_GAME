@@ -6,7 +6,7 @@ import NftDealContract from "../../contracts/NftDealContract.json";
 import jwtDecode from "jwt-decode";
 
 // log
-import { fetchData } from "../data/dataActions";
+// import { getMyNft } from "../data/dataActions";
 
 // //test
 // import Cookies from 'universal-cookie';
@@ -167,6 +167,7 @@ export const reconnect = () => {
       const nftDealNetworkData = await NftDealContract.networks[networkId];
       const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
       const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
+      console.log("11",accounts[0])
 
       dispatch(
         connectSuccess({
@@ -195,7 +196,7 @@ export const reconnect = () => {
 export const updateAccount = (account) => {
   return async (dispatch) => {
     dispatch(updateAccountRequest({ account: account }));
-    dispatch(fetchData(account));
+    // dispatch(getMyNft(account[0]));
   };
 };
 
@@ -285,7 +286,7 @@ export const connectWallet = () => {
               console.log(err);
               // setLoading(false);
             });
-
+            console.log("22",accounts[0])
           dispatch(
             connectSuccess({
               account: accounts[0],
@@ -293,14 +294,16 @@ export const connectWallet = () => {
               nftDealContract: nftDealContract,
               web3: web3,
             })
-          );
-          // Add listeners start
+            );
+            // Add listeners start
           window.ethereum.on("accountsChanged", (accounts) => {
+            console.log("여기",accounts)
             dispatch(updateAccount(accounts));
           });
           window.ethereum.on("chainChanged", () => {
             window.location.reload();
           });
+          // dispatch(getMyNft(accounts[0]));
           // Add listeners end
         } else {
           dispatch(

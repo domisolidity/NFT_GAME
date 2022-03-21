@@ -1,5 +1,7 @@
 // log
+import axios from "axios";
 import store from "../store";
+const baseUri = "http://127.0.0.1:8080/ipfs";
 
 const fetchDataRequest = () => {
   return {
@@ -70,17 +72,34 @@ export const fetchData = (account) => {
 //   }
 // }
 
-// export const getMyNft = account =>{
-//   return async (dispatch) =>{
-//     try {
-//       let myNft = await store.getState().blockchain.nftContract.methods.getMyToken().call({from:account});
-//       console.log(myNft.uri)
-//       console.log(myNft.id)
-//       dispatch(
-//         fetchDataSuccess({myNft:myNft})
-//       );
-//     } catch (error) {
-
-//     }
-//   }
-// }
+export const getMyNft = account =>{
+  return async (dispatch) =>{
+    dispatch(fetchDataRequest());
+    try {
+      console.log(typeof account)
+      if (typeof account == "object"){
+        account = account[0]
+      }
+      await store.getState().blockchain.nftContract.methods.getMyToken().call({from:account}).then(async(result)=>{
+        let myNfts = [];
+        for (const info of result) {
+          if(info.uri == "") continue;
+          const response = await axios.get( `${baseUri}${info.uri.slice(6)}/${info.id}.json`)
+          myNfts.push({
+            id: info.id,
+            name: response.data.name,
+            image: `${baseUri}${response.data.image.slice(6)}`,
+            description: response.data.description,
+          })
+        }
+        console.log("myNft", myNfts);
+        dispatch(
+          fetchDataSuccess({myNfts:myNfts})
+        );
+      })
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchDataFailed("Could not load data from contract."));
+    }
+  }
+}
