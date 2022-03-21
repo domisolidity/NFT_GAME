@@ -3,6 +3,7 @@ const initialState = {
   myNftId: null,
   myNftUri: null,
   myNfts: null,
+  onSaleNfts:null,
   error: false,
   errorMsg: "",
 };
@@ -20,15 +21,21 @@ const dataReducer = (state = initialState, action) => {
         loading: false,
         myNftId: action.payload.myNftId,
         myNftUri: action.payload.myNftUri,
-        myNfts: action.payload.myNfts
+        myNfts: action.payload.myNfts,
+        onSaleNfts: action.payload.onSaleNfts
       };
-    case "CHECK_DATA_FAILED":
-      return {
-        ...initialState,
-        loading: false,
-        error: true,
-        errorMsg: action.payload,
-      };
+      case "CHECK_DATA_FAILED":
+        return {
+          ...initialState,
+          loading: false,
+          error: true,
+          errorMsg: action.payload,
+        };
+      case "SUCCESS_SUBMIT_SALE":
+        return {
+          ...initialState,
+          onSaleNfts: action.payload.onSaleNfts
+      }
     default:
       return state;
   }

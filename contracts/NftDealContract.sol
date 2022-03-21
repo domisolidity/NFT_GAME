@@ -69,6 +69,14 @@ contract NftDealContract {
     return onSaleNftArray.length;
   }
 
+
+  function onSale(uint _tokenId) public view returns (bool) {
+    if (nftPrices[_tokenId] == 0) {
+        return false;
+    } else {
+      return true;
+    }
+  }
   //
   function getOnSaleNftArray() public view returns (uint256[] memory) {
     return onSaleNftArray;

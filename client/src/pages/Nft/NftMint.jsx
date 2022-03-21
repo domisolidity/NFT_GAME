@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Image, Button } from "@chakra-ui/react";
 import ethLogo from "../../assets/logo/eth.svg";
 import { useSelector,useDispatch } from "react-redux";
-import { getMyNft } from "../../redux/data/dataActions";
 import Swal from "sweetalert2";
 
 const NftMint = () => {
-  const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, nftContract } = blockchain;
   const [loading, setLoading] = useState(false);
@@ -44,7 +42,6 @@ const NftMint = () => {
           text: "정상 적으로 민팅 되었습니다.",
           footer: `<a href="/mypage">마이페이지에서 확인</a>`,
         });
-        dispatch(getMyNft(account))
       }
     } catch (error) {
       console.log("-에러 내용- \n", error);
