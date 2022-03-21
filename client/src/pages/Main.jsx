@@ -1,18 +1,46 @@
 import React from "react";
-import { Box, Button, Flex, Image } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import "./main.css";
 
-import Top from "./Main/Top";
-import Middle from "./Main/Middle";
-import Bottom from "./Main/Bottom";
-import Footer from "./Main/Footer";
+import RetroGames from "../assets/retro_games_blur.png";
+import NeonCard from "../components/NeonCard";
+import GameInfoCard from "../components/GameInfoCard";
+
 const Main = () => {
   return (
-    <Flex justify="center" wrap="wrap" direction="column" align="center">
-      <Top />
-      <Middle />
-      <Bottom />
-      <Footer />
-    </Flex>
+    <div className="main">
+      <div className="main__content">
+        <div className="main__top_item">
+          <img src={RetroGames} />
+        </div>
+        <div className="main__top_item">
+          <div className="main__top_item-head">
+            Let's Play, <br />
+            earn and collect!
+          </div>
+          <div className="main__top_item-middle">
+            Doremi Game provides various mini-games. <br />
+            Weekly ranking winners will be rewarded. <br />
+            Don't miss this great opportunity.
+          </div>
+          <div className="main__top_item-bottom">
+            <div className="main__top_item-bottom-line">
+              <Link to="/game">
+                <NeonCard type={1} text={"Play"} />
+              </Link>
+            </div>
+            <div className="main__top_item-bottom-linesecond">
+              <Link to="/rank">
+                <NeonCard type={2} text={"Earn"} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="main__bottom">
+        <GameInfoCard />
+      </div>
+    </div>
   );
 };
 

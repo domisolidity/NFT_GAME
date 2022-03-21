@@ -22,7 +22,6 @@ contract NftContract is ERC721Enumerable {
   // uint8 public constant totalSupply = 100;
   mapping(uint => string) tokenURIs;
 
-
   struct RenderToken {
     uint16 id;
     string uri;
@@ -63,8 +62,7 @@ contract NftContract is ERC721Enumerable {
       uint16 tokenId = uint16(tokenOfOwnerByIndex(_tokenOwner, i));
       string memory tokenUri = tokenURI(tokenId);
 
-      renderToken[i] = RenderToken(tokenId,tokenUri);
-
+      renderToken[i] = RenderToken(tokenId, tokenUri);
     }
     return renderToken;
   }

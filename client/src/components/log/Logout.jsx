@@ -15,7 +15,7 @@ const Logout = (props) => {
       <Button onClick={onCopy} ml={2} bg="#F93B8B">
         {hasCopied ? <CheckIcon /> : <CopyIcon />}
       </Button>
-      <Button onClick={props.onLoggedOut} ml={2}>
+      <Button onClick={props.onLoggedOut} ml={2} mr={2}>
         logout
       </Button>
     </Flex>
