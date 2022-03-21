@@ -1,69 +1,101 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { useSelector } from 'react-redux';
-import { Link,useParams,useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Box, Grid, GridItem, Flex, Image, Button,Heading,Text,Input } from "@chakra-ui/react";
-const NftDetail_my = (props) => {
-  // const currentPath = window.location.pathname;
-  // const nftId = window.location.pathname.slice(8)
+
+
+
+
+const NftDetail_my = () => {
+
+  const {state} = useLocation();
+  const {id,grade,attributes,name,image,description} = state.nftInfo;
   const blockchain = useSelector(state=> state.blockchain);
   const { web3, account, nftContract, nftDealContract}  = blockchain;
-  const {state} = useLocation();
-  const tokenId = useParams();
-  const {img, name, description} = state;
+  
   const [isApproved,setIsApproved] = useState(false);
+  const [onSale,setOnSale] = useState(false);
   const [price,setPrice] = useState();
 
-//테스트용 isApprovedForAll
-const test = async()=>{
-  await nftContract.methods.isApprovedForAll(account,nftDealContract._address).call().then(result=>{
-    console.log(result)
-    if(result.state){
-      console.log(result.state)
-      console.log(result)
-    }
-  })
-  
-}
-//테스트용) 판매목록 반환 함수
-  const saleNft = async()=>{
-    await nftDealContract.methods.getOnSaleNftArrayLength().call({from:account}).then(result=>{
-      console.log(result)
-      if(result.state){
-        console.log(result.state)
-        console.log(result)
-      }
-    })
-  }
 
+ 
+
+  // 판매 승인
   const approveSell = async(bool) =>{
     try {
-      setIsApproved(!isApproved)
-      console.log(bool)
+      console.log(!bool)
       console.log(nftDealContract._address)
-        await nftContract.methods.setApprovalForAll(nftDealContract._address,bool).send({from:account}).then(result=>{
-          if (result) {
-            console.log(result)
-            setIsApproved(!isApproved)
-          }
-        })
+      await nftContract.methods.setApprovalForAll(nftDealContract._address,!bool).send({from:account}).then((result)=>{
+        if (result) {
+          console.log(result)
+          isApprovedCheck();
+          setIsApprovedTrigger(!isApproved)
+        }
+      })
     } catch (error) {
-      console.log(error)
+        console.log(error)
+      }
     }
-  }
+    
+  // 판매 등록
   const submitSell = async() => {
     try {
-      console.log(tokenId)
-        await nftDealContract.methods.sellNft(tokenId.id,web3.utils.toWei(price, "ether")).send({from:account}).then(result=>{
-          console.log(result)
-          if (result.state) {
-            console.log(result)
-          }
-        })
-      
+      if (onSale) {
+        alert("이미 판매중입니다.")
+      }
+      if (!isApproved) {
+        alert("판매 승인을 먼저 받아주세요")
+        return false;
+      } else if (!price) {
+        alert("가격을 입력해주세요")
+        return false;
+      }
+      await nftDealContract.methods.sellNft(id,web3.utils.toWei(price, "ether")).send({from:account}).then(result=>{
+        console.log(result)
+        onSaleCheck()
+      })
+      console.log(id)
     } catch (error) {
       console.log(error)
     }
   }
+    
+    // 판매 취소
+    const cancelSell = async() => {
+      try {
+        //취소하는 동작 넣기
+        // setOnSaleTrigger(false)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    // 허용여부 확인
+    const isApprovedCheck = async()=>{
+      await nftContract.methods.isApprovedForAll(account,nftDealContract._address).call().then(result=>{
+        setIsApproved(result)
+      })
+      
+    }
+    
+    // 판매여부 확인
+    const onSaleCheck = async() =>{
+      try {
+        await nftDealContract.methods.onSale(tokenId.id).call({from: account}).then(result=>{
+        console.log(result)
+        setOnSale(result)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  useEffect(() => {
+    if (!account) return false;
+    console.log("허용여부확인")
+    isApprovedCheck();
+    onSaleCheck();
+  }, [account])
 
   return (
     <>
@@ -73,39 +105,45 @@ const test = async()=>{
       templateColumns="repeat(5,1fr)"
       templateRows="repeat(1,1fr)"
       gap={2}
-      
     >
       <GridItem colSpan={2}  bg="whiteAlpha.100" >
         <Flex direction="column">
-          <Image src={img} borderRadius={10}/>
+          <Image src={image} borderRadius={10}/>
           <Box borderRadius={10} border="1px solid #302f2f"  mt="2">
             <Heading size="sm" bg="#182749" padding="3">Description</Heading>
             <Text fontSize="15" padding="3">{description}</Text>
           </Box>
           <Box borderRadius={10} bg="##1E315F" border="1px solid #302f2f" >
             <Heading size="sm" bg="#182749" padding="3">Properties</Heading>
-            <Grid templateColumns="repeat(3,1fr)" padding="3"> 
-                <GridItem>속성1</GridItem>
-                <GridItem>속성2</GridItem>
-                <GridItem>속성1</GridItem>
-                <GridItem>속성1</GridItem>
+            <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}> 
+              {attributes[0] && attributes.map((attr,i)=>{
+                return (
+                  <GridItem key={i} align="center" border="2px solid #2b7997" borderRadius={15}>
+                    <Text fontWeight="bold">{attr.trait_type}</Text>
+                    <Text>{attr.value}</Text>
+                  </GridItem>
+                )
+              })}
             </Grid>
           </Box>
         </Flex>
       </GridItem>
       <GridItem colSpan={3}  bg="whiteAlpha.100" padding="5">
-        <Text>grade</Text>
+        <Text borderRadius={20} bg={grade=="red" ? "red.700" : grade=="green" ? "green.700" : "purple.700"} w="10%" padding={1} align="center">{grade}</Text>
         <Heading>{name}</Heading>
         <Text>owned by <span style={{color:"skyblue"}}>you</span></Text>
 
     
         <Box mt={20}>
             <Heading size="lg" display="inline">Sell 
-              {isApproved ? 
-                <Text fontSize="15" display="inline-block" bg="green">판매 승인 완료</Text>
+            {onSale ? <Text fontSize="15" display="inline-block" bg="#e28a37">판매중</Text>
+            :  
+            isApproved ? 
+              <Text fontSize="15" display="inline-block" bg="#2d7a47">판매 가능</Text>
               :
-                <Text fontSize="15" display="inline-block" bg="red">판매 승인 필요</Text>
-              }
+              <Text fontSize="15" display="inline-block" bg="#9e2d2d">판매 승인 필요</Text>
+              
+            }
             </Heading>
             <Text>Type</Text>
             <Flex justify="space-around">
@@ -117,13 +155,19 @@ const test = async()=>{
             <Box>
             <Text>duration</Text>
             <Input/>
-            <Flex justify="center">
-              <Button onClick={()=>approveSell(isApproved)}>Approved Sell</Button>
-              <Button onClick={submitSell}> Sell</Button>
-              <Button onClick={test}>test)허용됐는지 확인</Button>
-              <Button onClick={saleNft}>test)판매등록된 nft목록</Button>
+              {onSale ? 
+                <Flex justify="center">
+                  <Button onClick={cancelSell}> Cansel Sell</Button>
+                </Flex>
+              :
+              <Flex justify="center">
+                  <Button onClick={()=>approveSell(isApproved)}>
+                    {isApproved ? <span>Cancel Approved Sell</span> : <span>Approved Sell</span>}
+                  </Button>
+                  <Button onClick={submitSell}> Sell</Button>
+                </Flex>
+              }
 
-            </Flex>
         </Box>
 
         <Box mt={20}>
@@ -142,9 +186,6 @@ const test = async()=>{
           <Text>12</Text>
           <Text>12</Text>
         </GridItem>
-
-      {/* <GridItem colSpan={5} rowSpan={1} bg="whiteAlpha.100" padding={5}>
-      </GridItem> */}
     </Grid>
     </>
   )
