@@ -2,11 +2,12 @@ import { Box, Flex, Img, Text } from "@chakra-ui/react";
 import React from "react";
 
 const GameCard = (props) => {
+  const { game, getSelectGame } = props;
   // 해당 게임 선택 시 상위 컴포넌트(Game)의 함수selectGame에 게임명 전달
   const selectGame = () => {
-    const selectedGame = props.game.gameTitle;
-    if (window.confirm(`${selectedGame} 게임으로 이동합니다`))
-      props.selectGame(selectedGame);
+    const selectedGame = game.gameTitle;
+    if (window.confirm(`${game.description}\n게임을 플레이 하시겠습니까?`))
+      getSelectGame(selectedGame);
   };
   return (
     <Box
@@ -17,7 +18,7 @@ const GameCard = (props) => {
       position={`relative`}
       onClick={selectGame}
     >
-      <Img w={`100%`} src={`./images/game_${props.game.id}.png`} />
+      <Img w={`100%`} src={`./images/game_${game.gameId}.png`} />
       <Flex
         w={`100%`}
         h={`100%`}
@@ -34,7 +35,7 @@ const GameCard = (props) => {
         alignItems={`center`}
       >
         <Text color={`#1e315f`} fontSize={`50px`} fontWeight={`bold`}>
-          {props.game.gameTitle}
+          {game.gameTitle}
         </Text>
       </Flex>
     </Box>

@@ -23,7 +23,7 @@ const Game = () => {
   );
 
   /* 게임 선택 */
-  const selectGame = async (selectedGame) => {
+  const getSelectGame = async (selectedGame) => {
     // 로그인 안 하면 게임 선택 못하게 막기
     if (!(account && auth)) {
       alert("로그인 안하시면 게임 안 시켜줄겁니다");
@@ -39,29 +39,41 @@ const Game = () => {
       case "":
         break;
       case GameInterface.gameList[0].gameTitle:
-        return <StackingBlocks runningGame={runningGame} />;
+        return <StackingBlocks />;
       case GameInterface.gameList[1].gameTitle:
-        return <Tetris runningGame={runningGame} />;
+        return <Tetris />;
       case GameInterface.gameList[2].gameTitle:
-        return <TreasureHunt runningGame={runningGame} />;
+        return <TreasureHunt />;
 
       default:
         break;
     }
   };
 
+  useEffect(() => {
+    // 로그인 안돼있으면 게임 선택창으로 보내버리기
+    if (!(account && auth)) {
+      setRunningGame("");
+    }
+  }, [account, auth]);
+
+  useEffect(() => {
+    if (GameInterface.gameList.length != 0) return;
+    GameInterface.getGameList();
+  }, []);
+
   return (
     <Flex>
       {runningGame != "" ? (
-        <GameListSidebar selectGame={selectGame} />
+        <GameListSidebar getSelectGame={getSelectGame} />
       ) : // 실행중인 게임이 없으면 사이드바 표시 안하기
       null}
-      <Box w={"100%"} minHeight={"400px"}>
+      <Box w={"100%"} minHeight={"400px"} position={`relative`}>
         {runningGame == "" ? (
           // 실행중인 게임이 없을 땐 게임선택창 표시
           <Flex justifyContent={"space-evenly"}>
             {GameInterface.gameList.map((game, index) => (
-              <GameCard key={index} game={game} selectGame={selectGame} />
+              <GameCard key={index} game={game} getSelectGame={getSelectGame} />
             ))}
           </Flex>
         ) : (

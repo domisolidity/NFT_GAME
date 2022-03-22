@@ -25,23 +25,36 @@ const Tetris = () => {
   const { account, auth } = blockchain;
   const { gameTitle } = GameInterface.gameList[1];
 
-  const [chance, setChance] = useState(0);
+  const [chance, setChance] = useState("");
   const [gameItems, setGameItems] = useState("");
-  const [itemEffect, setItemEffect] = useState(undefined);
+  const [itemEffect, setItemEffect] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [bestScore, setBestScore] = useState("");
+
+  useEffect(async () => {
+    if (!(account && auth)) return;
+    // 사용자 초기화
+    await GameInterface.setParticipant(account, gameTitle);
+    // 사용자 게임횟수 불러오기
+    const recivedChance = await GameInterface.getMyChance(account, gameTitle);
+    setChance(recivedChance);
+    // 게임 아이템 및 사용자의 아이템 수량 불러오기
+    const recivedItems = await GameInterface.getGameItems();
+    setGameItems(recivedItems);
+    // 사용자 게임 기록 불러오기
+    const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
+    setBestScore(recivedBestScore);
+  }, [account, auth]);
+
+  // 잔여 기회 갱신
+  const updateChance = (updatedChance) => {
+    setChance(updatedChance);
+  };
 
   // 아이템 효과 담기
   const getItemEffect = async (recivedItemEffect) => {
     setItemEffect(recivedItemEffect);
   };
-
-  useEffect(async () => {
-    if (!(account && auth && gameTitle)) return;
-    await GameInterface.setParticipant(account, auth, gameTitle);
-
-    setChance(await GameInterface.getMyChance(account, auth, gameTitle));
-    setGameItems(await GameInterface.getGameItems());
-  }, [account, auth]);
 
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
@@ -57,10 +70,17 @@ const Tetris = () => {
   };
 
   const startGame = async () => {
+    // 게임 기회가 없으면 아무것도 안하기
+    if (chance <= 0) {
+      alert("잔여 게임 기회가 없습니다. 아이템을 구입하셔서 충전하세요 ^ㅈ^");
+      return;
+    }
     if (!window.confirm("횟수가 차감됩니다. 게임을 시작하시겠읍니까?")) return;
-    setIsPlaying(true);
-    setItemEffect(undefined); // 아이템 효과 초기화
-    setChance(await GameInterface.minusGameCount(account, gameTitle)); // 횟수 차감
+    setIsPlaying(true); // 게임중으로 상태 변경
+    setItemEffect(1); // 아이템 효과 초기화
+    await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
+    const recivedChance = await GameInterface.getMyChance(account, gameTitle);
+    setChance(recivedChance); // 횟수 차감됐으니 횟수 다시 불러오기
     //reset everything
     setStage(createStage());
     setDropTime(1000); // 1 sec
@@ -71,7 +91,7 @@ const Tetris = () => {
     setLevel(0);
   };
 
-  const drop = () => {
+  const drop = async () => {
     // increase level when player has cleared 10 rows
     if (rows > (level + 1) * 10) {
       setLevel((prev) => prev + 1);
@@ -83,7 +103,9 @@ const Tetris = () => {
       if (player.pos.y < 1) {
         setGameOver(true);
         setDropTime(null);
-        GameInterface.sendScore(account, gameTitle, score, itemEffect);
+        await GameInterface.sendScore(account, gameTitle, score, itemEffect);
+        const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
+        setBestScore(recivedBestScore);
         setIsPlaying(false);
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
@@ -136,7 +158,14 @@ const Tetris = () => {
           <aside>
             <div>
               <Display text={`Chance: ${chance}`} />
-              <Display text={`Score: ${score}`} />
+              <Display text={`Best score: ${bestScore}`} />
+
+              {itemEffect == 1 ? (
+                <Display text={`Score: ${score}`} />
+              ) : (
+                <Display text={`Score: ${score} x${itemEffect}`} />
+              )}
+
               <Display text={`Rows: ${rows}`} />
               <Display text={`Level: ${level}`} />
             </div>
@@ -151,6 +180,8 @@ const Tetris = () => {
                   gameTitle={gameTitle}
                   getItemEffect={getItemEffect}
                   itemEffect={itemEffect}
+                  isPlaying={isPlaying}
+                  updateChance={updateChance}
                 />
               ))}
           </div>

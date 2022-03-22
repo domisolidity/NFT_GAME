@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import axios from "axios";
 import "./StackingBlocks.css";
-import InventoryBox from "./InventoryBox";
 import GameInterface from "../GameInterface";
+import GameItem from "../GameItem";
 
-const StackingBlocks = (props) => {
+const StackingBlocks = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
   const { gameTitle } = GameInterface.gameList[0];
@@ -15,44 +14,37 @@ const StackingBlocks = (props) => {
   const [bestScore, setBestScore] = useState(0);
   const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
-  const [gameItems, setGameItems] = useState([]);
-  const [itemEffect, setItemEffect] = useState(undefined);
+  const [gameItems, setGameItems] = useState("");
+  const [itemEffect, setItemEffect] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // 로그인 되어있으면 해당계정의 남은 기회와 점수를 불러온다
   useEffect(async () => {
-    if (!(account && auth && props.runningGame)) return;
-    await GameInterface.setParticipant(account, auth, gameTitle);
-    setChance(await GameInterface.getMyChance(account, auth, gameTitle));
-    setBestScore(await GameInterface.getMyBestScore(account, auth, gameTitle));
+    await GameInterface.setParticipant(account, gameTitle);
+    setChance(await GameInterface.getMyChance(account, gameTitle));
+    setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
     setGameItems(await GameInterface.getGameItems());
-  }, [props.runningGame]);
+  }, []);
+
+  // 잔여 기회 갱신
+  const updateChance = (updatedChance) => {
+    setChance(updatedChance);
+  };
 
   // 게임이 끝나서 점수가 State에 들어오면 게임기록 서버에 전송
   useEffect(async () => {
     if (document.querySelector("#blockGameContainer.ended")) {
-      // await GameInterface.sendScore(
-      //   account,
-      //   auth,
-      //   gameTitle,
-      //   score,
-      //   itemEffect
-      // );
-      sendScore(score);
+      await GameInterface.sendScore(account, gameTitle, score, itemEffect);
+      const recivedBestScore = await GameInterface.getMyBestScore(
+        account,
+        gameTitle
+      );
+      setBestScore(recivedBestScore);
     }
   }, [score]);
 
-  // 게임 기회 차감하기
-  const minusGameCount = async () => {
-    if (!account) return;
-
-    await axios
-      .post(`/api/games/stacking-blocks/minus-count`, { account: account })
-      .then((res) => setChance(res.data.gameCount)) // 차감 후 화면에 횟수 갱신
-      .catch((err) => console.log(err));
-  };
-
   // 게임시작
-  const playGame = () => {
+  const playGame = async () => {
     if (
       !(
         document.querySelector("#blockGameContainer.playing") ||
@@ -60,9 +52,12 @@ const StackingBlocks = (props) => {
       )
     )
       return;
+    setIsPlaying(true);
     setGameEnded(false); // 게임상태 변경
-    minusGameCount(); // 횟수 차감
-    setItemEffect(undefined); // 이전판 아이템 효과 제거
+    await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
+    const recivedChance = await GameInterface.getMyChance(account, gameTitle);
+    setChance(recivedChance); // 횟수 차감됐으니 횟수 다시 불러오기
+    setItemEffect(1); // 이전판 아이템 효과 제거
   };
 
   // 블록쌓기
@@ -78,18 +73,6 @@ const StackingBlocks = (props) => {
   // 아이템 효과 담기
   const getItemEffect = async (recivedItemEffect) => {
     setItemEffect(recivedItemEffect);
-  };
-
-  // 점수 등록(전송)
-  const sendScore = async (score) => {
-    await axios
-      .post(`/api/games/stacking-blocks/send-score`, {
-        account: account,
-        score: parseInt(score),
-        itemEffect: itemEffect,
-      })
-      .then((res) => setBestScore(res.data.gameScore))
-      .catch((err) => console.log(err));
   };
 
   // 블록쌓기 게임 불러오기
@@ -178,13 +161,14 @@ const StackingBlocks = (props) => {
           <Flex justifyContent={"center"}>
             {gameItems &&
               gameItems.map((item) => (
-                <InventoryBox
+                <GameItem
                   key={item.itemId}
                   item={item}
                   gameTitle={gameTitle}
                   getItemEffect={getItemEffect}
-                  gameEnded={gameEnded}
                   itemEffect={itemEffect}
+                  isPlaying={isPlaying}
+                  updateChance={updateChance}
                 />
               ))}
           </Flex>

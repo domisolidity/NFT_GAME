@@ -11,10 +11,15 @@ router.use("/ranking", ranking);
 /* 블록쌓기게임 */
 router.use("/stacking-blocks", stackingBlocks);
 
+/* 게임목록 불러오기 */
+router.get("/game-list", async (req, res) => {
+  const response = await Game.findAll({}).catch((err) => console.log(err));
+  res.send(response);
+});
+
 /* 첫 참여 때 InGameUser 테이블에 참여자 행 초기화 해주기 */
-router.post("/", async (req, res) => {
+router.post("/set-participant", async (req, res) => {
   console.log("참여자 초기화");
-  if (!req.body) return;
   const account = req.body.account;
   const gameTitle = req.body.gameTitle;
   const response = await InGameUser.findOne({
@@ -22,8 +27,12 @@ router.post("/", async (req, res) => {
   }).catch((err) => console.log(err));
 
   // 이번 주 차 게임에 참여한 기록이 없으면 DB에 생성해주기
-  if (!response) await InGameUser.create({ user_address: account, game_title: gameTitle });
-  res.send("참여기록 초기화");
+  if (!response) {
+    await InGameUser.create({ user_address: account, game_title: gameTitle });
+    res.send(true);
+  } else {
+    res.send(false);
+  }
 });
 
 /* 게임 남은 기회 가져오기 */
@@ -60,17 +69,18 @@ router.post("/minus-count", async (req, res) => {
     attributes: ["gameCount"],
     where: { user_address: account, game_title: gameTitle },
   });
-  // 차감 전 횟수에 -1 해서 DB 갱신
-  await InGameUser.update(
-    { gameCount: before.gameCount - 1 },
-    { where: { user_address: account, game_title: gameTitle } }
-  );
-  // 차감 후 횟수 DB에서 가져오기
-  const after = await InGameUser.findOne({
-    attributes: ["gameCount"],
-    where: { user_address: account, game_title: gameTitle },
-  });
-  res.send(after);
+  // 차감 전 기회가 0이면 false
+  if (before.gameCount == 0) {
+    res.send(false);
+  } else {
+    // 차감 전 횟수에 -1 해서 DB 갱신
+    await InGameUser.update(
+      { gameCount: before.gameCount - 1 },
+      { where: { user_address: account, game_title: gameTitle } }
+    );
+    // 차감 했으면 true
+    res.send(true);
+  }
 });
 
 /* 점수 등록 */
