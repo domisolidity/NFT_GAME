@@ -3,6 +3,7 @@ import Web3 from "web3";
 import NftContract from "../../contracts/NftContract.json";
 import NftDealContract from "../../contracts/NftDealContract.json";
 import jwtDecode from "jwt-decode";
+import { fetchData } from "../data/dataActions";
 
 // log
 // import { getSaleNft } from "../data/dataActions";
@@ -94,115 +95,170 @@ export const authenticate = () => {
 //   }
 // }
 
-// export const connect = () => {
-//   return async (dispatch) => {
-//     dispatch(connectRequest());
-//     if (window.ethereum) {
-//       let web3 = new Web3(window.ethereum);
-//       try {
-//         const accounts = await window.ethereum.request({
-//           method: "eth_accounts",
-//         });
-//         console.log(accounts);
-//         const networkId = await window.ethereum.request({
-//           method: "net_version",
-//         });
-//         console.log("networkId : ", networkId);
-
-//         if (networkId == 1337 || networkId == 5777) {
-//           const NetworkData = await NftContract.networks[networkId];
-//           const nftContract = new web3.eth.Contract(NftContract.abi, NetworkData.address);
-
-//           if (accounts[0] == null) {
-//             dispatch(connectFailed("메타마스크 로그인이 필요합니다."));
-//             return;
-//           }
-
-//           dispatch(
-//             connectSuccess({
-//               account: accounts[0],
-//               nftContract: nftContract,
-//               web3: web3,
-//             })
-//           );
-
-//           // Add listeners start
-//           window.ethereum.on("accountsChanged", (accounts) => {
-//             dispatch(updateAccount(accounts));
-//           });
-//           window.ethereum.on("chainChanged", () => {
-//             window.location.reload();
-//           });
-//           // Add listeners end
-//         } else {
-//           dispatch(
-//             connectFailed(`현재 networkId 는 ${networkId} 입니다.\nnetworkId : 1337 (로컬호스트)로 변경이 필요합니다.`)
-//           );
-//         }
-//       } catch (err) {
-//         console.log(err);
-//         dispatch(connectFailed("Something went wrong."));
-//       }
-//     } else {
-//       dispatch(connectFailed("Install Metamask."));
-//     }
-//   };
-// };
-
-export const reconnect = () => {
+export const connect = () => {
   return async (dispatch) => {
     dispatch(connectRequest());
-    let web3 = new Web3(window.ethereum);
-    try {
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-      const networkId = await window.ethereum.request({
-        method: "net_version",
-      });
-      console.log("networkId : ", networkId);
+    if (window.ethereum) {
+      let web3 = new Web3(window.ethereum);
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        console.log(accounts);
+        const networkId = await window.ethereum.request({
+          method: "net_version",
+        });
+        console.log("networkId : ", networkId);
 
-      const nftNetwork = await NftContract.networks[networkId];
-      const nftDealNetworkData = await NftDealContract.networks[networkId];
-      const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
-      const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
-      console.log("11",accounts[0])
-      
+        if (networkId == 1337 || networkId == 5777) {
+          const NetworkData = await NftContract.networks[networkId];
+          const nftContract = new web3.eth.Contract(NftContract.abi, NetworkData.address);
 
+          if (accounts[0] == null) {
+            dispatch(connectFailed("메타마스크 로그인이 필요합니다."));
+            return;
+          }
 
-      dispatch(
-        connectSuccess({
-          account: accounts[0],
-          nftContract: nftContract,
-          nftDealContract: nftDealContract,
-          web3: web3,
-        })
-      );
-      dispatch(authenticate());
+          dispatch(
+            connectSuccess({
+              account: accounts[0],
+              nftContract: nftContract,
+              web3: web3,
+            })
+          );
 
-      await  nftDealContract.events.submitSell().on("data",async(e)=> {
-        console.log("이벤트", e.returnValues)
-      })
-      // Add listeners start
-      window.ethereum.on("accountsChanged", (accounts) => {
-        dispatch(updateAccount(accounts));
-      });
-      window.ethereum.on("chainChanged", () => {
-        window.location.reload();
-      });
-      // Add listeners end
-    } catch (err) {
-      console.log(err);
-      dispatch(connectFailed("Something went wrong."));
+          // Add listeners start
+          window.ethereum.on("accountsChanged", (accounts) => {
+            dispatch(updateAccount(accounts));
+          });
+          window.ethereum.on("chainChanged", () => {
+            window.location.reload();
+          });
+          // Add listeners end
+        } else {
+          dispatch(
+            connectFailed(`현재 networkId 는 ${networkId} 입니다.\nnetworkId : 1337 (로컬호스트)로 변경이 필요합니다.`)
+          );
+        }
+      } catch (err) {
+        console.log(err);
+        dispatch(connectFailed("Something went wrong."));
+      }
+    } else {
+      dispatch(connectFailed("Install Metamask."));
     }
   };
 };
 
+// export const reconnect = () => {
+//   return async (dispatch) => {
+//     dispatch(connectRequest());
+//     let web3 = new Web3(window.ethereum);
+//     try {
+//       const accounts = await window.ethereum.request({
+//         method: "eth_accounts",
+//       });
+//       const networkId = await window.ethereum.request({
+//         method: "net_version",
+//       });
+//       console.log("networkId : ", networkId);
+
+//       const nftNetwork = await NftContract.networks[networkId];
+//       const nftDealNetworkData = await NftDealContract.networks[networkId];
+//       const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
+//       const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
+//       console.log("11", accounts[0])
+
+
+
+//       dispatch(
+//         connectSuccess({
+//           account: accounts[0],
+//           nftContract: nftContract,
+//           nftDealContract: nftDealContract,
+//           web3: web3,
+//         })
+//       );
+//       dispatch(authenticate());
+
+//       await nftDealContract.events.submitSell().on("data", async (e) => {
+//         console.log("이벤트", e.returnValues)
+//       })
+//       // Add listeners start
+//       window.ethereum.on("accountsChanged", (accounts) => {
+//         dispatch(updateAccount(accounts));
+//       });
+//       window.ethereum.on("chainChanged", () => {
+//         window.location.reload();
+//       });
+//       // Add listeners end
+//     } catch (err) {
+//       console.log(err);
+//       dispatch(connectFailed("Something went wrong."));
+//     }
+//   };
+// };
+
 export const updateAccount = (account) => {
   return async (dispatch) => {
     dispatch(updateAccountRequest({ account: account }));
-  };
+    dispatch(fetchData(account));
+    console.log("같은 네트워크에서 계정만 교체");
+    //////////////////////////////////////
+    // 작업중
+    ///////////////////////////////////
+
+    const handleAuthenticate = async ({ publicAddress, signature }) =>
+      fetch(`/api/auth`, {
+        body: JSON.stringify({ publicAddress, signature }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }).then((response) => response.json());
+
+    const handleSignMessage = async ({ publicAddress, nonce }) => {
+      try {
+
+        let web3 = new Web3(window.ethereum);
+
+        const signature = await web3.eth.personal.sign(
+          `I am signing my one-time nonce: ${nonce}`,
+          publicAddress,
+          "" // MetaMask will ignore the password argument here
+        );
+        return { publicAddress, signature };
+      } catch (err) {
+        throw new Error("You need to sign the message to be able to log in.");
+      }
+    };
+
+    const handleLoggedIn = (auth) => {
+      localStorage.setItem(LS_KEY, JSON.stringify(auth));
+
+      //const access_token = localStorage.getItem(LS_KEY);
+      dispatch(authenticate());
+      // dispatch(login({ access_token: JSON.parse(access_token).accessToken, refresh_token: null }))
+    };
+
+    if (account) {
+      console.log(account)
+      fetch(`/api/users?publicAddress=${account}`)
+        .then((response) => response.json())
+        .then((users) => (users.length ? (users[0]) : dispatch(connectFailed("등록된 계정이 아닙니다.로그아웃됩니다."))))
+        .then(handleSignMessage)
+        .then(handleAuthenticate)
+        // Pass accessToken back to parent component (to save it in localStorage)
+        .then((auth) => handleLoggedIn(auth))
+        .catch((err) => {
+          console.log(err);
+          dispatch(disconnectWallet())
+        });
+    }
+
+  }
 };
+
 
 export const connectWallet = () => {
   return async (dispatch) => {
@@ -290,7 +346,7 @@ export const connectWallet = () => {
               console.log(err);
               // setLoading(false);
             });
-            console.log("22",accounts[0])
+          console.log("22", accounts[0])
           dispatch(
             connectSuccess({
               account: accounts[0],
@@ -298,15 +354,15 @@ export const connectWallet = () => {
               nftDealContract: nftDealContract,
               web3: web3,
             })
-            );
+          );
 
-          
-          await  nftDealContract.events.submitSell().on("data",async(e)=> {
+
+          await nftDealContract.events.submitSell().on("data", async (e) => {
             console.log("이벤트", e.returnValues)
           })
-            // Add listeners start
+          // Add listeners start
           window.ethereum.on("accountsChanged", (accounts) => {
-            console.log("여기",accounts)
+            console.log("여기", accounts)
             dispatch(updateAccount(accounts));
           });
           window.ethereum.on("chainChanged", () => {
@@ -332,11 +388,86 @@ export const connectWallet = () => {
 export const disconnectWallet = () => {
   return async (dispatch) => {
     localStorage.removeItem(LS_KEY);
-    localStorage.setItem("logout", Date.now());
 
     dispatch(authenticate());
     dispatch(connectFailed("로그아웃"));
-    // dispatch(logoutToken())
-    // cookies.remove('accessToken');
   };
 };
+
+export const retryProcess = (publicAddress) => {
+
+  return async (dispatch) => {
+
+    const networkId = await window.ethereum.request({
+      method: "net_version",
+    });
+
+    const accounts = await window.ethereum.request({
+      method: "eth_accounts",
+    });
+
+    let web3 = new Web3(window.ethereum);
+    const nftNetwork = await NftContract.networks[networkId];
+    const nftDealNetworkData = await NftDealContract.networks[networkId];
+    const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
+    const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
+
+
+    const handleAuthenticate = async ({ publicAddress, signature }) =>
+      fetch(`/api/auth`, {
+        body: JSON.stringify({ publicAddress, signature }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }).then((response) => response.json());
+
+    const handleSignMessage = async ({ publicAddress, nonce }) => {
+      try {
+        const signature = await web3.eth.personal.sign(
+          `I am signing my one-time nonce: ${nonce}`,
+          publicAddress,
+          "" // MetaMask will ignore the password argument here
+        );
+        return { publicAddress, signature };
+      } catch (err) {
+        throw new Error("You need to sign the message to be able to log in.");
+      }
+    };
+
+    const handleLoggedIn = (auth) => {
+      localStorage.setItem(LS_KEY, JSON.stringify(auth));
+
+      //const access_token = localStorage.getItem(LS_KEY);
+      dispatch(authenticate());
+      // dispatch(login({ access_token: JSON.parse(access_token).accessToken, refresh_token: null }))
+    };
+
+
+    fetch(`/api/users`, {
+      body: JSON.stringify({ publicAddress }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }).then((response) => console.log(response))//response.json())
+      .then(handleSignMessage)
+      .then(handleAuthenticate)
+      .then((auth) => handleLoggedIn(auth))
+      .catch((err) => {
+        console.log(err);
+        // setLoading(false);
+      });
+
+
+    dispatch(
+      connectSuccess({
+        account: accounts[0],
+        nftContract: nftContract,
+        nftDealContract: nftDealContract,
+        web3: web3,
+      })
+    )
+  }
+
+}

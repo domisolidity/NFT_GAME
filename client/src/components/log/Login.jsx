@@ -5,26 +5,36 @@ import {
   connectWallet,
   disconnectWallet,
   reconnect,
+  connect,
 } from "../../redux/blockchain/blockchainActions";
 
 const Login = () => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
 
-  const { errorMsg, auth } = blockchain;
+  console.log(blockchain);
+
+  const { errorMsg, auth, account } = blockchain;
+  useEffect(() => {
+    console.log(errorMsg);
+  }, [errorMsg]);
+  useEffect(() => {
+    if (!errorMsg) return;
+    alert(errorMsg);
+  }, [account, auth, errorMsg]);
 
   useEffect(() => {
-    getReconnect();
+    dispatch(connect());
     //getConnectWallet();
   }, []);
 
   const getConnectWallet = async () => {
-    if (errorMsg == "메타마스크 로그인이 필요합니다.") {
-      console.log(11);
-      const popUp = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-    }
+    // if (errorMsg == "메타마스크 로그인이 필요합니다.") {
+    //   console.log(11);
+    //   const popUp = await window.ethereum.request({
+    //     method: "eth_requestAccounts",
+    //   });
+    // }
     dispatch(connectWallet());
   };
 
@@ -33,7 +43,7 @@ const Login = () => {
   };
 
   const getReconnect = () => {
-    dispatch(reconnect());
+    dispatch(connect());
   };
   return (
     <>
