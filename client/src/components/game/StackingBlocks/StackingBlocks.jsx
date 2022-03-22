@@ -143,7 +143,7 @@ const StackingBlocks = () => {
                 {chance}
               </Text>
             </Box>
-            {itemEffect ? (
+            {itemEffect != 1 ? (
               <Box color={"#333344"} className="item-effect-box">
                 x {itemEffect}!
               </Box>

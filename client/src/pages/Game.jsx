@@ -60,7 +60,7 @@ const Game = () => {
   useEffect(() => {
     if (GameInterface.gameList.length != 0) return;
     GameInterface.getGameList();
-  }, []);
+  }, [GameInterface.gameList]);
 
   return (
     <Flex>
