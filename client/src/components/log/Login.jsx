@@ -1,77 +1,48 @@
-import { Box, Button } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Button, useColorMode, useColorModeValue } from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  connectWallet,
+  disconnectWallet,
+  reconnect,
+} from "../../redux/blockchain/blockchainActions";
 
-import { useSelector, useDispatch } from "react-redux";
-
-const Login = (props) => {
+const Login = () => {
   const dispatch = useDispatch();
-  const { web3 } = useSelector((state) => state.blockchain);
+  const blockchain = useSelector((state) => state.blockchain);
 
-  const [loading, setLoading] = useState(false); // Loading button state
+  const { errorMsg, auth } = blockchain;
 
-  const handleAuthenticate = async ({ publicAddress, signature }) =>
-    fetch(`/api/auth`, {
-      body: JSON.stringify({ publicAddress, signature }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    }).then((response) => response.json());
+  useEffect(() => {
+    getReconnect();
+    //getConnectWallet();
+  }, []);
 
-  const handleSignMessage = async ({ publicAddress, nonce }) => {
-    try {
-      const signature = await web3.eth.personal.sign(
-        `I am signing my one-time nonce: ${nonce}`,
-        publicAddress,
-        "" // MetaMask will ignore the password argument here
-      );
-      console.log(signature);
-      return { publicAddress, signature };
-    } catch (err) {
-      throw new Error("You need to sign the message to be able to log in.");
-    }
-  };
-
-  const handleSignup = (publicAddress) =>
-    fetch(`/api/users`, {
-      body: JSON.stringify({ publicAddress }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    }).then((response) => response.json());
-
-  const handleClick = async () => {
-    const coinbase = await web3.eth.getCoinbase();
-    if (!coinbase) {
-      alert("Please activate MetaMask first.");
-      return;
-    }
-
-    const publicAddress = coinbase.toLowerCase();
-    setLoading(true);
-
-    // Look if user with current publicAddress is already present on backend
-    fetch(`/api/users?publicAddress=${publicAddress}`)
-      .then((response) => response.json())
-      // If yes, retrieve it. If no, create it.
-      .then((users) => (users.length ? users[0] : handleSignup(publicAddress)))
-      // Popup MetaMask confirmation modal to sign message
-      .then(handleSignMessage)
-      // Send signature to backend on the /auth route
-      .then(handleAuthenticate)
-      // Pass accessToken back to parent component (to save it in localStorage)
-      .then((auth) => props.onLoggedIn(auth))
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
+  const getConnectWallet = async () => {
+    if (errorMsg == "메타마스크 로그인이 필요합니다.") {
+      console.log(11);
+      const popUp = await window.ethereum.request({
+        method: "eth_requestAccounts",
       });
+    }
+    dispatch(connectWallet());
   };
 
+  const getDisConnectWallet = () => {
+    dispatch(disconnectWallet());
+  };
+
+  const getReconnect = () => {
+    dispatch(reconnect());
+  };
   return (
-    <Box bg="#F93B8B">
-      <Button onClick={handleClick}>Connect Wallet</Button>
-    </Box>
+    <>
+      {auth ? (
+        <Button onClick={getDisConnectWallet}>Logout</Button>
+      ) : (
+        <Button onClick={getConnectWallet}>Login</Button>
+      )}
+    </>
   );
 };
 

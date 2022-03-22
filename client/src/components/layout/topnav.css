@@ -1,0 +1,29 @@
+.topnav {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.topnav__item-inner > span {
+  text-transform: capitalize;
+}
+
+.topnav__item-inner:hover {
+  color: #5ce3f2;
+  text-shadow: 0 0 0 transparent, 0 0 0.3rem #d1d2d0,
+    0 0 0.1rem rgba(38, 149, 255, 0.5), 0 0 0.1rem #d1d2d0, 0 0 0.1rem #d1d2d0,
+    0 0 0.1rem #d1d2d0, 0 0 0.2rem #d1d2d0, 0 0 0.1rem #d1d2d0;
+}
+
+.topnav__item-inner.active {
+  color: #5ce3f2;
+  text-shadow: 0 0 0 transparent, 0 0 0.3rem #d1d2d0,
+    0 0 0.1rem rgba(38, 149, 255, 0.5), 0 0 0.1rem #d1d2d0, 0 0 0.1rem #d1d2d0,
+    0 0 0.1rem #d1d2d0, 0 0 0.4rem #d1d2d0, 0 0 0.3rem #d1d2d0;
+}
+
+.topnav__item {
+  /* padding: 1rem 2rem; */
+  font-size: 1.5rem;
+  font-weight: 800;
+  transition: color 0.3s ease 0s;
+}
