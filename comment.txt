@@ -1,0 +1,95 @@
+프리티어 설정 적용
+npx prettier --write .
+npx prettier -w .
+
+-> npm run format:fix
+
+프리티어 설정 적용 확인
+npx prettier --check .
+npx prettier -c .
+
+-> npm run format
+
+프리티어 미적용 파일 이름 보기
+npx prettier --list-different .
+npx prettier -l .
+
+
+@ 깃 푸쉬 규칙 
+Feat - 새로운 기능 추가
+Fix - 버그 수정
+Build - 빌드 관련 파일 수정
+Ci - CI관련 설정 수정
+Docs - 문서 (문서 추가, 수정, 삭제)
+Style - 스타일 (코드 형식, 세미콜론 추가: 비즈니스 로직에 변경 없는 경우)
+Refactor - 코드 리팩토링
+Test - 테스트 (테스트 코드 추가, 수정, 삭제: 비즈니스 로직에 변경 없는 경우)
+Chore - 기타 변경사항 (빌드 스크립트 수정 등)
+
+
+@@ 머지 전 주석해제 해두기
+// getMyItemQuantity(); 
+@ refactoring
+    myNft 불러오기 리덕스 적용 (여러 컴포넌트에서 사용중)
+        - 디스패치 시점 (민팅 O / 선물 X/ 판매등록 X)
+    nft 선물 / 판매 기능 마이페이지로 합치기
+    onSaleNft db app.js 작성한거 하위로 넣기
+    onSaleNft db 적용후 리덕스 / 이벤트 사용여부 결정
+
+    
+@ style
+    nft hover
+
+
+
+
+Accounts:
+(0) 0xbe005997cc214577c575cab11d0430777145a7dd
+(1) 0x3bfa24aa222b623f91dde9b02cb97452c84daa98
+(2) 0xf3a183692d886b2e3f4578e8f27a2ba79051bdaa
+(3) 0xdc9412c646837792c4d75edf99eade051452d8c6
+(4) 0xdab40e9c5c55ae3dc74aa7946cb823b72531b457
+(5) 0x0e7e39a44b2001657fa5166c54a824e28d379081
+(6) 0x11ea69fce4e4a9eeea3c910cf2ee5754af922053
+(7) 0x5ccb892acae8b4781bc00c61208d981a923b995f
+(8) 0xc7c4d7c84a6ac3a6a84e1967ac2f659d0688376e
+(9) 0xf49c05cca88331959e4e8e7d4b4d5f8b1007d1fe
+
+Private Keys:
+(0) aa1576274ed1397557605519d5ce8683d9fdcf1a41064dbb911207c699e56011
+(1) 1a3ef562b9847ab5fc3e4fbaa9d486dd7c1061c016db202aaa21c874cabc04be
+(2) 12bb8d5a35019bca33e060a535bf50778a3ee14b6797e9e79b2504028999025d
+(3) 9f50674898c87d83387d05de2485a270ea14d605cae37818c2563425372db412
+(4) 12059e0390b40f4a38cb74a06a51422f58120afb6de1f1ef30e20448079da39f
+(5) 040acf74cc46ac3e40646022cd2bd9736b887620f9f179bd6d62daac66f9f8b4
+(6) cf9e6e0d73d8b1029f544f6944d5cecf9745935e0e16d838b671eb316e90182d
+(7) 019a7885cb866e977516f056c6453228bd2ff657ddd0cb000eb3142ee72c4d7f
+(8) fc472c2128347d1bb5157d32969f3e20789c859dc33aaec706dca3ddd62bec5d
+(9) b9daf25a6001aad269f0a94877fa58133d01f2387cd8b9890a5483196913589f
+
+useDispatch
+useSelector
+
+Accounts:
+(0) 0xff33a5edfa345846a7041ea31423140ef5c23ec6
+(1) 0x74f3f774230b0169b0b9cb720cf3bc038033042f
+(2) 0x99b23d3c08f88adcff136a20a7f93ae117a7cf7b
+(3) 0x0eff5ffec29a5d4935f179e065af0b402138a949
+(4) 0xd9d878b9b8b5f876a0897c7c9eb9889fb5c4eb74
+(5) 0xa0b85d90a781194523bda8aa448e23d7a8a47757
+(6) 0x5c9dc46f07773c6bdb7b2125ae8466092264f18a
+(7) 0xd92b3aba1d3739c88c332a220532194c5c7e5a48
+(8) 0x5e1ef1239e1e47f267f4bf23030182dd58b7ffb8
+(9) 0xf23ada7af4f60264c8e9e156d0bb65b24cf08627
+
+Private Keys:
+(0) 3692c80dd08da964116e9d68bca481b89a9b6d4a3c27132232dd14ca29dee3e9
+(1) a450b8128fdbb102058984b97847c669e86c04b64ce814771bc05d1e3cb7ce56
+(2) 17d58b9d2bd347016508dde1de873adea736a6fd8c4e6ad275a0c5283dc342de
+(3) 5531aa1a5330d47d7e8670e44ff6c6957bf6d0efd5bbb03a76e800bf693a2c9f
+(4) 58899dd93b5d819a3d1c51463f2768d65e43da3f691934771958197fec6fc889
+(5) b2c9ebd006f29ce442de096dbc2f2a1061fada1eafdb740b2c618286d8ac3c0c
+(6) 05307111e6abbabc75ac82015ce431c7a91ee3a2bed1c03d0513609b797e888b
+(7) 276a0633de923322410296f14824e452060ff667830b8bbbc647985ffc9f5518
+(8) 2c283929cd2a99231db064b2ca7fd53f266b2145fa5e60db81167f2b04029541
+(9) 1ffe087cbcaabfd36f7b41d28d237fa6a8319ac1a7601a017cf69ec1a55e28f6
