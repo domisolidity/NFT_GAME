@@ -31,6 +31,13 @@ const Tetris = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [bestScore, setBestScore] = useState("");
 
+  // 키보드 스크롤 방지
+  function stopScroll(e) {
+    if (e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40) {
+      e.preventDefault();
+    }
+  }
+
   useEffect(async () => {
     if (!(account && auth)) return;
     // 사용자 초기화
@@ -44,6 +51,7 @@ const Tetris = () => {
     // 사용자 게임 기록 불러오기
     const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
     setBestScore(recivedBestScore);
+    window.addEventListener("keydown", stopScroll);
   }, [account, auth]);
 
   // 잔여 기회 갱신

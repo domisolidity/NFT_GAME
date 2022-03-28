@@ -1,5 +1,4 @@
 import { Box, Flex, Img, Text } from "@chakra-ui/react";
-import Link from "next/link";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -14,7 +13,7 @@ const GameCard = ({ game, getSelectGame }) => {
       .call({ from: account });
     if (!haveToken) {
       alert("Nft를 가지고 있지 않습니다. \n 민팅 후 게임에 참여가 가능합니다.");
-      return false;
+      return;
     }
 
     const selectedGame = game.gameTitle;

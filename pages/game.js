@@ -1,5 +1,4 @@
 import { Box, Flex } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import TreasureHunt from "../components/game/FindTheRing/containers/App/TreasureHunt";
@@ -61,7 +60,7 @@ const Game = () => {
         <GameSelectbar gameList={gameList} getSelectGame={getSelectGame} />
       ) : // 실행중인 게임이 없으면 사이드바 표시 안하기
       null}
-      <Box m={"0 10px"} w={"100%"} minHeight={"400px"} position={`relative`}>
+      <Box m={"0 10px"} minHeight={"400px"} position={`relative`}>
         {runningGame == "" ? (
           // 실행중인 게임이 없을 땐 게임선택창 표시
           <Flex justifyContent={"space-evenly"}>

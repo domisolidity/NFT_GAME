@@ -5,7 +5,7 @@ import NftDealContract from "../../contracts/artifacts/NftDealContract.json";
 import jwtDecode from "jwt-decode";
 import { fetchData } from "../data/dataActions";
 import Cookies from "js-cookie";
-const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const LS_KEY = "login-with-metamask:auth";
 
@@ -37,12 +37,12 @@ const updateAccountRequest = (payload) => {
 };
 
 export const authenticate = () => {
-  const accessToken = Cookies.get(LS_KEY)
+  const accessToken = Cookies.get(LS_KEY);
   const auth = accessToken && JSON.parse(accessToken).accessToken;
-  console.log(" 🛠 authenticate 🛠")
+  console.log(" 🛠 authenticate 🛠");
   //토큰이 있을때 if문 실행
   if (auth) {
-    console.log(" 🛠 auth 🛠")
+    console.log(" 🛠 auth 🛠");
     const {
       payload: { id },
     } = jwtDecode(auth);
@@ -53,15 +53,14 @@ export const authenticate = () => {
       },
     })
       .then((response) => {
-        console.log("🛠 response 🛠", response)
-        response.json().ok
+        console.log("🛠 response 🛠", response);
+        response.json().ok;
       })
       .catch((err) => console.log(err));
-    console.log("🛠 isAuth1 🛠", isAuth)
-
+    console.log("🛠 isAuth1 🛠", isAuth);
 
     if (isAuth) {
-      console.log(" 🛠 isAuth2 🛠", isAuth)
+      console.log(" 🛠 isAuth2 🛠", isAuth);
       return {
         type: "AUTH",
         payload: true,
@@ -75,9 +74,8 @@ export const authenticate = () => {
   };
 };
 
-
 export const reconnect = () => {
-  console.log(" 🛠 reconnect 🛠")
+  console.log(" 🛠 reconnect 🛠");
   return async (dispatch) => {
     dispatch(connectRequest());
     let web3 = new Web3(window.ethereum);
@@ -85,25 +83,25 @@ export const reconnect = () => {
       const accounts = await window.ethereum.request({
         method: "eth_accounts",
       });
-      console.log(" 🛠 accounts 🛠", accounts)
+      console.log(" 🛠 accounts 🛠", accounts);
       const networkId = await window.ethereum.request({
         method: "net_version",
       });
       console.log(" 🛠 networkId 🛠 ", networkId);
 
       const nftNetwork = await NftContract.networks[networkId];
-      console.log(" 🚩 nftNetwork ", nftNetwork)
+      console.log(" 🚩 nftNetwork ", nftNetwork);
       const nftDealNetworkData = await NftDealContract.networks[networkId];
-      console.log(" 🚩 nftDealNetworkData ", nftDealNetworkData)
+      console.log(" 🚩 nftDealNetworkData ", nftDealNetworkData);
       const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
-      console.log(" 🚩 nftContract ", nftContract)
+      console.log(" 🚩 nftContract ", nftContract);
       const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
-      console.log(" 🚩 nftDealContract ", nftDealContract)
-      console.log("11", accounts[0]);
+      console.log(" 🚩 nftDealContract ", nftDealContract);
+      console.log("11", accounts);
 
       dispatch(
         connectSuccess({
-          account: accounts[0],
+          account: accounts.toString(),
           nftContract: nftContract,
           nftDealContract: nftDealContract,
           web3: web3,
@@ -149,7 +147,7 @@ export const updateAccount = (account) => {
 };
 
 export const connectWallet = () => {
-  console.log(" 🛠 connectWallet 🛠")
+  console.log(" 🛠 connectWallet 🛠");
   return async (dispatch) => {
     dispatch(connectRequest());
     if (window.ethereum) {
@@ -234,10 +232,10 @@ export const connectWallet = () => {
               console.log(err);
               // setLoading(false);
             });
-          console.log("22", accounts[0]);
+          console.log("22", accounts);
           dispatch(
             connectSuccess({
-              account: accounts[0],
+              account: accounts.toString(),
               nftContract: nftContract,
               nftDealContract: nftDealContract,
               web3: web3,
