@@ -86,7 +86,7 @@ var Block = /** @class */ (function () {
     this.dimension.height = this.targetBlock ? this.targetBlock.dimension.height : 2; // 블록 높이(두께)
     this.dimension.depth = this.targetBlock ? this.targetBlock.dimension.depth : 10; // 블록 깊이(세로)
     // 블록이 화면의 어느 지점에 위치할건지 정하는 녀석들(가로, 높이, 세로)
-    this.position.x = this.targetBlock ? this.targetBlock.position.x : -6;
+    this.position.x = this.targetBlock ? this.targetBlock.position.x : 0;
     this.position.y = this.dimension.height * this.index;
     this.position.z = this.targetBlock ? this.targetBlock.position.z : 0;
     // 블록 색상 랜덤 지정을 위한 변수
