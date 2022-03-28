@@ -41,3 +41,14 @@
 }
 .layout__footer {
 }
+::-webkit-scrollbar {
+  width: 0;
+}
+/* ::-webkit-scrollbar-thumb {
+  background-color: yellow;
+  height: 100px;
+}
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+
+} */
