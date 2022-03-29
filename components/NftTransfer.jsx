@@ -74,17 +74,17 @@ const NftTransfer = () => {
       });
   };
 
-  // useEffect(async () => {
-  //   if (!account) return false;
+  useEffect(async () => {
+    if (!account) return false;
 
-  //   console.log(typeof nft);
-  //   await getMyNft();
-  // }, [account]);
+    console.log(typeof nft);
+    await getMyNft();
+  }, [account]);
 
-  // useEffect(async () => {
-  //   if (!account || nft == undefined) return false;
-  //   await getMyNft();
-  // }, [nft.id]);
+  useEffect(async () => {
+    if (!account || nft == undefined) return false;
+    await getMyNft();
+  }, [nft.id]);
 
   return (
     <Grid

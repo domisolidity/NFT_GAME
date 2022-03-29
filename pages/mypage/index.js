@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Grid, GridItem, Text, Box, Button } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import { Flex, Grid, GridItem, Button } from "@chakra-ui/react";
 import NetworkCard from "../../components/NetworkCard";
 import ProfileCard from "../../components/ProfileCard";
 import Inventory from '../../components/Inventory'

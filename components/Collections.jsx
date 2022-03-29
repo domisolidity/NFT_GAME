@@ -3,6 +3,7 @@ import { Flex, Box, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import MyNftsCard from "../components/MyNftsCard";
+import Link from "next/link";
 
 const Collections = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -11,35 +12,45 @@ const Collections = () => {
   // const { myNfts } = data;
   const [myNfts, setMyNfts] = useState({
     id: null || "",
-    metadata: null || "",
-    // name: null || "",
-    // image: null || "",
-    // description: null || ""
+    name: null || "",
+    image: null || "",
+    description: null || "",
+    grade: null || "",
+    attributes: null || "",
   });
 
   const baseUri = "http://127.0.0.1:8080/ipfs";
 
   const getMyNfts = async () => {
-    await nftContract.methods
-      .getMyToken(account.toString())
-      .call({ from: account.toString() })
-      .then(async (result) => {
-        console.log("getMyNft");
-        let myNfts = [];
-        for (const info of result) {
-          if (info.uri == "") continue;
-          const response = await axios.get(
-            `${baseUri}${info.uri.slice(6)}/${info.id}.json`
-          );
-          myNfts.push({
-            id: info.id,
-            name: response.data.name,
-            image: `${baseUri}${response.data.image.slice(6)}`,
-            description: response.data.description,
-          });
-        }
-        setMyNfts(myNfts);
-      });
+    try {
+      await nftContract.methods
+        .getMyToken(account)
+        .call({ from: account })
+        .then(async (result) => {
+          console.log("getMyToken", result);
+          let mynfts = [];
+          if (!result) return true;
+          for (const info of result) {
+            if (info.uri == "") continue;
+            const response = await axios.get(
+              `${baseUri}${info.uri.slice(6)}/${info.id}.json`
+            );
+            console.log(response.data);
+            mynfts.push({
+              id: info.id,
+              grade: response.data.grade,
+              attributes: response.data.attributes,
+              name: response.data.name,
+              image: `${baseUri}${response.data.image.slice(6)}`,
+              description: response.data.description,
+            });
+          }
+          // console.log("myNft", mynfts);
+          setMyNfts(mynfts);
+        });
+    } catch (error) {
+      console.error();
+    }
   };
 
   useEffect(async () => {
@@ -57,12 +68,31 @@ const Collections = () => {
           <>
             {myNfts.map((mynft, index) => {
               return (
-                <MyNftsCard
-                  key={index}
-                  img={mynft.image}
-                  name={mynft.name}
-                  description={mynft.description}
-                />
+                <Box key={index}>
+                  <Link
+                    href={{
+                      pathname: `mypage/${mynft.id}`,
+                      query: {
+                        id: mynft.id,
+                        grade: mynft.grade,
+                        attributes: mynft.attributes,
+                        name: mynft.name,
+                        image: mynft.image,
+                        description: mynft.description,
+                      },
+                    }}
+                    as={`mypage/${mynft.id}`}
+                  >
+                    {/* id, grade, attributes, name, image, description */}
+                    <a>
+                      <MyNftsCard
+                        img={mynft.image}
+                        name={mynft.name}
+                        description={mynft.description}
+                      />
+                    </a>
+                  </Link>
+                </Box>
               );
             })}
           </>

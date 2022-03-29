@@ -12,8 +12,8 @@ router.get("/", async (req, res, next) => {
   const whereClause =
     req.query && req.query.publicAddress
       ? {
-          where: { publicAddress: req.query.publicAddress },
-        }
+        where: { publicAddress: req.query.publicAddress },
+      }
       : undefined;
   return User.findAll(whereClause)
     .then((users) => res.json(users))
@@ -43,7 +43,7 @@ router.post("/", async (req, res, next) => {
 
 /** PATCH /api/users/:userId */
 /** Authenticated route */
-router.get("/:userId", jwt(config), async (req, res, next) => {
+router.patch("/:userId", jwt(config), async (req, res, next) => {
   // Only allow to fetch current user
   console.log("userId")
   if (req.user.payload.id !== +req.params.userId) {
@@ -62,8 +62,8 @@ router.get("/:userId", jwt(config), async (req, res, next) => {
       return user
         ? res.json(user)
         : res.status(401).send({
-            error: `User with publicAddress ${req.params.userId} is not found in database`,
-          });
+          error: `User with publicAddress ${req.params.userId} is not found in database`,
+        });
     })
     .catch(next);
 });
