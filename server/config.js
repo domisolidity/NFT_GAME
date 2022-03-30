@@ -64,6 +64,12 @@ const getDatabaseConfig = async () => {
     (await UserItem.findAll()).length == 0 &&
     (await Ranking.findAll()).length == 0
   ) {
+    // 테스트 계정 1,2,3 가입시키기
+    for (let i = 0; i < 3; i++) {
+      await User.create({
+        publicAddress: testAddressArray[i],
+      });
+    }
     // 아이템 추가
     for (let i = 0; i < itemList.length; i++) {
       await Item.create({
@@ -80,17 +86,15 @@ const getDatabaseConfig = async () => {
         description: gameList[i].description,
       });
     }
-    // 테스트 계정 추가
-    for (let i = 0; i < testAddressArray.length; i++) {
-      await User.create({
-        publicAddress: testAddressArray[i],
-      });
-      // 테스트 계정들 0번인덱스 게임(블록쌓기)에 임의로 참여 기록 입력
-      await InGameUser.create({
-        user_address: testAddressArray[i],
-        game_title: gameList[0].gameTitle,
-        gameScore: Math.floor(Math.random() * 10),
-      });
+    // 테스트 계정들 게임별 임의 플레이 기록 추가
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < gameList.length; j++) {
+        await InGameUser.create({
+          user_address: testAddressArray[i],
+          game_title: gameList[j].gameTitle,
+          gameScore: Math.floor(Math.random() * 30),
+        });
+      }
     }
     // 테스트 0번 계정에 아이템 임의로 추가
     for (let i = 0; i < 30; i++) {
@@ -99,32 +103,44 @@ const getDatabaseConfig = async () => {
         item_itemName: itemList[Math.floor(Math.random() * 6)].itemName,
       });
     }
-    // 테스트 계정들 0주차 랭킹에 임의 기록
-    for (let i = 0; i < 5; i++) {
-      await Ranking.create({
-        weeks: 0,
-        game_title: gameList[0].gameTitle,
-        gameScore: 10 - i,
-        ranking: i + 1,
-        user_address: testAddressArray[i],
-      });
+
+    // 3주차까지 테스트계정 1,2,3의 임의기록 저장
+    const testWeek = 3;
+    let tempWeek = 1;
+    for (let i = 0; i < testWeek; i++) {
+      for (let j = 0; j < gameList.length; j++) {
+        let testScore = 30;
+        let tempRank = 1;
+        for (let k = 0; k < 3; k++) {
+          await Ranking.create({
+            weeks: tempWeek,
+            game_title: gameList[j].gameTitle,
+            gameScore: testScore - Math.floor(Math.random() * 10),
+            ranking: tempRank,
+            user_address: testAddressArray[k],
+          });
+          testScore = testScore - 10;
+          tempRank++;
+        }
+      }
+      tempWeek++;
     }
   }
 };
 
 /* 순위 집계 */
-/* InGameUser 테이블에서 게임별로 TOP 5를 찾아 순위 테이블에 기록하고 
+/* InGameUser 테이블에서 게임별로 TOP 3를 찾아 순위 테이블에 기록하고 
    InGameUser 테이블 초기화하기                                     */
 const rankAggregation = async () => {
-  // 게임별 TOP 5 찾기
+  // 게임별 TOP 3 찾기
   for (let i = 0; i < gameList.length; i++) {
     const latestWeekData = await Ranking.findOne({ attributes: ["weeks"], limit: 1, order: [["weeks", "desc"]] });
     const latestWeek = latestWeekData.weeks; // 최신 주(week)
     const gameTitle = gameList[i].gameTitle; // 게임명
-    // 이번 주 차 TOP 5 정보
+    // 이번 주 차 TOP 3 정보
     const thisWeekRankData = await InGameUser.findAll({
       raw: true,
-      limit: 5, // 결과로 5개만 가져올 것.
+      limit: 3, // 결과로 3개만 가져올 것.
       order: [
         ["gameScore", "desc"], // 게임점수 내림차순
         ["updatedAt", "asc"], // 갱신시간 오름차순
@@ -132,7 +148,7 @@ const rankAggregation = async () => {
       where: { game_title: gameTitle },
     });
 
-    // 찾은 TOP 5를 순위테이블에 넣어주기
+    // 찾은 TOP 3를 순위테이블에 넣어주기
     for (let i = 0; i < thisWeekRankData.length; i++)
       await Ranking.create({
         weeks: latestWeek + 1,
@@ -144,16 +160,26 @@ const rankAggregation = async () => {
   }
   await InGameUser.sync({ force: true });
   console.log(`순위 집계가 끝났습니다`);
+
+  // 테스트 계정들 게임별 임의 플레이 기록 추가
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < gameList.length; j++) {
+      await InGameUser.create({
+        user_address: testAddressArray[i],
+        game_title: gameList[j].gameTitle,
+        gameScore: Math.floor(Math.random() * 30),
+      });
+    }
+  }
 };
 
 /* 매주 순위 집계 시행하기 */
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
-  rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
-  rule.hour = 7; // UTC 차이로 +9시간인 16시가 됨
-  rule.minute = 0;
-  rule.second = 0;
-  rule.tz = "Etc/UTC";
+  // rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
+  rule.hour = 22;
+  rule.minute = 44;
+  rule.second = 00;
 
   const job = schedule.scheduleJob(rule, function () {
     rankAggregation(); // 순위집계 시행
