@@ -1,5 +1,6 @@
 import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import {
+  Button,
   ButtonGroup,
   Editable,
   EditableInput,
@@ -14,11 +15,17 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import Modal from "./Modal";
+import ImageUpload from "./ImageUpload";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const ProfileCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [Images, setImages] = useState([]);
 
   function EditableControls() {
     const {
@@ -119,12 +126,101 @@ const ProfileCard = () => {
   //   payload: { publicAddress },
   // } = jwtDecode(accessToken);
 
-  const userName = user && user.userName;
+  const getIsOpen = () => {
+    setIsOpen(!isOpen);
+  };
 
-  console.log(userName);
+  const getUserName = (e) => {
+    setUserName(e.target.value);
+    console.log(userName);
+  };
+  const updateImages = (newImages) => {
+    setImages(newImages);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    // if (!userName || Images.length == 0) {
+    //   return alert("빈칸을 채워주세요");
+    // }
+
+    const getToken = Cookies.get(LS_KEY);
+    const parsedToken = getToken && JSON.parse(getToken).accessToken;
+    setAccessToken(parsedToken);
+    const {
+      payload: { id },
+    } = jwtDecode(accessToken);
+
+    const variables = {
+      userName: userName,
+      images: Images,
+    };
+
+    fetch(`/api/users/profile/${id}`, {
+      body: JSON.stringify(variables),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+    })
+      .then((response) => response.json())
+      .then((user) => {
+        setUserName(user.userName), setImages(user.userImage);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // useEffect(async () => {
+    //   const getToken = Cookies.get(LS_KEY);
+    //   const parsedToken = getToken && JSON.parse(getToken).accessToken;
+
+    //   setAccessToken(parsedToken);
+
+    //   const {
+    //     payload: { id },
+    //   } = jwtDecode(accessToken);
+
+    //   await fetch(`/api/users/${id}`, {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   })
+    //     .then((response) => {
+    //       response.json(), console.log(response);
+    //     })
+    //     // .then((user) => setState({ ...state, user }))
+    //     .catch(window.alert);
+    // }, [account]);
+  };
+
+  let imgFile = {
+    updateImages,
+  };
+
   return (
     <>
-      <Image borderRadius="full" src="/GameCoin3.png" alt="Profile-image" />
+      <div>
+        {isOpen && (
+          <Modal closeModal={getIsOpen}>
+            <form onSubmit={onSubmit}>
+              <ImageUpload refreshImg={imgFile} />
+              <input onChange={getUserName} value={userName} />
+              <Button onClick={onSubmit}>변경하기</Button>
+            </form>
+          </Modal>
+        )}
+        <div className="profile_img">
+          <img
+            src={"/github-fill.png"}
+            alt="프로필이미지"
+            onClick={getIsOpen}
+          />
+        </div>
+      </div>
+
       <Editable
         textAlign="center"
         // defaultValue={`${userName}`}
@@ -138,18 +234,6 @@ const ProfileCard = () => {
         {/* {userName ? <div>{userName}</div> : "not set."} */}
         <EditableControls />
       </Editable>
-
-      {/* <div>
-        My userName is {userName ? <pre>{userName}</pre> : "not set."} My
-        publicAddress is <pre>{publicAddress}</pre>
-      </div>
-      <div>
-        <label htmlFor="userName">Change userName: </label>
-        <input name="userName" onChange={handleChange} />
-        <button disabled={loading} onClick={handleSubmit}>
-          Submit
-        </button>
-      </div> */}
     </>
   );
 };
