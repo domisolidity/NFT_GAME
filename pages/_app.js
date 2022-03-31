@@ -1,31 +1,31 @@
 import '../styles/globals.css'
 import { ChakraProvider } from "@chakra-ui/react";
 import wrapper from '../redux/store';
-import Header from  "../components/layout/Header.jsx";
-import Footer from  "../components/layout/Footer.jsx";
+import Header from "../components/layout/Header.jsx";
+import Footer from "../components/layout/Footer.jsx";
 import Head from "next/head"
 
 
 function MyApp({ Component, pageProps }) {
   return (
 
-      // <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <ChakraProvider>
-          <Head>
-            <title>Doremifasolidity</title>
-          </Head>
-          <div className="layout">
-            <header className="layout__header">
-              <Header/>
-            </header>
-            <content className="layout__content">
-              <Component {...pageProps} />
-            </content>
-            <footer className="layout__footer">
-              <Footer/>
-            </footer>
-          </div>
-        </ChakraProvider>
+    // <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+    <ChakraProvider>
+      <Head>
+        <title>Doremifasolidity</title>
+      </Head>
+      <div className="layout">
+        <div className="layout__header">
+          <Header />
+        </div>
+        <div className="layout__content">
+          <Component {...pageProps} />
+        </div>
+        <div className="layout__footer">
+          <Footer />
+        </div>
+      </div>
+    </ChakraProvider>
   )
 }
 

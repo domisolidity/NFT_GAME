@@ -37,7 +37,7 @@ const Main = () => {
         </div>
       </div>
       <div className="main__bottom">
-        <GameInfoCard />
+        {/* <GameInfoCard /> */}
       </div>
       <style jsx>{`
       .main {
@@ -114,8 +114,8 @@ const Main = () => {
         border: solid 0.1rem;
         border-radius: 0.5rem;
         color: #d1d2d0;
-        box-shadow: 0 0 0.1rem #2695ff, inset 0 0 0.1rem #2695ff, 0 0 0.5rem #2695ff,
-          inset 0 0 0.5rem #2695ff, 0 0 0.1rem #2695ff, inset 0 0 0.1rem #2695ff;
+        box-shadow: 0 0 0.1rem #0511f2, inset 0 0 0.1rem #0511f2, 0 0 0.5rem #0511f2,
+          inset 0 0 0.5rem #0511f2, 0 0 0.1rem #0511f2, inset 0 0 0.1rem #0511f2;
         padding: 0 3rem;
         margin-right: 2.5rem;
       }
