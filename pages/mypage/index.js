@@ -15,11 +15,12 @@ const Mypage = () => {
   const { web3, account, nftContract } = blockchain;
   // const { myNfts } = data;
   const [myNfts, setMyNfts] = useState({
-    id: null || "",
-    metadata: null || "",
-    // name: null || "",
-    // image: null || "",
-    // description: null || ""
+    id:null || "",
+    name:null || "",
+    image:null || "",
+    description:null || "",
+    grade:null || "",
+    attributes: null || "",
   })
   console.log("📌 nftContract", nftContract)
   //console.log("📌 web3", web3.eth)
@@ -34,36 +35,43 @@ const Mypage = () => {
   console.log(gameItems)
 
 
-
-  const getMyNfts = async () => {
-    await nftContract.methods
-      .getMyToken(account.toString())
-      .call({ from: account.toString() })
-      .then(async (result) => {
-        console.log("getMyNft");
-        let myNfts = [];
+  const getMyNfts = async() =>{
+    try {
+      await nftContract.methods.getMyToken(account).call({from:account}).then(async(result)=>{
+        console.log("getMyToken",result)
+        let mynfts = [];
+        if (!result) return true
         for (const info of result) {
-          if (info.uri == "") continue;
-          const response = await axios.get(
-            `${baseUri}${info.uri.slice(6)}/${info.id}.json`
-          );
-          myNfts.push({
+          if(info.uri == "") continue;
+          const response = await axios.get( `${baseUri}${info.uri.slice(6)}/${info.id}.json`)
+          console.log(response.data)
+          mynfts.push({
             id: info.id,
+            grade: response.data.grade,
+            attributes: response.data.attributes,
             name: response.data.name,
             image: `${baseUri}${response.data.image.slice(6)}`,
             description: response.data.description,
-          });
+          })
         }
-        console.log("myNft", myNfts);
-        setMyNfts(myNfts)
+        // console.log("myNft", mynfts);
+        setMyNfts(mynfts)
       })
+    } catch (error) {
+      console.error()
+    }
   }
 
   // 아이템 목록 가져오기
-  const getGameItems = async () =>
-    await axios
-      .get(`/api/items/game-items`)
-      .then((res) => setGameItems(res.data));
+  const getGameItems = async () => {
+    try {
+      await axios
+        .get(`/api/items/game-items`)
+        .then((res) => setGameItems(res.data));
+    } catch (error) {
+      console.error()
+    }
+  }
 
   useEffect(async () => {
     if (!account) return false;
@@ -91,15 +99,29 @@ const Mypage = () => {
               {myNfts[0] ? (
                 <>
                   {myNfts.map((mynft, index) => {
-                    return (
-                      <>
-                        <MyNftsCard
-                          key={index}
-                          img={mynft.image}
-                          name={mynft.name}
-                          description={mynft.description}
-                        />
-                      </>
+                    return (    
+                      <Box key={index}>
+                        <Link  href={{
+                          pathname:`mypage/${mynft.id}`,
+                          query:{
+                            id: mynft.id,
+                            grade: mynft.grade,
+                            attributes: mynft.attributes,
+                            name: mynft.name,
+                            image: mynft.image,
+                            description: mynft.description
+                          }
+                        }} as={`mypage/${mynft.id}`}>  
+                        {/* id, grade, attributes, name, image, description */}
+                          <a>
+                            <MyNftsCard
+                              img={mynft.image}
+                              name={mynft.name}
+                              description={mynft.description}
+                              />              
+                          </a>
+                        </Link>
+                      </Box> 
                     );
                   })}
                 </>

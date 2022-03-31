@@ -1,4 +1,12 @@
 {
-    "presets": ["next/babel"],
-    "plugins": []
-  }
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "babel-plugin-styled-components",
+      {
+        "ssr": true,
+        "displayName": true // 개발모드일때 브라우저에서 styled components의 클래스 이름을 쉽게 확인 할 수 있게 함
+      }
+    ]
+  ]
+}
