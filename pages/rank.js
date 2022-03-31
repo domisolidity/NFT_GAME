@@ -55,7 +55,7 @@ const Rank = ({ gameList }) => {
           </Flex>
         </Flex>
       ) : (
-        <BlankComponent receivedText={"게임을 선택하여 게임별 참여자들의 랭킹을 보세요!"} />
+        <BlankComponent receivedText={"게임을 선택하여 게임별 참여자들의 순서를 확인하세요!"} />
       )}
     </Flex>
   );
