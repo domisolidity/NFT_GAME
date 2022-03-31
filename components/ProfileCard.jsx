@@ -56,71 +56,71 @@ const ProfileCard = () => {
 
   const [accessToken, setAccessToken] = useState("");
 
-  const [state, setState] = useState({
-    loading: false,
-    user: "",
-    userName: "",
-  });
+  // const [state, setState] = useState({
+  //   loading: false,
+  //   user: "",
+  //   userName: "",
+  // });
 
-  const { loading, user } = state;
+  // const { loading, user } = state;
 
-  useEffect(async () => {
-    const getToken = Cookies.get(LS_KEY);
-    const parsedToken = getToken && JSON.parse(getToken).accessToken;
+  // useEffect(async () => {
+  //   const getToken = Cookies.get(LS_KEY);
+  //   const parsedToken = getToken && JSON.parse(getToken).accessToken;
 
-    setAccessToken(parsedToken);
+  //   setAccessToken(parsedToken);
 
-    console.log(typeof accessToken);
+  //   console.log(typeof accessToken);
 
-    const {
-      payload: { id },
-    } = jwtDecode(accessToken);
+  //   const {
+  //     payload: { id },
+  //   } = jwtDecode(accessToken);
 
-    console.log(jwtDecode(accessToken).payload.id);
+  //   console.log(jwtDecode(accessToken).payload.id);
 
-    await fetch(`/api/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((user) => setState({ ...state, user }))
-      .catch(window.alert);
-  }, [account]);
+  //   await fetch(`/api/users/${id}`, {
+  //     headers: {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((user) => setState({ ...state, user }))
+  //     .catch(window.alert);
+  // }, [account]);
 
-  const handleChange = ({ target: { value } }) => {
-    setState({ ...state, userName: value });
-  };
+  // const handleChange = ({ target: { value } }) => {
+  //   setState({ ...state, userName: value });
+  // };
 
-  console.log(state);
+  // console.log(state);
 
-  const handleSubmit = () => {
-    const { user, userName } = state;
+  // const handleSubmit = () => {
+  //   const { user, userName } = state;
 
-    setState({ ...state, loading: true });
+  //   setState({ ...state, loading: true });
 
-    if (!user) {
-      console.log(
-        "The user id has not been fetched yet. Please try again in 5 seconds."
-      );
-      return;
-    }
+  //   if (!user) {
+  //     console.log(
+  //       "The user id has not been fetched yet. Please try again in 5 seconds."
+  //     );
+  //     return;
+  //   }
 
-    fetch(`/api/users/${user.userId}`, {
-      body: JSON.stringify({ userName }),
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      method: "PATCH",
-    })
-      .then((response) => response.json())
-      .then((user) => setState({ ...state, loading: false, user }))
-      .catch((err) => {
-        console.log(err);
-        setState({ ...state, loading: false });
-      });
-  };
+  //   fetch(`/api/users/${user.userId}`, {
+  //     body: JSON.stringify({ userName }),
+  //     headers: {
+  //       Authorization: `Bearer ${accessToken}`,
+  //       "Content-Type": "application/json",
+  //     },
+  //     method: "PATCH",
+  //   })
+  //     .then((response) => response.json())
+  //     .then((user) => setState({ ...state, loading: false, user }))
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setState({ ...state, loading: false });
+  //     });
+  // };
 
   // const {
   //   payload: { publicAddress },
@@ -154,7 +154,7 @@ const ProfileCard = () => {
 
     const variables = {
       userName: userName,
-      images: Images,
+      userImage: Images[0],
     };
 
     fetch(`/api/users/profile/${id}`, {
@@ -167,7 +167,8 @@ const ProfileCard = () => {
     })
       .then((response) => response.json())
       .then((user) => {
-        setUserName(user.userName), setImages(user.userImage);
+        setUserName(user.userName);
+        setImages(user.userImage);
       })
       .catch((err) => {
         console.log(err);
@@ -213,27 +214,10 @@ const ProfileCard = () => {
           </Modal>
         )}
         <div className="profile_img">
-          <img
-            src={"/github-fill.png"}
-            alt="프로필이미지"
-            onClick={getIsOpen}
-          />
+          <img src={`${Images[0]}`} alt="프로필이미지" onClick={getIsOpen} />
         </div>
       </div>
-
-      <Editable
-        textAlign="center"
-        // defaultValue={`${userName}`}
-        fontSize="1.2rem"
-        isPreviewFocusable={false}
-        m={3}
-      >
-        <EditablePreview />
-        {/* Here is the custom input */}
-        <Input as={EditableInput} onChange={handleChange} />
-        {/* {userName ? <div>{userName}</div> : "not set."} */}
-        <EditableControls />
-      </Editable>
+      {userName}
     </>
   );
 };
