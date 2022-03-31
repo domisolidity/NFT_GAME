@@ -3,6 +3,7 @@ const initialState = {
   account: null,
   nftContract: null,
   nftDealContract: null,
+  gameTokenContract: null,
   web3: null,
   errorMsg: "",
   auth: false,
@@ -22,6 +23,7 @@ const blockchainReducer = (state = initialState, action) => {
         account: action.payload.account.toString(),
         nftContract: action.payload.nftContract,
         nftDealContract: action.payload.nftDealContract,
+        gameTokenContract: action.payload.gameTokenContract,
         web3: action.payload.web3,
         errorMsg: "",
       };

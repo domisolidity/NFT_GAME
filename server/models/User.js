@@ -21,6 +21,10 @@ module.exports = class User extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: true,
         },
+        userImage: {
+          type: Sequelize.STRING,
+          allowNull: true,
+        },
         nonce: {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false,

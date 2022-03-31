@@ -8,14 +8,12 @@ import InventoryCard from "./InventoryCard";
 const Inventory = () => {
   const blockchain = useSelector((state) => state.blockchain);
   console.log("blockchain", blockchain);
-  const { web3, account, nftContract } = blockchain;
+  const { account, nftContract } = blockchain;
 
   console.log("📌 nftContract", nftContract);
 
   // 게임 아이템 목록
   const [gameItems, setGameItems] = useState([]);
-
-  console.log(gameItems);
 
   // 아이템 목록 가져오기
   const getGameItems = async () =>

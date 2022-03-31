@@ -24,7 +24,8 @@
 }
 
 .layout {
-  background: linear-gradient(to top, #004e92, #000428);
+  background: #000428;
+  /* linear-gradient(to top, #004e92, #000428); */
   display: flex;
   flex-direction: column;
 }

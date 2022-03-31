@@ -1,5 +1,6 @@
 import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import {
+  Button,
   ButtonGroup,
   Editable,
   EditableInput,
@@ -12,9 +13,20 @@ import {
 } from "@chakra-ui/react";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import Modal from "./Modal";
+import ImageUpload from "./ImageUpload";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const ProfileCard = () => {
+  const blockchain = useSelector((state) => state.blockchain);
+  const { account } = blockchain;
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [Images, setImages] = useState([]);
+
   function EditableControls() {
     const {
       isEditing,
@@ -25,7 +37,11 @@ const ProfileCard = () => {
 
     return isEditing ? (
       <ButtonGroup justifyContent="center" size="sm">
-        <IconButton icon={<CheckIcon />} {...getSubmitButtonProps()} />
+        <IconButton
+          icon={<CheckIcon />}
+          {...getSubmitButtonProps()}
+          onClick={handleSubmit}
+        />
         <IconButton icon={<CloseIcon />} {...getCancelButtonProps()} />
       </ButtonGroup>
     ) : (
@@ -36,47 +52,47 @@ const ProfileCard = () => {
   }
 
   ///////////////////////////////////////////////////////////////
-  // const LS_KEY = "login-with-metamask:auth";
+  const LS_KEY = "login-with-metamask:auth";
 
-  // const [accessToken, setAccessToken] = useState("");
+  const [accessToken, setAccessToken] = useState("");
 
   // const [state, setState] = useState({
   //   loading: false,
-  //   user: undefined,
+  //   user: "",
   //   userName: "",
   // });
 
-  // useEffect(() => {
-  //   const getToken = localStorage.getItem(LS_KEY);
+  // const { loading, user } = state;
+
+  // useEffect(async () => {
+  //   const getToken = Cookies.get(LS_KEY);
   //   const parsedToken = getToken && JSON.parse(getToken).accessToken;
 
   //   setAccessToken(parsedToken);
 
-  //   // const {
-  //   //   payload: { id },
-  //   // } = jwtDecode(accessToken);
+  //   console.log(typeof accessToken);
 
-  //   console.log(jwtDecode(accessToken));
+  //   const {
+  //     payload: { id },
+  //   } = jwtDecode(accessToken);
 
-  // await fetch(`/api/users/${id}`, {
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //   },
-  // })
-  //   .then((response) => response.json())
-  //   .then((user) => setState({ ...state, user }))
-  //   .catch(window.alert);
+  //   console.log(jwtDecode(accessToken).payload.id);
 
-  // const {
-  //   payload: { publicAddress },
-  // } = jwtDecode(accessToken);
-
-  // console.log(jwtDecode(accessToken));
-  // }, []);
+  //   await fetch(`/api/users/${id}`, {
+  //     headers: {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((user) => setState({ ...state, user }))
+  //     .catch(window.alert);
+  // }, [account]);
 
   // const handleChange = ({ target: { value } }) => {
   //   setState({ ...state, userName: value });
   // };
+
+  // console.log(state);
 
   // const handleSubmit = () => {
   //   const { user, userName } = state;
@@ -90,7 +106,7 @@ const ProfileCard = () => {
   //     return;
   //   }
 
-  //   fetch(`${baseUrl}/users/${user.id}`, {
+  //   fetch(`/api/users/${user.userId}`, {
   //     body: JSON.stringify({ userName }),
   //     headers: {
   //       Authorization: `Bearer ${accessToken}`,
@@ -110,36 +126,98 @@ const ProfileCard = () => {
   //   payload: { publicAddress },
   // } = jwtDecode(accessToken);
 
-  // const { loading, user } = state;
+  const getIsOpen = () => {
+    setIsOpen(!isOpen);
+  };
 
-  // const userName = user && user.userName;
+  const getUserName = (e) => {
+    setUserName(e.target.value);
+    console.log(userName);
+  };
+  const updateImages = (newImages) => {
+    setImages(newImages);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    // if (!userName || Images.length == 0) {
+    //   return alert("빈칸을 채워주세요");
+    // }
+
+    const getToken = Cookies.get(LS_KEY);
+    const parsedToken = getToken && JSON.parse(getToken).accessToken;
+    setAccessToken(parsedToken);
+    const {
+      payload: { id },
+    } = jwtDecode(accessToken);
+
+    const variables = {
+      userName: userName,
+      userImage: Images[0],
+    };
+
+    fetch(`/api/users/profile/${id}`, {
+      body: JSON.stringify(variables),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+    })
+      .then((response) => response.json())
+      .then((user) => {
+        setUserName(user.userName);
+        setImages(user.userImage);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // useEffect(async () => {
+    //   const getToken = Cookies.get(LS_KEY);
+    //   const parsedToken = getToken && JSON.parse(getToken).accessToken;
+
+    //   setAccessToken(parsedToken);
+
+    //   const {
+    //     payload: { id },
+    //   } = jwtDecode(accessToken);
+
+    //   await fetch(`/api/users/${id}`, {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   })
+    //     .then((response) => {
+    //       response.json(), console.log(response);
+    //     })
+    //     // .then((user) => setState({ ...state, user }))
+    //     .catch(window.alert);
+    // }, [account]);
+  };
+
+  let imgFile = {
+    updateImages,
+  };
+
   return (
     <>
-      <Image borderRadius="full" src="/GameCoin3.png" alt="Profile-image" />
-      <Editable
-        textAlign="center"
-        defaultValue={"Adsa"}
-        fontSize="1.2rem"
-        isPreviewFocusable={false}
-        m={3}
-      >
-        <EditablePreview />
-        {/* Here is the custom input */}
-        <Input as={EditableInput} />
-        <EditableControls />
-      </Editable>
-
-      {/* <div>
-        My userName is {userName ? <pre>{userName}</pre> : "not set."} My
-        publicAddress is <pre>{publicAddress}</pre>
-      </div>
       <div>
-        <label htmlFor="userName">Change userName: </label>
-        <input name="userName" onChange={handleChange} />
-        <button disabled={loading} onClick={handleSubmit}>
-          Submit
-        </button>
-      </div> */}
+        {isOpen && (
+          <Modal closeModal={getIsOpen}>
+            <form onSubmit={onSubmit}>
+              <ImageUpload refreshImg={imgFile} />
+              <input onChange={getUserName} value={userName} />
+              <Button onClick={onSubmit}>변경하기</Button>
+            </form>
+          </Modal>
+        )}
+        <div className="profile_img">
+          <img src={`${Images[0]}`} alt="프로필이미지" onClick={getIsOpen} />
+        </div>
+      </div>
+      {userName}
     </>
   );
 };
