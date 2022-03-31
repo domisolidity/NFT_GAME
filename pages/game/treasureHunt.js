@@ -1,16 +1,16 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { BrowserRouter, Routes } from "react-router-dom";
 import { Redirect, Route } from "react-router";
-import ContextProvider from "../../store/contextProvider";
-import { createChests } from "../../utils";
-import { CHEST_COUNT, GameStatus } from "../../consts";
-import reducer from "../../store/reducer";
-import Menu from "../../components/Menu/Menu";
-import GameInterface from "../../../GameInterface";
+import ContextProvider from "../../components/game/FindTheRing/store/contextProvider";
+import { createChests } from "../../components/game/FindTheRing/utils";
+import { CHEST_COUNT, GameStatus } from "../../components/game/FindTheRing/consts";
+import reducer from "../../components/game/FindTheRing//store/reducer";
+import Menu from "../../components/game/FindTheRing/components/Menu/Menu";
 import { useSelector } from "react-redux";
-import GameItem from "../../../GameItem";
-import ChestContainer from "../../components/ChestContainer/ChestContainer";
-import ControlPanel from "../../components/ControlPanel/ControlPanel";
+import GameInterface from "../../components/game/GameInterface";
+import GameItem from "../../components/game/GameItem";
+import ChestContainer from "../../components/game/FindTheRing/components/ChestContainer/ChestContainer";
+import ControlPanel from "../../components/game/FindTheRing/components/ControlPanel/ControlPanel";
 
 const TreasureHunt = () => {
   const blockchain = useSelector((state) => state.blockchain);
