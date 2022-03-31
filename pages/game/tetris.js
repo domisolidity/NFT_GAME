@@ -1,35 +1,49 @@
 import React, { useEffect, useState } from "react";
 
-import { createStage, didCollide } from "./gameHelpers";
+import { createStage, didCollide } from "../../components/game/Tetris/gameHelpers";
 
 // Custom Hooks
-import { useInterval } from "./hooks/useInterval";
-import { usePlayer } from "./hooks/usePlayer";
-import { useStage } from "./hooks/useStage";
-import { useGameStatus } from "./hooks/useGameStatus";
+import { useInterval } from "../../components/game/Tetris/hooks/useInterval";
+import { usePlayer } from "../../components/game/Tetris/hooks/usePlayer";
+import { useStage } from "../../components/game/Tetris/hooks/useStage";
+import { useGameStatus } from "../../components/game/Tetris/hooks/useGameStatus";
 
 // Components
-import Stage from "./Stage";
-import Display from "./Display";
-import StartButton from "./StartButton";
+import Stage from "../../components/game/Tetris/Stage";
+import Display from "../../components/game/Tetris/Display";
+import StartButton from "../../components/game/Tetris/StartButton";
 
 // Styled Components
-import { StyledTetrisWrapper, StyledTetris } from "./styles/StyledTetris";
+import { StyledTetrisWrapper, StyledTetris } from "../../components/game/Tetris/styles/StyledTetris";
 
-import GameInterface from "../GameInterface";
+import GameInterface from "../../components/game/GameInterface";
 import { useSelector } from "react-redux";
-import GameItem from "../GameItem";
+import GameItem from "../../components/game/GameItem";
+import GameSelectbar from "../../components/game/GameSelectbar";
 
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
   const { gameTitle } = GameInterface.gameList[1];
 
+  const [dropTime, setDropTime] = useState(null);
+  const [gameOver, setGameOver] = useState(false);
+
+  const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
+  const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
+  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
   const [chance, setChance] = useState("");
   const [gameItems, setGameItems] = useState("");
   const [itemEffect, setItemEffect] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [bestScore, setBestScore] = useState("");
+
+  // 키보드 스크롤 방지
+  function stopScroll(e) {
+    if (e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40) {
+      e.preventDefault();
+    }
+  }
 
   useEffect(async () => {
     if (!(account && auth)) return;
@@ -44,6 +58,7 @@ const Tetris = () => {
     // 사용자 게임 기록 불러오기
     const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
     setBestScore(recivedBestScore);
+    window.addEventListener("keydown", stopScroll);
   }, [account, auth]);
 
   // 잔여 기회 갱신
@@ -55,13 +70,6 @@ const Tetris = () => {
   const getItemEffect = async (recivedItemEffect) => {
     setItemEffect(recivedItemEffect);
   };
-
-  const [dropTime, setDropTime] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
-
-  const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
-  const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
-  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
   // left-right
   const movePlayer = (dir) => {
@@ -152,6 +160,7 @@ const Tetris = () => {
   return (
     // 키 누름을 감지하기 위해 감싸는 스타일 래퍼
     <>
+      <GameSelectbar />
       <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
         <StyledTetris>
           <Stage stage={stage} gameOver={gameOver} />

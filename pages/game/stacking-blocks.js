@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import GameInterface from "../GameInterface";
-import GameItem from "../GameItem";
+import GameInterface from "../../components/game/GameInterface";
+import GameItem from "../../components/game/GameItem";
+import { useRouter } from "next/router";
+import GameSelectbar from "../../components/game/GameSelectbar";
 
 const StackingBlocks = () => {
+  const router = useRouter();
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
+  console.log(GameInterface.gameList)
   const { gameTitle } = GameInterface.gameList[0];
 
   const [score, setScore] = useState(0);
@@ -76,36 +80,42 @@ const StackingBlocks = () => {
 
   // 블록쌓기 게임 불러오기
   useEffect(() => {
-    if (!(account && auth)) return;
-
+    // if (!(account && auth)) return;
+    // if (document.getElementsByClassName("gameScript")) return
     const scriptSrc = [
       "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
       "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js",
-      "./blockGameScript.js",
+      "../blockGameScript.js",
     ];
     const scripts = [, ,];
-    for (let i = 0; i < scriptSrc.length; i++) {
-      // <script> 태그를 만들어 배열에 넣고
-      scripts[i] = document.createElement("script");
-      // 그 태그의 src 정보를 넣어
-      scripts[i].src = scriptSrc[i];
-      scripts[i].async = true;
-      // 문서 body에 추가해준다
-      document.body.appendChild(scripts[i]);
-    }
-
+    setTimeout(() => {
+      console.log(document.getElementsByClassName("gameScript"))
+      // if (document.body.scriptSrc[0]) return;
+      for (let i = 0; i < scriptSrc.length; i++) {
+        // <script> 태그를 만들어 배열에 넣고
+        scripts[i] = document.createElement("script");
+        // 그 태그의 src 정보를 넣어
+        scripts[i].src = scriptSrc[i];
+        scripts[i].className = "gameScript";
+        scripts[i].async = true;
+        // 문서 body에 추가해준다
+        document.body.appendChild(scripts[i]);
+      }
+    }, 0)
     return () => {
       scripts.forEach((script) => {
         // 스크립트 태그 지워주는 녀석
         document.body.removeChild(script);
       });
     };
+
   }, [account, auth]);
 
   return (
     <>
       {account ? (
         <>
+          <GameSelectbar />
           <div id="blockGameContainer">
             <div id="game"></div>
             <div id="score">0</div>

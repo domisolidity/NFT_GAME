@@ -15,6 +15,9 @@ module.exports = class Game extends Sequelize.Model {
           type: Sequelize.STRING,
           unique: true, // 고유하게,
         },
+        gameUrl: {
+          type: Sequelize.STRING,
+        },
         description: {
           type: Sequelize.STRING,
         },

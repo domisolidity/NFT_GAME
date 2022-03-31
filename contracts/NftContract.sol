@@ -7,9 +7,11 @@ pragma solidity ^0.8.0;
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "./BEP20/SafeMath.sol";
 
 contract NftContract is ERC721Enumerable {
   using Counters for Counters.Counter;
+  using SafeMath for uint;
   // Counters.Counter private tokenIds; //잠깐만 public 사용중
   // Counters.Counter private tokenIds_red; //잠깐만 public 사용중
   // Counters.Counter private tokenIds_green; //잠깐만 public 사용중
@@ -135,8 +137,13 @@ contract NftContract is ERC721Enumerable {
 
     _mint(_to, tokenId);
     _setTokenURI(tokenId, _tokenURI);
-
     //setApprovalForAll(배포한 거래 계약 주소, true); => 에러모음에 적기
+  }
+
+
+  function getMyLastNft(address _account) public view returns(RenderToken memory){
+    uint myNftLength = myNfts[_account].length;  
+    return myNfts[_account][myNftLength-1];  
   }
 }
 
