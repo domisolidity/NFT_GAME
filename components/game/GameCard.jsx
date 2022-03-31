@@ -1,6 +1,7 @@
 import { Box, Flex, Img, Text } from "@chakra-ui/react";
 import React from "react";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 const GameCard = ({ game, getSelectGame }) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -15,19 +16,31 @@ const GameCard = ({ game, getSelectGame }) => {
       alert("Nft를 가지고 있지 않습니다. \n 민팅 후 게임에 참여가 가능합니다.");
       return;
     }
-
-    const selectedGame = game.gameTitle;
-    if (window.confirm(`${game.description}\n게임을 플레이 하시겠습니까?`))
-      getSelectGame(selectedGame);
   };
+
+  // const selectGame = async() =>{
+  //   console.log("게임",game)
+  //   //홀더 자격 확인
+  //   const haveToken =  await nftContract.methods.haveTokenBool(account).call({from: account})
+  //   if ( !haveToken ) {
+  //     alert ("Nft를 가지고 있지 않습니다. \n 민팅 후 게임에 참여가 가능합니다.")
+  //     return false;
+  //   } else{
+  //     const selectedGame = game.gameTitle;
+  //     console.log("selectedGame", game.gameTitle)
+  //     if (window.confirm(`${game.description}\n게임을 플레이 하시겠습니까?`))
+  //     await getSelectGame(selectedGame);
+  //     return true;
+  //   }
+
+  // }
   return (
     <Box
       overflow={`hidden`}
       borderRadius={`15px`}
-      w={`30%`}
+      w={`100%`}
       h={`100%`}
       position={`relative`}
-      onClick={selectGame}
     >
       <Img w={`100%`} src={`./images/game_${game.gameId}.png`} />
       <Flex

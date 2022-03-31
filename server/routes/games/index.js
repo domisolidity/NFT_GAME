@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, Game, InGameUser, Item, UserItem } = require("../../models");
+const { User, Game, InGameUser,Ranking, Item, UserItem } = require("../../models");
 
 /* 게임목록 불러오기 */
 router.get("/game-list", async (req, res) => {
@@ -99,5 +99,15 @@ router.post("/send-score", async (req, res) => {
   });
   res.send(after);
 });
+
+
+router.get("/rank",async (req,res)=>{
+  console.log("랭킹`");
+  const rank = await Ranking.findAll({
+    attributes: ['user_address','ranking','game_title'],
+    order:[['game_title'],['ranking']]
+  })
+  res.send(rank)
+})
 
 module.exports = router;
