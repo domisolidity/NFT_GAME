@@ -19,6 +19,7 @@ import { StyledTetrisWrapper, StyledTetris } from "../../components/game/Tetris/
 import GameInterface from "../../components/game/GameInterface";
 import { useSelector } from "react-redux";
 import GameItem from "../../components/game/GameItem";
+import GameSelectbar from "../../components/game/GameSelectbar";
 
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -159,6 +160,7 @@ const Tetris = () => {
   return (
     // 키 누름을 감지하기 위해 감싸는 스타일 래퍼
     <>
+      <GameSelectbar />
       <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
         <StyledTetris>
           <Stage stage={stage} gameOver={gameOver} />

@@ -1,6 +1,26 @@
 import axios from "axios";
 
-const gameList = [];
+const gameList = [
+  {
+    gameId: 1,
+    gameTitle: "블록쌓기",
+    gameUrl: "stacking-blocks",
+    description:
+      "스르륵 움직이는 블록을 단단히 고정된 블록에 정확한 순간에 착 놓아서 쑥쑥 높게 쌓아올리는 게임",
+  },
+  {
+    gameId: 2,
+    gameTitle: "테트리스",
+    gameUrl: "tetris",
+    description: "긴 거 필요할 때 꼭 안 나오는 그 게임",
+  },
+  {
+    gameId: 3,
+    gameTitle: "보물찾기",
+    gameUrl: "treasure",
+    description: "운으로 승부하는 운빨 존망겜",
+  },
+];
 
 const getGameList = async () => {
   const response = await axios.get(`/api/games/game-list`);

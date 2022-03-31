@@ -4,13 +4,14 @@ import { Redirect, Route } from "react-router";
 import ContextProvider from "../../components/game/FindTheRing/store/contextProvider";
 import { createChests } from "../../components/game/FindTheRing/utils";
 import { CHEST_COUNT, GameStatus } from "../../components/game/FindTheRing/consts";
-import reducer from "../../components/game/FindTheRing//store/reducer";
+import reducer from "../../components/game/FindTheRing/store/reducer";
 import Menu from "../../components/game/FindTheRing/components/Menu/Menu";
 import { useSelector } from "react-redux";
 import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
 import ChestContainer from "../../components/game/FindTheRing/components/ChestContainer/ChestContainer";
 import ControlPanel from "../../components/game/FindTheRing/components/ControlPanel/ControlPanel";
+import GameSelectbar from "../../components/game/GameSelectbar";
 
 const TreasureHunt = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -74,66 +75,69 @@ const TreasureHunt = () => {
   }, []);
 
   return (
-    <ContextProvider state={state} dispatch={dispatch}>
-      <div className="App">
-        <div className="App__container">
-          {isPlaying ? (
-            <>
-              <h1 className="App__heading">상자를 열어요!</h1>
-              <ChestContainer />
-              <ControlPanel
-                gameStart={gameStart}
-                getAttemptsMade={getAttemptsMade}
-                account={account}
-                gameTitle={gameTitle}
-                score={score}
-                itemEffect={itemEffect}
-              />
-            </>
-          ) : (
-            <>
-              <h1 className="App__heading">최소한의 횟수로 링을 찾으세요</h1>
-              <Menu gameStart={gameStart} />
-            </>
-          )}
-        </div>
-        <div>
-          {gameItems &&
-            gameItems.map((item) => (
-              <GameItem
-                key={item.itemId}
-                item={item}
-                gameTitle={gameTitle}
-                getItemEffect={getItemEffect}
-                itemEffect={itemEffect}
-                isPlaying={isPlaying}
-                updateChance={updateChance}
-              />
-            ))}
-        </div>
-        <div className="score__box">
-          점수
-          <br />
-          {itemEffect == 1 ? score : Math.ceil(score * itemEffect)}
-        </div>
-        {itemEffect == 1 ? null : (
-          <div className="item_effect__box">
-            이번 판 점수
-            <br />
-            {Math.round((itemEffect - 1) * 100)} % 증가!
+    <>
+      <GameSelectbar />
+
+      <ContextProvider state={state} dispatch={dispatch}>
+        <div className="App">
+          <div className="App__container">
+            {isPlaying ? (
+              <>
+                <h1 className="App__heading">상자를 열어요!</h1>
+                <ChestContainer />
+                <ControlPanel
+                  gameStart={gameStart}
+                  getAttemptsMade={getAttemptsMade}
+                  account={account}
+                  gameTitle={gameTitle}
+                  score={score}
+                  itemEffect={itemEffect}
+                />
+              </>
+            ) : (
+              <>
+                <h1 className="App__heading">최소한의 횟수로 링을 찾으세요</h1>
+                <Menu gameStart={gameStart} />
+              </>
+            )}
           </div>
-        )}
-        <div className="best_score__box">
-          최고기록
-          <br />
-          {bestScore}
-        </div>
-        <div className="chance__box">
-          남은 기회
-          <br />
-          {chance}
-        </div>
-        <style jsx>{`
+          <div>
+            {gameItems &&
+              gameItems.map((item) => (
+                <GameItem
+                  key={item.itemId}
+                  item={item}
+                  gameTitle={gameTitle}
+                  getItemEffect={getItemEffect}
+                  itemEffect={itemEffect}
+                  isPlaying={isPlaying}
+                  updateChance={updateChance}
+                />
+              ))}
+          </div>
+          <div className="score__box">
+            점수
+            <br />
+            {itemEffect == 1 ? score : Math.ceil(score * itemEffect)}
+          </div>
+          {itemEffect == 1 ? null : (
+            <div className="item_effect__box">
+              이번 판 점수
+              <br />
+              {Math.round((itemEffect - 1) * 100)} % 증가!
+            </div>
+          )}
+          <div className="best_score__box">
+            최고기록
+            <br />
+            {bestScore}
+          </div>
+          <div className="chance__box">
+            남은 기회
+            <br />
+            {chance}
+          </div>
+          <style jsx>{`
           .App {
             min-height: 100%;
             display: flex;
@@ -184,8 +188,9 @@ const TreasureHunt = () => {
             text-align: center;
           }
         `}</style>
-      </div>
-    </ContextProvider>
+        </div>
+      </ContextProvider>
+    </>
   );
 };
 

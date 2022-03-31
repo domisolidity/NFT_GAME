@@ -4,6 +4,7 @@ import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
 import { useRouter } from "next/router";
+import GameSelectbar from "../../components/game/GameSelectbar";
 
 const StackingBlocks = () => {
   const router = useRouter();
@@ -87,9 +88,9 @@ const StackingBlocks = () => {
       "../blockGameScript.js",
     ];
     const scripts = [, ,];
-    setTimeout (() => {
+    setTimeout(() => {
       console.log(document.getElementsByClassName("gameScript"))
-          // if (document.body.scriptSrc[0]) return;
+      // if (document.body.scriptSrc[0]) return;
       for (let i = 0; i < scriptSrc.length; i++) {
         // <script> 태그를 만들어 배열에 넣고
         scripts[i] = document.createElement("script");
@@ -100,7 +101,7 @@ const StackingBlocks = () => {
         // 문서 body에 추가해준다
         document.body.appendChild(scripts[i]);
       }
-    },0)
+    }, 0)
     return () => {
       scripts.forEach((script) => {
         // 스크립트 태그 지워주는 녀석
@@ -114,6 +115,7 @@ const StackingBlocks = () => {
     <>
       {account ? (
         <>
+          <GameSelectbar />
           <div id="blockGameContainer">
             <div id="game"></div>
             <div id="score">0</div>
