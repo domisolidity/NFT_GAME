@@ -34,7 +34,10 @@ const Tetris = () => {
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
   const [chance, setChance] = useState("");
   const [gameItems, setGameItems] = useState("");
-  const [itemEffect, setItemEffect] = useState(1);
+  const [resultBonus, setResultBonus] = useState("");
+  const [previousScore, setPreviousScore] = useState("");
+  const [extraPoints, setExtraPoints] = useState(0);
+  const [extraScore, setExtraScore] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [bestScore, setBestScore] = useState("");
 
@@ -44,6 +47,22 @@ const Tetris = () => {
       e.preventDefault();
     }
   }
+
+  // 반전 아이템 사용 시 현재 점수를 useState에 담기
+  useEffect(() => {
+    if (extraPoints) {
+      setExtraScore(score);
+      setPreviousScore(score);
+    }
+  }, [extraPoints]);
+
+  // 반전 아이템 사용 중 추가점수 부여
+  useEffect(() => {
+    if (extraPoints) {
+      setExtraScore(extraScore + (score - previousScore) * parseFloat(extraPoints));
+      setPreviousScore(score);
+    }
+  }, [score]);
 
   useEffect(async () => {
     if (!(account && auth)) return;
@@ -68,7 +87,12 @@ const Tetris = () => {
 
   // 아이템 효과 담기
   const getItemEffect = async (recivedItemEffect) => {
-    setItemEffect(recivedItemEffect);
+    if (recivedItemEffect.resultBonus) {
+      setResultBonus(recivedItemEffect.resultBonus);
+    }
+    if (recivedItemEffect.extraPoints) {
+      setExtraPoints(recivedItemEffect.extraPoints);
+    }
   };
 
   // left-right
@@ -85,7 +109,9 @@ const Tetris = () => {
     }
     if (!window.confirm("횟수가 차감됩니다. 게임을 시작하시겠읍니까?")) return;
     setIsPlaying(true); // 게임중으로 상태 변경
-    setItemEffect(1); // 아이템 효과 초기화
+    setResultBonus(""); // 아이템 효과 초기화
+    setExtraPoints(""); // 아이템 효과 초기화
+    setExtraScore(""); // 아이템 효과 초기화
     await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
     const recivedChance = await GameInterface.getMyChance(account, gameTitle);
     setChance(recivedChance); // 횟수 차감됐으니 횟수 다시 불러오기
@@ -111,7 +137,11 @@ const Tetris = () => {
       if (player.pos.y < 1) {
         setGameOver(true);
         setDropTime(null);
-        await GameInterface.sendScore(account, gameTitle, score, itemEffect);
+        if (extraScore) {
+          await GameInterface.sendScore(account, gameTitle, extraScore, resultBonus);
+        } else {
+          await GameInterface.sendScore(account, gameTitle, score, resultBonus);
+        }
         const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
         setBestScore(recivedBestScore);
         setIsPlaying(false);
@@ -137,6 +167,25 @@ const Tetris = () => {
 
   const move = ({ keyCode }) => {
     if (!gameOver) {
+      if (extraPoints) {
+        switch (keyCode) {
+          case 37:
+            keyCode = 39;
+            break;
+          case 39:
+            keyCode = 37;
+            break;
+          case 38:
+            keyCode = 40;
+            break;
+          case 40:
+            keyCode = 38;
+            break;
+
+          default:
+            break;
+        }
+      }
       if (keyCode === 37) {
         //left
         movePlayer(-1);
@@ -169,10 +218,14 @@ const Tetris = () => {
               <Display text={`Chance: ${chance}`} />
               <Display text={`Best score: ${bestScore}`} />
 
-              {itemEffect == 1 ? (
-                <Display text={`Score: ${score}`} />
+              {extraScore && resultBonus ? (
+                <Display text={`Score: ${extraScore} x${resultBonus}`} />
+              ) : extraScore ? (
+                <Display text={`Score: ${extraScore}`} />
+              ) : resultBonus ? (
+                <Display text={`Score: ${score} x${resultBonus}`} />
               ) : (
-                <Display text={`Score: ${score} x${itemEffect}`} />
+                <Display text={`Score: ${score}`} />
               )}
 
               <Display text={`Rows: ${rows}`} />
@@ -188,7 +241,8 @@ const Tetris = () => {
                   item={item}
                   gameTitle={gameTitle}
                   getItemEffect={getItemEffect}
-                  itemEffect={itemEffect}
+                  resultBonus={resultBonus}
+                  extraPoints={extraPoints}
                   isPlaying={isPlaying}
                   updateChance={updateChance}
                 />

@@ -52,6 +52,11 @@ const itemList = [
   { itemName: "자본의 맛", itemPrice: 1, itemDescription: "게임결과에 5%만큼 점수가 가산됩니다" },
   { itemName: "자본주의", itemPrice: 5, itemDescription: "게임결과에 10%만큼 점수가 가산됩니다" },
   { itemName: "자낳괴", itemPrice: 15, itemDescription: "게임결과에 15%만큼 점수가 가산됩니다" },
+  {
+    itemName: "혼돈의 카오스",
+    itemPrice: 10,
+    itemDescription: "테트리스 좌우, 상하 조작이 반전되고 이후 획득하는 점수에 10% 추가점수를 획득합니다",
+  },
 ];
 
 /* DB 초기 데이터 입력 */
@@ -97,10 +102,10 @@ const getDatabaseConfig = async () => {
       }
     }
     // 테스트 0번 계정에 아이템 임의로 추가
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 50; i++) {
       await UserItem.create({
         user_address: testAddressArray[0],
-        item_itemName: itemList[Math.floor(Math.random() * 6)].itemName,
+        item_itemName: itemList[Math.floor(Math.random() * itemList.length)].itemName,
       });
     }
 

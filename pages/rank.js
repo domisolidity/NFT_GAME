@@ -40,7 +40,7 @@ const Rank = ({ gameList }) => {
   }, [selectedGameTitle]);
 
   return (
-    <Flex m={"0 10px"}>
+    <Flex>
       <RankSelectbar gameList={gameList} getSelectedGameTitle={getSelectedGameTitle} />
       {selectedGameTitle ? (
         <Flex flexDirection={"column"} w={"100%"} textAlign="center">
