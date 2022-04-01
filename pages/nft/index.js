@@ -1,49 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Box, Heading, Flex, Button, Text } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
-
-import axios from "axios";
+import Tier from "../../components/nft/Tier";
 import NftTransfer from "../../components/NftTransfer";
 import NftMint from "../../components/NftMint";
 const Nft = () => {
   const [MintOrTransfer, setMintOrTransfer] = useState(false);
 
-  const onMint = (e) => {
-    e.preventDefault();
-    setMintOrTransfer(false);
-  };
-
-  const onTransfer = (e) => {
-    e.preventDefault();
-    setMintOrTransfer(true);
-  };
 
   return (
     <Box align="center" pb={20}>
+        <Tier />
       <Box w="400px" mb={70}>
-        <Flex
-          justifyContent="space-evenly"
-          borderRadius="30"
-          bg="whiteAlpha.400"
-          mt={10}
-        >
-          <Button
-            onClick={onMint}
-            variant="ghost"
-            isActive={MintOrTransfer ? 0 : 1}
-          >
-            NFT 구매
-          </Button>
-          <Button
-            onClick={onTransfer}
-            variant="ghost"
-            isActive={MintOrTransfer ? 1 : 0}
-          >
-            NFT 선물
-          </Button>
-        </Flex>
+      <Text mt="200" fontSize="25" borderRadius="20" w="10vw" bg="#8382821f">
+        NFT 구매
+      </Text>
       </Box>
-      {MintOrTransfer ? <NftTransfer /> : <NftMint />}
+      <NftMint />
     </Box>
   );
 };
