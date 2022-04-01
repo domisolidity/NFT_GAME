@@ -7,9 +7,8 @@ import Link from "next/link";
 
 const Collections = () => {
   const blockchain = useSelector((state) => state.blockchain);
-
   const { account, nftContract } = blockchain;
-  // const { myNfts } = data;
+
   const [myNfts, setMyNfts] = useState({
     id: null || "",
     name: null || "",
@@ -56,17 +55,57 @@ const Collections = () => {
   useEffect(async () => {
     if (!account) return false;
     await getMyNfts();
-  }, [account]);
+  }, [account, dataShow]);
+
+  const initDataShow =
+    limit && myNfts ? myNfts.slice(0, Number(limit)) : myNfts;
+
+  const [dataShow, setDataShow] = useState(initDataShow);
+
+  let limit = 5;
+  let pages = 1;
+  let range = [];
+
+  if (limit !== undefined) {
+    let page = Math.floor(myNfts.length / Number(limit)) || 0;
+    pages = myNfts.length % Number(limit) === 0 ? page : page + 1;
+    range = [...Array(pages).keys()];
+  }
+
+  const [currPage, setCurrPage] = useState(0);
+
+  const selectPage = (page) => {
+    const start = Number(limit) * page;
+    const end = start + Number(limit);
+
+    setDataShow(myNfts.slice(start, end));
+    setCurrPage(page);
+  };
 
   return (
     <>
       <Box fontSize={"1.5rem"} fontWeight="bold">
         My Nfts
       </Box>
+      {pages > 1 ? (
+        <div className="table__pagination">
+          {range.map((item, index) => (
+            <div
+              key={index}
+              className={`table__pagination-item ${
+                currPage === index ? "active" : ""
+              }`}
+              onClick={() => selectPage(index)}
+            >
+              {item + 1}
+            </div>
+          ))}
+        </div>
+      ) : null}
       <Flex flexDir={"row"}>
-        {myNfts[0] ? (
+        {dataShow[0] ? (
           <>
-            {myNfts.map((mynft, index) => {
+            {dataShow.map((mynft, index) => {
               return (
                 <Box key={index}>
                   <Link
@@ -88,7 +127,7 @@ const Collections = () => {
                       <MyNftsCard
                         img={mynft.image}
                         name={mynft.name}
-                        description={mynft.description}
+                        grade={mynft.grade}
                       />
                     </a>
                   </Link>
@@ -100,6 +139,37 @@ const Collections = () => {
           <Text>보유 nft가 없습니다.</Text>
         )}
       </Flex>
+      <style jsx>{`
+        .table__pagination {
+          display: flex;
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+          margin: 1rem;
+        }
+
+        .table__pagination-item {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          margin: 0.5rem;
+        }
+
+        .table__pagination-item.active,
+        .table__pagination-item.active:hover {
+          background-color: var(--chakra-colors-purple-700);
+          font-weight: 600;
+        }
+
+        .table__pagination-item:hover {
+          /* color: var(--chakra-colors-white-700); */
+          background-color: var(--chakra-colors-purple-700);
+        }
+      `}</style>
     </>
   );
 };
