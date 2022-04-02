@@ -13,6 +13,7 @@ contract GameToken is BEP20Token {
         address _account;
         uint8 ranking;
         string gameTitle;
+        uint16 score;
     }
 
     uint private constant victory = 1;

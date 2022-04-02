@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Image, Button,Heading } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import NftCard from "./NftCard.jsx";
-import Swal from "sweetalert2";
 import axios from "axios";
 
 const NftMint = () => {
@@ -103,7 +102,7 @@ const NftMint = () => {
 
   return (
     <Box mt={6}>
-      <Flex className="ekek"  >
+      <Flex justify="space-around" w="70vw"  >
         <div className="card red">
           <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
             Nfts : {redNfts} / 60
@@ -139,7 +138,7 @@ const NftMint = () => {
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("red")}
             >
@@ -183,7 +182,7 @@ const NftMint = () => {
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("green")}
             >
@@ -227,7 +226,7 @@ const NftMint = () => {
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("purple")}
             >
@@ -246,10 +245,7 @@ const NftMint = () => {
       }
 
       <style jsx>{`
-        .ekek{
-          justify-content:"space-around"
-          width:"70vw"
-        }
+
         .card{
           width: 360px;
           height: 500px;
