@@ -2,9 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "./Auction.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
   
-// 이 계약은 경매 계약을 배포합니다.
+// 경매 컨트랙트 생성용 컨트랙트
 contract AuctionCreator {
 
     mapping(uint=>Auction) public auctionToId;
@@ -19,9 +18,8 @@ contract AuctionCreator {
     }
     AuctionNft[] public auctionNfts;
     
-    //계약 경매를 배포할 함수 선언
+    //경매 컨트랙트 생성 함수
     function createAuction( uint8 _tokenId,address _nftContractAddres, uint _startBid,uint _remainedBlock) public{
-        // 경매 생성자에게 msg.sender 전달
         Auction newAuction = new Auction(payable(msg.sender),_nftContractAddres, _startBid,_remainedBlock,_tokenId); 
         auctionToId[_tokenId] = newAuction;
 
