@@ -1,11 +1,13 @@
 var NftContract = artifacts.require("./NftContract.sol");
 var NftDealContract = artifacts.require("./NftDealContract.sol");
 var GameToken = artifacts.require("./GameToken.sol");
+var AuctionCreator = artifacts.require('./AuctionCreator.sol');
 
 module.exports = async function (deployer) {
   await deployer.deploy(NftContract);
   await deployer.deploy(NftDealContract, NftContract.address);
   await deployer.deploy(GameToken);
+  await deployer.deploy(AuctionCreator);
 };
 
 
