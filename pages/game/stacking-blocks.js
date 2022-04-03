@@ -208,7 +208,6 @@ const StackingBlocks = () => {
           position: relative;
           height: 70vh;
           margin: 0 auto;
-          color: yellow;
         }
         #blockGameContainer #score {
           position: absolute;
