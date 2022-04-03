@@ -11,7 +11,7 @@ import { Box,Button, Heading,Table,Checkbox,
 const Tier = () => {
   return (
       <box>
-          <h6>Tier</h6>
+          <h6 className="title">Tier</h6>
           <table className="tier_table">
               <thead>
                 <tr className="benefit">
@@ -63,11 +63,14 @@ const Tier = () => {
           </table>
         <style jsx>{`
             h6 {
-                font-size:25px;
+                font-size:35px;
                 margin-bottom:30px;
                 width:8vw;
-                border-radius:30px;
-                background:#8382821f;
+                background: linear-gradient(#f1f1f1 23%, #818181 100%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                font-weight: 900;
             }
             .tier_table {
                 width: 30vw;
