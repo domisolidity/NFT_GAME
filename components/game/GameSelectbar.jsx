@@ -19,7 +19,7 @@ const GameSelectbar = () => {
     <Flex m={"0 10px"} justifyContent={"space-evenly"}>
       {GameInterface.gameList.map((game, index) => (
         <Link href={`/game/${game.gameUrl}`} key={index} m={"10px 5px"}>
-          {game.gameTitle}
+          <Button>{game.gameTitle}</Button>
         </Link>
       ))}
     </Flex>

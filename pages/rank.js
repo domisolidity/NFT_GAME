@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { Flex, Box } from "@chakra-ui/react";
 import axios from "axios";
 import GameInterface from "../components/game/GameInterface";
@@ -40,16 +39,16 @@ const Rank = ({ gameList }) => {
   }, [selectedGameTitle]);
 
   return (
-    <Flex>
+    <Flex maxWidth={"1000px"} margin="0 auto" justifyContent={"center"}>
       <RankSelectbar gameList={gameList} getSelectedGameTitle={getSelectedGameTitle} />
       {selectedGameTitle ? (
-        <Flex flexDirection={"column"} w={"100%"} textAlign="center">
+        <Flex flexDirection={"column"} textAlign="center">
           <Box>{selectedGameTitle} 게임의 순위입니다.</Box>
           <Flex>
-            <Box w={"100%"}>
+            <Box>
               <CurrentRanking currentRankData={currentRankData} />
             </Box>
-            <Box w={"30%"} minWidth="300px">
+            <Box minWidth="300px">
               <PastRanking pastRankData={pastRankData} />
             </Box>
           </Flex>

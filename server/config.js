@@ -137,10 +137,10 @@ const getDatabaseConfig = async () => {
 /* InGameUser 테이블에서 게임별로 TOP 3를 찾아 순위 테이블에 기록하고 
    InGameUser 테이블 초기화하기                                     */
 const rankAggregation = async () => {
+  const latestWeekData = await Ranking.findOne({ attributes: ["weeks"], order: [["weeks", "desc"]] });
+  const latestWeek = latestWeekData.weeks; // 최신 주(week)
   // 게임별 TOP 3 찾기
   for (let i = 0; i < gameList.length; i++) {
-    const latestWeekData = await Ranking.findOne({ attributes: ["weeks"], limit: 1, order: [["weeks", "desc"]] });
-    const latestWeek = latestWeekData.weeks; // 최신 주(week)
     const gameTitle = gameList[i].gameTitle; // 게임명
     // 이번 주 차 TOP 3 정보
     const thisWeekRankData = await InGameUser.findAll({
@@ -182,9 +182,8 @@ const rankAggregation = async () => {
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
   // rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
-  rule.hour = 22;
-  rule.minute = 44;
-  rule.second = 00;
+  rule.hour = 19;
+  rule.minute = 14;
 
   const job = schedule.scheduleJob(rule, function () {
     rankAggregation(); // 순위집계 시행

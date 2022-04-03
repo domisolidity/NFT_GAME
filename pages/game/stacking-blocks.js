@@ -36,7 +36,7 @@ const StackingBlocks = () => {
   // 게임이 끝나서 점수가 State에 들어오면 게임기록 서버에 전송
   useEffect(async () => {
     if (document.querySelector("#blockGameContainer.ended")) {
-      await GameInterface.sendScore(account, gameTitle, score, itemEffect);
+      await GameInterface.sendScore(account, gameTitle, score, resultBonus);
       const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
       setBestScore(recivedBestScore);
     }
@@ -208,6 +208,7 @@ const StackingBlocks = () => {
           position: relative;
           height: 70vh;
           margin: 0 auto;
+          color: yellow;
         }
         #blockGameContainer #score {
           position: absolute;

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 
 const PastRanking = ({ pastRankData }) => {
+  const blockchain = useSelector((state) => state.blockchain);
+  const { account, auth } = blockchain;
   const [processedRankData, setProcessedRankData] = useState([]);
 
   // 역대 순위들 주별로 나누는 작업
@@ -32,10 +35,28 @@ const PastRanking = ({ pastRankData }) => {
   // 한 주에 대한 컴포넌트
   const PastWeek = ({ weeks }) => {
     return (
-      <Flex flexDirection={"column"}>
+      <Flex
+        className="past-ranking-box"
+        flexDirection={"column"}
+        marginBottom="10px"
+        backgroundColor="rgb(118 118 118 / 40%)"
+        borderRadius="10px"
+        transitionDuration="0.3s"
+        _hover={{
+          boxShadow:
+            "-1px -1px 10px 2px #5ce3f2, 1px 1px 10px 2px #5ce3f2, 1px -1px 10px 2px #5ce3f2, -1px 1px 10px 2px #5ce3f2, inset -3px -3px 10px -4px #5ce3f2, inset 3px 3px 10px -4px #5ce3f2, inset 3px -3px 10px -4px #5ce3f2, inset -3px 3px 10px -4px #5ce3f2",
+        }}
+      >
         <Text>{weeks[0].weeks}주차</Text>
         {weeks.map((rankData) => (
-          <div className="past-ranking-table" key={rankData.rankingId}>
+          <div
+            className={
+              auth && rankData.user_address == account
+                ? "past-ranking-table my-record"
+                : "past-ranking-table"
+            }
+            key={rankData.rankingId}
+          >
             <div>{rankData.ranking}위</div>
             <div>{rankData.gameScore}점</div>
             <div>
@@ -63,6 +84,10 @@ const PastRanking = ({ pastRankData }) => {
           }
           .past-ranking-table div:nth-child(3) {
             min-width: 140px;
+          }
+          .my-record {
+            color: yellow;
+            font-weight: bold;
           }
         `}</style>
       </Flex>
