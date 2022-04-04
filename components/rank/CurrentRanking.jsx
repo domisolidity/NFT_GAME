@@ -63,7 +63,8 @@ const CurrentRanking = ({ currentRankData }) => {
         }
         .my-record {
           color: yellow;
-          font-weight: bold;
+          text-shadow: 0 0 10px white, 0 0 10px white, 0 0 10px white,
+            0 0 10px white, 0 0 10px white;
         }
       `}</style>
     </>

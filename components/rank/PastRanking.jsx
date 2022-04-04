@@ -44,7 +44,7 @@ const PastRanking = ({ pastRankData }) => {
         transitionDuration="0.3s"
         _hover={{
           boxShadow:
-            "-1px -1px 10px 2px #5ce3f2, 1px 1px 10px 2px #5ce3f2, 1px -1px 10px 2px #5ce3f2, -1px 1px 10px 2px #5ce3f2, inset -3px -3px 10px -4px #5ce3f2, inset 3px 3px 10px -4px #5ce3f2, inset 3px -3px 10px -4px #5ce3f2, inset -3px 3px 10px -4px #5ce3f2",
+            "0px 0px 10px 2px #5ce3f2,0px 0px 10px 2px #5ce3f2,0px 0px 10px 2px #5ce3f2, inset 0px 0px 10px 2px #5ce3f2,  inset 0px 0px 10px 2px #5ce3f2, inset 0px 0px 10px 2px #5ce3f2",
         }}
       >
         <Text>{weeks[0].weeks}주차</Text>
@@ -87,7 +87,8 @@ const PastRanking = ({ pastRankData }) => {
           }
           .my-record {
             color: yellow;
-            font-weight: bold;
+            text-shadow: 0 0 10px white, 0 0 10px white, 0 0 10px white,
+              0 0 10px white, 0 0 10px white;
           }
         `}</style>
       </Flex>

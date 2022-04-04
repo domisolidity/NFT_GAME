@@ -5,6 +5,7 @@ import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
 import { useRouter } from "next/router";
 import GameSelectbar from "../../components/game/GameSelectbar";
+import BlankComponent from "../../components/BlankComponent";
 
 const StackingBlocks = () => {
   const router = useRouter();
@@ -109,15 +110,13 @@ const StackingBlocks = () => {
 
   return (
     <>
-      {account ? (
+      {account && auth ? (
         <>
           <GameSelectbar />
           <div id="blockGameContainer">
             <div id="game"></div>
             <div id="score">0</div>
-            <div color={"#333344"} id="instructions">
-              블록을 높이 쌓으세요
-            </div>
+            <div id="instructions">블록을 높이 쌓으세요</div>
             <div className="game-over">
               <button id="restart-button" onClick={playGame}>
                 다시시작
@@ -131,31 +130,17 @@ const StackingBlocks = () => {
               </button>
               <div></div>
             </div>
-            <div color={"#333344"} className="my-score-box">
+            <div className="my-score-box">
               최고점수
-              <p fontWeight={"bold"} textAlign={"center"}>
-                {bestScore}
-              </p>
+              <p>{bestScore}</p>
             </div>
-            <div color={"#333344"} className="chance-box">
+            <div className="chance-box">
               남은기회
-              <p fontWeight={"bold"} textAlign={"center"}>
-                {chance}
-              </p>
+              <p>{chance}</p>
             </div>
-            {resultBonus ? (
-              <div color={"#333344"} className="item-effect-box">
-                x {resultBonus}!
-              </div>
-            ) : null}
-            <button
-              colorScheme={"blue"}
-              width={"100"}
-              onClick={stackingBlock}
-              disabled={gameEnded}
-              className="placeBlock-button"
-            >
-              멈춰!
+            {resultBonus ? <div className="item-effect-box">x {resultBonus}!</div> : null}
+            <button onClick={stackingBlock} disabled={gameEnded} className="placeBlock-button">
+              멈춰 !
             </button>
           </div>
           <Flex justifyContent={"center"}>
@@ -174,7 +159,7 @@ const StackingBlocks = () => {
           </Flex>
         </>
       ) : (
-        <div>로그인 해주세요</div>
+        <BlankComponent receivedText={"로그인 및 NFT를 소유해야 게임에 참여하실 수 있습니다"} />
       )}
       <style jsx>{`
         #game canvas {
@@ -182,10 +167,20 @@ const StackingBlocks = () => {
           max-height: 100% !important;
         }
         .placeBlock-button {
+          width: 100px;
+          height: 40px;
+          border-radius: 10px;
+          background-color: #7d0000;
+          color: #ebebeb;
           position: absolute;
           left: 80%;
           top: 58.5%;
           transform: translate(-50%, -50%);
+          transition-duration: 0.3s;
+        }
+        .placeBlock-button:hover {
+          background-color: #7d0000;
+          opacity: 0.4;
         }
         .chance-box {
           position: absolute;
@@ -208,12 +203,14 @@ const StackingBlocks = () => {
           position: relative;
           height: 70vh;
           margin: 0 auto;
+          text-align: center;
+          color: #333344;
+          font-weight: bold;
         }
         #blockGameContainer #score {
           position: absolute;
           top: 20px;
           width: 100%;
-          text-align: center;
           font-size: 10vh;
           -webkit-transition: -webkit-transform 0.5s ease;
           transition: -webkit-transform 0.5s ease;
@@ -303,7 +300,6 @@ const StackingBlocks = () => {
           width: 100%;
           top: 16vh;
           left: 0;
-          text-align: center;
           -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
           transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
           transition: opacity 0.5s ease, transform 0.5s ease;

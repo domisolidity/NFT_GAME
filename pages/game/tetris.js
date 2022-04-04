@@ -20,6 +20,7 @@ import GameInterface from "../../components/game/GameInterface";
 import { useSelector } from "react-redux";
 import GameItem from "../../components/game/GameItem";
 import GameSelectbar from "../../components/game/GameSelectbar";
+import BlankComponent from "../../components/BlankComponent";
 
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -207,49 +208,55 @@ const Tetris = () => {
   }, dropTime);
 
   return (
-    // 키 누름을 감지하기 위해 감싸는 스타일 래퍼
     <>
-      <GameSelectbar />
-      <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
-        <StyledTetris>
-          <Stage stage={stage} gameOver={gameOver} />
-          <aside>
-            <div>
-              <Display text={`Chance: ${chance}`} />
-              <Display text={`Best score: ${bestScore}`} />
+      {account && auth ? (
+        <>
+          <GameSelectbar />
+          {/* 키 누름을 감지하기 위해 감싸는 스타일 래퍼 */}
+          <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
+            <StyledTetris>
+              <Stage stage={stage} gameOver={gameOver} />
+              <aside>
+                <div>
+                  <Display text={`Chance: ${chance}`} />
+                  <Display text={`Best score: ${bestScore}`} />
 
-              {extraScore && resultBonus ? (
-                <Display text={`Score: ${extraScore} x${resultBonus}`} />
-              ) : extraScore ? (
-                <Display text={`Score: ${extraScore}`} />
-              ) : resultBonus ? (
-                <Display text={`Score: ${score} x${resultBonus}`} />
-              ) : (
-                <Display text={`Score: ${score}`} />
-              )}
+                  {extraScore && resultBonus ? (
+                    <Display text={`Score: ${extraScore} x${resultBonus}`} />
+                  ) : extraScore ? (
+                    <Display text={`Score: ${extraScore}`} />
+                  ) : resultBonus ? (
+                    <Display text={`Score: ${score} x${resultBonus}`} />
+                  ) : (
+                    <Display text={`Score: ${score}`} />
+                  )}
 
-              <Display text={`Rows: ${rows}`} />
-              <Display text={`Level: ${level}`} />
-            </div>
-            <StartButton callback={startGame} isPlaying={isPlaying} />
-          </aside>
-          <div>
-            {gameItems &&
-              gameItems.map((item) => (
-                <GameItem
-                  key={item.itemId}
-                  item={item}
-                  gameTitle={gameTitle}
-                  getItemEffect={getItemEffect}
-                  resultBonus={resultBonus}
-                  extraPoints={extraPoints}
-                  isPlaying={isPlaying}
-                  updateChance={updateChance}
-                />
-              ))}
-          </div>
-        </StyledTetris>
-      </StyledTetrisWrapper>
+                  <Display text={`Rows: ${rows}`} />
+                  <Display text={`Level: ${level}`} />
+                </div>
+                <StartButton callback={startGame} isPlaying={isPlaying} />
+              </aside>
+              <div>
+                {gameItems &&
+                  gameItems.map((item) => (
+                    <GameItem
+                      key={item.itemId}
+                      item={item}
+                      gameTitle={gameTitle}
+                      getItemEffect={getItemEffect}
+                      resultBonus={resultBonus}
+                      extraPoints={extraPoints}
+                      isPlaying={isPlaying}
+                      updateChance={updateChance}
+                    />
+                  ))}
+              </div>
+            </StyledTetris>
+          </StyledTetrisWrapper>
+        </>
+      ) : (
+        <BlankComponent receivedText={"로그인 및 NFT를 소유해야 게임에 참여하실 수 있습니다"} />
+      )}
     </>
   );
 };
