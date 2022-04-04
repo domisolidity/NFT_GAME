@@ -10,6 +10,7 @@ const Modal = (props) => {
         top: "0.1rem",
         right: "0.1rem",
         fontSize: "2rem",
+        color: "white",
       }}
     />
   );
@@ -36,13 +37,13 @@ const Modal = (props) => {
           z-index: 999;
         }
         .content {
-          margin: 15% auto;
-          background-color: grey;
+          margin: 8% auto;
+          background-color: #3b406e;
           border-radius: 0.25rem;
           width: 50vw;
-          padding: 2rem;
+          padding: 3rem;
           position: relative;
-          color: black;
+          color: white;
         }
       `}</style>
     </div>
