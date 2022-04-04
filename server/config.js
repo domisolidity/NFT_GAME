@@ -6,7 +6,7 @@ const config = {
   secret: "shhhh", // TODO Put in process.env
 };
 
-const { sequelize, User, InGameUser, Game, Item, UserItem, Ranking } = require("./models");
+const { sequelize, User, InGameUser, Game, Item, UserItem, Ranking, DailyMission } = require("./models");
 const schedule = require("node-schedule");
 
 // DB 초기 세팅 (테스트 계정, 블록게임, 아이템 생성)
@@ -59,6 +59,13 @@ const itemList = [
   },
 ];
 
+/* 일일 미션 목록 */
+const dailyMission = [
+  { game_title: "블록쌓기", targetValue: 30, missionDetails: "블록 30개 이상 쌓기" },
+  { game_title: "테트리스", targetValue: 50, missionDetails: "블록 50줄 이상 제거" },
+  { game_title: "보물찾기", targetValue: 30, missionDetails: "블록 50줄 이상 제거" },
+];
+
 /* DB 초기 데이터 입력 */
 const getDatabaseConfig = async () => {
   if (
@@ -89,6 +96,14 @@ const getDatabaseConfig = async () => {
         gameTitle: gameList[i].gameTitle,
         gameUrl: gameList[i].gameUrl,
         description: gameList[i].description,
+      });
+    }
+    // 일일미션 추가
+    for (let i = 0; i < dailyMission.length; i++) {
+      await DailyMission.create({
+        game_title: dailyMission[i].game_title,
+        targetValue: dailyMission[i].targetValue,
+        missionDetails: dailyMission[i].missionDetails,
       });
     }
     // 테스트 계정들 게임별 임의 플레이 기록 추가
@@ -181,12 +196,24 @@ const rankAggregation = async () => {
 /* 매주 순위 집계 시행하기 */
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
-  // rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
-  rule.hour = 19;
-  rule.minute = 14;
+  rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
+  rule.hour = 9;
+  rule.minute = 0;
 
   const job = schedule.scheduleJob(rule, function () {
     rankAggregation(); // 순위집계 시행
+  });
+};
+/* 하루 한번 일일미션 등록시켜주기 */
+const dailylySchedule = async () => {
+  const rule = new schedule.RecurrenceRule();
+
+  rule.hour = 9;
+  rule.minute = 1;
+
+  const job = schedule.scheduleJob(rule, function () {
+    // 일일미션 함수
+    // asdf();
   });
 };
 

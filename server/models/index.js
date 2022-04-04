@@ -13,6 +13,8 @@ const InGameUser = require("./InGameUser");
 const Item = require("./Item");
 const UserItem = require("./UserItem");
 const Ranking = require("./Ranking");
+const DailyMission = require("./DailyMission");
+const MissionInUser = require("./MissionInUser");
 
 const db = {};
 
@@ -29,6 +31,8 @@ db.InGameUser = InGameUser;
 db.Item = Item;
 db.UserItem = UserItem;
 db.Ranking = Ranking;
+db.DailyMission = DailyMission;
+db.MissionInUser = MissionInUser;
 
 Object.keys(db).forEach((modelName) => {
   db[modelName].init(sequelize);
