@@ -84,7 +84,7 @@ router.post("/send-score", async (req, res) => {
   const itemEffect = req.body.itemEffect;
 
   // 추가점수 주는 아이템 사용한 경우 입력된 점수에 가산
-  if (itemEffect.resultBonus) score = Math.ceil(score * itemEffect);
+  if (itemEffect) score = Math.ceil(score * itemEffect);
 
   const before = await InGameUser.findOne({
     attributes: ["gameScore"],
