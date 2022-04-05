@@ -18,7 +18,7 @@ module.exports = class MissionInUser extends Sequelize.Model {
       },
       {
         sequelize,
-        timestamps: false,
+        timestamps: true,
         underscored: false,
         modelName: "MissionInUser",
         tableName: "mission_in_users",
