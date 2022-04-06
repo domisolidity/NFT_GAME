@@ -1,12 +1,4 @@
-import { Box,Button, Heading,Table,Checkbox,
-    Text,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    TableContainer, } from "@chakra-ui/react";
+
 
 const Tier = () => {
   return (
@@ -105,16 +97,16 @@ const Tier = () => {
                 font-size: 20px;
             }
             #red {
-                text-shadow: -1px 0 #cc8d8d, 0 1px #cc8d8d, 1px 0 #cc8d8d, 0 -1px #cc8d8d,
-                0 0 52px #ffffff;
+                text-shadow: -1px 0 #cc8d8d, 0 1px #cc8d8d, 1px 0 #cc8d8d, 0 -1px #cc8d8d;
+            
             }
             #green {
-                text-shadow: -1px 0 #8fcc8d, 0 1px #8fcc8d, 1px 0 #8fcc8d, 0 -1px #8fcc8d,
-                0 0 52px #ffffff;
+                text-shadow: -1px 0 #8fcc8d, 0 1px #8fcc8d, 1px 0 #8fcc8d, 0 -1px #8fcc8d;
+            
             }
             #purple {
-                text-shadow: -1px 0 #b78bd1, 0 1px #b78bd1, 1px 0 #b78bd1, 0 -1px #b78bd1,
-                0 0 52px #ffffff;
+                text-shadow: -1px 0 #b78bd1, 0 1px #b78bd1, 1px 0 #b78bd1, 0 -1px #b78bd1;
+            
             }
         `}</style>
       </box>

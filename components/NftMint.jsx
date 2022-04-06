@@ -56,7 +56,7 @@ const NftMint = () => {
           })
         })
         setViewResult(true); // 민팅시 nft정보 띄우는 트리거 역할
-        document.querySelector(".minted").scrollIntoView({behavior:'smooth', block: 'center'});
+        document.querySelector(".minted").scrollIntoView({behavior:'smooth', block: 'start'});
         success ? setSuccess(false) : setSuccess(true); // 남은 nft 업데이트하는 트리거 역할
         // Swal.fire({
         //   icon: "success",
@@ -101,7 +101,7 @@ const NftMint = () => {
 
 
   return (
-    <Box mt={6}>
+    <Box mt="5">
       <Flex justify="space-around" w="70vw"  >
         <div className="card red">
           <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
@@ -223,6 +223,7 @@ const NftMint = () => {
           </Flex>
           <Box>
             <Button
+            className="minted"
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
@@ -236,15 +237,27 @@ const NftMint = () => {
         </div>
       </Flex>
       {viewResult && 
-      <Box className="minted" bg="#000000b3" w="70vw" h="65vh" padding="10" borderRadius="20" mt="40" >
-        <Heading >Minted Nft</Heading>
+      <>
+      <Text mt="150" fontSize="25" >
+        <span >Minting Nft</span>       
+        </Text>
+      <Box bg="#000000b3" w="70vw" padding="10" borderRadius="20" mt="70">
         <Flex  justify="space-around" w="70vw">
           <NftCard nftInfo={mintedNft}/>
         </Flex>
       </Box>
+      </>
       }
 
-      <style jsx>{`
+      <style jsx>{` 
+            span{
+          font-size:35px;
+          background: linear-gradient(#f1f1f1 23%, #818181 100%);
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          font-weight: 900;
+        }
 
         .card{
           width: 360px;
