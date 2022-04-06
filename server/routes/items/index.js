@@ -5,7 +5,6 @@ const router = express.Router();
 // /* 게임아이템 */
 // router.use("/game-items", gameItems);
 
-
 const { User, Game, InGameUser, Item, UserItem } = require("../../models");
 const databaseConfig = require("../../config");
 const itemList = databaseConfig.itemList;
@@ -23,7 +22,7 @@ const findItemEffect = async (account, itemName, gameTitle) => {
           where: { user_address: account, game_title: gameTitle },
         }
       );
-      return "1";
+      return { lifeBonus: "1" };
     case itemList[1].itemName:
       await InGameUser.update(
         {
@@ -33,7 +32,7 @@ const findItemEffect = async (account, itemName, gameTitle) => {
           where: { user_address: account, game_title: gameTitle },
         }
       );
-      return "1";
+      return { lifeBonus: "5" };
     case itemList[2].itemName:
       await InGameUser.update(
         {
@@ -43,20 +42,22 @@ const findItemEffect = async (account, itemName, gameTitle) => {
           where: { user_address: account, game_title: gameTitle },
         }
       );
-      return "1";
+      return { lifeBonus: "10" };
     case itemList[3].itemName:
-      return "1.05";
+      return { resultBonus: "1.05" };
     case itemList[4].itemName:
-      return "1.1";
+      return { resultBonus: "1.1" };
     case itemList[5].itemName:
-      return "1.15";
+      return { resultBonus: "1.15" };
+    case itemList[6].itemName:
+      return { extraPoints: "1.1" };
   }
 };
 
 // 아이템 목록 가져오기
 router.get("/game-items", async (req, res) => {
-  console.log(req.body.data)
-  console.log("아템목록")
+  console.log(req.body.data);
+  console.log("아템목록");
   const response = await Item.findAll().catch((err) => console.log(err));
   res.send(response);
 });
@@ -124,9 +125,5 @@ router.post("/game-items/get-item-effect", async (req, res) => {
     res.send(false);
   }
 });
-
-module.exports = router;
-
-
 
 module.exports = router;

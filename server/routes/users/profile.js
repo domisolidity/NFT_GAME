@@ -24,7 +24,7 @@ router.patch("/:userId", jwt(config), async (req, res, next) => {
     })
     .then((user) => {
       return user
-        ? res.json(user)
+        ? res.json({ user: user, success: true })
         : res.status(401).send({
           error: `User with publicAddress ${req.params.userId} is not found in database`,
         });

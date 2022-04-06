@@ -11,16 +11,16 @@ const ControlPanel = (props) => {
   const { gameStatus, chests } = state;
   const openedChests = countOpenedChests(chests);
   let attemptsMade = MAX_ATTEMPTS - openedChests;
-  const { account, gameTitle, score, itemEffect, getAttemptsMade, gameStart } = props;
+  const { account, gameTitle, score, resultBonus, getAttemptsMade, gameStart } = props;
 
   const reStart = () => {
     dispatch(restartGame());
     gameStart();
   };
   const giveUp = () => {
-    if (!window.confirm(`현재 점수의 반만 얻고 게임을 포기합니다.`)) return;
+    if (!window.confirm(`현재 점수의 절반만 얻고 게임을 포기합니다.`)) return;
+    GameInterface.sendScore(account, gameTitle, score / 2, resultBonus);
     dispatch(giveUpGame());
-    GameInterface.sendScore(account, gameTitle, score / 2, itemEffect);
   };
 
   useEffect(() => {
