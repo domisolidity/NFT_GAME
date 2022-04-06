@@ -6,11 +6,9 @@ const { sequelize } = require("./models");
 const session = require("express-session");
 const dotenv = require("dotenv");
 dotenv.config();
-const passportConfig = require("./middleware/passport");
 const databaseConfig = require("./config");
 
 const indexRouter = require("./routes/index");
-const passport = require("passport");
 //const csrf = require('csurf');
 // const { csrfProtectionF } = require("./middleware/middwares");
 
@@ -19,8 +17,6 @@ const usersRouter = require("./routes/users");
 const gamesRouter = require("./routes/games");
 const itemsRouter = require("./routes/items");
 const ranksRouter = require("./routes/ranks");
-
-passportConfig();
 
 /* 시퀄라이즈 연결 */
 sequelize
@@ -51,12 +47,6 @@ app.use(
     },
   })
 );
-
-// // CSRF 미들웨어 인스턴스 생성
-// const csrfProtection = csrf({ cookie: true });
-//app.use(csrf({ cookie: true }));
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);

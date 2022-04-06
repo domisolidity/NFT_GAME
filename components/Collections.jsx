@@ -9,14 +9,16 @@ const Collections = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract } = blockchain;
 
-  const [myNfts, setMyNfts] = useState({
-    id: null || "",
-    name: null || "",
-    image: null || "",
-    description: null || "",
-    grade: null || "",
-    attributes: null || "",
-  });
+  const [myNfts, setMyNfts] = useState([
+    {
+      id: null || "",
+      name: null || "",
+      image: null || "",
+      description: null || "",
+      grade: null || "",
+      attributes: null || "",
+    },
+  ]);
 
   const baseUri = "http://127.0.0.1:8080/ipfs";
 
@@ -44,8 +46,8 @@ const Collections = () => {
               description: response.data.description,
             });
           }
-          // console.log("myNft", mynfts);
           setMyNfts(mynfts);
+          console.log("myNft", mynfts);
         });
     } catch (error) {
       console.error();
@@ -55,16 +57,16 @@ const Collections = () => {
   useEffect(async () => {
     if (!account) return false;
     await getMyNfts();
-  }, [account, dataShow]);
+  }, [account]);
+
+  let limit = 5;
+  let pages = 1;
+  let range = [];
 
   const initDataShow =
     limit && myNfts ? myNfts.slice(0, Number(limit)) : myNfts;
 
   const [dataShow, setDataShow] = useState(initDataShow);
-
-  let limit = 5;
-  let pages = 1;
-  let range = [];
 
   if (limit !== undefined) {
     let page = Math.floor(myNfts.length / Number(limit)) || 0;
@@ -84,10 +86,10 @@ const Collections = () => {
 
   return (
     <>
-      <Box fontSize={"1.5rem"} fontWeight="bold">
+      {/* <Box fontSize={"1.5rem"} fontWeight="bold">
         My Nfts
-      </Box>
-      {pages > 1 ? (
+      </Box> */}
+      {pages >= 1 ? (
         <div className="table__pagination">
           {range.map((item, index) => (
             <div
@@ -103,41 +105,44 @@ const Collections = () => {
         </div>
       ) : null}
       <Flex flexDir={"row"}>
-        {dataShow[0] ? (
-          <>
-            {dataShow.map((mynft, index) => {
-              return (
-                <Box key={index}>
-                  <Link
-                    href={{
-                      pathname: `mypage/${mynft.id}`,
-                      query: {
-                        id: mynft.id,
-                        grade: mynft.grade,
-                        attributes: mynft.attributes,
-                        name: mynft.name,
-                        image: mynft.image,
-                        description: mynft.description,
-                      },
-                    }}
-                    as={`mypage/${mynft.id}`}
-                  >
-                    {/* id, grade, attributes, name, image, description */}
-                    <a>
-                      <MyNftsCard
-                        img={mynft.image}
-                        name={mynft.name}
-                        grade={mynft.grade}
-                      />
-                    </a>
-                  </Link>
-                </Box>
-              );
-            })}
-          </>
-        ) : (
-          <Text>보유 nft가 없습니다.</Text>
-        )}
+        {
+          dataShow[0] && (
+            <>
+              {dataShow.map((mynft, index) => {
+                return (
+                  <Box key={index}>
+                    <Link
+                      href={{
+                        pathname: `mypage/${mynft.id}`,
+                        query: {
+                          id: mynft.id,
+                          grade: mynft.grade,
+                          attributes: mynft.attributes,
+                          name: mynft.name,
+                          image: mynft.image,
+                          description: mynft.description,
+                        },
+                      }}
+                      as={`mypage/${mynft.id}`}
+                    >
+                      {/* id, grade, attributes, name, image, description */}
+                      <a>
+                        <MyNftsCard
+                          img={mynft.image}
+                          name={mynft.name}
+                          grade={mynft.grade}
+                        />
+                      </a>
+                    </Link>
+                  </Box>
+                );
+              })}
+            </>
+          )
+          // : (
+          //   <Text>보유 nft가 없습니다.</Text>
+          // )
+        }
       </Flex>
       <style jsx>{`
         .table__pagination {

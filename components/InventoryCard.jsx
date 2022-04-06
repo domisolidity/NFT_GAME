@@ -40,14 +40,15 @@ const InventoryCard = (props) => {
             .item {
               display: flex;
               flex-direction: column;
-              background-color: var(--chakra-colors-blue-900);
+              background-color: #0f263e;
               border-radius: 5%;
               margin: 1rem;
               align-items: center;
               position: relative;
+              border: solid 3px #2c3a43;
             }
             .item_image {
-              border: solid 1px;
+              border-bottom: solid 1px #2c3a43;
               border-radius: 5% 5% 0 0;
               width: 10rem;
               height: 10rem;

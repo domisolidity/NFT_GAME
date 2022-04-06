@@ -1,16 +1,17 @@
 const Modal = (props) => {
   const closeicon = () => (
     <i
-      class="bx bx-x"
+      className="bx bx-x"
       onClick={props.closeModal}
       style={{
-        margin: "0.5rem",
+        margin: "1rem",
         cursor: "pointer",
         position: "absolute",
-        top: "0.1rem",
-        right: "0.1rem",
+        top: "0.2rem",
+        right: "2rem",
         fontSize: "2rem",
         color: "white",
+        zIndex: 1000,
       }}
     />
   );
@@ -37,11 +38,11 @@ const Modal = (props) => {
           z-index: 999;
         }
         .content {
-          margin: 8% auto;
-          background-color: #3b406e;
+          margin: 12% auto;
+          /* background-color: #3b406e; */
           border-radius: 0.25rem;
           width: 50vw;
-          padding: 3rem;
+          /* padding: 3rem; */
           position: relative;
           color: white;
         }
