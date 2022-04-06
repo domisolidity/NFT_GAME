@@ -5,10 +5,10 @@ pragma solidity ^0.8.1;
 import "./NftContract.sol";
 
 contract NftDealContract {
-  NftContract public nftContractAddres;
+  NftContract public nftContractAddress;
 
-  constructor(address _nftContractAddres) {
-    nftContractAddres = NftContract(_nftContractAddres);
+  constructor(address _nftContractAddress) {
+    nftContractAddress = NftContract(_nftContractAddress);
   }
 
   event submitSell (uint tokenId,uint price,address tokenOwner,string tokenUri);
@@ -22,7 +22,7 @@ contract NftDealContract {
   // @ 판매 함수
   function sellNft(uint256 _tokenId, uint256 _price) public {
     // 토큰 주인
-    address nftTokenOwner = nftContractAddres.ownerOf(_tokenId);
+    address nftTokenOwner = nftContractAddress.ownerOf(_tokenId);
 
     //주인이어야 등록
     require(nftTokenOwner == msg.sender, "you are not token owner.");
@@ -30,7 +30,7 @@ contract NftDealContract {
     require(nftPrices[_tokenId] == 0, "this nft is already on a sale");
     // 토큰 소유자에게 판매 권한을 받아야 됨
     require(
-      nftContractAddres.isApprovedForAll(nftTokenOwner, address(this)),
+      nftContractAddress.isApprovedForAll(nftTokenOwner, address(this)),
       "Animal token owner did not approve token."
     );
 
@@ -39,20 +39,20 @@ contract NftDealContract {
     // 판매중인 토큰에 매개변수 넣음
     onSaleNftArray.push(_tokenId);
 
-    emit submitSell(_tokenId,_price,nftTokenOwner,nftContractAddres.tokenURI(_tokenId));
+    emit submitSell(_tokenId,_price,nftTokenOwner,nftContractAddress.tokenURI(_tokenId));
   }
 
 
   function buyNft(uint256 _tokenId) public payable {
     // uint256 price = nftPrices[_tokenId];
-    address seller = nftContractAddres.ownerOf(_tokenId);
+    address seller = nftContractAddress.ownerOf(_tokenId);
     // require(nftPrices[_tokenId]; > 0, " token not sale.");
     // require(nftPrices[_tokenId]; <= msg.value, "not enought price");
     // require(seller != msg.sender, "you are not token owner.");
 
     payable(seller).transfer(msg.value);
 
-    nftContractAddres.safeTransferFrom(seller, msg.sender, _tokenId); //토큰 구매자에게 이동
+    nftContractAddress.safeTransferFrom(seller, msg.sender, _tokenId); //토큰 구매자에게 이동
 
     nftPrices[_tokenId] = 0;
 

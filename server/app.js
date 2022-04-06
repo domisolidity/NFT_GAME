@@ -11,14 +11,13 @@ const databaseConfig = require("./config");
 
 const indexRouter = require("./routes/index");
 
-//const csrf = require('csurf');
-// const { csrfProtectionF } = require("./middleware/middwares");
-
 const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
 const gamesRouter = require("./routes/games");
 const itemsRouter = require("./routes/items");
 const ranksRouter = require("./routes/ranks");
+
+
 
 /* 시퀄라이즈 연결 */
 sequelize

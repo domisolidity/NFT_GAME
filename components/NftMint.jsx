@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Image, Button,Heading } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import NftCard from "./NftCard.jsx";
-import Swal from "sweetalert2";
 import axios from "axios";
 
 const NftMint = () => {
@@ -57,7 +56,7 @@ const NftMint = () => {
           })
         })
         setViewResult(true); // 민팅시 nft정보 띄우는 트리거 역할
-        document.querySelector(".minted").scrollIntoView({behavior:'smooth', block: 'center'});
+        document.querySelector(".minted").scrollIntoView({behavior:'smooth', block: 'start'});
         success ? setSuccess(false) : setSuccess(true); // 남은 nft 업데이트하는 트리거 역할
         // Swal.fire({
         //   icon: "success",
@@ -102,8 +101,8 @@ const NftMint = () => {
 
 
   return (
-    <Box mt={6}>
-      <Flex className="ekek"  >
+    <Box mt="5">
+      <Flex justify="space-around" w="70vw"  >
         <div className="card red">
           <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
             Nfts : {redNfts} / 60
@@ -139,7 +138,7 @@ const NftMint = () => {
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("red")}
             >
@@ -183,7 +182,7 @@ const NftMint = () => {
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("green")}
             >
@@ -224,10 +223,11 @@ const NftMint = () => {
           </Flex>
           <Box>
             <Button
+            className="minted"
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("purple")}
             >
@@ -237,19 +237,28 @@ const NftMint = () => {
         </div>
       </Flex>
       {viewResult && 
-      <Box className="minted" bg="#000000b3" w="70vw" h="65vh" padding="10" borderRadius="20" mt="40" >
-        <Heading >Minted Nft</Heading>
+      <>
+      <Text mt="150" fontSize="25" >
+        <span >Minting Nft</span>       
+        </Text>
+      <Box bg="#000000b3" w="70vw" padding="10" borderRadius="20" mt="70">
         <Flex  justify="space-around" w="70vw">
           <NftCard nftInfo={mintedNft}/>
         </Flex>
       </Box>
+      </>
       }
 
-      <style jsx>{`
-        .ekek{
-          justify-content:"space-around"
-          width:"70vw"
+      <style jsx>{` 
+            span{
+          font-size:35px;
+          background: linear-gradient(#f1f1f1 23%, #818181 100%);
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          font-weight: 900;
         }
+
         .card{
           width: 360px;
           height: 500px;
