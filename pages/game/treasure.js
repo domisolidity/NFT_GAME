@@ -1,6 +1,4 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { BrowserRouter, Routes } from "react-router-dom";
-import { Redirect, Route } from "react-router";
 import ContextProvider from "../../components/game/FindTheRing/store/contextProvider";
 import { createChests } from "../../components/game/FindTheRing/utils";
 import { CHEST_COUNT, GameStatus } from "../../components/game/FindTheRing/consts";
@@ -12,6 +10,7 @@ import GameItem from "../../components/game/GameItem";
 import ChestContainer from "../../components/game/FindTheRing/components/ChestContainer/ChestContainer";
 import ControlPanel from "../../components/game/FindTheRing/components/ControlPanel/ControlPanel";
 import GameSelectbar from "../../components/game/GameSelectbar";
+import BlankComponent from "../../components/BlankComponent";
 
 const TreasureHunt = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -23,7 +22,7 @@ const TreasureHunt = () => {
   });
   const [chance, setChance] = useState(0);
   const [gameItems, setGameItems] = useState("");
-  const [itemEffect, setItemEffect] = useState(1);
+  const [resultBonus, setResultBonus] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
@@ -33,9 +32,11 @@ const TreasureHunt = () => {
     setChance(updatedChance);
   };
 
-  // 사용 아이템 효과 담기
+  // 아이템 효과 담기
   const getItemEffect = async (recivedItemEffect) => {
-    setItemEffect(recivedItemEffect);
+    if (recivedItemEffect.resultBonus) {
+      setResultBonus(recivedItemEffect.resultBonus);
+    }
   };
 
   // 게임 시작
@@ -47,7 +48,7 @@ const TreasureHunt = () => {
     }
     if (!window.confirm("게임기회가 차감됩니다. 게임을 시작하시겠나이까?")) return;
     setIsPlaying(true); // 게임중으로 상태 변경
-    setItemEffect(1); // 아이템 효과 초기화
+    setResultBonus(""); // 아이템 효과 초기화
     await GameInterface.minusGameCount(account, gameTitle);
     const recivedChance = await GameInterface.getMyChance(account, gameTitle);
     setChance(recivedChance); // 횟수 차감됐으니 횟수 다시 불러오기
@@ -61,7 +62,7 @@ const TreasureHunt = () => {
   // 게임 끝났을 때 링 찾은 상태면 서버에 점수 전송
   useEffect(async () => {
     if (state.gameStatus == GameStatus.VICTORY) {
-      await GameInterface.sendScore(account, gameTitle, score, itemEffect);
+      await GameInterface.sendScore(account, gameTitle, score, resultBonus);
     }
     setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
   }, [state.gameStatus]);
@@ -76,120 +77,125 @@ const TreasureHunt = () => {
 
   return (
     <>
-      <GameSelectbar />
+      {account && auth ? (
+        <>
+          <GameSelectbar />
+          <ContextProvider state={state} dispatch={dispatch}>
+            <div className="App">
+              <div className="App__container">
+                {isPlaying ? (
+                  <>
+                    <h1 className="App__heading">상자를 열어요!</h1>
+                    <ChestContainer />
+                    <ControlPanel
+                      gameStart={gameStart}
+                      getAttemptsMade={getAttemptsMade}
+                      account={account}
+                      gameTitle={gameTitle}
+                      score={score}
+                      resultBonus={resultBonus}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <h1 className="App__heading">최소한의 횟수로 링을 찾으세요</h1>
+                    <Menu gameStart={gameStart} />
+                  </>
+                )}
+              </div>
+              <div>
+                {gameItems &&
+                  gameItems.map((item) => (
+                    <GameItem
+                      key={item.itemId}
+                      item={item}
+                      gameTitle={gameTitle}
+                      getItemEffect={getItemEffect}
+                      resultBonus={resultBonus}
+                      isPlaying={isPlaying}
+                      updateChance={updateChance}
+                    />
+                  ))}
+              </div>
+              <div className="score__box">
+                점수
+                <br />
+                {resultBonus ? Math.ceil(score * resultBonus) : score}
+              </div>
+              {resultBonus ? (
+                <div className="item_effect__box">
+                  이번 판 점수
+                  <br />
+                  {Math.round((resultBonus - 1) * 100)} % 증가!
+                </div>
+              ) : null}
+              <div className="best_score__box">
+                최고기록
+                <br />
+                {bestScore}
+              </div>
+              <div className="chance__box">
+                남은 기회
+                <br />
+                {chance}
+              </div>
+              <style jsx>{`
+                .App {
+                  min-height: 100%;
+                  display: flex;
+                  align-items: center;
+                  position: relative;
+                  border: solid 3px yellow;
+                }
 
-      <ContextProvider state={state} dispatch={dispatch}>
-        <div className="App">
-          <div className="App__container">
-            {isPlaying ? (
-              <>
-                <h1 className="App__heading">상자를 열어요!</h1>
-                <ChestContainer />
-                <ControlPanel
-                  gameStart={gameStart}
-                  getAttemptsMade={getAttemptsMade}
-                  account={account}
-                  gameTitle={gameTitle}
-                  score={score}
-                  itemEffect={itemEffect}
-                />
-              </>
-            ) : (
-              <>
-                <h1 className="App__heading">최소한의 횟수로 링을 찾으세요</h1>
-                <Menu gameStart={gameStart} />
-              </>
-            )}
-          </div>
-          <div>
-            {gameItems &&
-              gameItems.map((item) => (
-                <GameItem
-                  key={item.itemId}
-                  item={item}
-                  gameTitle={gameTitle}
-                  getItemEffect={getItemEffect}
-                  itemEffect={itemEffect}
-                  isPlaying={isPlaying}
-                  updateChance={updateChance}
-                />
-              ))}
-          </div>
-          <div className="score__box">
-            점수
-            <br />
-            {itemEffect == 1 ? score : Math.ceil(score * itemEffect)}
-          </div>
-          {itemEffect == 1 ? null : (
-            <div className="item_effect__box">
-              이번 판 점수
-              <br />
-              {Math.round((itemEffect - 1) * 100)} % 증가!
+                .App__container {
+                  margin: 0 auto;
+                  padding: 0 10px;
+                  min-width: 525px;
+                  max-width: 1020px;
+                }
+
+                .App__heading {
+                  text-align: center;
+                  font-size: 18px;
+                  margin: 20px 0;
+                }
+
+                .chance__box {
+                  width: 70px;
+                  position: absolute;
+                  top: 10px;
+                  right: 90px;
+                  text-align: center;
+                }
+                .score__box {
+                  width: 70px;
+                  position: absolute;
+                  top: 10px;
+                  left: 120px;
+                  text-align: center;
+                }
+                .best_score__box {
+                  width: 70px;
+                  position: absolute;
+                  top: 10px;
+                  left: 20px;
+                  text-align: center;
+                }
+                .item_effect__box {
+                  width: 100px;
+                  position: absolute;
+                  top: 10px;
+                  left: 220px;
+                  text-align: center;
+                }
+              `}</style>
             </div>
-          )}
-          <div className="best_score__box">
-            최고기록
-            <br />
-            {bestScore}
-          </div>
-          <div className="chance__box">
-            남은 기회
-            <br />
-            {chance}
-          </div>
-          <style jsx>{`
-          .App {
-            min-height: 100%;
-            display: flex;
-            align-items: center;
-            position: relative;
-            border: solid 3px yellow;
-          }
-
-          .App__container {
-            margin: 0 auto;
-            padding: 0 10px;
-            min-width: 525px;
-            max-width: 1020px;
-          }
-
-          .App__heading {
-            text-align: center;
-            font-size: 18px;
-            margin: 20px 0;
-          }
-
-          .chance__box {
-            width: 70px;
-            position: absolute;
-            top: 10px;
-            right: 90px;
-            text-align: center;
-          }
-          .score__box {
-            width: 70px;
-            position: absolute;
-            top: 10px;
-            left: 120px;
-            text-align: center;
-          }
-          .best_score__box {
-            width: 70px;
-            position: absolute;
-            top: 10px;
-            left: 20px;
-            text-align: center;
-          }
-          .item_effect__box {
-            width: 100px;
-            position: absolute;
-            top: 10px;
-            left: 220px;
-            text-align: center;
-          }
-        `}</style>
-        </div>
-      </ContextProvider>
+          </ContextProvider>
+        </>
+      ) : (
+        <BlankComponent receivedText={"로그인 및 NFT를 소유해야 게임에 참여하실 수 있습니다"} />
+      )}
     </>
   );
 };

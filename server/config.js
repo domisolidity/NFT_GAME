@@ -6,7 +6,18 @@ const config = {
   secret: "shhhh", // TODO Put in process.env
 };
 
-const { sequelize, User, InGameUser, Game, Item, UserItem, Ranking } = require("./models");
+const {
+  sequelize,
+  User,
+  InGameUser,
+  Game,
+  Item,
+  UserItem,
+  Ranking,
+  DailyMission,
+  MissionInUser,
+  ClosingMission,
+} = require("./models");
 const schedule = require("node-schedule");
 
 // DB 초기 세팅 (테스트 계정, 블록게임, 아이템 생성)
@@ -52,7 +63,64 @@ const itemList = [
   { itemName: "자본의 맛", itemPrice: 1, itemDescription: "게임결과에 5%만큼 점수가 가산됩니다" },
   { itemName: "자본주의", itemPrice: 5, itemDescription: "게임결과에 10%만큼 점수가 가산됩니다" },
   { itemName: "자낳괴", itemPrice: 15, itemDescription: "게임결과에 15%만큼 점수가 가산됩니다" },
+  {
+    itemName: "혼돈의 카오스",
+    itemPrice: 10,
+    itemDescription: "테트리스 좌우, 상하 조작이 반전되고 이후 획득하는 점수에 10% 추가점수를 획득합니다",
+  },
 ];
+
+/* 일일 미션 목록 */
+const dailyMission = [
+  { game_title: "블록쌓기", targetValue: 30, missionDetails: "블록 30개 이상 쌓기" },
+  { game_title: "테트리스", targetValue: 50, missionDetails: "블록 50줄 이상 제거" },
+  { game_title: "보물찾기", targetValue: 30, missionDetails: "블록 50줄 이상 제거" },
+];
+
+/* 일일 미션 등록 */
+const missionReg = async (account, staking) => {
+  switch (staking) {
+    case "red":
+      console.log("red");
+      const randomRed = Math.floor(Math.random() * 3 + 1);
+      console.log(randomRed);
+      MissionInUser.create({ user_address: account, mission_id: randomRed });
+      break;
+    case "green":
+      console.log("green");
+      const randomGreen = [];
+      let i = 0;
+      function same(n) {
+        for (let j = 0; j < randomGreen.length; j++) {
+          if (n == randomGreen[j]) {
+            return true;
+          }
+        }
+        return false;
+      }
+      while (i < 2) {
+        let temp = Math.floor(Math.random() * 3 + 1);
+        if (!same(temp)) {
+          randomGreen.push(temp);
+          i++;
+        }
+      }
+
+      for (let i = 0; i < 2; i++) {
+        MissionInUser.create({ user_address: account, mission_id: randomGreen[i] });
+      }
+      break;
+    case "purple":
+      console.log("purple");
+      for (let i = 0; i < dailyMission.length; i++) {
+        MissionInUser.create({ user_address: account, mission_id: i + 1 });
+      }
+      break;
+
+    default:
+      break;
+  }
+};
 
 /* DB 초기 데이터 입력 */
 const getDatabaseConfig = async () => {
@@ -86,6 +154,14 @@ const getDatabaseConfig = async () => {
         description: gameList[i].description,
       });
     }
+    // 일일미션 추가
+    for (let i = 0; i < dailyMission.length; i++) {
+      await DailyMission.create({
+        game_title: dailyMission[i].game_title,
+        targetValue: dailyMission[i].targetValue,
+        missionDetails: dailyMission[i].missionDetails,
+      });
+    }
     // 테스트 계정들 게임별 임의 플레이 기록 추가
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < gameList.length; j++) {
@@ -97,10 +173,10 @@ const getDatabaseConfig = async () => {
       }
     }
     // 테스트 0번 계정에 아이템 임의로 추가
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 50; i++) {
       await UserItem.create({
         user_address: testAddressArray[0],
-        item_itemName: itemList[Math.floor(Math.random() * 6)].itemName,
+        item_itemName: itemList[Math.floor(Math.random() * itemList.length)].itemName,
       });
     }
 
@@ -132,10 +208,10 @@ const getDatabaseConfig = async () => {
 /* InGameUser 테이블에서 게임별로 TOP 3를 찾아 순위 테이블에 기록하고 
    InGameUser 테이블 초기화하기                                     */
 const rankAggregation = async () => {
+  const latestWeekData = await Ranking.findOne({ attributes: ["weeks"], order: [["weeks", "desc"]] });
+  const latestWeek = latestWeekData.weeks; // 최신 주(week)
   // 게임별 TOP 3 찾기
   for (let i = 0; i < gameList.length; i++) {
-    const latestWeekData = await Ranking.findOne({ attributes: ["weeks"], limit: 1, order: [["weeks", "desc"]] });
-    const latestWeek = latestWeekData.weeks; // 최신 주(week)
     const gameTitle = gameList[i].gameTitle; // 게임명
     // 이번 주 차 TOP 3 정보
     const thisWeekRankData = await InGameUser.findAll({
@@ -173,17 +249,52 @@ const rankAggregation = async () => {
   }
 };
 
+/* 일일미션 집계 */
+const missionAggregation = async () => {
+  // 현재 모든 사용자의 일일미션 중 미션달성(attainment: true) 한 것만 찾기
+  const attainmentArr = await MissionInUser.findAll({ where: { attainment: true }, raw: true });
+  // 달성한 미션 수 만큼 반복
+  for (let i = 0; i < attainmentArr.length; i++) {
+    // 달성자와 달성시간을 ClosingMission 테이블에 기록
+    await ClosingMission.create({
+      user_address: attainmentArr[i].user_address,
+      attainmentTime: attainmentArr[i].updatedAt,
+    });
+  } // 달성미션 다 기록했으면 현재 모든 사용자의 일일미션 없애주기
+  await MissionInUser.sync({ force: true });
+  console.log(`미션 달성 집계 완료`);
+};
+
 /* 매주 순위 집계 시행하기 */
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
-  // rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
-  rule.hour = 22;
-  rule.minute = 44;
-  rule.second = 00;
-
+  rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
+  rule.hour = 9;
+  rule.minute = 0;
   const job = schedule.scheduleJob(rule, function () {
     rankAggregation(); // 순위집계 시행
   });
 };
+/* 하루 한번 일일미션 등록시켜주기 */
+const dailylySchedule = async () => {
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = 9;
+  rule.minute = 1;
+  const job = schedule.scheduleJob(rule, function () {
+    missionAggregation(); // 일일미션 집계
+  });
+};
 
-module.exports = { config, itemList, getDatabaseConfig, rankAggregation, gameList, weeklySchedule, itemList };
+module.exports = {
+  config,
+  itemList,
+  getDatabaseConfig,
+  rankAggregation,
+  missionAggregation,
+  gameList,
+  weeklySchedule,
+  dailylySchedule,
+  itemList,
+  dailyMission,
+  missionReg,
+};

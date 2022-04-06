@@ -57,5 +57,13 @@ module.exports = class User extends Sequelize.Model {
       foreignKey: "user_address",
       sourceKey: "publicAddress",
     });
+    db.User.hasMany(db.MissionInUser, {
+      foreignKey: "user_address",
+      sourceKey: "publicAddress",
+    });
+    db.User.hasMany(db.ClosingMission, {
+      foreignKey: "user_address",
+      sourceKey: "publicAddress",
+    });
   }
 };
