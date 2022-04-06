@@ -7,6 +7,7 @@ import Collections from "../../components/Collections";
 import TotalCard from "../../components/TotalCard";
 import Claim from "../../components/Claim";
 import Staking from "../../components/Staking";
+import { useSelector } from "react-redux";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
