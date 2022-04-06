@@ -1,13 +1,19 @@
 var NftContract = artifacts.require("./NftContract.sol");
 var NftDealContract = artifacts.require("./NftDealContract.sol");
-var GameToken = artifacts.require("./GameToken.sol");
 var AuctionCreator = artifacts.require('./AuctionCreator.sol');
+var GameToken = artifacts.require("./GameToken.sol");
+var Claim_20 = artifacts.require("./Claim_20.sol");
 
 module.exports = async function (deployer) {
+  // BEP721
   await deployer.deploy(NftContract);
   await deployer.deploy(NftDealContract, NftContract.address);
-  await deployer.deploy(GameToken);
   await deployer.deploy(AuctionCreator);
+
+  // BEP20
+  await deployer.deploy(GameToken,"DoremiGameToken","DGT",18,1000000000000);
+  await deployer.deploy(Claim_20, GameToken.address);
+
 };
 
 
@@ -22,5 +28,5 @@ module.exports = async function (deployer) {
       - nft레벨에 따라 마이닝 보상 확대
       - 스테이킹/마이닝 기간에 따라 레벨 업 --> 이 부분은 고려(레벨업 방식)
       - 스테이킹/마이닝에 따른 거버넌스?토큰 지급
-  - 거버넌스 토큰 활용한 투표기능  
+  - 거버넌스 토큰 활용한 투표기능   
 */
