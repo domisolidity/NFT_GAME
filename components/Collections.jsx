@@ -4,21 +4,13 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import MyNftsCard from "../components/MyNftsCard";
 import Link from "next/link";
+const _ = require("lodash");
 
 const Collections = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract } = blockchain;
 
-  const [myNfts, setMyNfts] = useState([
-    {
-      id: null || "",
-      name: null || "",
-      image: null || "",
-      description: null || "",
-      grade: null || "",
-      attributes: null || "",
-    },
-  ]);
+  const [myNfts, setMyNfts] = useState([]);
 
   const baseUri = "http://127.0.0.1:8080/ipfs";
 
@@ -36,7 +28,7 @@ const Collections = () => {
             const response = await axios.get(
               `${baseUri}${info.uri.slice(6)}/${info.id}.json`
             );
-            console.log(response.data);
+            console.log(_.cloneDeep(response.data.attributes));
             mynfts.push({
               id: info.id,
               grade: response.data.grade,
@@ -58,15 +50,16 @@ const Collections = () => {
     if (!account) return false;
     await getMyNfts();
   }, [account]);
+  useEffect(async () => {
+    const end = Number(limit);
+    setDataShow(myNfts.slice(0, end));
+  }, [myNfts]);
 
   let limit = 5;
   let pages = 1;
   let range = [];
 
-  const initDataShow =
-    limit && myNfts ? myNfts.slice(0, Number(limit)) : myNfts;
-
-  const [dataShow, setDataShow] = useState(initDataShow);
+  const [dataShow, setDataShow] = useState(myNfts);
 
   if (limit !== undefined) {
     let page = Math.floor(myNfts.length / Number(limit)) || 0;
@@ -86,9 +79,6 @@ const Collections = () => {
 
   return (
     <>
-      {/* <Box fontSize={"1.5rem"} fontWeight="bold">
-        My Nfts
-      </Box> */}
       {pages >= 1 ? (
         <div className="table__pagination">
           {range.map((item, index) => (

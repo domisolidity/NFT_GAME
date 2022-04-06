@@ -7,9 +7,15 @@ import Collections from "../../components/Collections";
 import TotalCard from "../../components/TotalCard";
 import Claim from "../../components/Claim";
 import Staking from "../../components/Staking";
+import { useSelector } from "react-redux";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
+  const data = useSelector(state => state.data);
+  const { kdkd, auctionList } = data;
+  console.log("kdkd", kdkd)
+  console.log("auctionList", auctionList)
+
 
   useEffect(() => {
     returnMenu(menu);
@@ -46,6 +52,8 @@ const Mypage = () => {
     e.preventDefault();
     setMenu("staking");
   };
+
+
 
   return (
     <>

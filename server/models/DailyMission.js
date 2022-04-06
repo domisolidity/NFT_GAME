@@ -1,24 +1,25 @@
 const Sequelize = require("sequelize");
 
-/* 게임 정보 DB */
-module.exports = class Game extends Sequelize.Model {
+/* 일일미션 정보 DB */
+module.exports = class DailyMission extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        gameId: {
+        missionId: {
           primaryKey: true,
           autoIncrement: true,
           type: Sequelize.INTEGER,
           unique: true,
         },
-        gameTitle: {
+        game_title: {
           type: Sequelize.STRING,
-          unique: true, // 고유하게,
+          allowNull: false,
         },
-        gameUrl: {
-          type: Sequelize.STRING,
+        targetValue: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
         },
-        description: {
+        missionDetails: {
           type: Sequelize.STRING,
         },
       },
@@ -26,8 +27,8 @@ module.exports = class Game extends Sequelize.Model {
         sequelize,
         timestamps: false,
         underscored: false,
-        modelName: "Game",
-        tableName: "games",
+        modelName: "DailyMission",
+        tableName: "daily_missions",
         paranoid: false,
         charset: "utf8",
         collate: "utf8_general_ci",
@@ -36,17 +37,13 @@ module.exports = class Game extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Game.hasMany(db.InGameUser, {
+    db.DailyMission.belongsTo(db.Game, {
       foreignKey: "game_title",
-      sourceKey: "gameTitle",
+      targetKey: "gameTitle",
     });
-    db.Game.hasMany(db.Ranking, {
-      foreignKey: "game_title",
-      sourceKey: "gameTitle",
-    });
-    db.Game.hasMany(db.DailyMission, {
-      foreignKey: "game_title",
-      sourceKey: "gameTitle",
+    db.DailyMission.hasMany(db.MissionInUser, {
+      foreignKey: "mission_id",
+      sourceKey: "missionId",
     });
   }
 };

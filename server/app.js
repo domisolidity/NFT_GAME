@@ -6,11 +6,10 @@ const { sequelize } = require("./models");
 const session = require("express-session");
 const dotenv = require("dotenv");
 dotenv.config();
+
 const databaseConfig = require("./config");
 
 const indexRouter = require("./routes/index");
-//const csrf = require('csurf');
-// const { csrfProtectionF } = require("./middleware/middwares");
 
 const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
@@ -18,13 +17,16 @@ const gamesRouter = require("./routes/games");
 const itemsRouter = require("./routes/items");
 const ranksRouter = require("./routes/ranks");
 
+
+
 /* 시퀄라이즈 연결 */
 sequelize
   .sync({ force: false })
   .then(async () => {
     console.log(`디비 서버 포트 : ${process.env.MYSQL_PORT_DEVELOPMENT} 연결`);
     databaseConfig.getDatabaseConfig(); // 기본 데이터베이스 세팅 (테스트용 포함)
-    databaseConfig.weeklySchedule(); // 주간 순위 집계
+    databaseConfig.weeklySchedule(); // 매주 주간 순위 집계를 위한 스케줄
+    databaseConfig.dailylySchedule(); // 매일 일일미션 달성여부 체크를 위한 스케줄
   })
   .catch((err) => {
     console.error(err);

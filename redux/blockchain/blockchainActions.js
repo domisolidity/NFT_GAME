@@ -3,6 +3,7 @@ import Web3 from "web3";
 import NftContract from "../../contracts/artifacts/NftContract.json";
 import NftDealContract from "../../contracts/artifacts/NftDealContract.json";
 import GameTokenContract from "../../contracts/artifacts/GameToken.json";
+import AuctionCreatorContract from "../../contracts/artifacts/AuctionCreator.json";
 import jwtDecode from "jwt-decode";
 import { fetchData } from "../data/dataActions";
 import Cookies from "js-cookie";
@@ -91,18 +92,15 @@ export const reconnect = () => {
       console.log(" 🛠 networkId 🛠 ", networkId);
 
       const nftNetwork = await NftContract.networks[networkId];
-      console.log(" 🚩 nftNetwork ", nftNetwork);
       const nftDealNetworkData = await NftDealContract.networks[networkId];
-      console.log(" 🚩 nftDealNetworkData ", nftDealNetworkData)
       const gameTokenNetworkData = await GameTokenContract.networks[networkId];
-      console.log(" 🚩 gameTokenNetworkData ", gameTokenNetworkData)
-
+      const auctionCreatorNetworkData = await AuctionCreatorContract.networks[networkId];
+  
       const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
-      console.log(" 🚩 nftContract ", nftContract);
       const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
-      console.log(" 🚩 nftDealContract ", nftDealContract)
       const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameTokenNetworkData.address);
-      console.log(" 🚩 gameTokenContract ", gameTokenContract)
+      const auctionCreatorContract = new web3.eth.Contract(AuctionCreatorContract.abi, auctionCreatorNetworkData.address);
+
 
       dispatch(
         connectSuccess({
@@ -110,6 +108,7 @@ export const reconnect = () => {
           nftContract: nftContract,
           nftDealContract: nftDealContract,
           gameTokenContract: gameTokenContract,
+          auctionCreatorContract: auctionCreatorContract,
           web3: web3,
         })
       );
@@ -173,9 +172,14 @@ export const connectWallet = () => {
           const nftNetwork = await NftContract.networks[networkId];
           const nftDealNetworkData = await NftDealContract.networks[networkId];
           const gameTokenNetworkData = await GameTokenContract.networks[networkId];
+          const auctionCreatorNetworkData = await AuctionCreatorContract.networks[networkId];
+          console.log("auctionCreatorNetworkData",auctionCreatorNetworkData)
+          
           const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
           const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
           const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameTokenNetworkData.address);
+          const auctionCreatorContract = new web3.eth.Contract(AuctionCreatorContract.abi, auctionCreatorNetworkData.address);
+          console.log("auctionCreatorContract",auctionCreatorContract)
 
           const coinbase = await web3.eth.getCoinbase(); //계정
 
@@ -247,6 +251,7 @@ export const connectWallet = () => {
               nftContract: nftContract,
               nftDealContract: nftDealContract,
               gameTokenContract: gameTokenContract,
+              auctionCreatorContract: auctionCreatorContract,
               web3: web3,
             })
           );
@@ -287,3 +292,4 @@ export const disconnectWallet = () => {
     dispatch(connectFailed("로그아웃"));
   };
 };
+

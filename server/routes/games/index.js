@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { User, Game, InGameUser,Ranking, Item, UserItem } = require("../../models");
+const { User, Game, InGameUser, Ranking, Item, UserItem, MissionInUser, DailyMission } = require("../../models");
+const { dailyMission, missionReg, missionAggregation } = require("../../config");
 
 /* 게임목록 불러오기 */
 router.get("/game-list", async (req, res) => {
@@ -100,14 +101,60 @@ router.post("/send-score", async (req, res) => {
   res.send(after);
 });
 
-
-router.get("/rank",async (req,res)=>{
+router.get("/rank", async (req, res) => {
   console.log("랭킹`");
   const rank = await Ranking.findAll({
-    attributes: ['user_address','ranking','game_title'],
-    order:[['game_title'],['ranking']]
-  })
-  res.send(rank)
-})
+    attributes: ["user_address", "ranking", "game_title"],
+    order: [["game_title"], ["ranking"]],
+  });
+  res.send(rank);
+});
+
+// 내 일일미션 정보 불러오기
+const myMission = async (account) => {
+  const missions = await MissionInUser.findAll({
+    where: { user_address: account },
+    include: {
+      model: DailyMission,
+    },
+  });
+  return missions;
+};
+
+/* 일일미션 조회 */
+router.post("/my-mission", async (req, res) => {
+  console.log("미션 조회");
+  const account = req.body.account;
+
+  if (account) {
+    const missions = await myMission(account);
+
+    res.send(missions);
+  } else {
+    res.send("계정에 문제있음");
+  }
+});
+
+/* 일일미션 등록 */
+router.post("/mission-reg", async (req, res) => {
+  console.log("미션 등록");
+  const account = req.body.account;
+  // const staking = req.body.staking;
+  const staking = "green";
+
+  if (account && staking) {
+    const missions = await myMission(account);
+    if (missions.length == 0) {
+      // 선택된 NFT에 따라 미션 등록 1~3개 등록
+      missionReg(account, staking);
+      res.send("일일미션이 등록되었습니다");
+    } else {
+      console.log("일일미션이 이미 있음");
+      res.send("일일미션이 이미 있음");
+    }
+  } else {
+    res.send("스테이킹 또는 계정에 문제있음");
+  }
+});
 
 module.exports = router;

@@ -1,6 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 const CurrentRanking = ({ currentRankData }) => {
+  const blockchain = useSelector((state) => state.blockchain);
+  const { account, auth } = blockchain;
   return (
     <>
       <div className={"ranking-table"}>
@@ -21,7 +24,14 @@ const CurrentRanking = ({ currentRankData }) => {
           const updatedAt = `${tempMonth}/${tempDate} ${tempHours}:${tempMinutes}:${tempSeconds}`;
 
           return (
-            <div className={"ranking-table"} key={user.inGameUserId}>
+            <div
+              className={
+                auth && user.user_address == account
+                  ? "ranking-table my-record"
+                  : "ranking-table"
+              }
+              key={user.inGameUserId}
+            >
               <div>{index + 1}</div>
               <div>
                 {user.user_address.substr(0, 5)}...
@@ -50,6 +60,11 @@ const CurrentRanking = ({ currentRankData }) => {
         }
         .ranking-table div:nth-child(4) {
           min-width: 140px;
+        }
+        .my-record {
+          color: yellow;
+          text-shadow: 0 0 10px white, 0 0 10px white, 0 0 10px white,
+            0 0 10px white, 0 0 10px white;
         }
       `}</style>
     </>

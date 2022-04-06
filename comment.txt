@@ -28,8 +28,9 @@ Chore - 기타 변경사항 (빌드 스크립트 수정 등)
 
 
 
-@ npm i 시 react-scroll-horizontal 설치 오류 해결방법
+@ npm i 시 설치 오류 해결방법
 npm i react-scroll-horizontal --legacy-peer-deps 
+npm i react-progress-steps --legacy-peer-deps
 
 
 

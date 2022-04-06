@@ -5,12 +5,12 @@ import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
 import { useRouter } from "next/router";
 import GameSelectbar from "../../components/game/GameSelectbar";
+import BlankComponent from "../../components/BlankComponent";
 
 const StackingBlocks = () => {
   const router = useRouter();
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
-  console.log(GameInterface.gameList)
   const { gameTitle } = GameInterface.gameList[0];
 
   const [score, setScore] = useState(0);
@@ -18,7 +18,7 @@ const StackingBlocks = () => {
   const [chance, setChance] = useState("");
   const [gameEnded, setGameEnded] = useState(true);
   const [gameItems, setGameItems] = useState("");
-  const [itemEffect, setItemEffect] = useState(1);
+  const [resultBonus, setResultBonus] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
 
   // 로그인 되어있으면 해당계정의 남은 기회와 점수를 불러온다
@@ -37,11 +37,8 @@ const StackingBlocks = () => {
   // 게임이 끝나서 점수가 State에 들어오면 게임기록 서버에 전송
   useEffect(async () => {
     if (document.querySelector("#blockGameContainer.ended")) {
-      await GameInterface.sendScore(account, gameTitle, score, itemEffect);
-      const recivedBestScore = await GameInterface.getMyBestScore(
-        account,
-        gameTitle
-      );
+      await GameInterface.sendScore(account, gameTitle, score, resultBonus);
+      const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
       setBestScore(recivedBestScore);
     }
   }, [score]);
@@ -50,8 +47,7 @@ const StackingBlocks = () => {
   const playGame = async () => {
     if (
       !(
-        document.querySelector("#blockGameContainer.playing") ||
-        document.querySelector("#blockGameContainer.resetting")
+        document.querySelector("#blockGameContainer.playing") || document.querySelector("#blockGameContainer.resetting")
       )
     )
       return;
@@ -60,7 +56,7 @@ const StackingBlocks = () => {
     await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
     const recivedChance = await GameInterface.getMyChance(account, gameTitle);
     setChance(recivedChance); // 횟수 차감됐으니 횟수 다시 불러오기
-    setItemEffect(1); // 이전판 아이템 효과 제거
+    setResultBonus(""); // 이전판 아이템 효과 제거
   };
 
   // 블록쌓기
@@ -75,7 +71,9 @@ const StackingBlocks = () => {
 
   // 아이템 효과 담기
   const getItemEffect = async (recivedItemEffect) => {
-    setItemEffect(recivedItemEffect);
+    if (recivedItemEffect.resultBonus) {
+      setResultBonus(recivedItemEffect.resultBonus);
+    }
   };
 
   // 블록쌓기 게임 불러오기
@@ -89,7 +87,7 @@ const StackingBlocks = () => {
     ];
     const scripts = [, ,];
     setTimeout(() => {
-      console.log(document.getElementsByClassName("gameScript"))
+      console.log(document.getElementsByClassName("gameScript"));
       // if (document.body.scriptSrc[0]) return;
       for (let i = 0; i < scriptSrc.length; i++) {
         // <script> 태그를 만들어 배열에 넣고
@@ -101,27 +99,24 @@ const StackingBlocks = () => {
         // 문서 body에 추가해준다
         document.body.appendChild(scripts[i]);
       }
-    }, 0)
+    }, 0);
     return () => {
       scripts.forEach((script) => {
         // 스크립트 태그 지워주는 녀석
         document.body.removeChild(script);
       });
     };
-
   }, [account, auth]);
 
   return (
     <>
-      {account ? (
+      {account && auth ? (
         <>
           <GameSelectbar />
           <div id="blockGameContainer">
             <div id="game"></div>
             <div id="score">0</div>
-            <div color={"#333344"} id="instructions">
-              블록을 높이 쌓으세요
-            </div>
+            <div id="instructions">블록을 높이 쌓으세요</div>
             <div className="game-over">
               <button id="restart-button" onClick={playGame}>
                 다시시작
@@ -130,40 +125,22 @@ const StackingBlocks = () => {
               <p>대~단합니다</p>
             </div>
             <div className="game-ready">
-              <button
-                id="start-button"
-                onClick={playGame}
-                disabled={!gameEnded}
-              >
+              <button id="start-button" onClick={playGame} disabled={!gameEnded}>
                 시작
               </button>
               <div></div>
             </div>
-            <div color={"#333344"} className="my-score-box">
+            <div className="my-score-box">
               최고점수
-              <p fontWeight={"bold"} textAlign={"center"}>
-                {bestScore}
-              </p>
+              <p>{bestScore}</p>
             </div>
-            <div color={"#333344"} className="chance-box">
+            <div className="chance-box">
               남은기회
-              <p fontWeight={"bold"} textAlign={"center"}>
-                {chance}
-              </p>
+              <p>{chance}</p>
             </div>
-            {itemEffect != 1 ? (
-              <div color={"#333344"} className="item-effect-box">
-                x {itemEffect}!
-              </div>
-            ) : null}
-            <button
-              colorScheme={"blue"}
-              width={"100"}
-              onClick={stackingBlock}
-              disabled={gameEnded}
-              className="placeBlock-button"
-            >
-              멈춰!
+            {resultBonus ? <div className="item-effect-box">x {resultBonus}!</div> : null}
+            <button onClick={stackingBlock} disabled={gameEnded} className="placeBlock-button">
+              멈춰 !
             </button>
           </div>
           <Flex justifyContent={"center"}>
@@ -174,7 +151,7 @@ const StackingBlocks = () => {
                   item={item}
                   gameTitle={gameTitle}
                   getItemEffect={getItemEffect}
-                  itemEffect={itemEffect}
+                  resultBonus={resultBonus}
                   isPlaying={isPlaying}
                   updateChance={updateChance}
                 />
@@ -182,7 +159,7 @@ const StackingBlocks = () => {
           </Flex>
         </>
       ) : (
-        <div>로그인 해주세요</div>
+        <BlankComponent receivedText={"로그인 및 NFT를 소유해야 게임에 참여하실 수 있습니다"} />
       )}
       <style jsx>{`
         #game canvas {
@@ -190,10 +167,20 @@ const StackingBlocks = () => {
           max-height: 100% !important;
         }
         .placeBlock-button {
+          width: 100px;
+          height: 40px;
+          border-radius: 10px;
+          background-color: #7d0000;
+          color: #ebebeb;
           position: absolute;
           left: 80%;
           top: 58.5%;
           transform: translate(-50%, -50%);
+          transition-duration: 0.3s;
+        }
+        .placeBlock-button:hover {
+          background-color: #7d0000;
+          opacity: 0.4;
         }
         .chance-box {
           position: absolute;
@@ -216,12 +203,14 @@ const StackingBlocks = () => {
           position: relative;
           height: 70vh;
           margin: 0 auto;
+          text-align: center;
+          color: #333344;
+          font-weight: bold;
         }
         #blockGameContainer #score {
           position: absolute;
           top: 20px;
           width: 100%;
-          text-align: center;
           font-size: 10vh;
           -webkit-transition: -webkit-transform 0.5s ease;
           transition: -webkit-transform 0.5s ease;
@@ -258,8 +247,7 @@ const StackingBlocks = () => {
           -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
           transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
           transition: opacity 0.5s ease, transform 0.5s ease;
-          transition: opacity 0.5s ease, transform 0.5s ease,
-            -webkit-transform 0.5s ease;
+          transition: opacity 0.5s ease, transform 0.5s ease, -webkit-transform 0.5s ease;
           opacity: 0;
           -webkit-transform: translatey(-50px);
           transform: translatey(-50px);
@@ -291,8 +279,7 @@ const StackingBlocks = () => {
           -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
           transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
           transition: opacity 0.5s ease, transform 0.5s ease;
-          transition: opacity 0.5s ease, transform 0.5s ease,
-            -webkit-transform 0.5s ease;
+          transition: opacity 0.5s ease, transform 0.5s ease, -webkit-transform 0.5s ease;
           opacity: 0;
           -webkit-transform: translatey(-50px);
           transform: translatey(-50px);
@@ -313,12 +300,10 @@ const StackingBlocks = () => {
           width: 100%;
           top: 16vh;
           left: 0;
-          text-align: center;
           -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
           transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
           transition: opacity 0.5s ease, transform 0.5s ease;
-          transition: opacity 0.5s ease, transform 0.5s ease,
-            -webkit-transform 0.5s ease;
+          transition: opacity 0.5s ease, transform 0.5s ease, -webkit-transform 0.5s ease;
           opacity: 0;
         }
         #blockGameContainer #instructions.hide {
