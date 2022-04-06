@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-const NetworkCard = () => {
+
+const TotalCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account } = blockchain;
 
@@ -18,16 +19,34 @@ const NetworkCard = () => {
   useEffect(async () => {
     if (!account) return false;
     await getEthBalance();
-  }, [account]);
+  }, [account]); //account
 
   return (
+    //<div className="network">
+    //  <div className="title">BSC network</div>
+    //  <div className="content_wrapprer">
+    //    <div className="content">
+    //      <img src={"/EthereumCoin.png"} />
+    //      <div className="balance">
+    //        {ethBalance}
+    //        <div className="unit">ETH</div>
+    //      </div>
+    //    </div>
+    //    <div className="content">
+    //      <img src={"/GameCoin3.png"} />
+    //      <div className="balance">
+    //        {ethBalance}
+    //        <div className="unit">SOL</div>
+    //      </div>
+    //    </div>
+    //  </div>
     <div className="general-wrapper">
       <img
         src="https://www.sandbox.game/img/30_Profile/eth-back.svg"
         className="background-logo"
       />
       <header>
-        <p className="is-text-capitalized">Ethereum Network</p>
+        <p className="is-text-capitalized">총 보유 갯수</p>
       </header>
       <section className="wallet">
         <div className="eth">
@@ -210,6 +229,49 @@ const NetworkCard = () => {
       `}</style>
     </div>
   );
+  // return (
+  // <div className="total">
+  //   <div className="title">My bag</div>
+  //   <div className="content_wrapprer">
+  //     <div className="content">
+  //       <div className="balance">
+  //         <div className="unit">NFT</div>5
+  //       </div>
+  //     </div>
+  //     <div className="content">
+  //       <div className="balance">
+  //         <div className="unit">ITEM</div>6
+  //       </div>
+  //     </div>
+  //   </div>
+  //   <style jsx>{`
+  //     .total {
+  //       background-color: hsla(
+  //         43.93700787401574,
+  //         100%,
+  //         50.19607843137255%,
+  //         0.726
+  //       );
+  //       font-weight: bold;
+  //     }
+  //     .title {
+  //       margin: 0.5rem 1rem;
+  //       font-size: 1.5rem;
+  //     }
+  //     .content_wrapprer {
+  //       display: flex;
+  //       justify-content: space-around;
+  //     }
+  //     .content {
+  //       display: flex;
+  //       font-size: 1.5rem;
+  //       align-items: center;
+  //       text-align: center;
+  //       margin: 1rem;
+  //     }
+  //   `}</style>
+  // </div>
+  //);
 };
 
-export default NetworkCard;
+export default TotalCard;

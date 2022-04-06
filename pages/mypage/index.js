@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Grid, GridItem, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import NetworkCard from "../../components/NetworkCard";
 import ProfileCard from "../../components/ProfileCard";
 import Inventory from '../../components/Inventory'
 import Collections from "../../components/Collections";
-import { useSelector } from "react-redux";
+import TotalCard from "../../components/TotalCard";
+import Claim from "../../components/Claim";
+import Staking from "../../components/Staking";
+
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
-  const data = useSelector(state=>state.data);
-  const {kdkd, auctionList} =data;
-  console.log("kdkd",kdkd)
-  console.log("auctionList",auctionList)
+  const data = useSelector(state => state.data);
+  const { kdkd, auctionList } = data;
+  console.log("kdkd", kdkd)
+  console.log("auctionList", auctionList)
 
 
   useEffect(() => {
@@ -23,6 +26,10 @@ const Mypage = () => {
         return <Inventory />
       case "nfts":
         return <Collections />
+      case "claim":
+        return <Claim />
+      case "staking":
+        return <Staking />
       default:
         break;
     }
@@ -36,40 +43,72 @@ const Mypage = () => {
     e.preventDefault();
     setMenu("nfts");
   };
+  const renderClaim = (e) => {
+    e.preventDefault();
+    setMenu("claim");
+  };
+  const renderStaking = (e) => {
+    e.preventDefault();
+    setMenu("staking");
+  };
 
-  
+
 
   return (
     <>
-      <Grid
-        height="85vh"
-        padding="0 4vw"
-        templateRows="repeat(5, minmax(10rem,1rem))" //세로
-        templateColumns="repeat(7, minmax(11rem,1rem))" //가로
-        gap={1}
-      >
-        <GridItem bg="whiteAlpha.100" borderRight={"solid 0.1rem"} colSpan={1} rowSpan={7}>
+      <div className="mypage">
+        <div className="sidebar">
           <ProfileCard />
-          <Flex flexDir={"column"}>
-            <Button onClick={renderItems} m={3}>아이템</Button>
-            <Button onClick={renderNfts} m={3}>NFT</Button>
+          <Button onClick={renderItems} m={4}>아이템</Button>
+          <Button onClick={renderNfts} m={4}>NFT</Button>
+          <Button onClick={renderClaim} m={4}>Claim</Button>
+          <Button onClick={renderStaking} m={4}>Staking</Button>
+        </div>
+        <div className="content">
+          <div className="fixed">
+            <div className="fixed_item">
+            </div>
+            <div className="fixed_item">
+              <NetworkCard />
+            </div>
+            <div className="fixed_item">
+              <TotalCard />
+            </div>
+          </div>
+          <div className="menu">
+            {returnMenu(menu)}
+          </div>
+        </div>
+      </div>
+      <style jsx>{`
+      .mypage{
+        display: flex;
+        margin: 0 3rem;
+      }
+      .sidebar{
+        display: flex;
+        width: 10%;
+        height: 65vh;
+        flex-direction: column;
+        border-right: 1px solid
+      }
+      .content{
+        width: 100%;
+        height:auto;
+        margin: 0 1rem;
 
-          </Flex>
-        </GridItem>
+      }
+      .fixed{
+        display: flex;
+      }
 
-        <GridItem colSpan={2} rowSpan={1}>
-          <NetworkCard />
-        </GridItem>
-        {/* <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={2}>
-          지갑
-        </GridItem>
-        <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={2}>
-          현재등수?
-        </GridItem> */}
-        <GridItem bg="whiteAlpha.100" colSpan={6} rowSpan={6}>
-          {returnMenu(menu)}
-        </GridItem>
-      </Grid>
+      .fixed_item{
+        margin-right: 2rem;
+      }
+      .menu{
+        margin: 2rem 1rem;
+      }
+      `}</style>
     </>
   );
 };

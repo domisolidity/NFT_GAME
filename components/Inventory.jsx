@@ -29,9 +29,9 @@ const Inventory = () => {
 
   return (
     <>
-      <Box fontSize={"1.5rem"} fontWeight="bold">
+      {/* <Box fontSize={"1.5rem"} fontWeight="bold">
         Items
-      </Box>
+      </Box> */}
       <Flex flexDir={"row"}>
         {gameItems[0] &&
           gameItems.map((item, index) => {
