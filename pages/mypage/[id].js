@@ -14,7 +14,10 @@ const NftDetail_my = () => {
     const router = useRouter();
     console.log(router)
     const {id, grade, attributes, name, image, description } = router.query;
-    console.log(router.query)
+
+
+    console.log("attributes",attributes)
+
     
     const [isApproved, setIsApproved] = useState(false);
     const [price, setPrice] = useState();
@@ -48,9 +51,18 @@ const NftDetail_my = () => {
 
     const _startingBid = web3.utils.toWei(startingBid,'ether');
 
-    await auctionCreatorContract.methods.createAuction(id,nftContract._address,_startingBid,_covertToBlockTime).send({from:account}).then((res)=>{
+    await auctionCreatorContract.methods.createAuction(id,nftContract._address,_startingBid,_covertToBlockTime,expirationTime).send({from:account}).then((res)=>{
       console.log("res",res)
       dispatch(addAuctionList(id, grade, attributes, name, image, description))
+
+    })
+    alert("경매 권한 승인")
+    await auctionCreatorContract.methods.getAuctionAddress(id).call({from:account}).then(async(address)=>{
+      // const auctionContract = new web3.eth.Contract(AuctionContract.abi, address);
+      // console.log(auctionContract);
+      await nftContract.methods.setApprovalForAll(address, true).send({ from: account }).then(res=>{
+        console.log(res)
+      })
     })
 
   }
@@ -62,10 +74,9 @@ const NftDetail_my = () => {
     await auctionCreatorContract.methods.getAuctionList(account,id).call({from:account}).then(async(address)=>{
       const auctionContract = new web3.eth.Contract(AuctionContract.abi, address);
       console.log(auctionContract);
-      // await auctionContract.methods.isAuctionCheck(id).call({from:account}).then(res=>{
-      //     console.log(res)
-      //     setOnAuctioning(res)
-      // })
+      await nftContract.methods.setApprovalForAll(address, true).send({ from: account }).then(res=>{
+        console.log(res)
+      })
     })
   }
 
@@ -184,8 +195,8 @@ const NftDetail_my = () => {
                 Properties
               </Heading>
               <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}>
-                {attributes[0] &&
-                  attributes.map((attr, i) => {
+                {/* {attr[0] &&
+                  attr.map((attribute, i) => {
                     return (
                       <GridItem
                         key={i}
@@ -193,11 +204,11 @@ const NftDetail_my = () => {
                         border="2px solid #2b7997"
                         borderRadius={15}
                       >
-                        <Text fontWeight="bold">{attr.trait_type}</Text>
-                        <Text>{attr.value}</Text>
+                        <Text fontWeight="bold">{attribute.trait_type}</Text>
+                        <Text>{attribute.value}</Text>
                       </GridItem>
                     );
-                  })}
+                  })} */}
               </Grid>
             </Box>
           </Flex>

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import MyNftsCard from "../components/MyNftsCard";
 import Link from "next/link";
+const _ = require("lodash");
 
 const Collections = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -35,7 +36,7 @@ const Collections = () => {
             const response = await axios.get(
               `${baseUri}${info.uri.slice(6)}/${info.id}.json`
             );
-            console.log(response.data);
+            console.log(_.cloneDeep(response.data.attributes));
             mynfts.push({
               id: info.id,
               grade: response.data.grade,
@@ -69,21 +70,11 @@ const Collections = () => {
             {myNfts.map((mynft, index) => {
               return (
                 <Box key={index}>
+                  {console.log("attr", mynft)}
                   <Link
-                    href={{
-                      pathname: `mypage/${mynft.id}`,
-                      query: {
-                        id: mynft.id,
-                        grade: mynft.grade,
-                        attributes: mynft.attributes,
-                        name: mynft.name,
-                        image: mynft.image,
-                        description: mynft.description,
-                      },
-                    }}
+                    href={{ pathname: `mypage/${mynft.id}`, query: mynft }}
                     as={`mypage/${mynft.id}`}
                   >
-                    {/* id, grade, attributes, name, image, description */}
                     <a>
                       <MyNftsCard
                         img={mynft.image}

@@ -4,9 +4,14 @@ import NetworkCard from "../../components/NetworkCard";
 import ProfileCard from "../../components/ProfileCard";
 import Inventory from '../../components/Inventory'
 import Collections from "../../components/Collections";
-
+import { useSelector } from "react-redux";
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
+  const data = useSelector(state=>state.data);
+  const {kdkd, auctionList} =data;
+  console.log("kdkd",kdkd)
+  console.log("auctionList",auctionList)
+
 
   useEffect(() => {
     returnMenu(menu);
@@ -32,6 +37,8 @@ const Mypage = () => {
     setMenu("nfts");
   };
 
+  
+
   return (
     <>
       <Grid
@@ -46,6 +53,7 @@ const Mypage = () => {
           <Flex flexDir={"column"}>
             <Button onClick={renderItems} m={3}>아이템</Button>
             <Button onClick={renderNfts} m={3}>NFT</Button>
+
           </Flex>
         </GridItem>
 

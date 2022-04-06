@@ -11,11 +11,22 @@ const Nft = () => {
     <Box align="center" pb={20}>
         <Tier />
       <Box w="400px" mb={70}>
-      <Text mt="200" fontSize="25" borderRadius="20" w="10vw" bg="#8382821f">
-        NFT 구매
-      </Text>
+      <Text mt="150" fontSize="25" w="10vw">
+        <span>NFT 구매</span>       
+        </Text>
       </Box>
-      <NftMint />
+
+          <NftMint />
+      <style jsx>{`
+        span{
+          font-size:35px;
+          background: linear-gradient(#f1f1f1 23%, #818181 100%);
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          font-weight: 900;
+        }
+      `}</style>
     </Box>
   );
 };
