@@ -4,6 +4,8 @@ const initialState = {
   myNftUri: null,
   myNfts: null,
   onSaleNfts:null,
+  auctionList:null,
+  kdkd:null,
   error: false,
   errorMsg: "",
 };
@@ -35,6 +37,13 @@ const dataReducer = (state = initialState, action) => {
         return {
           ...initialState,
           onSaleNfts: action.payload.onSaleNfts
+      }
+      case "ADD_AUCTION":
+        console.log(action.payload)
+        return {
+          ...initialState,
+          kdkd: action.payload.kdkd,
+          auctionList: action.payload.auctionList
       }
     default:
       return state;

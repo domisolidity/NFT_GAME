@@ -40,6 +40,7 @@ const Header = () => {
         grid-template-rows: repeat(2, minmax(2rem, auto));
         grid-template-columns: repeat(10, 1fr);
         align-items: center;
+        padding: 0 100px 10px 140px
       }
 
       .header__logo:nth-child(1) {
