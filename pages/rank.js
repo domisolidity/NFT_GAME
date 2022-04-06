@@ -6,8 +6,11 @@ import RankSelectbar from "../components/rank/RankSelectbar";
 import CurrentRanking from "../components/rank/CurrentRanking";
 import PastRanking from "../components/rank/PastRanking";
 import BlankComponent from "../components/BlankComponent";
+import { useSelector } from "react-redux";
 
 const Rank = ({ gameList }) => {
+  const blockchain = useSelector((state) => state.blockchain);
+  const { account } = blockchain;
   const [selectedGameTitle, setSelectedGameTitle] = useState("");
   const [currentRankData, setCurrentRankData] = useState([]);
   const [pastRankData, setPastRankData] = useState([]);
@@ -38,8 +41,27 @@ const Rank = ({ gameList }) => {
     getPastRankData();
   }, [selectedGameTitle]);
 
+  const zxcv = async () => {
+    await axios.post(`/api/games/mission-reg`, { account: account }).then((res) => {
+      console.log(res.data);
+    });
+  };
+  const asdf = async () => {
+    await axios.post(`/api/games/my-mission`, { account: account }).then((res) => {
+      console.log(res.data);
+    });
+  };
+  const test = async () => {
+    await axios.get(`/api/games/asdf`).then((res) => {
+      console.log(res.data);
+    });
+  };
+
   return (
     <Flex maxWidth={"1000px"} margin="0 auto" justifyContent={"center"}>
+      <button onClick={zxcv}>등록</button>
+      <button onClick={asdf}>조회</button>
+      <button onClick={test}>테스트</button>
       <RankSelectbar gameList={gameList} getSelectedGameTitle={getSelectedGameTitle} />
       {selectedGameTitle ? (
         <Flex flexDirection={"column"} textAlign="center">
@@ -54,7 +76,7 @@ const Rank = ({ gameList }) => {
           </Flex>
         </Flex>
       ) : (
-        <BlankComponent receivedText={"게임을 선택하여 참여자들의 게임별 순위를 확인하세요! asdf"} />
+        <BlankComponent receivedText={"게임을 선택하여 참여자들의 게임별 순위를 확인하세요!"} />
       )}
     </Flex>
   );
