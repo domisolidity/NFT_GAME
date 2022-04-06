@@ -174,6 +174,11 @@ const ProfileCard = () => {
           padding: 1rem;
           cursor: pointer;
         }
+        .profile_modal {
+          border: solid 1px;
+          background-color: #0f263e;
+          padding: 3rem;
+        }
         .profile_modal div {
           display: flex;
           flex-direction: column;
