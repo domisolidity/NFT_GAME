@@ -41,27 +41,8 @@ const Rank = ({ gameList }) => {
     getPastRankData();
   }, [selectedGameTitle]);
 
-  const zxcv = async () => {
-    await axios.post(`/api/games/mission-reg`, { account: account }).then((res) => {
-      console.log(res.data);
-    });
-  };
-  const asdf = async () => {
-    await axios.post(`/api/games/my-mission`, { account: account }).then((res) => {
-      console.log(res.data);
-    });
-  };
-  const test = async () => {
-    await axios.get(`/api/games/asdf`).then((res) => {
-      console.log(res.data);
-    });
-  };
-
   return (
     <Flex maxWidth={"1000px"} margin="0 auto" justifyContent={"center"}>
-      <button onClick={zxcv}>등록</button>
-      <button onClick={asdf}>조회</button>
-      <button onClick={test}>테스트</button>
       <RankSelectbar gameList={gameList} getSelectedGameTitle={getSelectedGameTitle} />
       {selectedGameTitle ? (
         <Flex flexDirection={"column"} textAlign="center">

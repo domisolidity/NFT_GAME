@@ -92,13 +92,12 @@ router.post("/send-score", async (req, res) => {
     where: { user_address: account, game_title: gameTitle },
   });
   // 이전기록 >= 현재기록 이면 갱신할 필요가 없음
-  if (before.gameScore >= score) return;
-  await InGameUser.update({ gameScore: score }, { where: { user_address: account, game_title: gameTitle } });
-  const after = await InGameUser.findOne({
-    attributes: ["gameScore"],
-    where: { user_address: account, game_title: gameTitle },
-  });
-  res.send(after);
+  if (before.gameScore >= score) {
+    res.send("이전 점수가 더 높음");
+  } else {
+    await InGameUser.update({ gameScore: score }, { where: { user_address: account, game_title: gameTitle } });
+    res.send("최고점수 갱신");
+  }
 });
 
 router.get("/rank", async (req, res) => {
@@ -111,13 +110,29 @@ router.get("/rank", async (req, res) => {
 });
 
 // 내 일일미션 정보 불러오기
-const myMission = async (account) => {
-  const missions = await MissionInUser.findAll({
-    where: { user_address: account },
-    include: {
-      model: DailyMission,
-    },
-  });
+const myMission = async (account, gameTitle) => {
+  console.log("일일미션 DB에서 불러오자");
+  let missions;
+  if (gameTitle) {
+    console.log("게임타이틀이 있을 때");
+    missions = await MissionInUser.findOne({
+      // 미션현황에서 자신의 미션 중에
+      where: { user_address: account },
+      include: {
+        model: DailyMission, // 일일미션이
+        // gameTitle과 같은것
+        where: { game_title: gameTitle },
+      },
+    });
+  } else {
+    console.log("게임타이틀이 없을 때");
+    missions = await MissionInUser.findAll({
+      where: { user_address: account },
+      include: {
+        model: DailyMission,
+      },
+    });
+  }
   return missions;
 };
 
@@ -125,10 +140,12 @@ const myMission = async (account) => {
 router.post("/my-mission", async (req, res) => {
   console.log("미션 조회");
   const account = req.body.account;
-
-  if (account) {
+  const gameTitle = req.body.gameTitle;
+  if (account && gameTitle) {
+    const missions = await myMission(account, gameTitle);
+    res.send(missions);
+  } else if (account) {
     const missions = await myMission(account);
-
     res.send(missions);
   } else {
     res.send("계정에 문제있음");
@@ -137,16 +154,15 @@ router.post("/my-mission", async (req, res) => {
 
 /* 일일미션 등록 */
 router.post("/mission-reg", async (req, res) => {
-  console.log("미션 등록");
+  console.log("server:미션 등록");
   const account = req.body.account;
-  // const staking = req.body.staking;
-  const staking = "green";
+  const tokenId = req.body.tokenId;
 
-  if (account && staking) {
+  if (account && tokenId) {
     const missions = await myMission(account);
     if (missions.length == 0) {
       // 선택된 NFT에 따라 미션 등록 1~3개 등록
-      missionReg(account, staking);
+      await missionReg(account, tokenId);
       res.send("일일미션이 등록되었습니다");
     } else {
       console.log("일일미션이 이미 있음");
@@ -155,6 +171,24 @@ router.post("/mission-reg", async (req, res) => {
   } else {
     res.send("스테이킹 또는 계정에 문제있음");
   }
+});
+
+/* 일일미션 달성 */
+router.post("/update-mission", async (req, res) => {
+  console.log("server:미션 달성");
+  const account = req.body.account;
+  const missionId = req.body.missionId;
+
+  if (account && missionId) {
+    // 해당 미션의 달성여부를 true로 변경
+    MissionInUser.update(
+      { attainment: true },
+      {
+        where: { user_address: account, mission_id: missionId },
+      }
+    );
+  }
+  res.send("일일미션 달성");
 });
 
 module.exports = router;

@@ -11,6 +11,7 @@ import ChestContainer from "../../components/game/FindTheRing/components/ChestCo
 import ControlPanel from "../../components/game/FindTheRing/components/ControlPanel/ControlPanel";
 import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
+import MissionCard from "../../components/game/MissionCard";
 
 const TreasureHunt = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -26,6 +27,7 @@ const TreasureHunt = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [hasMission, setHasMission] = useState("");
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -62,9 +64,20 @@ const TreasureHunt = () => {
   // 게임 끝났을 때 링 찾은 상태면 서버에 점수 전송
   useEffect(async () => {
     if (state.gameStatus == GameStatus.VICTORY) {
-      await GameInterface.sendScore(account, gameTitle, score, resultBonus);
+      GameInterface.sendScore(account, gameTitle, score, resultBonus).then((res) => console.log(res));
+      setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
+      if (hasMission) {
+        console.log("미션있음");
+        // 이미 일일미션 달성 상태면 아무것도 안하기
+        if (hasMission.attainment) return;
+        // 남은 횟수(열쇠 수)가 미션 제시량 이상이면 달성으로 업데이트
+        if (score >= hasMission.DailyMission.targetValue) {
+          await GameInterface.updateMission(account, hasMission.mission_id);
+          const recivedMission = await GameInterface.getMission(account, gameTitle);
+          setHasMission(recivedMission);
+        }
+      }
     }
-    setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
   }, [state.gameStatus]);
 
   useEffect(async () => {
@@ -73,7 +86,12 @@ const TreasureHunt = () => {
     setChance(await GameInterface.getMyChance(account, gameTitle));
     setGameItems(await GameInterface.getGameItems());
     setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
-  }, []);
+    // 사용자 일일미션 불러오기
+    const recivedMission = await GameInterface.getMission(account, gameTitle);
+    if (recivedMission) {
+      setHasMission(recivedMission);
+    }
+  }, [account, auth]);
 
   return (
     <>
@@ -94,6 +112,7 @@ const TreasureHunt = () => {
                       gameTitle={gameTitle}
                       score={score}
                       resultBonus={resultBonus}
+                      hasMission={hasMission}
                     />
                   </>
                 ) : (
@@ -139,63 +158,61 @@ const TreasureHunt = () => {
                 <br />
                 {chance}
               </div>
-              <style jsx>{`
-                .App {
-                  min-height: 100%;
-                  display: flex;
-                  align-items: center;
-                  position: relative;
-                  border: solid 3px yellow;
-                }
-
-                .App__container {
-                  margin: 0 auto;
-                  padding: 0 10px;
-                  min-width: 525px;
-                  max-width: 1020px;
-                }
-
-                .App__heading {
-                  text-align: center;
-                  font-size: 18px;
-                  margin: 20px 0;
-                }
-
-                .chance__box {
-                  width: 70px;
-                  position: absolute;
-                  top: 10px;
-                  right: 90px;
-                  text-align: center;
-                }
-                .score__box {
-                  width: 70px;
-                  position: absolute;
-                  top: 10px;
-                  left: 120px;
-                  text-align: center;
-                }
-                .best_score__box {
-                  width: 70px;
-                  position: absolute;
-                  top: 10px;
-                  left: 20px;
-                  text-align: center;
-                }
-                .item_effect__box {
-                  width: 100px;
-                  position: absolute;
-                  top: 10px;
-                  left: 220px;
-                  text-align: center;
-                }
-              `}</style>
             </div>
           </ContextProvider>
+          {hasMission && <MissionCard filledValue={score} hasMission={hasMission} />}
         </>
       ) : (
-        <BlankComponent receivedText={"로그인 및 NFT를 소유해야 게임에 참여하실 수 있습니다"} />
+        <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
       )}
+      <style jsx>{`
+        .App {
+          min-height: 100%;
+          display: flex;
+          align-items: center;
+          position: relative;
+          border: solid 3px yellow;
+        }
+        .App__container {
+          margin: 0 auto;
+          padding: 0 10px;
+          min-width: 525px;
+          max-width: 1020px;
+        }
+        .App__heading {
+          text-align: center;
+          font-size: 18px;
+          margin: 20px 0;
+        }
+        .chance__box {
+          width: 80px;
+          position: absolute;
+          top: 10px;
+          right: 90px;
+          text-align: center;
+        }
+        .score__box {
+          width: 70px;
+          position: absolute;
+          top: 10px;
+          left: 120px;
+          text-align: center;
+        }
+        .best_score__box {
+          width: 70px;
+          position: absolute;
+          top: 10px;
+          left: 20px;
+          text-align: center;
+        }
+        .item_effect__box {
+          width: 100px;
+          position: absolute;
+          top: 10px;
+          left: 220px;
+          text-align: center;
+        }
+      `}</style>
     </>
   );
 };

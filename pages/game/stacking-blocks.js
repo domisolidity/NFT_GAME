@@ -6,9 +6,9 @@ import GameItem from "../../components/game/GameItem";
 import { useRouter } from "next/router";
 import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
+import MissionCard from "../../components/game/MissionCard";
 
 const StackingBlocks = () => {
-  const router = useRouter();
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
   const { gameTitle } = GameInterface.gameList[0];
@@ -20,14 +20,21 @@ const StackingBlocks = () => {
   const [gameItems, setGameItems] = useState("");
   const [resultBonus, setResultBonus] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasMission, setHasMission] = useState("");
 
   // 로그인 되어있으면 해당계정의 남은 기회와 점수를 불러온다
   useEffect(async () => {
+    if (!(account && auth)) return;
     await GameInterface.setParticipant(account, gameTitle);
     setChance(await GameInterface.getMyChance(account, gameTitle));
     setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
     setGameItems(await GameInterface.getGameItems());
-  }, []);
+    // 사용자 일일미션 불러오기
+    const recivedMission = await GameInterface.getMission(account, gameTitle);
+    if (recivedMission) {
+      setHasMission(recivedMission);
+    }
+  }, [account, auth]);
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -40,6 +47,17 @@ const StackingBlocks = () => {
       await GameInterface.sendScore(account, gameTitle, score, resultBonus);
       const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
       setBestScore(recivedBestScore);
+      if (hasMission) {
+        console.log("미션있음");
+        // 이미 일일미션 달성 상태면 아무것도 안하기
+        if (hasMission.attainment) return;
+        // 쌓은 블록 수가 미션 제시량 이상이면 달성으로 업데이트
+        if (score >= hasMission.DailyMission.targetValue) {
+          await GameInterface.updateMission(account, hasMission.mission_id);
+          const recivedMission = await GameInterface.getMission(account, gameTitle);
+          setHasMission(recivedMission);
+        }
+      }
     }
   }, [score]);
 
@@ -61,11 +79,11 @@ const StackingBlocks = () => {
 
   // 블록쌓기
   const stackingBlock = () => {
+    // 현재 점수 useState에 담기
+    setScore(document.querySelector("#score").innerHTML);
     // 게임이 끝나면
     if (document.querySelector("#blockGameContainer.ended")) {
       setGameEnded(true); // 게임상태 변경
-      // 현재 점수 useState에 담기
-      setScore(document.querySelector("#score").innerHTML);
     }
   };
 
@@ -78,28 +96,24 @@ const StackingBlocks = () => {
 
   // 블록쌓기 게임 불러오기
   useEffect(() => {
-    // if (!(account && auth)) return;
-    // if (document.getElementsByClassName("gameScript")) return
+    if (!(account && auth)) return;
     const scriptSrc = [
       "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
       "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js",
       "../blockGameScript.js",
     ];
     const scripts = [, ,];
-    setTimeout(() => {
-      console.log(document.getElementsByClassName("gameScript"));
-      // if (document.body.scriptSrc[0]) return;
-      for (let i = 0; i < scriptSrc.length; i++) {
-        // <script> 태그를 만들어 배열에 넣고
-        scripts[i] = document.createElement("script");
-        // 그 태그의 src 정보를 넣어
-        scripts[i].src = scriptSrc[i];
-        scripts[i].className = "gameScript";
-        scripts[i].async = true;
-        // 문서 body에 추가해준다
-        document.body.appendChild(scripts[i]);
-      }
-    }, 0);
+    for (let i = 0; i < scriptSrc.length; i++) {
+      // <script> 태그를 만들어 배열에 넣고
+      scripts[i] = document.createElement("script");
+      // 그 태그의 src 정보를 넣어
+      scripts[i].src = scriptSrc[i];
+      scripts[i].className = "gameScript";
+
+      // 문서 body에 추가해준다
+      document.body.appendChild(scripts[i]);
+    }
+
     return () => {
       scripts.forEach((script) => {
         // 스크립트 태그 지워주는 녀석
@@ -142,6 +156,11 @@ const StackingBlocks = () => {
             <button onClick={stackingBlock} disabled={gameEnded} className="placeBlock-button">
               멈춰 !
             </button>
+            {hasMission && (
+              <div className="mission-box">
+                <MissionCard filledValue={score} hasMission={hasMission} />
+              </div>
+            )}
           </div>
           <Flex justifyContent={"center"}>
             {gameItems &&
@@ -159,7 +178,7 @@ const StackingBlocks = () => {
           </Flex>
         </>
       ) : (
-        <BlankComponent receivedText={"로그인 및 NFT를 소유해야 게임에 참여하실 수 있습니다"} />
+        <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
       )}
       <style jsx>{`
         #game canvas {
@@ -174,13 +193,17 @@ const StackingBlocks = () => {
           color: #ebebeb;
           position: absolute;
           left: 80%;
-          top: 58.5%;
+          top: 65%;
           transform: translate(-50%, -50%);
           transition-duration: 0.3s;
         }
         .placeBlock-button:hover {
           background-color: #7d0000;
           opacity: 0.4;
+        }
+        .placeBlock-button:disabled {
+          opacity: 0;
+          cursor: default;
         }
         .chance-box {
           position: absolute;
@@ -197,6 +220,16 @@ const StackingBlocks = () => {
           left: 60%;
           top: 9%;
           font-size: 5vh;
+        }
+        .mission-box {
+          color: #333344;
+          position: absolute;
+          left: 30px;
+          top: 65%;
+          transform: translateY(-50%);
+          border-radius: 10px;
+          background-color: #ffa5008c;
+          padding: 5px;
         }
         #blockGameContainer {
           overflow: hidden;

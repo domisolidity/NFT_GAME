@@ -143,7 +143,6 @@ const minusGameCount = async (account, gameTitle) => {
 
 /* 점수 등록(전송) */
 const sendScore = async (account, gameTitle, score, itemEffect) => {
-  console.log(account, gameTitle, score, itemEffect);
   if (!(account && gameTitle && score > 0)) return;
 
   const response = await axios
@@ -155,6 +154,71 @@ const sendScore = async (account, gameTitle, score, itemEffect) => {
     })
     .catch((err) => console.log(err));
   return response;
+};
+
+/* 대표 NFT 받아오기 */
+const getMyNFT = async (account) => {
+  if (!account) return;
+
+  const mainNFT = await axios.post(`/api/users/profile/my-token-id`, {
+    account: account,
+  });
+  const tokenId = mainNFT.data.mainNft;
+
+  return tokenId;
+};
+
+/* 일일미션 받기 */
+const missionReg = async (account, tokenId) => {
+  if (!(account && tokenId)) return;
+
+  const response = await axios
+    .post(`/api/games/mission-reg`, {
+      account: account,
+      tokenId: tokenId,
+    })
+    .catch((err) => console.log(err));
+  console.log(response.data.length);
+  return response.data;
+};
+
+/* 일일미션 불러오기 */
+const getMission = async (account, gameTitle) => {
+  if (!account) return;
+  if (gameTitle) {
+    const response = await axios
+      .post(`/api/games/my-mission`, {
+        account: account,
+        gameTitle: gameTitle,
+      })
+      .catch((err) => console.log(err));
+
+    return response.data;
+  } else {
+    const response = await axios
+      .post(`/api/games/my-mission`, {
+        account: account,
+      })
+      .catch((err) => console.log(err));
+
+    return response.data;
+  }
+};
+
+/* 미션현황 갱신 */
+const updateMission = async (account, missionId) => {
+  console.log("인터페이스:미션현황 갱신");
+  if (!(account && missionId)) return;
+
+  const response = await axios
+    .post(`/api/games/update-mission`, {
+      account: account,
+      missionId: missionId,
+    })
+    .catch((err) => console.log(err));
+
+  console.log(response);
+  return;
 };
 
 export default {
@@ -169,4 +233,8 @@ export default {
   getMyItemQuantity,
   minusGameCount,
   sendScore,
+  getMyNFT,
+  missionReg,
+  getMission,
+  updateMission,
 };
