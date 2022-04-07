@@ -1,41 +1,190 @@
-const ChoiceNft = () => {
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
+
+import MyNftsCard from "../components/MyNftsCard";
+const ChoiceNft = (props) => {
+  const blockchain = useSelector((state) => state.blockchain);
+  const { account, nftContract } = blockchain;
+
+  const { closeModal } = props;
+
+  const [myNfts, setMyNfts] = useState([]);
+  const [currentMainNft, setcurrentMainNft] = useState("");
+
+  const [beforeUserName, setBeforeUserName] = useState("");
+  const [beforeImages, setBeforeImages] = useState([]);
+  const [userName, setUserName] = useState("");
+  const [Images, setImages] = useState([]);
+
+  const baseUri = "http://127.0.0.1:8080/ipfs";
+  const LS_KEY = "login-with-metamask:auth";
+  const [accessToken, setAccessToken] = useState("");
+
+  useEffect(() => {
+    const getToken = Cookies.get(LS_KEY);
+    const parsedToken = getToken && JSON.parse(getToken).accessToken;
+    setAccessToken(parsedToken);
+  }, [accessToken]);
+
+  const getMyNfts = async () => {
+    try {
+      await nftContract.methods
+        .getMyToken(account)
+        .call({ from: account })
+        .then(async (result) => {
+          console.log("getMyToken", result);
+          let mynfts = [];
+          if (!result) return true;
+          for (const info of result) {
+            if (info.uri == "") continue;
+            const response = await axios.get(
+              `${baseUri}${info.uri.slice(6)}/${info.id}.json`
+            );
+            console.log(`${baseUri}${info.uri.slice(6)}/${info.id}.json`);
+            //console.log(_.cloneDeep(response.data.attributes));
+            mynfts.push({
+              id: info.id,
+              grade: response.data.grade,
+              attributes: response.data.attributes,
+              name: response.data.name,
+              image: `${baseUri}${response.data.image.slice(6)}`,
+              description: response.data.description,
+            });
+          }
+          setMyNfts(mynfts);
+          console.log("myNft", mynfts);
+        });
+    } catch (error) {
+      console.error();
+    }
+  };
+
+  const getNftDetail = async (e) => {
+    const tokenId = e.currentTarget.getAttribute("tokenId");
+    console.log(tokenId);
+    handleClick(e);
+    setcurrentMainNft(tokenId);
+  };
+
+  useEffect(async () => {
+    if (!account) return false;
+
+    await getMyNfts();
+  }, [account]);
+
+  const clickdeFocus = document.getElementsByClassName("nft-row nft-body");
+
+  function handleClick(event) {
+    // console.log(event.target);
+    // console.log(this);
+    // 콘솔창을 보면 둘다 동일한 값이 나온다
+
+    // console.log(event.target.classList);
+
+    if (event.target.classList[1] === "clicked") {
+      event.target.classList.remove("clicked");
+    } else {
+      for (var i = 0; i < clickdeFocus.length; i++) {
+        clickdeFocus[i].classList.remove("clicked");
+      }
+      event.target.classList.add("clicked");
+    }
+  }
+
+  let disable = "disable";
+  if (currentMainNft) disable = "";
+
+  const getSubmit = () => {
+    if (!currentMainNft) return;
+
+    const {
+      payload: { id },
+    } = jwtDecode(accessToken);
+
+    const variables = {
+      mainNft: currentMainNft,
+    };
+
+    fetch(`/api/users/profile/${id}`, {
+      body: JSON.stringify(variables),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setcurrentMainNft(result.user.mainNft);
+        alert("한 주간 유지됩니다.");
+        closeModal();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className="shell overflow-hidden anim-scale-in position-relative ">
       <div className="header">
-        <div>Stake NFT</div>
+        <div>Main NFT</div>
       </div>
       <div className="content">
         <div className="nft-row nft-header-label">
           <div className="nft-id">ID</div>
           <div className="nft-name">NFT Name</div>
-          <div className="nft-grade"> Grade </div>
+          <div className="nft-grade">Grade</div>
+          <div className="nft-image">Image</div>
         </div>
-        <div className="blank-state">
-          <div>
-            <img src="https://bunicorn.exchange/img/no-search.96c77eef.svg" />
+
+        {myNfts.length !== 0 ? (
+          myNfts.map((info, index) => {
+            return (
+              <div
+                key={index}
+                className={"nft-row nft-body"}
+                onClick={getNftDetail}
+                tokenId={info.id}
+              >
+                {console.log(info)}
+                <div className="nft-id">{info.id}</div>
+                <div className="nft-name">{info.name}</div>
+                <div className="nft-grade">{info.grade}</div>
+                <div className="nft-image">
+                  <img src={info.image} />
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="blank-state">
+            <div>
+              <img src="https://bunicorn.exchange/img/no-search.96c77eef.svg" />
+            </div>
+            <div className="not-found mt-4 "> Not Found </div>
           </div>
-          <div className="not-found mt-4 "> Not Found </div>
-        </div>
+        )}
       </div>
       <div className="retangle"></div>
       <div className="button-flex button-footer">
         <button
-          className="button button-wrapper button disable "
-          requirelogin="true"
+          className={`button button-wrapper button ${disable}`}
           type="submit"
+          onClick={getSubmit}
         >
           <span>Confirm</span>
         </button>
-        <button className="button button button-cancel" type="button">
-          {" "}
-          Cancel{" "}
+
+        <button
+          className="button button button-cancel"
+          type="button"
+          onClick={closeModal}
+        >
+          Cancel
         </button>
-        <a className="position-absolute right-0 p-4 a icon-close-modal">
-          {/* <i
-          className="iconfont icon-close"
-          style="font-size: 20px; line-height: 20px;"
-        ></i> */}
-        </a>
       </div>
 
       <style jsx>{`
@@ -92,7 +241,7 @@ const ChoiceNft = () => {
           width: 100%;
           top: 0;
           background: #0f263e;
-          color: hsla(0, 0%, 100%, 0.4);
+          /*color: hsla(0, 0%, 100%, 0.4); */
         }
         .nft-row {
           padding: 8px 40px;
@@ -101,16 +250,47 @@ const ChoiceNft = () => {
           justify-content: space-between;
         }
 
+        .nft-row.nft-body {
+          background: #0f263e;
+          color: hsla(0, 0%, 100%, 0.4);
+          cursor: pointer;
+          text-align: center;
+        }
+        .nft-row.nft-body > div {
+          pointer-events: none;
+        }
+        .nft-row.nft-body:hover {
+          color: white;
+          background: #303844 !important;
+        }
+
+        .nft-row.nft-body.clicked {
+          color: white;
+          background: #f47820 !important;
+        }
+
         .nft-id {
-          width: 20%;
+          width: 10%;
+          text-align: center;
         }
         .nft-name {
-          text-align: left;
-          width: 50%;
+          text-align: center;
+          width: 40%;
         }
         .nft-grade {
-          width: 30%;
-          text-align: right;
+          width: 20%;
+          text-align: center;
+        }
+        .nft-image {
+          width: 20%;
+          text-align: center;
+        }
+        .nft-image > img {
+          width: 50%;
+          border-radius: 50%;
+          text-align: center;
+          display: block;
+          margin: auto;
         }
         .blank-state {
           display: flex;
@@ -174,6 +354,7 @@ const ChoiceNft = () => {
         .button {
           min-width: 150px !important;
         }
+
         [type="button"]:not(:disabled),
         [type="reset"]:not(:disabled),
         [type="submit"]:not(:disabled),
@@ -224,6 +405,10 @@ const ChoiceNft = () => {
           position: absolute !important;
         }
       `}</style>
+      <link
+        href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+        rel="stylesheet"
+      ></link>
     </div>
   );
 };
