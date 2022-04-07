@@ -70,7 +70,7 @@ const NetworkCard = () => {
           align-items: flex-start;
           border: solid;
           border-color: #3b4149;
-          border-radius: 10px;
+          border-radius: 1rem;
           border-width: 1px;
         }
         .general-wrapper .background-logo {

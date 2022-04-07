@@ -8,7 +8,7 @@ const Modal = (props) => {
         cursor: "pointer",
         position: "absolute",
         top: "0.2rem",
-        right: "2rem",
+        right: "5rem",
         fontSize: "2rem",
         color: "white",
         zIndex: 1000,
