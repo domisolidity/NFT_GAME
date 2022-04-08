@@ -67,7 +67,7 @@ const StackingBlocks = () => {
         }
       }
     }
-  }, [score]);
+  }, [document.querySelector("#blockGameContainer.ended")]);
 
   // 게임시작
   const playGame = async () => {
