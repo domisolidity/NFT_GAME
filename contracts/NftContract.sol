@@ -2,12 +2,11 @@
 
 pragma solidity ^0.8.0;
 
-// import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
-import "./BEP20/SafeMath.sol";
+import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
+
+// import "./BEP20/SafeMath.sol";
 
 contract NftContract is ERC721Enumerable {
   using Counters for Counters.Counter;
@@ -29,7 +28,6 @@ contract NftContract is ERC721Enumerable {
   // uint8 public constant totalSupply = 100;
   mapping(uint => string) tokenURIs;
 
-
   struct RenderToken {
     uint16 id;
     string uri;
@@ -37,8 +35,8 @@ contract NftContract is ERC721Enumerable {
 
   mapping(address => RenderToken[]) public myNfts;
 
-  modifier isOwner(address _tokenOwner){
-    require(_tokenOwner == msg.sender,"you are not tokenOwner" );
+  modifier isOwner(address _tokenOwner) {
+    require(_tokenOwner == msg.sender, "you are not tokenOwner");
     _;
   }
 
@@ -64,9 +62,7 @@ contract NftContract is ERC721Enumerable {
     myNfts[_to].push(RenderToken(_tokenId, tokenUri));
   }
 
-
-  function getMyToken(address _tokenOwner) public isOwner(_tokenOwner) view returns (RenderToken[] memory) {
-
+  function getMyToken(address _tokenOwner) public view isOwner(_tokenOwner) returns (RenderToken[] memory) {
     uint balanceLength = balanceOf(_tokenOwner);
 
     RenderToken[] memory renderToken = new RenderToken[](balanceLength);
@@ -75,20 +71,19 @@ contract NftContract is ERC721Enumerable {
       uint16 tokenId = uint16(tokenOfOwnerByIndex(_tokenOwner, i));
       string memory tokenUri = tokenURI(tokenId);
 
-      renderToken[i] = RenderToken(tokenId,tokenUri);
-
+      renderToken[i] = RenderToken(tokenId, tokenUri);
     }
     return renderToken;
   }
 
-  function haveTokenBool(address _tokenOwner) public isOwner(_tokenOwner) view returns(bool) {
-     uint balanceLength = balanceOf(_tokenOwner);
-     if (balanceLength > 0) {
-       return true;
-     } else {
-       return false;
-     }
-  } 
+  function haveTokenBool(address _tokenOwner) public view isOwner(_tokenOwner) returns (bool) {
+    uint balanceLength = balanceOf(_tokenOwner);
+    if (balanceLength > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   function remainNfts()
     public
@@ -140,10 +135,9 @@ contract NftContract is ERC721Enumerable {
     //setApprovalForAll(배포한 거래 계약 주소, true); => 에러모음에 적기
   }
 
-
-  function getMyLastNft(address _account) public view returns(RenderToken memory){
-    uint myNftLength = myNfts[_account].length;  
-    return myNfts[_account][myNftLength-1];  
+  function getMyLastNft(address _account) public view returns (RenderToken memory) {
+    uint myNftLength = myNfts[_account].length;
+    return myNfts[_account][myNftLength - 1];
   }
 }
 

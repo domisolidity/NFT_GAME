@@ -33,6 +33,19 @@ contract AuctionCreator {
     auctionNfts.push(AuctionNft(msg.sender, _tokenId, endBlock, _expirationTime, newAuction));
   }
 
+  //     // 경매
+  //   function cancelAuctionContract(uint _tokenId) external {
+  //     for (uint256 i = 0; i < auctionNfts.length; i++) {
+  //         if(auctionNfts[i].tokenId == _tokenId){
+  //             require(msg.sender == auctionNfts[i].account, "you are not this contract owner");
+  //             auctionNfts[i] = auctionNfts[auctionNfts.length - 1];
+  //             auctionNfts.pop();
+  //             break;
+  //         }
+  //     }
+  //     delete auctionToId[_tokenId];
+  //   }
+
   function getAuctionAddress(uint _tokenId) public view returns (Auction) {
     return auctionToId[_tokenId];
   }
