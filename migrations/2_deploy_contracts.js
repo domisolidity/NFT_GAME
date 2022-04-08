@@ -1,6 +1,6 @@
 var NftContract = artifacts.require("./NftContract.sol");
 var NftDealContract = artifacts.require("./NftDealContract.sol");
-var AuctionCreator = artifacts.require('./AuctionCreator.sol');
+var AuctionCreator = artifacts.require("./AuctionCreator.sol");
 var GameToken = artifacts.require("./GameToken.sol");
 var Claim_20 = artifacts.require("./Claim_20.sol");
 
@@ -11,11 +11,9 @@ module.exports = async function (deployer) {
   await deployer.deploy(AuctionCreator);
 
   // BEP20
-  await deployer.deploy(GameToken, "DoremiGameToken", "DGT", 18, 10000000000000);
+  await deployer.deploy(GameToken);
   await deployer.deploy(Claim_20, GameToken.address);
-
 };
-
 
 /*
   - 게임 "승리"시 토큰보상 구현 어떻게

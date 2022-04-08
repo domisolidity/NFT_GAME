@@ -94,16 +94,18 @@ const Game = () => {
       </Box>
       <Box w={"100%"} minHeight={"400px"} position={`relative`}>
         <Flex justifyContent={"space-evenly"}>
-          {GameInterface.gameList.map((game, index) => (
-            <Link key={index} href={(() => selectGame(game)) == true ? `/game/${game.gameUrl}` : `/game`}>
-              <a onClick={() => selectGame(game)} style={{ width: "30%", height: "100%" }}>
-                <GameCard game={game} />
-              </a>
-            </Link>
-          ))}
-        </Flex>
-      </Box>
-    </Flex>
+          {
+            GameInterface.gameList.map((game, index) => (
+              <Link key={index} href={(() => selectGame(game)) == true ? `/game/${game.gameUrl}` : `/game`}>
+                <a onClick={() => selectGame(game)} style={{ width: "30%", height: "100%" }}>
+                  <GameCard game={game} />
+                </a>
+              </Link>
+            ))
+          }
+        </Flex >
+      </Box >
+    </Flex >
   );
 };
 export default Game;
