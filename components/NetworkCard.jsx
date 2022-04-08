@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 const NetworkCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account } = blockchain;
+  const { web3, account, gameTokenContract } = blockchain;
 
   const [ethBalance, setEthBalance] = useState();
+  const [tokenBalance, setTokenBalance] = useState();
+  console.log(gameTokenContract);
 
   //잔액
   const getEthBalance = async () => {
@@ -14,10 +16,22 @@ const NetworkCard = () => {
       setEthBalance(balance.slice(0, 5));
     });
   };
+  const getTokenBalance = async () => {
+    let balance;
+    await gameTokenContract.methods
+      .balanceOf(account)
+      .call({ from: account })
+      .then((tokenBalance) => {
+        // balance = web3.utils.fromWei(tokenBalance);
+        // setTokenBalance(balance.slice(0, 5));
+        setTokenBalance(tokenBalance.slice(0, 5));
+      });
+  };
 
   useEffect(async () => {
     if (!account) return false;
     await getEthBalance();
+    await getTokenBalance();
   }, [account]);
 
   return (
@@ -49,8 +63,8 @@ const NetworkCard = () => {
             className="crypto-img"
           />
           <div className="sand-balances">
-            <p className="crypto-balance is-color-yellow">0.00</p>
-            <p className="crypto-name is-color-yellow">SAND</p>
+            <p className="crypto-balance is-color-yellow">{tokenBalance}</p>
+            <p className="crypto-name is-color-yellow">DTG</p>
             <p className="fiat-balance">0.00 USD</p>
           </div>
         </div>
@@ -70,10 +84,10 @@ const NetworkCard = () => {
           align-items: flex-start;
           border: solid;
           border-color: #3b4149;
-          border-radius: 10px;
+          border-radius: 1rem;
           border-width: 1px;
         }
-        .general-wrapper .background-logo {
+        .background-logo {
           position: absolute;
           top: 19.66px;
           right: 13.81px;
@@ -91,11 +105,11 @@ const NetworkCard = () => {
           vertical-align: middle;
         }
 
-        .general-wrapper header {
+        header {
           padding-bottom: 25px;
         }
 
-        .general-wrapper header > p {
+        header > p {
           letter-spacing: 0.7px;
           font-size: 14px;
           line-height: 18px;
@@ -104,7 +118,7 @@ const NetworkCard = () => {
           text-align: left;
         }
 
-        .general-wrapper .wallet {
+        .wallet {
           width: 100%;
           bottom: 85px;
           z-index: 2;
@@ -114,7 +128,7 @@ const NetworkCard = () => {
           align-items: center;
         }
 
-        .general-wrapper .wallet .eth {
+        .eth {
           width: 50%;
           display: flex;
           flex-direction: row;
@@ -122,12 +136,12 @@ const NetworkCard = () => {
           align-items: flex-start;
         }
 
-        .general-wrapper .wallet .crypto-img {
+        .crypto-img {
           width: 26px;
           height: 26px;
         }
 
-        .general-wrapper .wallet .eth .eth-balances {
+        .eth .eth-balances {
           padding-left: 10px;
           display: flex;
           flex-direction: column;
@@ -135,7 +149,7 @@ const NetworkCard = () => {
           align-items: flex-start;
         }
 
-        .general-wrapper .wallet .crypto-balance {
+        .crypto-balance {
           font-size: 20px;
           line-height: 21px;
           font-family: "Montserrat SemiBold";
@@ -143,7 +157,7 @@ const NetworkCard = () => {
           text-align: left;
         }
 
-        .general-wrapper .wallet .crypto-name {
+        .crypto-name {
           font-size: 14px;
           line-height: 18px;
           font-family: "Montserrat SemiBold";
@@ -151,7 +165,7 @@ const NetworkCard = () => {
           text-align: left;
         }
 
-        .general-wrapper .wallet .fiat-balance {
+        .fiat-balance {
           font-size: 14px;
           line-height: 31px;
           font-family: "Montserrat Regular";
@@ -159,7 +173,7 @@ const NetworkCard = () => {
           text-align: left;
         }
 
-        .general-wrapper .wallet .sand {
+        .sand {
           width: 50%;
           display: flex;
           flex-direction: row;
@@ -167,7 +181,7 @@ const NetworkCard = () => {
           align-items: flex-start;
         }
 
-        .general-wrapper .wallet .crypto-img {
+        .crypto-img {
           width: 26px;
           height: 26px;
         }
@@ -179,13 +193,13 @@ const NetworkCard = () => {
           vertical-align: middle;
         }
 
-        .general-wrapper .wallet .sand .sand-balances {
+        .sand .sand-balances {
           display: flex;
           flex-direction: column;
           justify-content: stretch;
           align-items: flex-start;
         }
-        .general-wrapper .wallet .sand .sand-balances {
+        .sand .sand-balances {
           padding-left: 10px;
         }
 

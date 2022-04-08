@@ -72,53 +72,62 @@ const itemList = [
 
 /* 일일 미션 목록 */
 const dailyMission = [
-  { game_title: "블록쌓기", targetValue: 30, missionDetails: "블록 30개 이상 쌓기" },
-  { game_title: "테트리스", targetValue: 50, missionDetails: "블록 50줄 이상 제거" },
-  { game_title: "보물찾기", targetValue: 30, missionDetails: "블록 50줄 이상 제거" },
+  { game_title: "블록쌓기", targetValue: 10, missionDetails: "블록 10개 이상 쌓기" },
+  { game_title: "테트리스", targetValue: 10, missionDetails: "블록 10줄 이상 제거" },
+  { game_title: "보물찾기", targetValue: 10, missionDetails: "열쇠 10개 이상 남긴 채 보물 발견" },
 ];
 
 /* 일일 미션 등록 */
-const missionReg = async (account, staking) => {
-  switch (staking) {
-    case "red":
-      console.log("red");
-      const randomRed = Math.floor(Math.random() * 3 + 1);
-      console.log(randomRed);
-      MissionInUser.create({ user_address: account, mission_id: randomRed });
-      break;
-    case "green":
-      console.log("green");
-      const randomGreen = [];
-      let i = 0;
-      function same(n) {
-        for (let j = 0; j < randomGreen.length; j++) {
-          if (n == randomGreen[j]) {
-            return true;
-          }
-        }
-        return false;
-      }
-      while (i < 2) {
-        let temp = Math.floor(Math.random() * 3 + 1);
-        if (!same(temp)) {
-          randomGreen.push(temp);
-          i++;
+const missionReg = async (account, tokenId) => {
+  console.log("server: 토큰id " + tokenId);
+  if (tokenId >= 1 && tokenId <= 60) {
+    console.log("red");
+    const randomRed = Math.floor(Math.random() * 3 + 1);
+    console.log(randomRed);
+    await MissionInUser.create({ user_address: account, mission_id: randomRed });
+  } else if (tokenId >= 61 && tokenId <= 90) {
+    console.log("green");
+    const randomGreen = [];
+    let i = 0;
+    function same(n) {
+      for (let j = 0; j < randomGreen.length; j++) {
+        if (n == randomGreen[j]) {
+          return true;
         }
       }
-
-      for (let i = 0; i < 2; i++) {
-        MissionInUser.create({ user_address: account, mission_id: randomGreen[i] });
+      return false;
+    }
+    while (i < 2) {
+      let temp = Math.floor(Math.random() * 3 + 1);
+      if (!same(temp)) {
+        randomGreen.push(temp);
+        i++;
       }
-      break;
-    case "purple":
-      console.log("purple");
-      for (let i = 0; i < dailyMission.length; i++) {
-        MissionInUser.create({ user_address: account, mission_id: i + 1 });
-      }
-      break;
+    }
+    for (let i = 0; i < 2; i++) {
+      await MissionInUser.create({ user_address: account, mission_id: randomGreen[i] });
+    }
+  } else if (tokenId >= 91 && tokenId <= 100) {
+    console.log("purple");
+    for (let i = 0; i < dailyMission.length; i++) {
+      await MissionInUser.create({ user_address: account, mission_id: i + 1 });
+    }
+  }
+};
 
-    default:
-      break;
+/* 대표 NFT별 참여횟수 초기값 받기 */
+const initChance = async (account, gameTitle, tokenId) => {
+  console.log("server: 토큰id " + tokenId);
+  console.log("server: 겜 " + gameTitle);
+  if (tokenId >= 1 && tokenId <= 60) {
+    console.log("red");
+    await InGameUser.update({ gameCount: 5 }, { where: { user_address: account, game_title: gameTitle } });
+  } else if (tokenId >= 61 && tokenId <= 90) {
+    console.log("green");
+    await InGameUser.update({ gameCount: 10 }, { where: { user_address: account, game_title: gameTitle } });
+  } else if (tokenId >= 91 && tokenId <= 100) {
+    console.log("purple");
+    await InGameUser.update({ gameCount: 15 }, { where: { user_address: account, game_title: gameTitle } });
   }
 };
 
@@ -234,6 +243,7 @@ const rankAggregation = async () => {
         user_address: thisWeekRankData[i].user_address,
       });
   }
+  // 집계 끝났으면 게임 플레이 현황 테이블 비워주기
   await InGameUser.sync({ force: true });
   console.log(`순위 집계가 끝났습니다`);
 
@@ -265,6 +275,12 @@ const missionAggregation = async () => {
   console.log(`미션 달성 집계 완료`);
 };
 
+/* 대표 NFT 해제하기 */
+const unlockNFT = async () => {
+  console.log("대표 NFT 해제");
+  await User.update({ mainNft: null }, { where: {} });
+};
+
 /* 매주 순위 집계 시행하기 */
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
@@ -273,6 +289,7 @@ const weeklySchedule = async () => {
   rule.minute = 0;
   const job = schedule.scheduleJob(rule, function () {
     rankAggregation(); // 순위집계 시행
+    unlockNFT(); // 모든 사용자 대표 NFT 해제하기
   });
 };
 /* 하루 한번 일일미션 등록시켜주기 */
@@ -289,6 +306,7 @@ module.exports = {
   config,
   itemList,
   getDatabaseConfig,
+  initChance,
   rankAggregation,
   missionAggregation,
   gameList,
@@ -297,4 +315,5 @@ module.exports = {
   itemList,
   dailyMission,
   missionReg,
+  unlockNFT,
 };

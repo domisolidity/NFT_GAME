@@ -1,4 +1,25 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 const ClaimInfoCard = () => {
+  const blockchain = useSelector((state) => state.blockchain);
+  const { web3, account, claim20_Contract } = blockchain;
+
+  const [accumulatedAmount, setAccumulatedAmount] = useState("");
+
+  useEffect(() => {
+    if (!account) return;
+    if (!account) return;
+    getAccumulatedAmount();
+    console.log(account);
+  }, [account]);
+
+  const getAccumulatedAmount = async () => {
+    await claim20_Contract.methods
+      .getRewardAmount(account)
+      .call({ from: account })
+      .then((res) => console.log(res));
+  };
   return (
     <div className="showPool">
       <div className="wrapper-purple">
@@ -13,13 +34,13 @@ const ClaimInfoCard = () => {
               className=""
             />
             <div className="network-name-wrapper">
-              <p className="network">폴리곤 메인넷</p>
+              <p className="network">BSC</p>
               <p className="title">
-                <span className="title is-color-polygon">mSAND</span>-MATIC
+                <span className="title is-color-polygon">Reward</span>-DTG
               </p>
             </div>
           </div>
-          <div className="lp-stake">
+          {/* <div className="lp-stake">
             <p className="category-title">
               TVL
               <span className="tooltipPool">
@@ -39,7 +60,7 @@ const ClaimInfoCard = () => {
               </span>
             </p>
             <p className="result">
-              $ 136,400,296 M
+              $ 136,400,296 M (보상받을 수 있는 금액)
               <span className="balanceTooltip">
                 $ 136,400,296
                 <i></i>
@@ -70,7 +91,7 @@ const ClaimInfoCard = () => {
                 39.4573 %<i></i>
               </span>
             </p>
-          </div>
+          </div> */}
           <div className="lp-weekly">
             <p className="category-title">
               주간 리워드
@@ -106,7 +127,7 @@ const ClaimInfoCard = () => {
           </div>
           <div className="lp-earnings approved">
             <p className="category-title">
-              수익금
+              수익금(수령가능누적수익금)
               <span className="tooltipPool">
                 <img
                   src="https://www.sandbox.game/img/00_General/question-circle.png"
@@ -122,10 +143,10 @@ const ClaimInfoCard = () => {
                 </span>
               </span>
             </p>
-            <button color="primary" type="button" className="cta xsmall">
-              Claim
-            </button>
           </div>
+          <button color="primary" type="button" className="cta xsmall">
+            Claim
+          </button>
         </div>
       </div>
 
@@ -141,7 +162,7 @@ const ClaimInfoCard = () => {
         } */
         .wrapper-purple {
           height: 206px;
-          width: 95%;
+          width: 50%;
           background-color: transparent;
           position: relative;
           border-width: 2px;
@@ -178,6 +199,8 @@ const ClaimInfoCard = () => {
             "head head"
             "middle-first middle-second"
             "footer-first footer-second";
+          justify-content: center;
+          align-items: center;
         }
         .lp-name {
           justify-content: flex-start !important;
@@ -350,11 +373,10 @@ const ClaimInfoCard = () => {
         button.small,
         button.xsmall {
           border-radius: 20px;
-          display: flex;
-          flex-direction: row;
           justify-content: center;
           align-items: center;
           background-color: #0084ff;
+          grid-area: footer-second;
         }
 
         /* .liquidity-pools {

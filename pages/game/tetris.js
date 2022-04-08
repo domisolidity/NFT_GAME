@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import GameItem from "../../components/game/GameItem";
 import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
+import MissionCard from "../../components/game/MissionCard";
 
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -41,6 +42,8 @@ const Tetris = () => {
   const [extraScore, setExtraScore] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [bestScore, setBestScore] = useState("");
+  const [hasMission, setHasMission] = useState("");
+  const [mainNFT, setMainNFT] = useState("");
 
   // 키보드 스크롤 방지
   function stopScroll(e) {
@@ -65,21 +68,28 @@ const Tetris = () => {
     }
   }, [score]);
 
+  // 페이지 진입 시 대표 NFT 받아오기
   useEffect(async () => {
     if (!(account && auth)) return;
-    // 사용자 초기화
-    await GameInterface.setParticipant(account, gameTitle);
-    // 사용자 게임횟수 불러오기
-    const recivedChance = await GameInterface.getMyChance(account, gameTitle);
-    setChance(recivedChance);
-    // 게임 아이템 및 사용자의 아이템 수량 불러오기
-    const recivedItems = await GameInterface.getGameItems();
-    setGameItems(recivedItems);
-    // 사용자 게임 기록 불러오기
-    const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
-    setBestScore(recivedBestScore);
-    window.addEventListener("keydown", stopScroll);
+    const mainNFT = await GameInterface.getMyNFT(account);
+    setMainNFT(mainNFT);
   }, [account, auth]);
+
+  // 로그인, 대표NFT까지 확인 됐으면
+  useEffect(async () => {
+    if (!(account && auth && gameTitle && mainNFT)) return;
+    await GameInterface.setParticipant(account, gameTitle); // 참여자 초기화
+    await GameInterface.initChance(account, gameTitle, mainNFT); // 게임횟수 초기화
+    setChance(await GameInterface.getMyChance(account, gameTitle)); // 횟수 불러오기
+    setGameItems(await GameInterface.getGameItems()); // 게임아이템 불러오기
+    setBestScore(await GameInterface.getMyBestScore(account, gameTitle)); // 최고점수 불러오기
+    // 사용자 일일미션 불러오기
+    const recivedMission = await GameInterface.getMission(account, gameTitle);
+    if (recivedMission) {
+      setHasMission(recivedMission);
+    } // 테트리스 게임에 방해가 되는 키보드 스크롤 기능 막기
+    window.addEventListener("keydown", stopScroll);
+  }, [mainNFT]);
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -142,6 +152,17 @@ const Tetris = () => {
           await GameInterface.sendScore(account, gameTitle, extraScore, resultBonus);
         } else {
           await GameInterface.sendScore(account, gameTitle, score, resultBonus);
+        }
+        if (hasMission) {
+          console.log("미션있음");
+          // 이미 일일미션 달성 상태면 아무것도 안하기
+          if (hasMission.attainment) return;
+          // 제거한 줄이 미션 제시량 이상이면 달성으로 업데이트
+          if (rows >= hasMission.DailyMission.targetValue) {
+            await GameInterface.updateMission(account, hasMission.mission_id);
+            const recivedMission = await GameInterface.getMission(account, gameTitle);
+            setHasMission(recivedMission);
+          }
         }
         const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
         setBestScore(recivedBestScore);
@@ -251,11 +272,16 @@ const Tetris = () => {
                     />
                   ))}
               </div>
+              {hasMission && (
+                <div className="mission-box">
+                  <MissionCard filledValue={rows} hasMission={hasMission} />
+                </div>
+              )}
             </StyledTetris>
           </StyledTetrisWrapper>
         </>
       ) : (
-        <BlankComponent receivedText={"로그인 및 NFT를 소유해야 게임에 참여하실 수 있습니다"} />
+        <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
       )}
     </>
   );
