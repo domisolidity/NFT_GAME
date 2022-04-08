@@ -8,7 +8,7 @@ import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Claim_20 is Ownable{
+contract Claim_20 is Ownable {
   using Counters for Counters.Counter;
   using SafeMath for uint;
 
@@ -71,7 +71,7 @@ contract Claim_20 is Ownable{
   /* Ranking Reward Function */
 
   // 게임 랭커 클레임 허용
-  function approveClaim(weeklyRank[] memory result) external onlyOwner{
+  function approveClaim(weeklyRank[] memory result) external {
     // 제약 조건 추가하기
     for (uint i = 0; i < result.length; i++) {
       if (result[i].ranking == 1) {
@@ -91,6 +91,5 @@ contract Claim_20 is Ownable{
     uint rewardAmount = token.allowance(admin, _account);
     token.transferFrom(admin, _account, rewardAmount);
   }
-
 }
 //["0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",1,"보물찾기",21]

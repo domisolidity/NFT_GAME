@@ -113,7 +113,6 @@ export const reconnect = () => {
           nftContract: nftContract,
           nftDealContract: nftDealContract,
           gameTokenContract: gameTokenContract,
-          claim20Contract: claim20Contract,
           auctionCreatorContract: auctionCreatorContract,
           claim20_Contract: claim20_Contract,
           web3: web3,

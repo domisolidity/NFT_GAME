@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const ClaimInfoCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, claim20Contract } = blockchain;
+  const { web3, account, claim20_Contract } = blockchain;
 
   const [accumulatedAmount, setAccumulatedAmount] = useState("");
 
@@ -15,7 +15,7 @@ const ClaimInfoCard = () => {
   }, [account]);
 
   const getAccumulatedAmount = async () => {
-    await claim20Contract.methods
+    await claim20_Contract.methods
       .getRewardAmount(account)
       .call({ from: account })
       .then((res) => console.log(res));
