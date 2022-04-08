@@ -28,6 +28,7 @@ const TreasureHunt = () => {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [hasMission, setHasMission] = useState("");
+  const [mainNFT, setMainNFT] = useState("");
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -80,22 +81,31 @@ const TreasureHunt = () => {
     }
   }, [state.gameStatus]);
 
+  // 페이지 진입 시 대표 NFT 받아오기
   useEffect(async () => {
-    if (!(account && auth && gameTitle)) return;
-    await GameInterface.setParticipant(account, gameTitle);
-    setChance(await GameInterface.getMyChance(account, gameTitle));
-    setGameItems(await GameInterface.getGameItems());
-    setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
+    if (!(account && auth)) return;
+    const mainNFT = await GameInterface.getMyNFT(account);
+    setMainNFT(mainNFT);
+  }, [account, auth]);
+
+  // 로그인, 대표NFT까지 확인 됐으면
+  useEffect(async () => {
+    if (!(account && auth && gameTitle && mainNFT)) return;
+    await GameInterface.setParticipant(account, gameTitle); // 참여자 초기화
+    await GameInterface.initChance(account, gameTitle, mainNFT); // 게임횟수 초기화
+    setChance(await GameInterface.getMyChance(account, gameTitle)); // 횟수 불러오기
+    setGameItems(await GameInterface.getGameItems()); // 게임아이템 불러오기
+    setBestScore(await GameInterface.getMyBestScore(account, gameTitle)); // 최고점수 불러오기
     // 사용자 일일미션 불러오기
     const recivedMission = await GameInterface.getMission(account, gameTitle);
     if (recivedMission) {
       setHasMission(recivedMission);
     }
-  }, [account, auth]);
+  }, [mainNFT]);
 
   return (
     <>
-      {account && auth ? (
+      {account && auth && mainNFT ? (
         <>
           <GameSelectbar />
           <ContextProvider state={state} dispatch={dispatch}>

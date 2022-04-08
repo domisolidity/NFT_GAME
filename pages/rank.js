@@ -6,11 +6,8 @@ import RankSelectbar from "../components/rank/RankSelectbar";
 import CurrentRanking from "../components/rank/CurrentRanking";
 import PastRanking from "../components/rank/PastRanking";
 import BlankComponent from "../components/BlankComponent";
-import { useSelector } from "react-redux";
 
 const Rank = ({ gameList }) => {
-  const blockchain = useSelector((state) => state.blockchain);
-  const { account } = blockchain;
   const [selectedGameTitle, setSelectedGameTitle] = useState("");
   const [currentRankData, setCurrentRankData] = useState([]);
   const [pastRankData, setPastRankData] = useState([]);
@@ -37,8 +34,8 @@ const Rank = ({ gameList }) => {
   // 게임이 선택되면 해당 게임 현재순위, 역대순위 받아다 useState에 담아주기
   useEffect(() => {
     if (!selectedGameTitle) return;
-    getCurrentRankData();
-    getPastRankData();
+    getCurrentRankData(); // 현재순위 받아와
+    getPastRankData(); // 과거순위 받아와
   }, [selectedGameTitle]);
 
   return (
@@ -66,11 +63,8 @@ const Rank = ({ gameList }) => {
 export default Rank;
 
 export async function getStaticProps() {
-  // const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-  // const data = res.data;
-
+  // 게임리스트 받아오기
   const gameList = GameInterface.gameList;
-
   return {
     props: {
       gameList: gameList,

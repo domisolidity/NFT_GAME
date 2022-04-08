@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
-import { useRouter } from "next/router";
 import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
 import MissionCard from "../../components/game/MissionCard";
@@ -21,20 +20,29 @@ const StackingBlocks = () => {
   const [resultBonus, setResultBonus] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasMission, setHasMission] = useState("");
+  const [mainNFT, setMainNFT] = useState("");
 
-  // 로그인 되어있으면 해당계정의 남은 기회와 점수를 불러온다
+  // 페이지 진입 시 대표 NFT 받아오기
   useEffect(async () => {
     if (!(account && auth)) return;
-    await GameInterface.setParticipant(account, gameTitle);
-    setChance(await GameInterface.getMyChance(account, gameTitle));
-    setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
-    setGameItems(await GameInterface.getGameItems());
+    const mainNFT = await GameInterface.getMyNFT(account);
+    setMainNFT(mainNFT);
+  }, [account, auth]);
+
+  // 로그인, 대표NFT까지 확인 됐으면
+  useEffect(async () => {
+    if (!(account && auth && gameTitle && mainNFT)) return;
+    await GameInterface.setParticipant(account, gameTitle); // 참여자 초기화
+    await GameInterface.initChance(account, gameTitle, mainNFT); // 게임횟수 초기화
+    setChance(await GameInterface.getMyChance(account, gameTitle)); // 횟수 불러오기
+    setGameItems(await GameInterface.getGameItems()); // 게임아이템 불러오기
+    setBestScore(await GameInterface.getMyBestScore(account, gameTitle)); // 최고점수 불러오기
     // 사용자 일일미션 불러오기
     const recivedMission = await GameInterface.getMission(account, gameTitle);
     if (recivedMission) {
       setHasMission(recivedMission);
     }
-  }, [account, auth]);
+  }, [mainNFT]);
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -96,35 +104,23 @@ const StackingBlocks = () => {
 
   // 블록쌓기 게임 불러오기
   useEffect(() => {
-    if (!(account && auth)) return;
-    const scriptSrc = [
-      "https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js",
-      "../blockGameScript.js",
-    ];
-    const scripts = [, ,];
-    for (let i = 0; i < scriptSrc.length; i++) {
-      // <script> 태그를 만들어 배열에 넣고
-      scripts[i] = document.createElement("script");
-      // 그 태그의 src 정보를 넣어
-      scripts[i].src = scriptSrc[i];
-      scripts[i].className = "gameScript";
-
-      // 문서 body에 추가해준다
-      document.body.appendChild(scripts[i]);
-    }
+    if (!(account && auth && mainNFT)) return;
+    // <script> 태그를 만들고
+    const script = document.createElement("script");
+    // 그 태그의 src 정보를 넣어
+    script.src = "../blockGameScript.js";
+    // 문서 body에 추가해준다
+    document.body.appendChild(script);
 
     return () => {
-      scripts.forEach((script) => {
-        // 스크립트 태그 지워주는 녀석
-        document.body.removeChild(script);
-      });
+      // 다른곳으로 이동할 때 스크립트 없애주는 녀석
+      document.body.removeChild(script);
     };
-  }, [account, auth]);
+  }, [mainNFT]);
 
   return (
     <>
-      {account && auth ? (
+      {account && auth && mainNFT ? (
         <>
           <GameSelectbar />
           <div id="blockGameContainer">

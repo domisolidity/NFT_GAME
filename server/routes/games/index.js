@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { User, Game, InGameUser, Ranking, Item, UserItem, MissionInUser, DailyMission } = require("../../models");
-const { dailyMission, missionReg, missionAggregation } = require("../../config");
+const { Game, InGameUser, Ranking, MissionInUser, DailyMission } = require("../../models");
+const { missionReg, initChance } = require("../../config");
 
 /* 게임목록 불러오기 */
 router.get("/game-list", async (req, res) => {
@@ -11,9 +11,10 @@ router.get("/game-list", async (req, res) => {
 
 /* 첫 참여 때 InGameUser 테이블에 참여자 행 초기화 해주기 */
 router.post("/set-participant", async (req, res) => {
-  console.log("참여자 초기화");
+  console.log("server: 참여자 초기화");
   const account = req.body.account;
   const gameTitle = req.body.gameTitle;
+  // 게임 참여현황 테이블에 본인address와 현재 참여 중인 게임 정보 있는지 찾기
   const response = await InGameUser.findOne({
     where: { user_address: account, game_title: gameTitle },
   }).catch((err) => console.log(err));
@@ -24,6 +25,29 @@ router.post("/set-participant", async (req, res) => {
     res.send(true);
   } else {
     res.send(false);
+  }
+});
+
+/* 대표 NFT에 따라 게임 횟수 채워주기 */
+router.post("/init-chance", async (req, res) => {
+  console.log("server: 참여횟수 초기화");
+  const account = req.body.account;
+  const gameTitle = req.body.gameTitle;
+  const mainNFT = req.body.mainNFT;
+  // 게임 참여현황 테이블에 본인address와 현재 참여 중인 게임 정보 있는지 찾기
+  const response = await InGameUser.findOne({
+    where: { user_address: account, game_title: gameTitle },
+    attributes: ["gameCount"],
+  }).catch((err) => console.log(err));
+
+  // 횟수가 있으면 넘어가기
+  if (response.gameCount != null) {
+    res.send("이미 횟수 초기화 됐음");
+    return;
+  } else {
+    await initChance(account, gameTitle, mainNFT);
+    // await InGameUser.update({gameCount:}{ user_address: account, game_title: gameTitle });
+    res.send("횟수 초기화했음");
   }
 });
 
@@ -141,9 +165,11 @@ router.post("/my-mission", async (req, res) => {
   console.log("미션 조회");
   const account = req.body.account;
   const gameTitle = req.body.gameTitle;
+  // 게임 하나 골랐으면 해당 게임 미션 조회
   if (account && gameTitle) {
     const missions = await myMission(account, gameTitle);
     res.send(missions);
+    // 게임 메인페이지면 전체 미션 조회
   } else if (account) {
     const missions = await myMission(account);
     res.send(missions);

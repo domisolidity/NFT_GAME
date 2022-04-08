@@ -28,7 +28,6 @@ module.exports = class InGameUser extends Sequelize.Model {
         gameCount: {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: true,
-          defaultValue: 100,
         },
       },
       {

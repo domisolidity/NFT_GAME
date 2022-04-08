@@ -19,14 +19,16 @@ const Game = () => {
     const mainNFT = await GameInterface.getMyNFT(account);
     setMainNFT(mainNFT);
   }, [account, auth]);
+
   useEffect(async () => {
     if (!(account && auth && mainNFT)) return;
+    //
+
     // 대표 NFT가 있으면 일일미션정보 받아오기
     let receivedMissions = await GameInterface.getMission(account);
     // 일일미션이 없으면 새로 받기
     if (receivedMissions.length == 0) {
-      const asdf = await GameInterface.missionReg(account, mainNFT);
-      console.log(asdf);
+      await GameInterface.missionReg(account, mainNFT);
       receivedMissions = await GameInterface.getMission(account);
     }
     setDailyMission(receivedMissions);
@@ -92,7 +94,6 @@ const Game = () => {
       </Box>
       <Box w={"100%"} minHeight={"400px"} position={`relative`}>
         <Flex justifyContent={"space-evenly"}>
-          {/* {console.log(game)} */}
           {GameInterface.gameList.map((game, index) => (
             <Link key={index} href={(() => selectGame(game)) == true ? `/game/${game.gameUrl}` : `/game`}>
               <a onClick={() => selectGame(game)} style={{ width: "30%", height: "100%" }}>

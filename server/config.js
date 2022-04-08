@@ -115,6 +115,22 @@ const missionReg = async (account, tokenId) => {
   }
 };
 
+/* 대표 NFT별 참여횟수 초기값 받기 */
+const initChance = async (account, gameTitle, tokenId) => {
+  console.log("server: 토큰id " + tokenId);
+  console.log("server: 겜 " + gameTitle);
+  if (tokenId >= 1 && tokenId <= 60) {
+    console.log("red");
+    await InGameUser.update({ gameCount: 5 }, { where: { user_address: account, game_title: gameTitle } });
+  } else if (tokenId >= 61 && tokenId <= 90) {
+    console.log("green");
+    await InGameUser.update({ gameCount: 10 }, { where: { user_address: account, game_title: gameTitle } });
+  } else if (tokenId >= 91 && tokenId <= 100) {
+    console.log("purple");
+    await InGameUser.update({ gameCount: 15 }, { where: { user_address: account, game_title: gameTitle } });
+  }
+};
+
 /* DB 초기 데이터 입력 */
 const getDatabaseConfig = async () => {
   if (
@@ -290,6 +306,7 @@ module.exports = {
   config,
   itemList,
   getDatabaseConfig,
+  initChance,
   rankAggregation,
   missionAggregation,
   gameList,

@@ -50,6 +50,25 @@ const setParticipant = async (account, gameTitle) => {
   return;
 };
 
+/* 첫 참여 시 대표 NFT에 맞게 횟수 초기화 */
+const initChance = async (account, gameTitle, mainNFT) => {
+  console.log("횟수 초기화");
+  if (!(account && gameTitle)) return;
+  const response = await axios
+    .post(`/api/games/init-chance`, {
+      account: account,
+      gameTitle: gameTitle,
+      mainNFT: mainNFT,
+    })
+    .catch((err) => console.log(err));
+  if (response) {
+    console.log("참여자 초기화 됨");
+  } else {
+    console.log("이미 참여자 초기화 되어있음");
+  }
+  return;
+};
+
 /* 남은 기회 가져오기 */
 const getMyChance = async (account, gameTitle) => {
   console.log("횟수 불러오기");
@@ -225,6 +244,7 @@ export default {
   getGameList,
   gameList,
   setParticipant,
+  initChance,
   getMyChance,
   getMyBestScore,
   getGameItems,
