@@ -1,8 +1,7 @@
 const StakingCard = (props) => {
-  const { closeModal } = props;
-
+  const { closeModal, hasMainNft } = props;
   return (
-    <div className="nft-block">
+    <div className="nft-block" style={{ display: hasMainNft && "none" }}>
       <div className="nft-img plus" onClick={closeModal}>
         <img
           src="https://bunicorn.exchange/img/plus.52eee613.svg"

@@ -4,7 +4,7 @@ import ChoiceNft from "./ChoiceNft";
 import Modal from "./Modal";
 import StakingCard from "./StakingCard";
 
-const Staking = () => {
+const Staking = ({ hasMainNft, getCurrentMainNft }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getIsOpen = () => {
@@ -15,10 +15,13 @@ const Staking = () => {
     <>
       {isOpen && (
         <Modal closeModal={getIsOpen}>
-          <ChoiceNft closeModal={getIsOpen} />
+          <ChoiceNft
+            closeModal={getIsOpen}
+            getCurrentMainNft={getCurrentMainNft}
+          />
         </Modal>
       )}
-      <StakingCard closeModal={getIsOpen} />
+      <StakingCard closeModal={getIsOpen} hasMainNft={hasMainNft} />
     </>
   );
 };
