@@ -30,30 +30,28 @@ router.post("/past-ranking", async (req, res) => {
   res.send(pastRankData);
 });
 
-router.get("/",async (req,res)=>{
+router.get("/", async (req, res) => {
   console.log("랭킹`");
   const rank = await Ranking.findAll({
-    attributes: ['user_address','ranking','game_title','gameScore'],
-    order:[['game_title'],['ranking']]
-  })
-  res.send(rank)
-})
+    attributes: ["user_address", "ranking", "game_title", "gameScore"],
+    order: [["game_title"], ["ranking"]],
+  });
+  res.send(rank);
+});
 
 // 클레임 허용 완료한 계정에 대해 랭크 삭제
-router.post("/deleteRank", async(req,res)=>{
-
+router.post("/deleteRank", async (req, res) => {
   const rank = req.body.rank;
-  for (let i = 0; i < rank.length ; i++) {
+  for (let i = 0; i < rank.length; i++) {
     await Ranking.destroy({
       where: {
-          game_title:rank[i][2],
-          ranking: rank[i][1],
-          user_address: rank[i][0]
-        }
-      })
-      
-    }
-    res.send("삭제 완료")
-})
+        game_title: rank[i][2],
+        ranking: rank[i][1],
+        user_address: rank[i][0],
+      },
+    });
+  }
+  res.send("삭제 완료");
+});
 
 module.exports = router;

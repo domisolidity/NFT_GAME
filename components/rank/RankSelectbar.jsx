@@ -15,7 +15,6 @@ const RankSelectbar = ({ gameList, getSelectedGameTitle }) => {
           key={game.gameId}
           onClick={selectGame}
           m={"10px 5px"}
-          w={""}
         >
           {game.gameTitle}
         </Button>
