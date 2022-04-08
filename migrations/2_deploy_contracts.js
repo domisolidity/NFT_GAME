@@ -11,7 +11,7 @@ module.exports = async function (deployer) {
   await deployer.deploy(AuctionCreator);
 
   // BEP20
-  await deployer.deploy(GameToken,"DoremiGameToken","DGT",18,1000000000000);
+  await deployer.deploy(GameToken, "DoremiGameToken", "DGT", 18, 10000000000000);
   await deployer.deploy(Claim_20, GameToken.address);
 
 };
