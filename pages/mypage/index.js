@@ -8,14 +8,12 @@ import TotalCard from "../../components/TotalCard";
 import Claim from "../../components/Claim";
 import Staking from "../../components/Staking";
 import { useSelector } from "react-redux";
+import CurrentMainNft from "../../components/CurrentMainNft";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
   const data = useSelector(state => state.data);
   const { kdkd, auctionList } = data;
-  console.log("kdkd", kdkd)
-  console.log("auctionList", auctionList)
-
 
   useEffect(() => {
     returnMenu(menu);
@@ -72,8 +70,11 @@ const Mypage = () => {
             <div className="fixed_item">
               <NetworkCard />
             </div>
-            <div className="fixed_item">
+            {/* <div className="fixed_item">
               <TotalCard />
+            </div> */}
+            <div className="fixed_item">
+              <CurrentMainNft />
             </div>
           </div>
           <div className="menu">
@@ -104,6 +105,7 @@ const Mypage = () => {
       }
 
       .fixed_item{
+        
         margin-right: 2rem;
       }
       .menu{

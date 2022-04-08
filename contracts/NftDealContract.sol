@@ -11,7 +11,7 @@ contract NftDealContract {
     nftContractAddress = NftContract(_nftContractAddress);
   }
 
-  event submitSell (uint tokenId,uint price,address tokenOwner,string tokenUri);
+  event submitSell(uint tokenId, uint price, address tokenOwner, string tokenUri);
 
   //토큰별 가격
   mapping(uint256 => uint256) public nftPrices;
@@ -39,9 +39,22 @@ contract NftDealContract {
     // 판매중인 토큰에 매개변수 넣음
     onSaleNftArray.push(_tokenId);
 
-    emit submitSell(_tokenId,_price,nftTokenOwner,nftContractAddress.tokenURI(_tokenId));
+    emit submitSell(_tokenId, _price, nftTokenOwner, nftContractAddress.tokenURI(_tokenId));
   }
 
+  function cancelSell(uint _tokenId) external {
+    require(msg.sender == nftContractAddress.ownerOf(_tokenId), "you are not token owner");
+
+    nftPrices[_tokenId] = 0;
+
+    for (uint256 i = 0; i < onSaleNftArray.length; i++) {
+      if (onSaleNftArray[i] == _tokenId) {
+        onSaleNftArray[i] = onSaleNftArray[onSaleNftArray.length - 1];
+        onSaleNftArray.pop();
+        break;
+      }
+    }
+  }
 
   function buyNft(uint256 _tokenId) public payable {
     // uint256 price = nftPrices[_tokenId];
@@ -60,6 +73,7 @@ contract NftDealContract {
       if (nftPrices[onSaleNftArray[i]] == 0) {
         onSaleNftArray[i] = onSaleNftArray[onSaleNftArray.length - 1];
         onSaleNftArray.pop();
+        break;
       }
     }
   }
@@ -69,15 +83,14 @@ contract NftDealContract {
     return onSaleNftArray.length;
   }
 
-
   function onSale(uint _tokenId) public view returns (bool) {
     if (nftPrices[_tokenId] == 0) {
-        return false;
+      return false;
     } else {
       return true;
     }
   }
-  //
+
   function getOnSaleNftArray() public view returns (uint256[] memory) {
     return onSaleNftArray;
   }
