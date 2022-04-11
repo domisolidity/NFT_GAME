@@ -30,9 +30,6 @@ contract Claim_20 is Ownable {
     uint8 count;
   }
 
-  mapping(address => WeeklyRank[]) public getRankReward;
-  mapping(address => uint8) public missionRewardList;
-
   uint private constant top1 = 100;
   uint private constant top2 = 50;
   uint private constant top3 = 30;
