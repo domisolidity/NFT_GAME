@@ -75,7 +75,7 @@ const ClaimInfoCard = () => {
 
     console.log(claimableData);
     await claim20_Contract.methods
-      .approveClaim_rank(claimableData, Date.now())
+      .claim_rank(claimableData, Date.now())
       .send({ from: account })
       .then((res) => {
         console.log(res);

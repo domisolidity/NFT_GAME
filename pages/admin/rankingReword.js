@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 
 const RankingReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, gameTokenContract, claim20_Contract } = blockchain;
+  const { account, gameTokenContract, claim20_Contract } = blockchain;
   console.log(claim20_Contract);
   console.log(gameTokenContract);
   const [rankData, setRankData] = useState();
@@ -36,7 +36,7 @@ const RankingReword = () => {
   const allChecked = checkedItems.every(Boolean);
   const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
 
-  //랭킹 정보 불러오기
+  // step 1) 랭킹 정보 불러오기
   const importRank = async () => {
     await axios
       .get("/api/ranks")
@@ -51,7 +51,7 @@ const RankingReword = () => {
       .catch(console.error());
   };
 
-  //데이터 선택
+  // step 2) 데이터 선택
   const selectRankData = async () => {
     if (checkedItems.length == 0) {
       alert("아무것도 선택되지 않았습니다. 클레임 허용할 계정을 체크해주세요");
@@ -79,43 +79,63 @@ const RankingReword = () => {
     setNextStep(true);
   };
 
+  // step 3) 선택한 데이터에 대한 보상량 승인 작업
   const approveRankClaim = async () => {
     console.log("selectedRankData", selectedRankData);
+
+    // 1) 클레임 컨트랙트 주소로 토큰 이동
     await gameTokenContract.methods
       .transfer(claim20_Contract._address, totalAllowance)
       .send({ from: account })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        alert("다음은 랭커별 인출 허용량 지정에 대한 승인 서명입니다.");
+      })
       .catch(console.error);
 
-    await axios
-      .post("/api/ranks/approved", { rank: selectedRankData })
+    // 2) 랭커(조건)별 allowance 지정
+    await claim20_Contract.methods
+      .approveClaim_rank(selectedRankData)
+      .send({ from: account })
       .then((res) => {
         console.log(res);
       })
       .catch(console.error);
-  };
 
-  // 랭킹정보에 따른 클레임양 선택 허용
-  const claim_rank = async () => {
-    console.log("checkedItems", checkedItems);
-
-    //선택한 계정에 한해 클레임 허용
-    console.log("claim", claim20_Contract);
-    await claim20_Contract.methods
-      .approveClaim_rank(selectedRankData)
-      .send({ from: account })
-      .then((result) => {
-        console.log(result);
+    // 3) db에 approve 된 상태로 업데이트
+    await axios
+      .post("/api/ranks/approved", { rank: selectedRankData })
+      .then((res) => {
+        console.log(res);
+        alert("승인 작업 완료");
       })
-      .catch((err) => console.error(err));
+      .catch(console.error);
 
     setNextStep(false);
     setLastStep(true);
-    // // 클레임 허용한 계정 랭킹db에서삭제
-    // await axios.post("/api/ranks/deleteRank",{rank:selectedRankData}).then(result=>{
-    //     console.log(result.data);
-    // }).catch(console.error());
   };
+
+  // // 랭킹정보에 따른 클레임양 선택 허용
+  // const claim_rank = async () => {
+  //   console.log("checkedItems", checkedItems);
+
+  //   //선택한 계정에 한해 클레임 허용
+  //   console.log("claim", claim20_Contract);
+  //   await claim20_Contract.methods
+  //     .approveClaim_rank(selectedRankData)
+  //     .send({ from: account })
+  //     .then((result) => {
+  //       console.log(result);
+  //     })
+  //     .catch((err) => console.error(err));
+
+  //   setNextStep(false);
+  //   setLastStep(true);
+  //   // // 클레임 허용한 계정 랭킹db에서삭제
+  //   // await axios.post("/api/ranks/deleteRank",{rank:selectedRankData}).then(result=>{
+  //   //     console.log(result.data);
+  //   // }).catch(console.error());
+  // };
 
   const previousStep = () => {
     if (isRankData) {
