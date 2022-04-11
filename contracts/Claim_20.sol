@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-// import "./GameToken.sol";
+import "./GameToken.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
@@ -12,12 +12,12 @@ contract Claim_20 is Ownable {
   using Counters for Counters.Counter;
   using SafeMath for uint;
 
-  ERC20 public token;
+  GameToken public token;
   address public admin;
 
-  constructor(address _gameTokenAddress) {
+  constructor(GameToken _gameTokenAddress) {
     admin = msg.sender;
-    token = ERC20(_gameTokenAddress);
+    token = _gameTokenAddress;
   }
 
   struct weeklyRank {

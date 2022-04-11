@@ -84,7 +84,7 @@ router.post("/game-items/buy-item", async (req, res) => {
     user_address: account,
     item_itemName: itemName,
   })
-    .then(res.send("구매완료"))
+    .then((data) => res.send(data))
     .catch((err) => console.log(err));
 });
 

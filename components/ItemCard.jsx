@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import ItemImage from "./ItemImage";
 
 const ItemCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account } = blockchain;
+  const { account, auth, gameTokenContract } = blockchain;
   const item = props.item;
 
   // 내 소유 아이템 목록
@@ -18,25 +19,31 @@ const ItemCard = (props) => {
         account: account,
         itemName: item.itemName,
       })
-      .then((res) => setMyItemQuantity(res.data.count));
+      .then((res) => {
+        setMyItemQuantity(res.data.count);
+      });
 
   // 아이템 구매하기
   const buyItem = async () => {
-    // await 웹3 샬라샬라//////////////////////////////////////////
-    // 구입했으면
-    await axios
-      .post(`/api/items/game-items/buy-item`, {
-        account: account,
-        itemName: item.itemName,
-      })
-      .then((res) => {
-        console.log(res.data);
-      });
+    // 판매자(컨트랙트 배포자) address 받아오기
+    const owner = await gameTokenContract.methods.getOwner().call();
+    // 판매자에게 아이템값 보내기
+    const response = await gameTokenContract.methods
+      .transfer(owner, item.itemPrice)
+      .send({ from: account });
+
+    // 구입했으면 DB에 아이템 추가해주기
+    const isBought = await axios.post(`/api/items/game-items/buy-item`, {
+      account: response.from,
+      itemName: item.itemName,
+    });
+    console.log(isBought.data.item_itemName, "구매했어");
+    setMyItemQuantity(myItemQuantity + 1);
   };
 
   useEffect(() => {
-    // getMyItemQuantity();
-  }, [account]);
+    getMyItemQuantity();
+  }, [account, auth]);
 
   return (
     <GridItem
@@ -46,7 +53,9 @@ const ItemCard = (props) => {
       wordBreak="break-all"
       textAlign="center"
     >
-      <Box height={"200px"}>아이테 미미지</Box>
+      <Box w={"200px"}>
+        <ItemImage itemId={item.itemId} />
+      </Box>
       <Box>{item.itemName}</Box>
       <Box>{myItemQuantity}개 보유 중</Box>
       <Box>{item.itemPrice} $</Box>
