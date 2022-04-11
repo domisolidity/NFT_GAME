@@ -76,6 +76,7 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
       <style jsx>{`
         .current_main_nft > img {
           width: 160px;
+          min-width: 160px;
           height: 160px;
           border-radius: 1rem;
         }

@@ -1,53 +1,53 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { connectWallet } from "../redux/blockchain/blockchainActions";
-import Web3 from "web3";
-import MetaMaskOnboarding from "@metamask/onboarding";
-import { metamaskLogin } from "../redux/actions/metamaskActions";
+// import Web3 from "web3";
+// import MetaMaskOnboarding from "@metamask/onboarding";
+// import { metamaskLogin } from "../redux/actions/metamaskActions";
 
 const WalletList = (props) => {
   const { toggle } = props;
   const dispatch = useDispatch();
-  const userLog = useSelector((state) => state.userLog);
-  const metamask = useSelector((state) => state.metamask);
+  // const userLog = useSelector((state) => state.userLog);
+  // const metamask = useSelector((state) => state.metamask);
 
-  const { auth } = userLog;
-  const { account } = metamask;
+  // const { auth } = userLog;
+  // const { account } = metamask;
 
-  // const getConnectWallet = () => {
-  //   dispatch(connectWallet());
-  //   toggle();
-  // };
-
-  let onboarding = new MetaMaskOnboarding();
-
-  // let web3 = new Web3(window.ethereum);
-
-  useEffect(() => {
-    if (!account) return;
-    console.log(account);
-    console.log(metamask);
-  }, [account]);
-
-  // const isMetaMaskConnected = () => account && account.length > 0;
-  // console.log(isMetaMaskConnected());
-
-  const getMetamaskWallet = async () => {
-    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
-      //dispatch(alertMsg("메타마스크가 설치되어 있지 않습니다.)); //=> 알림창
-      alert("메타마스크가 설치되어 있지 않습니다. 설치 페이지로 이동합니다.");
-      toggle();
-      onboarding.startOnboarding(); // => 다운로드 페이지 새창열기
-    } else if (account && auth) {
-      if (onboarding) {
-        onboarding.stopOnboarding();
-      }
-    } else {
-      //메타마스크 로그인 시작
-      dispatch(metamaskLogin());
-      toggle();
-    }
+  const getConnectWallet = () => {
+    dispatch(connectWallet());
+    toggle();
   };
+
+  // let onboarding = new MetaMaskOnboarding();
+
+  // // let web3 = new Web3(window.ethereum);
+
+  // useEffect(() => {
+  //   if (!account) return;
+  //   console.log(account);
+  //   console.log(metamask);
+  // }, [account]);
+
+  // // const isMetaMaskConnected = () => account && account.length > 0;
+  // // console.log(isMetaMaskConnected());
+
+  // const getMetamaskWallet = async () => {
+  //   if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+  //     //dispatch(alertMsg("메타마스크가 설치되어 있지 않습니다.)); //=> 알림창
+  //     alert("메타마스크가 설치되어 있지 않습니다. 설치 페이지로 이동합니다.");
+  //     toggle();
+  //     onboarding.startOnboarding(); // => 다운로드 페이지 새창열기
+  //   } else if (account && auth) {
+  //     if (onboarding) {
+  //       onboarding.stopOnboarding();
+  //     }
+  //   } else {
+  //     //메타마스크 로그인 시작
+  //     dispatch(metamaskLogin());
+  //     toggle();
+  //   }
+  // };
 
   return (
     <div>
@@ -56,7 +56,7 @@ const WalletList = (props) => {
         <a target="_blank" className="mb-2 d-block item-connect">
           <button
             className="button width-full v-align-middle d-flex"
-            onClick={getMetamaskWallet}
+            onClick={getConnectWallet}
           >
             <div> Metamask </div>
             <div>

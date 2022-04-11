@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { severLogout } from "../redux/actions/userLogActions";
-//import { disconnectWallet } from "../redux/blockchain/blockchainActions";
+//import { severLogout } from "../redux/actions/userLogActions";
+import { disconnectWallet } from "../redux/blockchain/blockchainActions";
 
 const ConnectedModal = (props) => {
   const { toggle } = props;
@@ -17,9 +17,9 @@ const ConnectedModal = (props) => {
 
   // const [scan, setScan] = useState("");
 
-  // const getDisConnectWallet = () => {
-  //   dispatch(disconnectWallet());
-  // };
+  const getDisConnectWallet = () => {
+    dispatch(disconnectWallet());
+  };
   const getServerLogout = () => {
     dispatch(severLogout());
   };
@@ -95,7 +95,7 @@ const ConnectedModal = (props) => {
         <div className="">
           <button
             className="button width-full text-red mb-2"
-            onClick={getServerLogout}
+            onClick={getDisConnectWallet}
           >
             Log out
           </button>
