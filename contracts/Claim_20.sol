@@ -7,17 +7,20 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./GameToken.sol";
 
 contract Claim_20 is Ownable {
   using Counters for Counters.Counter;
   using SafeMath for uint;
 
   ERC20 public token;
+  GameToken public gametoken;
   address public admin;
 
   constructor(address _gameTokenAddress) {
     admin = msg.sender;
     token = ERC20(_gameTokenAddress);
+    gametoken = GameToken(_gameTokenAddress);
   }
 
   struct weeklyRank {
@@ -75,21 +78,21 @@ contract Claim_20 is Ownable {
     // 제약 조건 추가하기
     for (uint i = 0; i < result.length; i++) {
       if (result[i].ranking == 1) {
-        token.increaseAllowance(result[i].account, top1);
+        gametoken.increaseAllowance(result[i].account, top1);
       } else if (result[i].ranking == 2) {
-        token.increaseAllowance(result[i].account, top2);
+        gametoken.increaseAllowance(result[i].account, top2);
       } else if (result[i].ranking == 3) {
-        token.increaseAllowance(result[i].account, top3);
+        gametoken.increaseAllowance(result[i].account, top3);
       } else {
-        token.increaseAllowance(result[i].account, top4To10);
+        gametoken.increaseAllowance(result[i].account, top4To10);
       }
     }
   }
 
   // 랭킹 보상 클레임
   function rankClaim(address _account) external {
-    uint rewardAmount = token.allowance(admin, _account);
-    token.transferFrom(admin, _account, rewardAmount);
+    uint rewardAmount = gametoken.allowance(admin, _account);
+    gametoken.transferFrom(admin, _account, rewardAmount);
   }
 }
 //["0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",1,"보물찾기",21]

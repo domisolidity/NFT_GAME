@@ -12,6 +12,7 @@ module.exports = async function (deployer) {
 
   // BEP20
   await deployer.deploy(GameToken);
+  console.log("gameTokenAddress", GameToken.address);
   await deployer.deploy(Claim_20, GameToken.address);
 };
 

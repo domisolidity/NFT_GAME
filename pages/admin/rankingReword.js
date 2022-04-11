@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Link from "next/link";
 import {
   Box,
   Button,
   Heading,
   Table,
-  Image,
+  Flex,
   Checkbox,
   Text,
   Thead,
@@ -69,6 +70,7 @@ const RankingReword = () => {
     console.log("checkedItems", checkedItems);
     console.log("selectedRankData", selectedRankData);
     //선택한 계정에 한해 클레임 허용
+    console.log("claim", claim20_Contract);
     await claim20_Contract.methods
       .approveClaim(selectedRankData)
       .send({ from: account })
@@ -147,11 +149,18 @@ const RankingReword = () => {
 
   return (
     <Box w="70vw" bg="blackAlpha.400" margin="0 auto" padding="10" border="2px solid gray" borderRadius="10">
-      <Heading display="inline">Managing Reward System</Heading>
-      <Text ml="10" mt="5">
-        {" "}
-        주간 랭킹 정보를 확인하고 랭킹 정보에 따라 클레임 허용여부를 관리할 수 있습니다.
-      </Text>
+      <Flex justify="space-between">
+        <Box>
+          <Heading display="inline">Managing Reward System</Heading>
+          <Text ml="10" mt="5">
+            {" "}
+            주간 랭킹 정보를 확인하고 랭킹 정보에 따라 클레임 허용여부를 관리할 수 있습니다.
+          </Text>
+        </Box>
+        <Link href={"/admin"}>
+          <Button>관리자 홈으로</Button>
+        </Link>
+      </Flex>
       {isRankData ? (
         <TableContainer align="center" mt="10">
           <Text fontSize="30"> step 2 </Text> 계정 선택

@@ -19,7 +19,7 @@ const Admin = () => {
         <a style={{ marginRight: 20 }}>
           <Button minWidth={300} h="200" p="10">
             <Flex direction="column">
-              <Image src={"images/icons/chartIcon.png"} boxSize="100px" />
+              <Image margin="0 auto" src={"images/icons/chartIcon.png"} boxSize="100px" />
               <Text mt="5">
                 Mission Reword <br /> Managing
               </Text>
@@ -32,7 +32,7 @@ const Admin = () => {
         <a>
           <Button minWidth={300} h="200" p="10">
             <Flex direction="column">
-              <Image src={"images/icons/trophyIcon.png"} boxSize="100px" />
+              <Image margin="0 auto" src={"images/icons/trophyIcon.png"} boxSize="100px" />
               <Text mt="5">
                 Rankging Reword <br /> Managing
               </Text>
