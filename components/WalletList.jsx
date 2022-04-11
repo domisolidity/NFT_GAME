@@ -235,7 +235,7 @@ const WalletList = (props) => {
           background: #f47820 !important;
           color: #fff !important;
         }
-
+        /* 
         ::-webkit-scrollbar {
           width: 6px;
         }
@@ -244,7 +244,7 @@ const WalletList = (props) => {
           background-clip: padding-box;
           border-radius: 6px;
           background-color: var(--text-btn-search);
-        }
+        } */
       `}</style>
     </div>
   );

@@ -243,7 +243,14 @@ const NftMint = () => {
           <Text mt="150" fontSize="25">
             <span>Minting Nft</span>
           </Text>
-          <Box bg="#000000b3" w="70vw" padding="10" borderRadius="20" mt="70">
+          <Box
+            bg="#000000b3"
+            minW={"600px"}
+            w="70vw"
+            padding="10"
+            borderRadius="20"
+            mt="70"
+          >
             <Flex justify="space-around" w="70vw">
               <NftCard nftInfo={mintedNft} />
             </Flex>

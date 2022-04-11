@@ -52,7 +52,7 @@ const Main = () => {
         </div>
       </div>
       <div className="main__bottom">
-        {/* <GameInfoCard /> */}
+
       </div>
       <style jsx>{`
       .main {

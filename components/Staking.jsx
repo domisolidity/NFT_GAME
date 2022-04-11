@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
+import useModal from "../hooks/useModal";
 
 import ChoiceNft from "./ChoiceNft";
 import Modal from "./Modal";
 import StakingCard from "./StakingCard";
 
 const Staking = ({ hasMainNft, getCurrentMainNft }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const getIsOpen = () => {
-    setIsOpen(!isOpen);
-  };
+  const { toggle, visible } = useModal();
 
   return (
     <>
-      {isOpen && (
-        <Modal closeModal={getIsOpen}>
-          <ChoiceNft
-            closeModal={getIsOpen}
-            getCurrentMainNft={getCurrentMainNft}
-          />
-        </Modal>
-      )}
-      <StakingCard closeModal={getIsOpen} hasMainNft={hasMainNft} />
+      <Modal toggle={toggle}>
+        <ChoiceNft
+          visible={visible}
+          toggle={toggle}
+          getCurrentMainNft={getCurrentMainNft}
+        />
+      </Modal>
+
+      <StakingCard toggle={toggle} hasMainNft={hasMainNft} />
     </>
   );
 };
