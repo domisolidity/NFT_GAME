@@ -69,7 +69,10 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
 
   return (
     <div className="current_main_nft">
-      <img src={currentImage} />
+      <img
+        src={currentImage ? currentImage : `images/defaultProfile.jpeg`}
+        alt="대표 NFT"
+      />
       <style jsx>{`
         .current_main_nft > img {
           width: 160px;

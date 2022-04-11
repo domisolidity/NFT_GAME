@@ -176,8 +176,11 @@ const Tetris = () => {
 
   const keyUp = ({ keyCode }) => {
     if (gameOver) return;
-
-    if (keyCode === 40) {
+    if (extraPoints) {
+      if (keyCode === 38) {
+        setDropTime(1000 / (level + 1) + 100); // 1 sec
+      }
+    } else if (keyCode === 40) {
       setDropTime(1000 / (level + 1) + 100); // 1 sec
     }
   };
