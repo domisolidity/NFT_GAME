@@ -28,6 +28,11 @@ Chore - 기타 변경사항 (빌드 스크립트 수정 등)
 
 
 
+npm install @truffle/hdwallet-provider 
+@truffle/hdwallet-provider: 니모닉 기반의 키를 사용할 수 있게 도와주는 라이브러리
+
+
+
 @ npm i 시 설치 오류 해결방법
 npm i react-scroll-horizontal --legacy-peer-deps 
 npm i react-progress-steps --legacy-peer-deps

@@ -1,6 +1,7 @@
 const initialState = {
   loading: false,
   account: null,
+  networkId: null,
   nftContract: null,
   nftDealContract: null,
   gameTokenContract: null,
@@ -23,6 +24,7 @@ const blockchainReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         account: action.payload.account.toString(),
+        networkId: action.payload.networkId,
         nftContract: action.payload.nftContract,
         nftDealContract: action.payload.nftDealContract,
         gameTokenContract: action.payload.gameTokenContract,

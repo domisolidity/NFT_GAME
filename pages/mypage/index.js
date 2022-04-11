@@ -106,7 +106,10 @@ const Mypage = () => {
         }
         .sidebar {
           display: flex;
+<<<<<<< HEAD
           min-width: 150px;
+=======
+>>>>>>> kdw
           width: 10%;
           height: 65vh;
           flex-direction: column;
