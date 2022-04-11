@@ -19,12 +19,13 @@ contract GameToken is Context, IERC20, Ownable {
   address private _owner;
 
   constructor() {
-    _name = "DoremiGameToken";
-    _symbol = "DGT";
+    _name = "DoremiGame Token";
+    _symbol = "DMG";
     _decimals = 18;
-    _totalSupply = 1000000000000;
+    _totalSupply = 10000 * 10**18;
     _owner = msg.sender;
     _balances[_owner] = _totalSupply;
+    // _balances[_owner] = _totalSupply;
 
     emit Transfer(address(0), _owner, _totalSupply);
   }
@@ -107,18 +108,21 @@ contract GameToken is Context, IERC20, Ownable {
   }
 
   function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
-    _approve(_owner, spender, _allowances[_owner][spender].add(addedValue));
-    return true;
-  }
+        address owner = _msgSender();
+        _approve(owner, spender, _allowances[owner][spender] + addedValue);
+        return true;
+    }
 
-  function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
-    _approve(
-      _msgSender(),
-      spender,
-      _allowances[_msgSender()][spender].sub(subtractedValue, "BEP20: decreased allowance below zero")
-    );
+function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+    address owner = _msgSender();
+    uint256 currentAllowance = allowance(owner, spender);
+    require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
+    unchecked {
+        _approve(owner, spender, currentAllowance - subtractedValue);
+    }
+
     return true;
-  }
+}
 
   function mint(uint256 amount) public virtual onlyOwner returns (bool) {
     _mint(_msgSender(), amount);
