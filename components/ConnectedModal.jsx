@@ -1,18 +1,27 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { disconnectWallet } from "../redux/blockchain/blockchainActions";
+import { severLogout } from "../redux/actions/userLogActions";
+//import { disconnectWallet } from "../redux/blockchain/blockchainActions";
 
 const ConnectedModal = (props) => {
   const { toggle } = props;
   const dispatch = useDispatch();
-  const blockchain = useSelector((state) => state.blockchain);
+  //const blockchain = useSelector((state) => state.blockchain);
+  const userLog = useSelector((state) => state.userLog);
+  const metamask = useSelector((state) => state.metamask);
+  console.log(userLog);
+  console.log(metamask);
 
-  const { account } = blockchain;
+  const { account } = metamask;
+  const { auth } = userLog;
 
   // const [scan, setScan] = useState("");
 
-  const getDisConnectWallet = () => {
-    dispatch(disconnectWallet());
+  // const getDisConnectWallet = () => {
+  //   dispatch(disconnectWallet());
+  // };
+  const getServerLogout = () => {
+    dispatch(severLogout());
   };
 
   useEffect(() => {
@@ -72,7 +81,7 @@ const ConnectedModal = (props) => {
               </div>
             </div>
             <span className="link">
-              {account && account.slice(0, 6) + "..." + account.slice(-4)}
+              {auth && account.slice(0, 6) + "..." + account.slice(-4)}
             </span>
             <i className="bx bx-link-external ml-1 link icon-external-link"></i>
             {/* <i className="iconfont ml-1 link icon-external-link"></i> */}
@@ -86,7 +95,7 @@ const ConnectedModal = (props) => {
         <div className="">
           <button
             className="button width-full text-red mb-2"
-            onClick={getDisConnectWallet}
+            onClick={getServerLogout}
           >
             Log out
           </button>
@@ -138,7 +147,7 @@ const ConnectedModal = (props) => {
           background: #f47820 !important;
           color: #fff !important;
         }
-
+        /* 
         ::-webkit-scrollbar {
           width: 6px;
         }
@@ -147,7 +156,7 @@ const ConnectedModal = (props) => {
           background-clip: padding-box;
           border-radius: 6px;
           background-color: var(--text-btn-search);
-        }
+        } */
 
         .link {
           /* color: var(--link-color) !important; */

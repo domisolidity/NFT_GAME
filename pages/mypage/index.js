@@ -9,6 +9,7 @@ import Claim from "../../components/Claim";
 import Staking from "../../components/Staking";
 import { useSelector } from "react-redux";
 import CurrentMainNft from "../../components/CurrentMainNft";
+import NftAmount from "../../components/NftAmount";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
@@ -76,6 +77,10 @@ const Mypage = () => {
             <div className="fixed_item">
               <CurrentMainNft />
             </div>
+            <div className="fixed_item">
+              <NftAmount />
+            </div>
+
           </div>
           <div className="menu">
             {returnMenu(menu)}
