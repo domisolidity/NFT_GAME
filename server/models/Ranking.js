@@ -27,6 +27,16 @@ module.exports = class Ranking extends Sequelize.Model {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
+        isApproved: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false,
+        },
+        isRewarded: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false,
+        },
         user_address: {
           type: Sequelize.STRING,
           allowNull: false,
