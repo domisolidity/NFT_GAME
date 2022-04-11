@@ -2,16 +2,11 @@
 
 pragma solidity ^0.8.0;
 
-// import "./GameToken.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
+
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./GameToken.sol";
 
 contract Claim_20 is Ownable {
-  using Counters for Counters.Counter;
-  using SafeMath for uint;
 
   event ClaimEvent(string rewardType, address indexed account, uint amount, uint time);
 
