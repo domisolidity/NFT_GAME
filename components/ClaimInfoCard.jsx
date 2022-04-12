@@ -1,25 +1,109 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Button } from "@chakra-ui/react";
+import axios from "axios";
+import ClaimHistory from "./mypage/ClaimHistory";
 
 const ClaimInfoCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, claim20_Contract } = blockchain;
+  const { account, claim20_Contract } = blockchain;
 
-  const [accumulatedAmount, setAccumulatedAmount] = useState("");
+  const [rewardAmount, setRewardAmount] = useState(0);
+  const [claimableData, setClaimableData] = useState([]);
+  const [claimHistory, setClaimHistory] = useState();
 
-  useEffect(() => {
-    if (!account) return;
-    if (!account) return;
-    getAccumulatedAmount();
-    console.log(account);
-  }, [account]);
+  // 보상 수량 조회
+  const getRewardAmount = async () => {
+    await axios.post("/api/ranks/claimable", { data: account }).then((rank) => {
+      console.log(rank);
+      let rewardData = [];
+      let totalRewardAmount = 0;
+      for (let i = 0; i < rank.data.length; i++) {
+        console.log(rank.data.ranking);
+        if (rank.data[i].ranking == 1) {
+          totalRewardAmount += 100;
+        } else if (rank.data[i].ranking == 2) {
+          totalRewardAmount += 50;
+        } else if (rank.data[i].ranking == 3) {
+          totalRewardAmount += 30;
+        }
+        rewardData.push(Object.values(rank.data[i]));
+      }
 
-  const getAccumulatedAmount = async () => {
-    await claim20_Contract.methods
-      .getRewardAmount(account)
-      .call({ from: account })
-      .then((res) => console.log(res));
+      console.log(totalRewardAmount);
+      console.log(rank.data);
+      setRewardAmount(totalRewardAmount);
+      setClaimableData(rewardData);
+    });
   };
+
+  // 클레임 히스토리 조회
+  const getClaimHistory = async () => {
+    await claim20_Contract
+      .getPastEvents("ClaimEvent", {
+        filter: { account: account },
+        fromBlock: 0,
+        toBlock: "latest",
+      })
+      .then((res) => {
+        console.log(res);
+        let returnValuesArr = [];
+        for (const history of res) {
+          returnValuesArr.push({
+            value: history.returnValues,
+            tx: history.transactionHash,
+          });
+        }
+        setClaimHistory(returnValuesArr);
+      })
+      .catch(console.error);
+  };
+
+  // 랭킹 클레임
+  const claimRank = async () => {
+    console.log("클레임");
+    console.log(claimableData);
+
+    for (let i = 0; i < claimableData.length; i++) {
+      if (
+        claimableData[i].isApproved == false ||
+        claimableData[i].isRewarded == true
+      ) {
+        alert("이미 보상 받았거나 아직 승인 받지 않았습니다.");
+      }
+    }
+
+    console.log(claimableData);
+    await claim20_Contract.methods
+      .claim_rank(claimableData, Date.now())
+      .send({ from: account })
+      .then((res) => {
+        console.log(res);
+        if (res.status) {
+          alert("클레임 성공");
+        }
+      })
+      .catch(console.error);
+
+    await axios
+      .post("/api/ranks/rewarded", { rank: claimableData })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+
+  useEffect(async () => {
+    if (!account) return;
+    await getRewardAmount();
+    await getClaimHistory();
+    console.log(account);
+    return () => setRewardAmount(0);
+  }, [account]);
+  // useEffect(async () => {
+  //   if (!account || !claimHistory) return;
+  //   console.log(claimHistory[0].value.rewardType);
+  // }, [account, claimHistory]);
+
   return (
     <div className="showPool">
       <div className="wrapper-purple">
@@ -40,58 +124,6 @@ const ClaimInfoCard = () => {
               </p>
             </div>
           </div>
-          {/* <div className="lp-stake">
-            <p className="category-title">
-              TVL
-              <span className="tooltipPool">
-                <img
-                  src="https://www.sandbox.game/img/00_General/question-circle.png"
-                  className="question-circle"
-                />
-                <span className="tooltiptext tooltip-text-tvl">
-                  <span className="tooltipTitle">
-                    잠긴 총 금액 (TVL)
-                    <br />
-                  </span>
-                  잠긴 총 금액 (Total Value Locked, TVL)은 스테이킹 프로그램
-                  내에 예치되어 있는 토큰의 총 가치를 나타냅니다.
-                  <i></i>
-                </span>
-              </span>
-            </p>
-            <p className="result">
-              $ 136,400,296 M (보상받을 수 있는 금액)
-              <span className="balanceTooltip">
-                $ 136,400,296
-                <i></i>
-              </span>
-            </p>
-          </div>
-          <div className="lp-apy">
-            <p className="category-title">
-              연간 수익률 (APR)
-              <span className="tooltipPool">
-                <img
-                  src="https://www.sandbox.game/img/00_General/question-circle.png"
-                  className="question-circle"
-                />
-                <span className="tooltiptext tooltip-apy">
-                  <span className="tooltipTitle">
-                    연간 수익률 (APR)
-                    <br />
-                  </span>
-                  스테이킹한 자금에 대한 한 해의 리워드 비율을 나타냅니다.
-                  <i></i>
-                </span>
-              </span>
-            </p>
-            <p className="result">
-              39.45 %
-              <span className="balanceTooltip">
-                39.4573 %<i></i>
-              </span>
-            </p>
-          </div> */}
           <div className="lp-weekly">
             <p className="category-title">
               주간 리워드
@@ -117,7 +149,7 @@ const ClaimInfoCard = () => {
                 className="coin"
               />
               <p className="result">
-                300 K
+                {rewardAmount}
                 <span className="balanceTooltip">
                   300 K mSAND
                   <i></i>
@@ -144,12 +176,10 @@ const ClaimInfoCard = () => {
               </span>
             </p>
           </div>
-          <button color="primary" type="button" className="cta xsmall">
-            Claim
-          </button>
         </div>
+        <Button onClick={claimRank}>Claim</Button>
       </div>
-
+      <ClaimHistory history={claimHistory} />
       <style jsx>{`
         /* .showPool {
           height: auto;

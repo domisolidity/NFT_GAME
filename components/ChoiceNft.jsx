@@ -9,7 +9,7 @@ const ChoiceNft = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract } = blockchain;
 
-  const { closeModal, getCurrentMainNft } = props;
+  const { toggle, getCurrentMainNft } = props;
 
   const [myNfts, setMyNfts] = useState([]);
   const [currentMainNft, setcurrentMainNft] = useState("");
@@ -126,7 +126,7 @@ const ChoiceNft = (props) => {
       .then((result) => {
         setcurrentMainNft(result.user.mainNft);
         alert("한 주간 유지됩니다.");
-        closeModal();
+        toggle();
       })
       .catch((err) => {
         console.log(err);
@@ -187,7 +187,7 @@ const ChoiceNft = (props) => {
         <button
           className="button button button-cancel"
           type="button"
-          onClick={closeModal}
+          onClick={toggle}
         >
           Cancel
         </button>

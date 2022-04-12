@@ -22,10 +22,11 @@ const NetworkCard = () => {
       .balanceOf(account)
       .call({ from: account })
       .then((tokenBalance) => {
-        // balance = web3.utils.fromWei(tokenBalance);
-        // setTokenBalance(balance.slice(0, 5));
-        setTokenBalance(tokenBalance.slice(0, 5));
-      });
+        console.log(tokenBalance);
+        balance = web3.utils.fromWei(tokenBalance);
+        setTokenBalance(balance.slice(0, 5));
+      })
+      .catch(console.error());
   };
 
   useEffect(async () => {

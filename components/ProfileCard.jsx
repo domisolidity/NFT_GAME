@@ -17,12 +17,13 @@ import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import Modal from "./Modal";
 import ImageUpload from "./ImageUpload";
+import useModal from "../hooks/useModal";
 
 const ProfileCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
 
-  const [isOpen, setIsOpen] = useState(false);
+  const { toggle, visible } = useModal();
   const [beforeUserName, setBeforeUserName] = useState("");
   const [beforeImages, setBeforeImages] = useState([]);
   const [userName, setUserName] = useState("");
@@ -63,10 +64,6 @@ const ProfileCard = () => {
       })
       .catch(window.alert);
   }, [account, accessToken, userName]);
-
-  const getIsOpen = () => {
-    setIsOpen(!isOpen);
-  };
 
   const getBeforeUserName = (e) => {
     setBeforeUserName(e.target.value);
@@ -117,7 +114,7 @@ const ProfileCard = () => {
         console.log(err);
       });
 
-    getIsOpen();
+    toggle();
   };
 
   let imgFile = {
@@ -127,8 +124,8 @@ const ProfileCard = () => {
   return (
     <>
       <div className="profile_content">
-        {isOpen && (
-          <Modal closeModal={getIsOpen}>
+        {toggle && (
+          <Modal toggle={toggle} visible={visible}>
             <form className="profile_modal" onSubmit={onSubmit}>
               <ImageUpload refreshImg={imgFile} />
               <div>nick name</div>
@@ -149,11 +146,11 @@ const ProfileCard = () => {
         )}
         {Images ? (
           <>
-            <img src={Images} alt="프로필이미지" onClick={getIsOpen} />
-            <div onClick={getIsOpen}>{userName}</div>
+            <img src={Images} alt="프로필이미지" />
+            <div>{userName}</div>
           </>
         ) : (
-          <img src={"/circle.png"} alt="프로필이미지" onClick={getIsOpen} />
+          <img src={"/circle.png"} alt="프로필이미지" onClick={toggle} />
         )}
       </div>
       <style jsx>{`
