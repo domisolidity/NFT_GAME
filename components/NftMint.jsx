@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Text, Image, Button,Heading } from "@chakra-ui/react";
+import { Box, Flex, Text, Image, Button } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import NftCard from "./NftCard.jsx";
 import axios from "axios";
@@ -16,10 +16,8 @@ const NftMint = () => {
   const [viewResult, setViewResult] = useState(false);
   const [mintedNft, setMintedNft] = useState();
 
-  
   // @ 민팅 함수
   const minting = async (grade) => {
-
     try {
       setLoading(true);
       console.log(grade);
@@ -34,29 +32,35 @@ const NftMint = () => {
 
       //민팅 메서드 요청
       const response = await nftContract.methods
-      .create(account, process.env.NEXT_PUBLIC_METADATA, grade)
-      .send({ from: account, value: web3.utils.toWei(price, "ether") })
-      
+        .create(account, process.env.NEXT_PUBLIC_METADATA, grade)
+        .send({ from: account, value: web3.utils.toWei(price, "ether") });
+
       //민팅 성공시
       if (response) {
         const baseUrl = "http://127.0.0.1:8080/ipfs";
         setLoading(false);
         // 민팅한 nft정보 불러오기
-        const result = await nftContract.methods.getMyLastNft(account).call({from:account})
-        await axios.get(`${baseUrl}${result.uri.slice(6)}/${result.id}.json`).then(res=>{
-          console.log(res)
-          console.log(res.data.attributes)
-          setMintedNft({
-            id: result.id,
-            grade: res.data.grade,
-            attributes: res.data.attributes,
-            name: res.data.name,
-            image: `${baseUrl}${res.data.image.slice(6)}`,
-            description: res.data.description,
-          })
-        })
+        const result = await nftContract.methods
+          .getMyLastNft(account)
+          .call({ from: account });
+        await axios
+          .get(`${baseUrl}${result.uri.slice(6)}/${result.id}.json`)
+          .then((res) => {
+            console.log(res);
+            console.log(res.data.attributes);
+            setMintedNft({
+              id: result.id,
+              grade: res.data.grade,
+              attributes: res.data.attributes,
+              name: res.data.name,
+              image: `${baseUrl}${res.data.image.slice(6)}`,
+              description: res.data.description,
+            });
+          });
         setViewResult(true); // 민팅시 nft정보 띄우는 트리거 역할
-        document.querySelector(".minted").scrollIntoView({behavior:'smooth', block: 'start'});
+        document
+          .querySelector(".minted")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
         success ? setSuccess(false) : setSuccess(true); // 남은 nft 업데이트하는 트리거 역할
         // Swal.fire({
         //   icon: "success",
@@ -64,7 +68,6 @@ const NftMint = () => {
         //   text: "정상 적으로 민팅 되었습니다.",
         //   footer: `<a href="/mypage">마이페이지에서 확인</a>`,
         // });
-
       }
     } catch (error) {
       console.log("-에러 내용- \n", error);
@@ -97,12 +100,11 @@ const NftMint = () => {
     return () => {
       setViewResult(false);
     };
-  }, [account,success]);
-
+  }, [account, success]);
 
   return (
     <Box mt="5">
-      <Flex justify="space-around" w="70vw"  >
+      <Flex justify="space-around" w="70vw">
         <div className="card red">
           <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
             Nfts : {redNfts} / 60
@@ -147,7 +149,7 @@ const NftMint = () => {
           </Box>
         </div>
 
-        <div className="card green" >
+        <div className="card green">
           <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
             Nfts : {greenNft} / 30
           </Text>
@@ -223,7 +225,7 @@ const NftMint = () => {
           </Flex>
           <Box>
             <Button
-            className="minted"
+              className="minted"
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
@@ -236,22 +238,29 @@ const NftMint = () => {
           </Box>
         </div>
       </Flex>
-      {viewResult && 
-      <>
-      <Text mt="150" fontSize="25" >
-        <span >Minting Nft</span>       
-        </Text>
-      <Box bg="#000000b3" w="70vw" padding="10" borderRadius="20" mt="70">
-        <Flex  justify="space-around" w="70vw">
-          <NftCard nftInfo={mintedNft}/>
-        </Flex>
-      </Box>
-      </>
-      }
+      {viewResult && (
+        <>
+          <Text mt="150" fontSize="25">
+            <span>Minting Nft</span>
+          </Text>
+          <Box
+            bg="#000000b3"
+            minW={"600px"}
+            w="70vw"
+            padding="10"
+            borderRadius="20"
+            mt="70"
+          >
+            <Flex justify="space-around" w="70vw">
+              <NftCard nftInfo={mintedNft} />
+            </Flex>
+          </Box>
+        </>
+      )}
 
-      <style jsx>{` 
-            span{
-          font-size:35px;
+      <style jsx>{`
+        span {
+          font-size: 35px;
           background: linear-gradient(#f1f1f1 23%, #818181 100%);
           background-clip: text;
           -webkit-background-clip: text;
@@ -259,12 +268,12 @@ const NftMint = () => {
           font-weight: 900;
         }
 
-        .card{
+        .card {
           width: 360px;
           height: 500px;
           border-radius: 10px;
         }
-        .red{
+        .red {
           border: 2px solid #917a7a;
           background-image: linear-gradient(
             310deg,
@@ -282,7 +291,7 @@ const NftMint = () => {
             hsl(344deg 69% 43%) 100%
           );
         }
-        .green{ 
+        .green {
           border: 2px solid #5c8665;
           background-image: linear-gradient(
             305deg,
@@ -299,23 +308,23 @@ const NftMint = () => {
           );
         }
 
-        .purple{
+        .purple {
           border: 2px solid #78709c;
           background-image: linear-gradient(
-          310deg,
-          hsl(256deg 64% 39%) 0%,
-          hsl(253deg 61% 34%) 8%,
-          hsl(249deg 58% 29%) 17%,
-          hsl(247deg 55% 23%) 27%,
-          hsl(245deg 52% 18%) 37%,
-          hsl(246deg 50% 13%) 47%,
-          hsl(246deg 50% 13%) 57%,
-          hsl(245deg 52% 18%) 67%,
-          hsl(247deg 55% 23%) 76%,
-          hsl(249deg 58% 29%) 85%,
-          hsl(253deg 61% 34%) 93%,
-          hsl(256deg 64% 39%) 100%
-        );
+            310deg,
+            hsl(256deg 64% 39%) 0%,
+            hsl(253deg 61% 34%) 8%,
+            hsl(249deg 58% 29%) 17%,
+            hsl(247deg 55% 23%) 27%,
+            hsl(245deg 52% 18%) 37%,
+            hsl(246deg 50% 13%) 47%,
+            hsl(246deg 50% 13%) 57%,
+            hsl(245deg 52% 18%) 67%,
+            hsl(247deg 55% 23%) 76%,
+            hsl(249deg 58% 29%) 85%,
+            hsl(253deg 61% 34%) 93%,
+            hsl(256deg 64% 39%) 100%
+          );
         }
       `}</style>
     </Box>

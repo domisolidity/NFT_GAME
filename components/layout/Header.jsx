@@ -7,12 +7,18 @@ import Chainbar from "../log/Chainbar";
 import Accountbar from "../log/Accountbar";
 import Login from "../log/Login";
 import TopNav from "./TopNav";
+import ConnectWallet from "../ConnectWallet";
+import Modal from "../Modal";
+import WalletList from "../WalletList";
+import useModal from "../../hooks/useModal";
 // import Theme from "./Theme";
 
 const Header = () => {
   const blockchain = useSelector((state) => state.blockchain);
 
   const { auth } = blockchain;
+
+  const { toggle, visible } = useModal();
   return (
     <div className="header">
       <div className="header__logo">
@@ -37,9 +43,15 @@ const Header = () => {
         </>
       )}
       <div className="header__right_btns">
-        <span>
-          <Login />
-        </span>
+        {!auth ? (
+          <span>
+            <ConnectWallet toggle={toggle} />
+            <Modal visible={visible} toggle={toggle}>
+              <WalletList toggle={toggle} />
+            </Modal>
+          </span>
+        ) : null}
+
         {/* <span>
           <Theme />
         </span> */}
@@ -47,7 +59,7 @@ const Header = () => {
       <div className="header__navbar">
         <TopNav />
       </div>
-      <style jsx>{`
+      <style global jsx>{`
         .header {
           display: grid;
           grid-template-rows: repeat(2, minmax(2rem, auto));

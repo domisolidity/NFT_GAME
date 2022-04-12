@@ -9,9 +9,12 @@ import Claim from "../../components/Claim";
 import Staking from "../../components/Staking";
 import { useSelector } from "react-redux";
 import CurrentMainNft from "../../components/CurrentMainNft";
+import NftAmount from "../../components/NftAmount";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
+  const [hasMainNft, setHasMainNft] = useState(false);
+  const [currentMainNft, setCurrentMainNft] = useState("");
   const data = useSelector((state) => state.data);
   const { kdkd, auctionList } = data;
 
@@ -28,7 +31,7 @@ const Mypage = () => {
       case "claim":
         return <Claim />;
       case "staking":
-        return <Staking />;
+        return <Staking hasMainNft={hasMainNft} getCurrentMainNft={getCurrentMainNft} />;
       default:
         break;
     }
@@ -49,6 +52,13 @@ const Mypage = () => {
   const renderStaking = (e) => {
     e.preventDefault();
     setMenu("staking");
+  };
+
+  const getCurrentMainNft = (receivedMainNft) => {
+    if (receivedMainNft) {
+      setHasMainNft(true);
+      setCurrentMainNft(receivedMainNft);
+    }
   };
 
   return (
@@ -79,8 +89,12 @@ const Mypage = () => {
               <TotalCard />
             </div> */}
             <div className="fixed_item">
-              <CurrentMainNft />
+              <CurrentMainNft getCurrentMainNft={getCurrentMainNft} currentMainNftImg={currentMainNft} />
             </div>
+            <div className="fixed_item">
+              <NftAmount />
+            </div>
+
           </div>
           <div className="menu">{returnMenu(menu)}</div>
         </div>
@@ -92,6 +106,10 @@ const Mypage = () => {
         }
         .sidebar {
           display: flex;
+<<<<<<< HEAD
+          min-width: 150px;
+=======
+>>>>>>> kdw
           width: 10%;
           height: 65vh;
           flex-direction: column;

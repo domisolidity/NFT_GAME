@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/primerRaw.css'
 import { ChakraProvider } from "@chakra-ui/react";
 import wrapper from '../redux/store';
 import Header from "../components/layout/Header.jsx";

@@ -9,14 +9,14 @@ const Nft = () => {
 
   return (
     <Box align="center" pb={20}>
-        <Tier />
+      <Tier />
       <Box w="400px" mb={70}>
-      <Text mt="150" fontSize="25" w="10vw">
-        <span>NFT 구매</span>       
+        <Text mt="150" fontSize="25" w="80px">
+          <span>NFT 구매</span>
         </Text>
       </Box>
 
-          <NftMint />
+      <NftMint />
       <style jsx>{`
         span{
           font-size:35px;

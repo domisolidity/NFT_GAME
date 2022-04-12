@@ -62,8 +62,12 @@
   margin: 11rem 0 2rem 0;
   /* margin-top: 11rem; */
   min-height: 65vh;
+  min-width: 800px;
 }
 .layout__footer {
+}
+.company-logo {
+  min-width: 100px;
 }
 
 ::-webkit-scrollbar {

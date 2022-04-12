@@ -2,12 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "./GameToken.sol";
 
 contract Claim_20 is Ownable {
-
   event ClaimEvent(string rewardType, address indexed account, uint amount, uint time);
 
   GameToken public gametoken;
