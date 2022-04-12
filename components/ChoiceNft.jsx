@@ -9,10 +9,11 @@ const ChoiceNft = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract } = blockchain;
 
-  const { closeModal } = props;
+  const { toggle, getCurrentMainNft } = props;
 
   const [myNfts, setMyNfts] = useState([]);
   const [currentMainNft, setcurrentMainNft] = useState("");
+  const [selectNft, setSelectNft] = useState("");
 
   const [beforeUserName, setBeforeUserName] = useState("");
   const [beforeImages, setBeforeImages] = useState([]);
@@ -28,6 +29,11 @@ const ChoiceNft = (props) => {
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
   }, [accessToken]);
+
+  useEffect(() => {
+    if (!currentMainNft) return;
+    getCurrentMainNft(currentMainNft);
+  }, [currentMainNft]);
 
   const getMyNfts = async () => {
     try {
@@ -66,7 +72,7 @@ const ChoiceNft = (props) => {
     const tokenId = e.currentTarget.getAttribute("tokenId");
     console.log(tokenId);
     handleClick(e);
-    setcurrentMainNft(tokenId);
+    setSelectNft(tokenId);
   };
 
   useEffect(async () => {
@@ -95,17 +101,17 @@ const ChoiceNft = (props) => {
   }
 
   let disable = "disable";
-  if (currentMainNft) disable = "";
+  if (selectNft) disable = "";
 
   const getSubmit = () => {
-    if (!currentMainNft) return;
+    if (!selectNft) return;
 
     const {
       payload: { id },
     } = jwtDecode(accessToken);
 
     const variables = {
-      mainNft: currentMainNft,
+      mainNft: selectNft,
     };
 
     fetch(`/api/users/profile/${id}`, {
@@ -120,7 +126,7 @@ const ChoiceNft = (props) => {
       .then((result) => {
         setcurrentMainNft(result.user.mainNft);
         alert("한 주간 유지됩니다.");
-        closeModal();
+        toggle();
       })
       .catch((err) => {
         console.log(err);
@@ -181,7 +187,7 @@ const ChoiceNft = (props) => {
         <button
           className="button button button-cancel"
           type="button"
-          onClick={closeModal}
+          onClick={toggle}
         >
           Cancel
         </button>

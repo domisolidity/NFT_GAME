@@ -4,13 +4,19 @@ import { useRouter } from "next/router";
 // import RetroGames from "../assets/retro_games_blur.png";
 import NeonCard from "../components/NeonCard";
 import GameInfoCard from "../components/GameInfoCard";
+import { useSelector } from "react-redux";
 
 const Main = () => {
-  let a= true;
+  const blockchain = useSelector((state) => state.blockchain);
+  const { account, auth } = blockchain;
+  let a = true;
 
-  const test =()=>{
-      alert("nono");
+  const test = () => {
+    if (!(account, auth)) {
+      alert("로그인하셈");
       return;
+    }
+    return;
   }
 
   return (
@@ -31,8 +37,8 @@ const Main = () => {
           </div>
           <div className="main__top_item_bottom">
             <div className="main__top_item_bottom_line">
-              <Link href={!a? "/game" : "/"}>
-                <a onClick={!a ? null : test}>
+              <Link href={account && auth ? "/game" : "/"}>
+                <a onClick={account && auth ? null : test}>
                   <NeonCard type={1} text={"Play"} />
                 </a>
               </Link>
@@ -46,7 +52,7 @@ const Main = () => {
         </div>
       </div>
       <div className="main__bottom">
-        {/* <GameInfoCard /> */}
+
       </div>
       <style jsx>{`
       .main {

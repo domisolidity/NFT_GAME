@@ -33,10 +33,59 @@ router.post("/past-ranking", async (req, res) => {
 router.get("/", async (req, res) => {
   console.log("랭킹`");
   const rank = await Ranking.findAll({
-    attributes: ["user_address", "ranking", "game_title", "gameScore"],
+    where: { isApproved: false },
+    attributes: ["user_address", "ranking", "game_title", "gameScore", "isApproved", "isRewarded"],
     order: [["game_title"], ["ranking"]],
   });
   res.send(rank);
+});
+
+// 클레임양 조회 요청
+router.post("/claimable", async (req, res) => {
+  const { data } = req.body;
+  console.log("랭킹ssss`");
+  const rank = await Ranking.findAll({
+    where: {
+      user_address: data,
+      isApproved: true,
+      isRewarded: false,
+    },
+    attributes: ["user_address", "ranking", "isApproved", "isRewarded", "game_title"],
+  });
+  res.send(rank);
+});
+
+router.post("/approved", async (req, res) => {
+  const rank = req.body.rank;
+  console.log(rank);
+  for (let i = 0; i < rank.length; i++) {
+    await Ranking.update(
+      { isApproved: true },
+      {
+        where: {
+          user_address: rank[i][0],
+          game_title: rank[i][2],
+          ranking: rank[i][1],
+        },
+      }
+    );
+  }
+});
+router.post("/rewarded", async (req, res) => {
+  const { rank } = req.body;
+  console.log(rank);
+  for (let i = 0; i < rank.length; i++) {
+    await Ranking.update(
+      { isRewarded: true },
+      {
+        where: {
+          user_address: rank[i][0],
+          game_title: rank[i][4],
+          ranking: rank[i][1],
+        },
+      }
+    );
+  }
 });
 
 // 클레임 허용 완료한 계정에 대해 랭크 삭제

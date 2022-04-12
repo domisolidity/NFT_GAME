@@ -1,18 +1,53 @@
-import React,{useState} from "react";
-import {  Grid,Text,Flex } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Grid, Button } from "@chakra-ui/react";
 
 import Market_nft from "../../components/Market_nft";
 import Market_item from "../../components/Market_item";
 import Market_nft_auction from "../../components/market/Market_nft_auction";
+import { useSelector } from "react-redux";
 
 const Market = () => {
-  const [isTrue, setIsTrue] = useState(false);
+  const [menu, setMenu] = useState("items");
+
+  useEffect(() => {
+    returnMenu(menu);
+  }, [menu]);
+  const returnMenu = (display) => {
+    switch (display) {
+      case "items":
+        return <Market_item />;
+      case "nfts":
+        return <Market_nft />;
+      case "auction":
+        return <Market_nft_auction />;
+      default:
+        break;
+    }
+  };
+  const renderItems = (e) => {
+    e.preventDefault();
+    setMenu("items");
+  };
+  const renderNfts = (e) => {
+    e.preventDefault();
+    setMenu("nfts");
+  };
+  const renderAuction = (e) => {
+    e.preventDefault();
+    setMenu("auction");
+  };
 
   return (
     <>
-      <Flex justify="space-around" h="50vh" align="center" filter='auto' brightness='80%' bgImage="url('/images/backgrounds/marketplace-background2.jpg')" bgPosition="bottom" >
-        <Text lineHeight="40vh" fontSize="55" fontWeight="bold" bgGradient='linear(to-r, #ffffff, #ffffff)' bgClip='text'> Welcome To MarketPlace ! </Text> 
-      </Flex>
+      <Button onClick={renderItems} m={4}>
+        아이템
+      </Button>
+      <Button onClick={renderNfts} m={4}>
+        에네프티
+      </Button>
+      <Button onClick={renderAuction} m={4}>
+        경마ㅣ장
+      </Button>
       <Grid
         mt="2%"
         h="85%"
@@ -22,8 +57,7 @@ const Market = () => {
         align="center"
         gap={1}
       >
-        <Market_nft_auction/>
-        {!isTrue ? <Market_nft /> : <Market_item />}
+        {returnMenu(menu)}
       </Grid>
     </>
   );

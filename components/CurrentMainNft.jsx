@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-const CurrentMainNft = () => {
+const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract } = blockchain;
   const [accessToken, setAccessToken] = useState("");
@@ -37,10 +37,11 @@ const CurrentMainNft = () => {
       })
       .catch(window.alert);
     getMyNfts();
-  }, [account, accessToken, currentMainNft, currentImage]);
+  }, [account, accessToken, currentMainNft, currentImage, currentMainNftImg]);
 
   const getMyNfts = async () => {
     try {
+      getCurrentMainNft(currentMainNft);
       await nftContract.methods
         .getMyToken(account)
         .call({ from: account })
@@ -52,7 +53,7 @@ const CurrentMainNft = () => {
           for (const info of result) {
             console.log(info);
             console.log(info.id);
-            if (info.id == currentMainNft) {
+            if (info.id == currentMainNftImg) {
               const response = await axios.get(
                 `${baseUri}${info.uri.slice(6)}/${info.id}.json`
               );
@@ -68,10 +69,14 @@ const CurrentMainNft = () => {
 
   return (
     <div className="current_main_nft">
-      <img src={currentImage} />
+      <img
+        src={currentImage ? currentImage : `images/defaultProfile.jpeg`}
+        alt="대표 NFT"
+      />
       <style jsx>{`
         .current_main_nft > img {
           width: 160px;
+          min-width: 160px;
           height: 160px;
           border-radius: 1rem;
         }

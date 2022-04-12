@@ -2,94 +2,112 @@
 
 pragma solidity ^0.8.0;
 
-// import "./GameToken.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./GameToken.sol";
 
 contract Claim_20 is Ownable {
-  using Counters for Counters.Counter;
-  using SafeMath for uint;
+  event ClaimEvent(string rewardType, address indexed account, uint amount, uint time);
 
-  ERC20 public token;
+  GameToken public gametoken;
   address public admin;
 
-  constructor(address _gameTokenAddress) {
+  constructor(GameToken _token) {
     admin = msg.sender;
-    token = ERC20(_gameTokenAddress);
+    gametoken = _token;
   }
 
-  struct weeklyRank {
+  struct WeeklyRank {
     address account;
     uint8 ranking;
+    bool isApproved;
+    bool isRewarded;
     string gameTitle;
-    uint16 score;
+  }
+  struct DailyAchiever {
+    address account;
+    uint8 count;
   }
 
-  mapping(address => weeklyRank) public rankRewardList;
-
-  uint private constant victory = 1;
   uint private constant top1 = 100;
   uint private constant top2 = 50;
   uint private constant top3 = 30;
   uint private constant top4To10 = 10;
 
-  mapping(address => uint) rewardToUser;
-
-  /* Mission Reward Function */
-
-  modifier existReward(address _account) {
+  modifier onlyRewarder(address _account) {
     require(_account == msg.sender, "you are not owner.");
-    require(getRewardAmount(_account) > 0, "not exist reward");
+    require(gametoken.allowance(admin, _account) > 0, "not exist reward");
+    _;
+  }
+  modifier onlyRangker(address _account) {
+    require(_account == msg.sender, "you are not owner.");
+    require(gametoken.allowance(admin, _account) > 0, "not exist reward");
     _;
   }
 
-  // function test() external view returns(address){
-  //   return token._msgSender();
-  // }
+  /* 
+    Mission Reward Function 
+  */
 
-  // 승리 보상 클레임
-  function victoryClaim(address _account) external payable existReward(_account) {
-    //계정의 리워드 초기화
-    rewardToUser[_account].sub(getRewardAmount(_account));
-    // 리워드 받기 //임의로 _transfer안되서 transferFrom 넣어놓은 상태
-    token.transferFrom(admin, _account, rewardToUser[_account]);
-  }
-
-  // DB에서 받은 리워드양 set
-  function setRewardAmount(address _account, uint _amount) public {
-    require(_account == msg.sender, "you are not account owner");
-    require(_amount > 0, "not exist reward");
-    rewardToUser[_account] = _amount;
-  }
-
-  function getRewardAmount(address _account) public view returns (uint) {
-    return rewardToUser[_account];
-  }
-
-  /* Ranking Reward Function */
-
-  // 게임 랭커 클레임 허용
-  function approveClaim(weeklyRank[] memory result) external {
-    // 제약 조건 추가하기
-    for (uint i = 0; i < result.length; i++) {
-      if (result[i].ranking == 1) {
-        token.increaseAllowance(result[i].account, top1);
-      } else if (result[i].ranking == 2) {
-        token.increaseAllowance(result[i].account, top2);
-      } else if (result[i].ranking == 3) {
-        token.increaseAllowance(result[i].account, top3);
-      } else {
-        token.increaseAllowance(result[i].account, top4To10);
-      }
+  // 미션 보상 클레임 허용
+  function approveClaim_mission(DailyAchiever[] memory result) external onlyOwner {
+    for (uint256 i = 0; i < result.length; i++) {
+      require(result[i].count > 0, "not exist reward");
+      gametoken.increaseAllowance(result[i].account, result[i].count * 10);
     }
   }
 
-  // 랭킹 보상 클레임
-  function rankClaim(address _account) external {
-    uint rewardAmount = token.allowance(admin, _account);
-    token.transferFrom(admin, _account, rewardAmount);
+  // 미션 보상 클레임
+  function claim_mission(address _account) external {
+    uint _reward = gametoken.allowance(address(this), _account);
+    gametoken.transferFrom(address(this), _account, _reward);
+
+    emit ClaimEvent("Mission", _account, _reward, block.timestamp);
+  }
+
+  /* 
+    Ranking Reward Function 
+  */
+
+  function approveClaim_rank(WeeklyRank[] memory result) external onlyOwner {
+    for (uint i = 0; i < result.length; i++) {
+      require(result[i].isApproved == false, "has already been approved");
+
+      if (result[i].ranking == 1) {
+        gametoken.increaseAllowance(result[i].account, top1);
+      } else if (result[i].ranking == 2) {
+        gametoken.increaseAllowance(result[i].account, top2);
+      } else if (result[i].ranking == 3) {
+        gametoken.increaseAllowance(result[i].account, top3);
+      }
+      result[i].isApproved = true;
+    }
+  }
+
+  // @ 랭킹 클레임 리팩토링
+  function claim_rank(WeeklyRank[] memory result, uint currentTime) external {
+    require(gametoken.allowance(address(this), msg.sender) > 0, "no reward");
+
+    for (uint i = 0; i < result.length; i++) {
+      require(result[i].isApproved == true, "not approved");
+      require(result[i].isRewarded == false, "has already been rewarded");
+
+      uint _reward;
+      if (result[i].ranking == 1) {
+        _reward = top1;
+        gametoken.transferFrom(address(this), result[i].account, _reward);
+      } else if (result[i].ranking == 2) {
+        _reward = top2;
+        gametoken.transferFrom(address(this), result[i].account, _reward);
+      } else if (result[i].ranking == 3) {
+        _reward = top3;
+        gametoken.transferFrom(address(this), result[i].account, _reward);
+      }
+      result[i].isRewarded = true;
+      emit ClaimEvent("Ranking", result[i].account, _reward, currentTime);
+    }
   }
 }
+
+//["0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",3]
 //["0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",1,"보물찾기",21]
+//[["0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",3,false,false,"보물찾기"],["0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",1,false,false,"보물찾기"]]

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { Game, InGameUser, Ranking, MissionInUser, DailyMission } = require("../../models");
+const { Game, InGameUser, Ranking, MissionInUser, DailyMission, ClosingMission } = require("../../models");
 const { missionReg, initChance } = require("../../config");
-
+const Sequelize = require("sequelize");
 /* 게임목록 불러오기 */
 router.get("/game-list", async (req, res) => {
   const response = await Game.findAll({}).catch((err) => console.log(err));
@@ -215,6 +215,19 @@ router.post("/update-mission", async (req, res) => {
     );
   }
   res.send("일일미션 달성");
+});
+
+router.get("/mission-achiever", async (req, res) => {
+  console.log("server : 미션 데이터 요청");
+  const completeMission = await ClosingMission.findAll({
+    attributes: ["user_address", [Sequelize.fn("COUNT", "user_address"), "count_mission"]],
+    group: "user_address",
+  });
+  res.send(completeMission);
+});
+router.post("/delete-achiever", async (req, res) => {
+  console.log("server : 미션 삭제 요청");
+  const deleteMission = await ClosingMission.destroy();
 });
 
 module.exports = router;
