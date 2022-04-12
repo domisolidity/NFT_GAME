@@ -5,6 +5,7 @@ import Logo from "./Logo";
 import Searchbar from "../Seachbar";
 import Chainbar from "../log/Chainbar";
 import Accountbar from "../log/Accountbar";
+import Adminbar from "../log/Adminbar";
 import Login from "../log/Login";
 import TopNav from "./TopNav";
 import ConnectWallet from "../ConnectWallet";
@@ -56,6 +57,9 @@ const Header = () => {
           <Theme />
         </span> */}
       </div>
+      <div className="header__adminbar">
+        <Adminbar />
+      </div>
       <div className="header__navbar">
         <TopNav />
       </div>
@@ -85,13 +89,6 @@ const Header = () => {
           grid-column: 7/9;
         }
 
-        .header__chainbar2:nth-child(3) {
-          grid-column: 6;
-        }
-        .header__accountbar2:nth-child(4) {
-          grid-column: 7/9;
-        }
-
         .header__right_btns:nth-child(5) {
           grid-column: 9;
           justify-items: end;
@@ -99,8 +96,11 @@ const Header = () => {
         .header__right_btns > span {
           display: table-cell;
         }
+        .header__adminbar:nth-child(6) {
+          grid-column: 10;
+        }
 
-        .header__navbar:nth-child(6) {
+        .header__navbar:nth-child(7) {
           grid-row: 2;
           grid-column: 1/-1;
           /* border-top: 1px solid var(--chakra-colors-blue-200); */

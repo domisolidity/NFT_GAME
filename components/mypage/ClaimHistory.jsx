@@ -26,7 +26,7 @@ const ClaimHistory = (props) => {
   }, [account, claimHistory]);
 
   return (
-    <Box>
+    <Box m="0 auto" w="80%">
       <Box bg="#190929" p="3" mb="5">
         <Text fontSize="20">Claim History</Text>
       </Box>

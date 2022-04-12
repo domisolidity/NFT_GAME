@@ -36,6 +36,8 @@ const RankingReword = () => {
   const allChecked = checkedItems.every(Boolean);
   const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
 
+  const owner = process.env.NEXT_PUBLIC_OWNER;
+
   // step 1) 랭킹 정보 불러오기
   const importRank = async () => {
     await axios
@@ -81,6 +83,14 @@ const RankingReword = () => {
 
   // step 3) 선택한 데이터에 대한 보상량 승인 작업
   const approveRankClaim = async () => {
+    console.log(account);
+    console.log(typeof account);
+    console.log(owner);
+
+    if (account != owner) {
+      alert("권한이 없습니다.");
+      return;
+    }
     console.log("selectedRankData", selectedRankData);
 
     // 1) 클레임 컨트랙트 주소로 토큰 이동
@@ -94,6 +104,7 @@ const RankingReword = () => {
       .catch(console.error);
 
     // 2) 랭커(조건)별 allowance 지정
+    console.log(selectedRankData);
     await claim20_Contract.methods
       .approveClaim_rank(selectedRankData)
       .send({ from: account })
@@ -205,7 +216,6 @@ const RankingReword = () => {
                 {/* <Th>weeks</Th> */}
                 <Th>game title</Th>
                 <Th>rank</Th>
-                <Th>score</Th>
                 <Th>address</Th>
               </Tr>
             </Thead>
@@ -235,7 +245,6 @@ const RankingReword = () => {
                       {/* <Td>{rank[4]} 주차</Td> */}
                       <Td>{rank[2]}</Td>
                       <Td>{rank[1]}</Td>
-                      <Td>{rank[3]}</Td>
                       <Td>{rank[0]}</Td>
                     </Tr>
                   );

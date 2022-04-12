@@ -13,6 +13,16 @@ module.exports = class ClosingMission extends Sequelize.Model {
           type: Sequelize.DATE,
           allowNull: false,
         },
+        isApproved: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false,
+        },
+        isRewarded: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false,
+        },
       },
       {
         sequelize,

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, Ranking } = require("../../models");
+const { User, Ranking, ClosingMission } = require("../../models");
 const jwt = require("express-jwt");
 
 const { config } = require("../../config");
@@ -50,6 +50,53 @@ router.get("/claim_rank", async (req, res) => {
   })
     .then((data) => res.send(data))
     .catch(console.error());
+});
+
+// 클레임양 조회 요청
+router.post("/claimable", async (req, res) => {
+  const { data } = req.body;
+  console.log("랭킹ssss`");
+  const rank = await Ranking.findAll({
+    where: {
+      user_address: data,
+      isApproved: true,
+      isRewarded: false,
+    },
+    attributes: ["user_address", "ranking", "game_title", "isApproved", "isRewarded"],
+  });
+  res.send(rank);
+});
+
+router.post("/rewarded", async (req, res) => {
+  const { rank } = req.body;
+  console.log(rank);
+  for (let i = 0; i < rank.length; i++) {
+    await Ranking.update(
+      { isRewarded: true },
+      {
+        where: {
+          user_address: rank[i][0],
+          game_title: rank[i][2],
+          ranking: rank[i][1],
+        },
+      }
+    );
+  }
+});
+
+// 클레임 허용 완료한 계정에 대해 랭크 삭제
+router.post("/deleteMIsiion", async (req, res) => {
+  const rank = req.body.rank;
+  for (let i = 0; i < rank.length; i++) {
+    await ClosingMission.destroy({
+      where: {
+        game_title: rank[i][2],
+        ranking: rank[i][1],
+        user_address: rank[i][0],
+      },
+    });
+  }
+  res.send("삭제 완료");
 });
 
 // /** PATCH /api/users/:userId */
