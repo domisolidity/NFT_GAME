@@ -24,4 +24,11 @@ export const StyledTetris = styled.div`
     display: block;
     padding: 0 20px;
   }
+  .mission-box {
+    margin: 10px;
+    padding: 10px;
+    background-color: lawngreen;
+    border-radius: 10px;
+    color: purple;
+  }
 `;

@@ -15,6 +15,9 @@ module.exports = class Game extends Sequelize.Model {
           type: Sequelize.STRING,
           unique: true, // 고유하게,
         },
+        gameUrl: {
+          type: Sequelize.STRING,
+        },
         description: {
           type: Sequelize.STRING,
         },
@@ -38,6 +41,10 @@ module.exports = class Game extends Sequelize.Model {
       sourceKey: "gameTitle",
     });
     db.Game.hasMany(db.Ranking, {
+      foreignKey: "game_title",
+      sourceKey: "gameTitle",
+    });
+    db.Game.hasMany(db.DailyMission, {
       foreignKey: "game_title",
       sourceKey: "gameTitle",
     });

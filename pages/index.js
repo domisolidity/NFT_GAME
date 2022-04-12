@@ -1,11 +1,18 @@
 import React from "react";
 import Link from "next/link";
-
+import { useRouter } from "next/router";
 // import RetroGames from "../assets/retro_games_blur.png";
 import NeonCard from "../components/NeonCard";
 import GameInfoCard from "../components/GameInfoCard";
 
 const Main = () => {
+  let a= true;
+
+  const test =()=>{
+      alert("nono");
+      return;
+  }
+
   return (
     <div className="Main">
       <div className="main__content">
@@ -24,8 +31,10 @@ const Main = () => {
           </div>
           <div className="main__top_item_bottom">
             <div className="main__top_item_bottom_line">
-              <Link href="/game">
-                <NeonCard type={1} text={"Play"} />
+              <Link href={!a? "/game" : "/"}>
+                <a onClick={!a ? null : test}>
+                  <NeonCard type={1} text={"Play"} />
+                </a>
               </Link>
             </div>
             <div className="main__top_item_bottom_linesecond">
@@ -37,7 +46,7 @@ const Main = () => {
         </div>
       </div>
       <div className="main__bottom">
-        <GameInfoCard />
+        {/* <GameInfoCard /> */}
       </div>
       <style jsx>{`
       .main {
@@ -114,8 +123,8 @@ const Main = () => {
         border: solid 0.1rem;
         border-radius: 0.5rem;
         color: #d1d2d0;
-        box-shadow: 0 0 0.1rem #2695ff, inset 0 0 0.1rem #2695ff, 0 0 0.5rem #2695ff,
-          inset 0 0 0.5rem #2695ff, 0 0 0.1rem #2695ff, inset 0 0 0.1rem #2695ff;
+        box-shadow: 0 0 0.1rem #0511f2, inset 0 0 0.1rem #0511f2, 0 0 0.5rem #0511f2,
+          inset 0 0 0.5rem #0511f2, 0 0 0.1rem #0511f2, inset 0 0 0.1rem #0511f2;
         padding: 0 3rem;
         margin-right: 2.5rem;
       }

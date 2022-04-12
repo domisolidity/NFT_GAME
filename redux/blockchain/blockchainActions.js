@@ -2,10 +2,18 @@
 import Web3 from "web3";
 import NftContract from "../../contracts/artifacts/NftContract.json";
 import NftDealContract from "../../contracts/artifacts/NftDealContract.json";
+import GameTokenContract from "../../contracts/artifacts/GameToken.json";
+import Claim20_Contract from "../../contracts/artifacts/Claim_20.json";
+import AuctionCreatorContract from "../../contracts/artifacts/AuctionCreator.json";
 import jwtDecode from "jwt-decode";
 import { fetchData } from "../data/dataActions";
 import Cookies from "js-cookie";
-const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL
+
+// ================================================================
+// import
+
+// ================================================================
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const LS_KEY = "login-with-metamask:auth";
 
@@ -37,12 +45,12 @@ const updateAccountRequest = (payload) => {
 };
 
 export const authenticate = () => {
-  const accessToken = Cookies.get(LS_KEY)
+  const accessToken = Cookies.get(LS_KEY);
   const auth = accessToken && JSON.parse(accessToken).accessToken;
-  console.log(" 🛠 authenticate 🛠")
+  console.log(" 🛠 authenticate 🛠");
   //토큰이 있을때 if문 실행
   if (auth) {
-    console.log(" 🛠 auth 🛠")
+    console.log(" 🛠 auth 🛠");
     const {
       payload: { id },
     } = jwtDecode(auth);
@@ -53,15 +61,14 @@ export const authenticate = () => {
       },
     })
       .then((response) => {
-        console.log("🛠 response 🛠", response)
-        response.json().ok
+        console.log("🛠 response 🛠", response);
+        response.json().ok;
       })
       .catch((err) => console.log(err));
-    console.log("🛠 isAuth1 🛠", isAuth)
-
+    console.log("🛠 isAuth1 🛠", isAuth);
 
     if (isAuth) {
-      console.log(" 🛠 isAuth2 🛠", isAuth)
+      console.log(" 🛠 isAuth2 🛠", isAuth);
       return {
         type: "AUTH",
         payload: true,
@@ -75,9 +82,8 @@ export const authenticate = () => {
   };
 };
 
-
 export const reconnect = () => {
-  console.log(" 🛠 reconnect 🛠")
+  console.log(" 🛠 reconnect 🛠");
   return async (dispatch) => {
     dispatch(connectRequest());
     let web3 = new Web3(window.ethereum);
@@ -85,27 +91,36 @@ export const reconnect = () => {
       const accounts = await window.ethereum.request({
         method: "eth_accounts",
       });
-      console.log(" 🛠 accounts 🛠", accounts)
+      console.log(" 🛠 accounts 🛠", accounts);
       const networkId = await window.ethereum.request({
         method: "net_version",
       });
       console.log(" 🛠 networkId 🛠 ", networkId);
 
-      const nftNetwork = await NftContract.networks[networkId];
-      console.log(" 🚩 nftNetwork ", nftNetwork)
-      const nftDealNetworkData = await NftDealContract.networks[networkId];
-      console.log(" 🚩 nftDealNetworkData ", nftDealNetworkData)
-      const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
-      console.log(" 🚩 nftContract ", nftContract)
-      const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
-      console.log(" 🚩 nftDealContract ", nftDealContract)
-      console.log("11", accounts[0]);
+      const nft_Network = await NftContract.networks[networkId];
+      const nftDeal_NetworkData = await NftDealContract.networks[networkId];
+      const auctionCreator_NetworkData = await AuctionCreatorContract.networks[networkId];
+      const gameToken_NetworkData = await GameTokenContract.networks[networkId];
+      const claim20_NetworkData = await Claim20_Contract.networks[networkId];
+
+      const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
+      const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDeal_NetworkData.address);
+      const auctionCreatorContract = new web3.eth.Contract(
+        AuctionCreatorContract.abi,
+        auctionCreator_NetworkData.address
+      );
+      const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
+      const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
 
       dispatch(
         connectSuccess({
-          account: accounts[0],
+          account: accounts.toString(),
+          networkId: networkId,
           nftContract: nftContract,
           nftDealContract: nftDealContract,
+          gameTokenContract: gameTokenContract,
+          auctionCreatorContract: auctionCreatorContract,
+          claim20_Contract: claim20_Contract,
           web3: web3,
         })
       );
@@ -149,7 +164,7 @@ export const updateAccount = (account) => {
 };
 
 export const connectWallet = () => {
-  console.log(" 🛠 connectWallet 🛠")
+  console.log(" 🛠 connectWallet 🛠");
   return async (dispatch) => {
     dispatch(connectRequest());
     if (window.ethereum) {
@@ -165,11 +180,25 @@ export const connectWallet = () => {
         });
         console.log("networkId : ", networkId);
 
-        if (networkId == 1337 || networkId == 5777) {
+        if (networkId == 5777 || 3 || 4) {
+          console.log("if 통과", networkId);
           const nftNetwork = await NftContract.networks[networkId];
           const nftDealNetworkData = await NftDealContract.networks[networkId];
+          const auctionCreatorNetworkData = await AuctionCreatorContract.networks[networkId];
+          const gameTokenNetworkData = await GameTokenContract.networks[networkId];
+          const claim20_NetworkData = await Claim20_Contract.networks[networkId];
+
           const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
           const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
+          const auctionCreatorContract = new web3.eth.Contract(
+            AuctionCreatorContract.abi,
+            auctionCreatorNetworkData.address
+          );
+          const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameTokenNetworkData.address);
+          const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
+
+          console.log("gameTokenNetworkData.address", gameTokenNetworkData.address);
+          console.log("claim20_NetworkData.address", claim20_NetworkData.address);
 
           const coinbase = await web3.eth.getCoinbase(); //계정
 
@@ -234,12 +263,16 @@ export const connectWallet = () => {
               console.log(err);
               // setLoading(false);
             });
-          console.log("22", accounts[0]);
+
           dispatch(
             connectSuccess({
-              account: accounts[0],
+              account: accounts.toString(),
+              networkId: networkId,
               nftContract: nftContract,
               nftDealContract: nftDealContract,
+              gameTokenContract: gameTokenContract,
+              auctionCreatorContract: auctionCreatorContract,
+              claim20_Contract: claim20_Contract,
               web3: web3,
             })
           );
@@ -249,7 +282,6 @@ export const connectWallet = () => {
           });
           // Add listeners start
           window.ethereum.on("accountsChanged", (accounts) => {
-            console.log("여기", accounts);
             dispatch(updateAccount(accounts));
           });
           window.ethereum.on("chainChanged", () => {
