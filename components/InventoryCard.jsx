@@ -3,7 +3,6 @@ import { Box, Flex, Grid, GridItem, Image } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import ItemImage from "./ItemImage";
-import Link from "next/link";
 
 const InventoryCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -30,46 +29,43 @@ const InventoryCard = (props) => {
   return (
     <>
       {myItemQuantity != 0 ? (
-        <div className="item">
-          <div className="item_image">
-            <ItemImage itemId={props.img} />
-            <div className="itme_amount">{myItemQuantity}</div>
-          </div>
-          <div className="itme_name">{props.itemName}</div>
-          <style jsx>{`
-            .item {
-              display: flex;
-              flex-direction: column;
-              background-color: #0f263e;
-              border-radius: 5%;
-              margin: 1rem;
-              align-items: center;
-              position: relative;
-              border: solid 3px #2c3a43;
-            }
-            .item_image {
-              border-bottom: solid 1px #2c3a43;
-              border-radius: 5% 5% 0 0;
-              width: 10rem;
-              height: 10rem;
-            }
-            .itme_amount {
-              width: 2rem;
-              height: 2rem;
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              background-color: var(--chakra-colors-purple-700);
-              position: absolute;
-              top: 2%;
-              left: 78%;
-            }
-            .itme_name {
-              font-size: 1.5rem;
-            }
-          `}</style>
-        </div>
+        <Grid
+          padding="0 0.5vw"
+          templateColumns="repeat(3, 1fr)" //가로
+          templateRows="repeat(3, 1fr)" //세로
+          gap={1}
+          width="20rem"
+          alignItems={"center"}
+          justifyItems={"center"}
+          justify-content={"center"}
+        >
+          <GridItem bg="whiteAlpha.100" colSpan={3} rowSpan={3}>
+            <Box border={"solid 1px"} width="10rem" height="10rem">
+              <ItemImage itemId={props.img} />
+            </Box>
+          </GridItem>
+          <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={1}>
+            이름
+          </GridItem>
+          <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+            갯수
+          </GridItem>
+          <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={1}>
+            {props.itemName}
+          </GridItem>
+
+          <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+            {myItemQuantity} 개
+          </GridItem>
+          <GridItem
+            bg="whiteAlpha.100"
+            colSpan={3}
+            rowSpan={2}
+            justifySelf={"flex-start"}
+          >
+            {props.itemDescription}
+          </GridItem>
+        </Grid>
       ) : null}
     </>
   );

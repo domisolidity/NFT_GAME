@@ -21,13 +21,6 @@ const fetchDataFailed = (payload) => {
   };
 };
 
-const addAuctioningList = (payload) => {
-  return {
-    type: "ADD_AUCTION",
-    payload: payload,
-  };
-};
-
 export const fetchData = (account) => {
   return async (dispatch) => {
     dispatch(fetchDataRequest());
@@ -49,34 +42,52 @@ export const fetchData = (account) => {
   };
 };
 
+// export const saveNfts = (account,nftInfo) =>{
+//   return async (dispatch)  => {
+//     try {
+//       dispatch(
+//         fetchNftSuccess({
+//           nftInfo
+//         })
+//       )
+//     } catch (error) {
+//       console.log(error)
+//       dispatch(fetchNftFailed("Nft 저장에 실패하였습니다. 민팅과정 재시도 바랍니다."))
+//     }
+//   }
+// }
 
-
-export const addAuctionList = (id, grade, attributes, name, image, description) =>{
-  return (dispatch) =>{
-    try {
-      const auctionNftInfo = {
-        id:id,
-        grade:grade,
-         attributes:attributes, name:name, image:image, description:description}
-      console.log(id)
-      console.log(image)
-      console.log(description)
-      console.log(auctionNftInfo)
-      
-      dispatch(addAuctioningList({
-        kdkd:id,
-        auctionList:auctionNftInfo
-      }))
-    } catch (error) {
-      console.error(error)
-    }
-
-  }
-  
-
-}
-
-
+// export const getMyNft = account =>{
+//   return async (dispatch) =>{
+//     dispatch(fetchDataRequest());
+//     try {
+//       console.log(typeof account)
+//       if (typeof account == "object"){
+//         account = account[0]
+//       }
+//       await store.getState().blockchain.nftContract.methods.getMyToken().call({from:account}).then(async(result)=>{
+//         let myNfts = [];
+//         for (const info of result) {
+//           if(info.uri == "") continue;
+//           const response = await axios.get( `${baseUri}${info.uri.slice(6)}/${info.id}.json`)
+//           myNfts.push({
+//             id: info.id,
+//             name: response.data.name,
+//             image: `${baseUri}${response.data.image.slice(6)}`,
+//             description: response.data.description,
+//           })
+//         }
+//         console.log("myNft", myNfts);
+//         dispatch(
+//           fetchDataSuccess({myNfts:myNfts})
+//         );
+//       })
+//     } catch (error) {
+//       console.log(error);
+//       dispatch(fetchDataFailed("Could not load data from contract."));
+//     }
+//   }
+// }
 
 const onSaleNfts = [];
 export const getSaleNft = (data,tokenId, price )=>{

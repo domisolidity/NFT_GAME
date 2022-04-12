@@ -27,15 +27,19 @@ Test - 테스트 (테스트 코드 추가, 수정, 삭제: 비즈니스 로직�
 Chore - 기타 변경사항 (빌드 스크립트 수정 등)
 
 
+@@ 머지 전 주석해제 해두기
+// getMyItemQuantity(); 
+@ refactoring
+    myNft 불러오기 리덕스 적용 (여러 컴포넌트에서 사용중)
+        - 디스패치 시점 (민팅 O / 선물 X/ 판매등록 X)
+    nft 선물 / 판매 기능 마이페이지로 합치기
+    onSaleNft db app.js 작성한거 하위로 넣기
+    onSaleNft db 적용후 리덕스 / 이벤트 사용여부 결정
 
-npm install @truffle/hdwallet-provider 
-@truffle/hdwallet-provider: 니모닉 기반의 키를 사용할 수 있게 도와주는 라이브러리
+    
+@ style
+    nft hover
 
-
-
-@ npm i 시 설치 오류 해결방법
-npm i react-scroll-horizontal --legacy-peer-deps 
-npm i react-progress-steps --legacy-peer-deps
 
 
 

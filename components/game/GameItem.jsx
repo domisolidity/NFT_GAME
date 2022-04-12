@@ -4,17 +4,17 @@ import { useSelector } from "react-redux";
 import ItemImage from "../ItemImage";
 import GameInterface from "./GameInterface";
 
-const GameItem = ({
-  item,
-  gameTitle,
-  getItemEffect,
-  resultBonus,
-  extraPoints,
-  isPlaying,
-  updateChance,
-}) => {
+const GameItem = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
+  const {
+    item,
+    gameTitle,
+    getItemEffect,
+    itemEffect,
+    isPlaying,
+    updateChance,
+  } = props;
 
   // 내 소유 아이템 목록
   const [myItemQuantity, setMyItemQuantity] = useState(0);
@@ -28,7 +28,6 @@ const GameItem = ({
       item.itemName,
       gameTitle
     );
-    console.log(recivedItemEffect);
     if (recivedItemEffect) {
       // 아이템 사용
       await GameInterface.usingItem(account, item.itemName);
@@ -37,8 +36,7 @@ const GameItem = ({
         account,
         item.itemName
       );
-      // 사용 아이템이 횟수추가면 횟수추가하고 횟수업데이트
-      if (recivedItemEffect.lifeBonus) {
+      if (recivedItemEffect == 1) {
         const updatedChance = await GameInterface.getMyChance(
           account,
           gameTitle
@@ -71,16 +69,12 @@ const GameItem = ({
       height={"70px"}
       margin={"10px 5px 0px"}
       padding={"0"}
-      display={item.itemId == 7 && gameTitle != "테트리스" ? "none" : "block"}
+      display={"block"}
       position={"relative"}
       disabled={
-        // 아이템 사용 제한 추가
-        // (가진 수량이 0개면, 아이템번호 4~7번은 게임중이 아니면,)
-        // (4~7번 아이템은 한 게임당 두번이상 사용 불가)
         myItemQuantity == 0 ||
-        (item.itemId >= 4 && !isPlaying) ||
-        (item.itemId >= 4 && item.itemId <= 6 && resultBonus) ||
-        (item.itemId == 7 && extraPoints)
+        (item.itemId > 3 && itemEffect != 1) ||
+        (item.itemId > 3 && !isPlaying)
       }
     >
       <ItemImage itemId={item.itemId} />

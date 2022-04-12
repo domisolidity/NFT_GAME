@@ -57,13 +57,6 @@ const TopItem = (props) => {
         .topnav__item_inner > span {
           text-transform: capitalize;
         }
-        span {
-          background: linear-gradient(#f1f1f1 23%, #818181 100%);
-          background-clip: text;
-          -webkit-background-clip: text;
-          color: transparent;
-          font-weight: 900;
-        }
 
         .topnav__item_inner:hover {
           color: #5ce3f2;
@@ -73,7 +66,7 @@ const TopItem = (props) => {
             0 0 0.1rem #d1d2d0;
         }
 
-        .topnav__item_inner_active > span {
+        .topnav__item_inner_active {
           color: #5ce3f2;
           text-shadow: 0 0 0 transparent, 0 0 0.3rem #d1d2d0,
             0 0 0.1rem rgba(38, 149, 255, 0.5), 0 0 0.1rem #d1d2d0,

@@ -1,14 +1,33 @@
 import { Box, Flex, Img, Text } from "@chakra-ui/react";
 import React from "react";
+import { useSelector } from "react-redux";
 
-const GameCard = ({ game }) => {
+const GameCard = (props) => {
+  const { game, getSelectGame } = props;
+  const blockchain = useSelector(state => state.blockchain);
+  const { account , nftContract } = blockchain;
+
+  // 해당 게임 선택 시 상위 컴포넌트(Game)의 함수selectGame에 게임명 전달
+  const selectGame = async() => {
+    //홀더 자격 확인
+    const haveToken =  await nftContract.methods.haveTokenBool(account).call({from: account})
+    if ( !haveToken ) {
+      alert ("Nft를 가지고 있지 않습니다. \n 민팅 후 게임에 참여가 가능합니다.");
+      return false;
+    }
+
+    const selectedGame = game.gameTitle;
+    if (window.confirm(`${game.description}\n게임을 플레이 하시겠습니까?`))
+      getSelectGame(selectedGame);
+  };
   return (
     <Box
       overflow={`hidden`}
       borderRadius={`15px`}
-      w={`100%`}
+      w={`30%`}
       h={`100%`}
       position={`relative`}
+      onClick={selectGame}
     >
       <Img w={`100%`} src={`./images/game_${game.gameId}.png`} />
       <Flex
