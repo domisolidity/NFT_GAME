@@ -6,14 +6,15 @@ import { disconnectWallet } from "../redux/blockchain/blockchainActions";
 const ConnectedModal = (props) => {
   const { toggle } = props;
   const dispatch = useDispatch();
-  //const blockchain = useSelector((state) => state.blockchain);
-  const userLog = useSelector((state) => state.userLog);
-  const metamask = useSelector((state) => state.metamask);
-  console.log(userLog);
-  console.log(metamask);
+  const blockchain = useSelector((state) => state.blockchain);
+  // const userLog = useSelector((state) => state.userLog);
+  // const metamask = useSelector((state) => state.metamask);
+  // console.log(userLog);
+  // console.log(metamask);
 
-  const { account } = metamask;
-  const { auth } = userLog;
+  // const { account } = metamask;
+  const { account } = blockchain;
+  // const { auth } = userLog;
 
   // const [scan, setScan] = useState("");
 
@@ -81,7 +82,7 @@ const ConnectedModal = (props) => {
               </div>
             </div>
             <span className="link">
-              {auth && account.slice(0, 6) + "..." + account.slice(-4)}
+              {account && account.slice(0, 6) + "..." + account.slice(-4)}
             </span>
             <i className="bx bx-link-external ml-1 link icon-external-link"></i>
             {/* <i className="iconfont ml-1 link icon-external-link"></i> */}
