@@ -1,39 +1,29 @@
+import React from "react";
+import { Grid, GridItem, Image, Text } from "@chakra-ui/react";
+
 const InventoryCard = (props) => {
   return (
-    <div className={`inventory_card inventory_card-${props.grade}`}>
-      <div className="inventory_card_top">{props.grade}</div>
-      <img src={props.img} />
-      <style jsx>{`
-        .inventory_card {
-          display: flex;
-          flex-direction: column;
-          width: 15rem;
-          border-radius: 5%;
-          margin: 2rem;
-        }
-
-        .inventory_card-purple {
-          background-color: var(--chakra-colors-purple-700);
-        }
-        .inventory_card-green {
-          background-color: var(--chakra-colors-green-700);
-        }
-        .inventory_card-red {
-          background-color: var(--chakra-colors-red-700);
-        }
-
-        .inventory_card_top {
-          display: flex;
-          font-size: 1.5rem;
-          margin: 0.3rem;
-          justify-content: center;
-        }
-
-        .inventory_card > img {
-          border-radius: 0 0 5% 5%;
-        }
-      `}</style>
-    </div>
+    <Grid
+      padding="0 1vw"
+      templateColumns="repeat(2, 1fr)" //가로
+      templateRows="repeat(6, 1fr)" //세로
+      gap={2}
+      width="10vw"
+      key={props.key}
+    >
+      <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={3}>
+        <Image src={props.img} />
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+        <Text>이름</Text>
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={1}>
+        {props.name}
+      </GridItem>
+      <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={2}>
+        {props.description}
+      </GridItem>
+    </Grid>
   );
 };
 

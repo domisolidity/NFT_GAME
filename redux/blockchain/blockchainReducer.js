@@ -1,12 +1,8 @@
 const initialState = {
   loading: false,
   account: null,
-  networkId: null,
   nftContract: null,
   nftDealContract: null,
-  gameTokenContract: null,
-  auctionCreatorContract: null,
-  claim20_Contract: null,
   web3: null,
   errorMsg: "",
   auth: false,
@@ -23,13 +19,9 @@ const blockchainReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        account: action.payload.account.toString(),
-        networkId: action.payload.networkId,
+        account: action.payload.account,
         nftContract: action.payload.nftContract,
         nftDealContract: action.payload.nftDealContract,
-        gameTokenContract: action.payload.gameTokenContract,
-        auctionCreatorContract: action.payload.auctionCreatorContract,
-        claim20_Contract: action.payload.claim20_Contract,
         web3: action.payload.web3,
         errorMsg: "",
       };
@@ -42,7 +34,7 @@ const blockchainReducer = (state = initialState, action) => {
     case "UPDATE_ACCOUNT":
       return {
         ...state,
-        account: action.payload.account.toString(),
+        account: action.payload.account,
       };
     case "AUTH":
       return {

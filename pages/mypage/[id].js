@@ -1,92 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import AuctionContract from "../../contracts/artifacts/Auction.json";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { addAuctionList } from "../../redux/data/dataActions";
-import { Box, Grid, GridItem, Flex, Image, Button, Heading, Text, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  Flex,
+  Image,
+  Button,
+  Heading,
+  Text,
+  Input,
+} from "@chakra-ui/react";
 
 const NftDetail_my = () => {
-  const dispatch = useDispatch();
-  const data = useSelector((state) => state.data);
-  const { auctionList, kdkd } = data;
-  const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, nftContract, nftDealContract, auctionCreatorContract } = blockchain;
-  const router = useRouter();
-  console.log(router);
-  const { id, grade, attributes, name, image, description } = router.query;
+    const blockchain = useSelector((state) => state.blockchain);
+    const { web3, account, nftContract, nftDealContract } = blockchain;
+  console.log(nftDealContract)
+    const router = useRouter();
+    console.log(router)
+    const {id, grade, attributes, name, image, description } = router.query;
+    // const { id, grade, attributes, name, image, description} = nftInfo;
 
-  console.log("attributes", attributes);
-
-  const [isApproved, setIsApproved] = useState(false);
-  const [price, setPrice] = useState();
-  const [onsale, setOnSale] = useState(false);
-  const [onAuction, setOnAuction] = useState(false);
-  const [saleType, setSaleType] = useState(false);
-  const [startingBid, setStartingBid] = useState();
-  const [expirationDate, setExpirationDate] = useState();
-
-  // 경매 생성 함수
-  const createAuction = async () => {
-    if (onAuction) {
-      alert("이미 경매 판매중입니다.");
-    } else if (!startingBid || !expirationDate) {
-      alert("가격 또는 종료일자를 입력해주세요");
-      return false;
-    }
-    console.log("startingBid", startingBid);
-    console.log("expirationDate", expirationDate);
-
-    const expirationTime = new Date(expirationDate).getTime();
-    const currentTime = Date.now();
-    // (종료시간 - 현재시간) / ms단위 / 블록생성주기
-    const _covertToBlockTime = Math.ceil((expirationTime - currentTime) / 1000 / 15);
-    console.log(_covertToBlockTime);
-
-    const _startingBid = web3.utils.toWei(startingBid, "ether");
-
-    await auctionCreatorContract.methods
-      .createAuction(id, nftContract._address, _startingBid, _covertToBlockTime, expirationTime)
-      .send({ from: account })
-      .then((res) => {
-        console.log("res", res);
-        dispatch(addAuctionList(id, grade, attributes, name, image, description));
-      });
-    alert("경매 권한 승인");
-    await auctionCreatorContract.methods
-      .getAuctionAddress(id)
-      .call({ from: account })
-      .then(async (address) => {
-        // const auctionContract = new web3.eth.Contract(AuctionContract.abi, address);
-        // console.log(auctionContract);
-        await nftContract.methods
-          .setApprovalForAll(address, true)
-          .send({ from: account })
-          .then((res) => {
-            console.log(res);
-          });
-      });
-
-    setOnAuction(true);
-  };
-
-  // auctionContract 생성 확인 및 경매중 설정
-  const getAuctionContract = async () => {
-    console.log("auctionList", auctionList);
-    console.log("kdkd", kdkd);
-    await auctionCreatorContract.methods
-      .getAuctionList(account, id)
-      .call({ from: account })
-      .then(async (address) => {
-        const auctionContract = new web3.eth.Contract(AuctionContract.abi, address);
-        console.log(auctionContract);
-        await nftContract.methods
-          .setApprovalForAll(address, true)
-          .send({ from: account })
-          .then((res) => {
-            console.log(res);
-          });
-      });
-  };
+    const [isApproved, setIsApproved] = useState(false);
+    const [onsale, setOnSale] = useState(false);
+    const [price, setPrice] = useState();
 
   // 판매 승인
   const approveSell = async (bool) => {
@@ -134,23 +72,14 @@ const NftDetail_my = () => {
   };
 
   // 판매 취소
-  const cancelSellNft = async () => {
+  const cancelSell = async () => {
     try {
-      await nftDealContract.methods
-        .cancelSell(id)
-        .send({ from: account })
-        .then((res) => {
-          console.log(res);
-          onSaleCheck();
-        });
+      //취소하는 동작 넣기
+      // setOnSaleTrigger(false)
     } catch (error) {
       console.log(error);
     }
   };
-
-  // const cancelAuctionNft = async () => {
-  //   await auctionContract.
-  // }
   // 허용여부 확인
   const isApprovedCheck = async () => {
     await nftContract.methods
@@ -176,15 +105,6 @@ const NftDetail_my = () => {
     }
   };
 
-  // // 경매 등록여부 확인
-  // const onAuctioningCheck = async() =>{
-
-  // }
-
-  const convertToBlockNumber = (e) => {
-    setExpirationDate(e.target.value);
-  };
-
   useEffect(() => {
     if (!account) return false;
     // console.log("허용여부확인");
@@ -194,7 +114,13 @@ const NftDetail_my = () => {
 
   return (
     <>
-      <Grid w="70vw" margin="0 auto" templateColumns="repeat(5,1fr)" templateRows="repeat(1,1fr)" gap={2}>
+      <Grid
+        w="70vw"
+        margin="0 auto"
+        templateColumns="repeat(5,1fr)"
+        templateRows="repeat(1,1fr)"
+        gap={2}
+      >
         <GridItem colSpan={2} bg="whiteAlpha.100">
           <Flex direction="column">
             <Image src={image} borderRadius={10} />
@@ -211,8 +137,8 @@ const NftDetail_my = () => {
                 Properties
               </Heading>
               <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}>
-                {/* {attr[0] &&
-                  attr.map((attribute, i) => {
+                {attributes[0] &&
+                  attributes.map((attr, i) => {
                     return (
                       <GridItem
                         key={i}
@@ -220,11 +146,11 @@ const NftDetail_my = () => {
                         border="2px solid #2b7997"
                         borderRadius={15}
                       >
-                        <Text fontWeight="bold">{attribute.trait_type}</Text>
-                        <Text>{attribute.value}</Text>
+                        <Text fontWeight="bold">{attr.trait_type}</Text>
+                        <Text>{attr.value}</Text>
                       </GridItem>
                     );
-                  })} */}
+                  })}
               </Grid>
             </Box>
           </Flex>
@@ -232,7 +158,13 @@ const NftDetail_my = () => {
         <GridItem colSpan={3} bg="whiteAlpha.100" padding="5">
           <Text
             borderRadius={20}
-            bg={grade == "red" ? "red.700" : grade == "green" ? "green.700" : "purple.700"}
+            bg={
+              grade == "red"
+                ? "red.700"
+                : grade == "green"
+                ? "green.700"
+                : "purple.700"
+            }
             w="10%"
             padding={1}
             align="center"
@@ -243,114 +175,54 @@ const NftDetail_my = () => {
           <Text>
             owned by <span style={{ color: "skyblue" }}>you</span>
           </Text>
-          <Box mt={20} p="20px 30px" bg="whiteAlpha.100" border="1px solid #6d6969bd" borderRadius={10}>
+          <Box mt={20}>
             <Heading size="lg" display="inline">
               Sell
               {onsale ? (
-                <Text fontSize="15" display="inline-block" bg="#e28a37" borderRadius="20" ml="2" p="1">
-                  일반 판매중
+                <Text fontSize="15" display="inline-block" bg="#e28a37">
+                  판매중
                 </Text>
               ) : isApproved ? (
-                <Text fontSize="15" display="inline-block" bg="#2d7a47" borderRadius="20" ml="2" p="1">
+                <Text fontSize="15" display="inline-block" bg="#2d7a47">
                   판매 가능
                 </Text>
-              ) : onAuction ? (
-                <Text fontSize="15" display="inline-block" bg="#e28a37" borderRadius="20" ml="2" p="1">
-                  경매 진행중
-                </Text>
               ) : (
-                <Text fontSize="15" display="inline-block" bg="#9e2d2d" borderRadius="20" ml="2" p="1">
+                <Text fontSize="15" display="inline-block" bg="#9e2d2d">
                   판매 승인 필요
                 </Text>
               )}
             </Heading>
-            <Text mt="5">Type</Text>
+            <Text>Type</Text>
             <Flex justify="space-around">
-              <Button onClick={() => setSaleType(false)} p="10">
-                Fixed Price
-              </Button>
-              <Button onClick={() => setSaleType(true)} p="10">
-                Timed Action
-              </Button>
+              <Button>Fixed Price</Button>
+              <Button>Timed Action</Button>
             </Flex>
-            {!saleType ? (
-              <>
-                {onsale ? (
-                  <Flex justify="center" mt="10">
-                    <Button onClick={cancelSellNft}> 판매 취소 </Button>
-                  </Flex>
-                ) : (
-                  <>
-                    <Flex justify="center" mt="10">
-                      <Text lineHeight={10} mr="5">
-                        판매 가격 등록 :
-                      </Text>
-                      <Input w="200" onChange={(e) => setPrice(e.target.value)} />
-                      <Text lineHeight={10} ml="2">
-                        eth
-                      </Text>
-                    </Flex>
-                    <Flex justify="center" mt="10">
-                      <Button
-                        onClick={() => approveSell(isApproved)}
-                        colorScheme="linkedin"
-                        disabled={onAuction ? 1 : 0}
-                      >
-                        {isApproved ? <span>판매 권한 철회</span> : <span>판매 권한 승인</span>}
-                      </Button>
-                      <Button ml="5" onClick={submitSell} colorScheme="linkedin" disabled={onAuction ? 1 : 0}>
-                        판매 등록
-                      </Button>
-                    </Flex>
-                  </>
-                )}
-              </>
+          </Box>
+          price <Input onChange={(e) => setPrice(e.target.value)} />
+          <Box>
+            <Text>duration</Text>
+            <Input />
+            {onsale ? (
+              <Flex justify="center">
+                <Button onClick={cancelSell}> Cansel Sell</Button>
+              </Flex>
             ) : (
-              <>
-                {onAuction ? (
-                  <Text mt="10" align="center">
-                    경매가 진행중입니다. 경매 관리는 마켓에 등록된 경매건에서 가능합니다.
-                  </Text>
-                ) : (
-                  <Box mt="10">
-                    <Flex justify="space-between">
-                      <Text>입찰 시작가</Text>
-                      <Box>
-                        Eth <Input w="60" onChange={(e) => setStartingBid(e.target.value)} />
-                      </Box>
-                    </Flex>
-                    <Flex justify="space-between">
-                      <Text>경매 종료일</Text>
-                      <Input w="60" type="datetime-local" onChange={convertToBlockNumber} />
-                    </Flex>
-                    <Flex justify="center" mt="10">
-                      <Button ml="5" onClick={createAuction} colorScheme="linkedin" disabled={onsale ? 1 : 0}>
-                        {" "}
-                        경매 등록
-                      </Button>
-                      <Button ml="5" onClick={getAuctionContract} colorScheme="linkedin">
-                        {" "}
-                        getAuctionAddress
-                      </Button>
-                    </Flex>
-                  </Box>
-                )}
-              </>
+              <Flex justify="center">
+                <Button onClick={() => approveSell(isApproved)}>
+                  {isApproved ? (
+                    <span>Cancel Approved Sell</span>
+                  ) : (
+                    <span>Approved Sell</span>
+                  )}
+                </Button>
+                <Button onClick={submitSell}> Sell</Button>
+              </Flex>
             )}
           </Box>
-          <Box mt="5"></Box>
-          <Box mt={10} p="20px 30px" bg="whiteAlpha.100" border="1px solid #6d6969bd" borderRadius={10}>
+          <Box mt={20}>
             <Heading size="lg">Present</Heading>
-            <Flex justify="center">
-              <Text lineHeight={10} mr="10">
-                {" "}
-                to Address
-              </Text>{" "}
-              <Input w="200" />
-              <Button ml="2" colorScheme="linkedin">
-                Present
-              </Button>
-            </Flex>
+            to Address <Input />
+            <Button>Present</Button>
           </Box>
         </GridItem>
 

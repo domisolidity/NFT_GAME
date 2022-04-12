@@ -1,5 +1,4 @@
 import React from "react";
-import Script from "next/script";
 
 const Footer = () => {
   return (
@@ -40,7 +39,7 @@ const Footer = () => {
           align-items: center;
           justify-items: center;
           border-top: 2px solid;
-          border-image: linear-gradient(to right, #f2e205, #1a0faf) 1;
+          border-image: linear-gradient(to right, #f2e205, #0511f2) 1;
           box-shadow: 0 0 0 transparent, 0 0 0.3rem #d1d2d0,
             0 0 0.1rem rgba(38, 149, 255, 0.5), 0 0 0.1rem #d1d2d0,
             0 0 0.1rem #d1d2d0, 0 0 0.1rem #d1d2d0, 0 0 0.2rem #d1d2d0,
@@ -87,10 +86,6 @@ const Footer = () => {
 
         /* justify="space-around" h="30vh" align="center" bg="#444655 */
       `}</style>
-      <link
-        href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
-        rel="stylesheet"
-      ></link>
     </div>
   );
 };
