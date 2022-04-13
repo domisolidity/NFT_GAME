@@ -35,6 +35,7 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "3.2.0",
     "react-scroll-horizontal": "^1.6.6",
+    "react-slick": "^0.28.1",
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",

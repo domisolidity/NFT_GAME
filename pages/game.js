@@ -106,30 +106,32 @@ const Game = () => {
 
   return (
     <Flex direction={"column"}>
-      <Flex w={"100%"} textAlign="center" height={"160px"}>
+      <Flex w={"100%"} mb={"10px"} textAlign="center" height={"160px"} justifyContent={"center"} alignItems="center">
         {mainNFT ? (
           <>
             <Img w="160px" src={currentImage} />
-            <Text>오느래 밋숀</Text>
-            <Flex justifyContent={"center"}>
-              {dailyMission.map((mission, index) => {
-                return (
-                  <Flex
-                    key={index}
-                    direction="column"
-                    m="10px"
-                    p="10px"
-                    backgroundColor={mission.attainment ? "#ffff00a1" : "yellow"}
-                    color={mission.attainment ? "#c3c3c3" : "#000428"}
-                    fontWeight="bold"
-                    borderRadius={"10px"}
-                  >
-                    <Box>{mission.DailyMission.game_title}</Box>
-                    <Box>{mission.attainment ? "완료!" : "안완료!"}</Box>
-                  </Flex>
-                );
-              })}
-            </Flex>
+            <Box>
+              <Text>오느래 밋숀</Text>
+              <Flex justifyContent={"center"}>
+                {dailyMission.map((mission, index) => {
+                  return (
+                    <Flex
+                      key={index}
+                      direction="column"
+                      m="10px"
+                      p="10px"
+                      backgroundColor={mission.attainment ? "#ffff00a1" : "yellow"}
+                      color={mission.attainment ? "#c3c3c3" : "#000428"}
+                      fontWeight="bold"
+                      borderRadius={"10px"}
+                    >
+                      <Box>{mission.DailyMission.game_title}</Box>
+                      <Box>{mission.attainment ? "완료!" : "안완료!"}</Box>
+                    </Flex>
+                  );
+                })}
+              </Flex>
+            </Box>
           </>
         ) : (
           <BlankComponent receivedText={"대표 NFT가 지정되지 않았읍니다"} />

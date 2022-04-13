@@ -99,51 +99,50 @@ contract NftContract is ERC721Enumerable {
     return (remainedRed, remainedGreen, remainedPurple);
   }
 
+  // "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db", uri, purple, 3, 15500000
   // nft 생성
   function create(
     address _to,
     string memory _tokenURI,
-    string memory _grade,
+    uint _grade,
     uint _amount,
     uint _timestamp
-  ) public payable {
-    bool red = keccak256(abi.encodePacked(_grade)) == keccak256(abi.encodePacked("red"));
-    bool green = keccak256(abi.encodePacked(_grade)) == keccak256(abi.encodePacked("green"));
-    bool purple = keccak256(abi.encodePacked(_grade)) == keccak256(abi.encodePacked("purple"));
-
-    require(red || green || purple, "This is the wrong approach.");
+  ) external payable returns (RenderToken[] memory) {
     require(remainedRed > 0 || remainedGreen > 0 || remainedPurple > 0, "All quantities have been exhausted.");
-    require(_amount <= 3, "ddd");
+    require(balanceOf(_to) <= 3, "You can purchase up to 3");
 
-    uint16 tokenId;
+    RenderToken[] memory renderToken = new RenderToken[](_amount);
+    for (uint i = 0; i < _amount; i++) {
+      require(_grade == 1 || _grade == 2 || _grade == 3, "This is the wrong approach.");
 
-    if (red) {
-      require(msg.value == (0.3 ether * _amount), "value error");
-      tokenIds_red++;
-      tokenId = tokenIds_red;
-      remainedRed = 60 - tokenIds_red;
+      uint16 tokenId;
+
+      if (_grade == 1) {
+        require(msg.value == 0.3 ether * _amount, "value error");
+        tokenIds_red++;
+        tokenId = tokenIds_red;
+        remainedRed = 60 - tokenIds_red;
+      } else if (_grade == 2) {
+        require(msg.value == 0.5 ether * _amount, "value error");
+        tokenIds_green++;
+        tokenId = tokenIds_green;
+        remainedGreen = 90 - tokenIds_green;
+      } else if (_grade == 3) {
+        require(msg.value == 1 ether * _amount, "value error");
+        tokenIds_purple++;
+        tokenId = tokenIds_purple;
+        remainedPurple = 100 - tokenIds_purple;
+      }
       myNfts[msg.sender].push(RenderToken(tokenId, _tokenURI));
-    } else if (green) {
-      require(msg.value == (0.5 ether * _amount), "value error");
-      tokenIds_green++;
-      tokenId = tokenIds_green;
-      remainedGreen = 90 - tokenIds_green;
-      myNfts[msg.sender].push(RenderToken(tokenId, _tokenURI));
-    } else if (purple) {
-      require(msg.value == (1 ether * _amount), "value error");
-      tokenIds_purple++;
-      tokenId = tokenIds_purple;
-      remainedPurple = 100 - tokenIds_purple;
-      myNfts[msg.sender].push(RenderToken(tokenId, _tokenURI));
+      renderToken[i] = RenderToken(tokenId, _tokenURI);
+
+      _mint(_to, tokenId);
+      _setTokenURI(tokenId, _tokenURI);
+
+      emit NftHistory(tokenId, address(this), _to, _timestamp, "Mint");
     }
 
-    _mint(_to, tokenId);
-    _setTokenURI(tokenId, _tokenURI);
-    //setApprovalForAll(배포한 거래 계약 주소, true); => 에러모음에 적기
-    //(uint tokenId, address from, address to, uint time, string historyType
-    emit NftHistory(tokenId, address(this), _to, _timestamp, "Mint");
-
-    // return();
+    return renderToken;
   }
 
   function nftEventTrigger(
