@@ -15,11 +15,6 @@ const ChoiceNft = (props) => {
   const [currentMainNft, setcurrentMainNft] = useState("");
   const [selectNft, setSelectNft] = useState("");
 
-  const [beforeUserName, setBeforeUserName] = useState("");
-  const [beforeImages, setBeforeImages] = useState([]);
-  const [userName, setUserName] = useState("");
-  const [Images, setImages] = useState([]);
-
   const baseUri = "http://127.0.0.1:8080/ipfs";
   const LS_KEY = "login-with-metamask:auth";
   const [accessToken, setAccessToken] = useState("");
@@ -129,13 +124,13 @@ const ChoiceNft = (props) => {
         toggle();
       })
       .catch((err) => {
-        console.log(err);
+        alert("다시 선택해주세요.");
       });
   };
 
   return (
     <div className="shell overflow-hidden anim-scale-in position-relative ">
-      <div className="header">
+      <div className="header-title">
         <div>Main NFT</div>
       </div>
       <div className="content">
@@ -155,7 +150,6 @@ const ChoiceNft = (props) => {
                 onClick={getNftDetail}
                 tokenId={info.id}
               >
-                {console.log(info)}
                 <div className="nft-id">{info.id}</div>
                 <div className="nft-name">{info.name}</div>
                 <div className="nft-grade">{info.grade}</div>
@@ -168,7 +162,7 @@ const ChoiceNft = (props) => {
         ) : (
           <div className="blank-state">
             <div>
-              <img src="https://bunicorn.exchange/img/no-search.96c77eef.svg" />
+              <img src="/no-search.svg" />
             </div>
             <div className="not-found mt-4 "> Not Found </div>
           </div>
@@ -210,6 +204,7 @@ const ChoiceNft = (props) => {
         .border-0,
         .shell {
           border: 0 !important;
+          margin: 0 !important;
         }
         .overflow-hidden {
           overflow: hidden !important;
@@ -228,7 +223,7 @@ const ChoiceNft = (props) => {
         .overflow-hidden {
           overflow: hidden !important;
         }
-        .header {
+        .header-title {
           font-weight: 700;
           font-size: 22px;
           line-height: 35px;

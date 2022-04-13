@@ -77,7 +77,8 @@ const ProfileCard = () => {
     //setImages(newImages);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = (e, data) => {
+    console.log(process.env);
     e.preventDefault();
 
     // if (!userName || Images.length == 0) {
@@ -113,8 +114,9 @@ const ProfileCard = () => {
       .catch((err) => {
         console.log(err);
       });
-
-    toggle();
+    if (data == "change") {
+      toggle();
+    }
   };
 
   let imgFile = {
@@ -124,26 +126,25 @@ const ProfileCard = () => {
   return (
     <>
       <div className="profile_content">
-        {toggle && (
-          <Modal toggle={toggle} visible={visible}>
-            <form className="profile_modal" onSubmit={onSubmit}>
-              <ImageUpload refreshImg={imgFile} />
-              <div>nick name</div>
-              <div className="profile_name">
-                <Input
-                  textAlign="center"
-                  width={"20rem"}
-                  mt={"1rem"}
-                  onChange={getBeforeUserName}
-                  value={beforeUserName}
-                />
-                <Button mt={"4rem"} onClick={onSubmit}>
-                  변경하기
-                </Button>
-              </div>
-            </form>
-          </Modal>
-        )}
+        <Modal toggle={toggle} visible={visible}>
+          <form className="profile_modal" onSubmit={onSubmit}>
+            <ImageUpload refreshImg={imgFile} />
+            <div>nick name</div>
+            <div className="profile_name">
+              <Input
+                textAlign="center"
+                width={"20rem"}
+                mt={"1rem"}
+                onChange={getBeforeUserName}
+                value={beforeUserName}
+              />
+              <Button mt={"4rem"} onClick={(e) => onSubmit(e, "change")}>
+                변경하기
+              </Button>
+            </div>
+          </form>
+        </Modal>
+
         {Images ? (
           <>
             <img src={Images} alt="프로필이미지" />
