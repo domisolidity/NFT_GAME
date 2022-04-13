@@ -4,10 +4,7 @@ const StakingCard = (props) => {
   return (
     <div className="nft-block" style={{ display: hasMainNft && "none" }}>
       <div className="nft-img plus" onClick={toggle}>
-        <img
-          src="https://bunicorn.exchange/img/plus.52eee613.svg"
-          className="add-nft"
-        />
+        <img src="plus.svg" className="add-nft" />
       </div>
       <div className="nft-name">Add NFT</div>
       <div className="retangle" />
