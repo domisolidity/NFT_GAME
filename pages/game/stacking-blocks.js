@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
 import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
-import MissionCard from "../../components/game/MissionCard";
+import InGameProfile from "../../components/game/InGameProfile";
 
 const StackingBlocks = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -123,9 +123,10 @@ const StackingBlocks = () => {
   }, [mainNFT]);
 
   return (
-    <>
+    <Flex m={"0 10px"}>
+      <InGameProfile filledValue={score} hasMission={hasMission} />
       {account && auth && mainNFT ? (
-        <>
+        <Box w={"100%"}>
           <GameSelectbar />
           <div id="blockGameContainer">
             <div id="game"></div>
@@ -156,11 +157,6 @@ const StackingBlocks = () => {
             <button onClick={stackingBlock} disabled={gameEnded} className="placeBlock-button">
               멈춰 !
             </button>
-            {hasMission && (
-              <div className="mission-box">
-                <MissionCard filledValue={score} hasMission={hasMission} />
-              </div>
-            )}
           </div>
           <Flex justifyContent={"center"}>
             {gameItems &&
@@ -176,7 +172,7 @@ const StackingBlocks = () => {
                 />
               ))}
           </Flex>
-        </>
+        </Box>
       ) : (
         <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
       )}
@@ -373,7 +369,7 @@ const StackingBlocks = () => {
           transition-delay: 0.3s;
         }
       `}</style>
-    </>
+    </Flex>
   );
 };
 

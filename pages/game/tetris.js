@@ -21,7 +21,8 @@ import { useSelector } from "react-redux";
 import GameItem from "../../components/game/GameItem";
 import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
-import MissionCard from "../../components/game/MissionCard";
+import { Box, Flex } from "@chakra-ui/react";
+import InGameProfile from "../../components/game/InGameProfile";
 
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -236,9 +237,10 @@ const Tetris = () => {
   }, dropTime);
 
   return (
-    <>
+    <Flex m={"0 10px"}>
+      <InGameProfile filledValue={score} hasMission={hasMission} />
       {account && auth ? (
-        <>
+        <Box w={"100%"}>
           <GameSelectbar />
           {/* 키 누름을 감지하기 위해 감싸는 스타일 래퍼 */}
           <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
@@ -279,18 +281,13 @@ const Tetris = () => {
                     />
                   ))}
               </div>
-              {hasMission && (
-                <div className="mission-box">
-                  <MissionCard filledValue={rows} hasMission={hasMission} />
-                </div>
-              )}
             </StyledTetris>
           </StyledTetrisWrapper>
-        </>
+        </Box>
       ) : (
         <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
       )}
-    </>
+    </Flex>
   );
 };
 

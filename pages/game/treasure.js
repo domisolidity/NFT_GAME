@@ -11,7 +11,8 @@ import ChestContainer from "../../components/game/FindTheRing/components/ChestCo
 import ControlPanel from "../../components/game/FindTheRing/components/ControlPanel/ControlPanel";
 import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
-import MissionCard from "../../components/game/MissionCard";
+import { Box, Flex } from "@chakra-ui/react";
+import InGameProfile from "../../components/game/InGameProfile";
 
 const TreasureHunt = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -108,9 +109,10 @@ const TreasureHunt = () => {
   }, [mainNFT]);
 
   return (
-    <>
+    <Flex m={"0 10px"}>
+      <InGameProfile filledValue={score} hasMission={hasMission} />
       {account && auth && mainNFT ? (
-        <>
+        <Box w={"100%"}>
           <GameSelectbar />
           <ContextProvider state={state} dispatch={dispatch}>
             <div className="App">
@@ -174,8 +176,7 @@ const TreasureHunt = () => {
               </div>
             </div>
           </ContextProvider>
-          {hasMission && <MissionCard filledValue={score} hasMission={hasMission} />}
-        </>
+        </Box>
       ) : (
         <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
       )}
@@ -227,7 +228,7 @@ const TreasureHunt = () => {
           text-align: center;
         }
       `}</style>
-    </>
+    </Flex>
   );
 };
 
