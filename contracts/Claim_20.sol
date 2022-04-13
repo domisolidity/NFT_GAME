@@ -35,6 +35,8 @@ contract Claim_20 is Ownable {
   uint private constant top3 = 30;
   uint private constant top4To10 = 10;
 
+  mapping(address => DailyAchiever[]) missionRewardList;
+
   // modifier onlyRewarder(address _account) {
   //   require(_account == msg.sender, "you are not owner.");
   //   require(gametoken.allowance(admin, _account) > 0, "not exist reward");
@@ -56,15 +58,20 @@ contract Claim_20 is Ownable {
       require(result[i].isApproved == false, "has already been approved");
       require(result[i].count > 0, "not exist reward");
       gametoken.increaseAllowance(result[i].account, result[i].count * 10);
+
+      result[i].isApproved = true;
     }
   }
 
   // 미션 보상 클레임
-  function claim_mission(address _account) external {
-    uint _reward = gametoken.allowance(address(this), _account);
-    gametoken.transferFrom(address(this), _account, _reward);
+  function claim_mission(
+    address _account,
+    uint _amount,
+    uint _currentTime
+  ) external {
+    gametoken.transferFrom(address(this), _account, _amount);
 
-    emit ClaimEvent("Mission", _account, _reward, block.timestamp);
+    emit ClaimEvent("Mission", _account, _amount, _currentTime);
   }
 
   /* 
