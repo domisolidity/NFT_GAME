@@ -24,7 +24,7 @@ const Nft = () => {
     <Box align="center" pb={20}>
       <Tier />
       <Box w="400px" mb={70}>
-        <Text mt="150" fontSize="25" w="80px">
+        <Text mt="150" fontSize="25" w="200px">
           <span>NFT 구매</span>
         </Text>
         <Text>
