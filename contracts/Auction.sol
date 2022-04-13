@@ -6,6 +6,8 @@ import "./NftContract.sol";
 contract Auction {
   using Strings for uint256;
 
+  event NftHistory(uint indexed tokenId, address from, address to, uint time, string historyType);
+
   NftContract public nftContractAddres;
   address payable public owner;
   uint public startBlock; // 배포당시 블록으로 설정 (block.number)
@@ -131,7 +133,7 @@ contract Auction {
   }
 
   // 경매 종료 후 정산 함수
-  function finalizeAuction(uint _tokenId) public {
+  function finalizeAuction(uint _tokenId, uint _timestamp) public {
     require(auctionState == State.Canceled || block.number > endBlock);
     require(msg.sender == owner || bids[msg.sender] > 0);
 
@@ -165,6 +167,9 @@ contract Auction {
     bids[recipient] = 0;
     recipient.transfer(value);
     onAuctioning[_tokenId] = false;
+
+    // nft history 이벤트 트리거
+    nftContractAddres.nftEventTrigger(_tokenId, owner, recipient, _timestamp, "Acution");
   }
 
   function isAuctionCheck(uint _tokenId) public view returns (bool) {

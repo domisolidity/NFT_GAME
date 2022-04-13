@@ -4,6 +4,7 @@ import AuctionContract from "../../contracts/artifacts/Auction.json";
 import { useRouter } from "next/router";
 import { addAuctionList } from "../../redux/data/dataActions";
 import { Box, Grid, GridItem, Flex, Image, Button, Heading, Text, Input } from "@chakra-ui/react";
+import NftHistory from "../../components/mypage/NftHistory";
 
 const NftDetail_my = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const NftDetail_my = () => {
   const [saleType, setSaleType] = useState(false);
   const [startingBid, setStartingBid] = useState();
   const [expirationDate, setExpirationDate] = useState();
+  const [nftHistory, setNftHistory] = useState();
 
   // 경매 생성 함수
   const createAuction = async () => {
@@ -67,6 +69,26 @@ const NftDetail_my = () => {
       });
 
     setOnAuction(true);
+  };
+
+  const getNftHistory = async () => {
+    await nftContract
+      .getPastEvents("NftHistory", {
+        filter: { tokenId: id },
+        fromBlock: 0,
+        toBlock: "latest",
+      })
+      .then((res) => {
+        console.log(res);
+        let returnValuesArr = [];
+        for (const history of res) {
+          returnValuesArr.push({
+            value: history.returnValues,
+            tx: history.transactionHash,
+          });
+        }
+        setNftHistory(returnValuesArr);
+      });
   };
 
   // auctionContract 생성 확인 및 경매중 설정
@@ -185,11 +207,12 @@ const NftDetail_my = () => {
     setExpirationDate(e.target.value);
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!account) return false;
     // console.log("허용여부확인");
-    isApprovedCheck();
-    onSaleCheck();
+    await getNftHistory();
+    await isApprovedCheck();
+    await onSaleCheck();
   }, [account]);
 
   return (
@@ -355,13 +378,7 @@ const NftDetail_my = () => {
         </GridItem>
 
         <GridItem colSpan={5} bg="whiteAlpha.100" padding={5}>
-          <Heading>history</Heading>
-          <Text>12</Text>
-          <Text>12</Text>
-          <Text>12</Text>
-          <Text>12</Text>
-          <Text>12</Text>
-          <Text>12</Text>
+          <NftHistory history={nftHistory} updateHistory={getNftHistory} />
         </GridItem>
       </Grid>
     </>

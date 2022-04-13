@@ -1,10 +1,14 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Img, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GameCard from "../components/game/GameCard";
 import GameInterface from "../components/game/GameInterface";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import jwtDecode from "jwt-decode";
+import axios from "axios";
+import Cookies from "js-cookie";
+import BlankComponent from "../components/BlankComponent";
 
 const Game = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -12,12 +16,49 @@ const Game = () => {
   const router = useRouter();
   const [mainNFT, setMainNFT] = useState("");
   const [dailyMission, setDailyMission] = useState([]);
+  const LS_KEY = "login-with-metamask:auth";
+  const baseUri = "http://127.0.0.1:8080/ipfs";
+  const [currentImage, setCurrentImage] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+
+  useEffect(async () => {
+    const getToken = Cookies.get(LS_KEY);
+    const parsedToken = getToken && JSON.parse(getToken).accessToken;
+    setAccessToken(parsedToken);
+
+    if (!accessToken) return;
+
+    const {
+      payload: { id },
+    } = jwtDecode(accessToken);
+
+    await nftContract.methods
+      .getMyToken(account)
+      .call({ from: account })
+      .then(async (tokenData) => {
+        console.log("getMyToken", tokenData);
+
+        if (!tokenData) return;
+        for (const info of tokenData) {
+          console.log(info);
+          console.log(info.id);
+          if (info.id == mainNFT) {
+            const response = await axios.get(`${baseUri}${info.uri.slice(6)}/${info.id}.json`);
+            console.log(`${baseUri}${response.data.image.slice(6)}`);
+            setCurrentImage(`${baseUri}${response.data.image.slice(6)}`);
+            return;
+          }
+        }
+      });
+  }, [mainNFT]);
 
   // 페이지 진입 시 대표 NFT 받아오기
   useEffect(async () => {
     if (!(account && auth)) return;
+    console.log(123);
     const mainNFT = await GameInterface.getMyNFT(account);
     setMainNFT(mainNFT);
+    console.log(mainNFT);
   }, [account, auth]);
 
   useEffect(async () => {
@@ -65,10 +106,11 @@ const Game = () => {
 
   return (
     <Flex direction={"column"}>
-      <Box w={"100%"} textAlign="center" height={"150px"}>
-        {dailyMission.length != 0 && (
+      <Flex w={"100%"} textAlign="center" height={"160px"}>
+        {mainNFT ? (
           <>
-            <Text>오늘 밋숀</Text>
+            <Img w="160px" src={currentImage} />
+            <Text>오느래 밋숀</Text>
             <Flex justifyContent={"center"}>
               {dailyMission.map((mission, index) => {
                 return (
@@ -83,29 +125,28 @@ const Game = () => {
                     borderRadius={"10px"}
                   >
                     <Box>{mission.DailyMission.game_title}</Box>
-                    <Box>{mission.DailyMission.missionDetails}</Box>
                     <Box>{mission.attainment ? "완료!" : "안완료!"}</Box>
                   </Flex>
                 );
               })}
             </Flex>
           </>
+        ) : (
+          <BlankComponent receivedText={"대표 NFT가 지정되지 않았읍니다"} />
         )}
-      </Box>
+      </Flex>
       <Box w={"100%"} minHeight={"400px"} position={`relative`}>
         <Flex justifyContent={"space-evenly"}>
-          {
-            GameInterface.gameList.map((game, index) => (
-              <Link key={index} href={(() => selectGame(game)) == true ? `/game/${game.gameUrl}` : `/game`}>
-                <a onClick={() => selectGame(game)} style={{ width: "30%", height: "100%" }}>
-                  <GameCard game={game} />
-                </a>
-              </Link>
-            ))
-          }
-        </Flex >
-      </Box >
-    </Flex >
+          {GameInterface.gameList.map((game, index) => (
+            <Link key={index} href={(() => selectGame(game)) == true ? `/game/${game.gameUrl}` : `/game`}>
+              <a onClick={() => selectGame(game)} style={{ width: "30%", height: "100%" }}>
+                <GameCard game={game} />
+              </a>
+            </Link>
+          ))}
+        </Flex>
+      </Box>
+    </Flex>
   );
 };
 export default Game;

@@ -7,6 +7,8 @@ import "./NftContract.sol";
 contract NftDealContract {
   NftContract public nftContractAddress;
 
+  event NftHistory(uint indexed tokenId, address from, address to, uint time, string historyType);
+
   constructor(address _nftContractAddress) {
     nftContractAddress = NftContract(_nftContractAddress);
   }
@@ -56,7 +58,7 @@ contract NftDealContract {
     }
   }
 
-  function buyNft(uint256 _tokenId) public payable {
+  function buyNft(uint256 _tokenId, uint _timestamp) public payable {
     // uint256 price = nftPrices[_tokenId];
     address seller = nftContractAddress.ownerOf(_tokenId);
     // require(nftPrices[_tokenId]; > 0, " token not sale.");
@@ -76,6 +78,9 @@ contract NftDealContract {
         break;
       }
     }
+
+    // nft history 이벤트 트리거
+    nftContractAddress.nftEventTrigger(_tokenId, seller, msg.sender, _timestamp, "Shop");
   }
 
   // 길이를 통해 for문 돌려서 프론트에 판매중인 리스트 가져올 용도
@@ -113,3 +118,5 @@ contract NftDealContract {
   4) 2) 내부에 판매함수에 대한 권한을 얻게 된다. (판매가능)
 
 */
+
+// emit nftContractAddres.NftHistory(_tokenId,owner,recipient,_timestamp,"AuctionShop");

@@ -157,7 +157,7 @@ const minusGameCount = async (account, gameTitle) => {
   } else {
     console.log("게임 기회가 이미 0임");
   }
-  return;
+  return response;
 };
 
 /* 점수 등록(전송) */
