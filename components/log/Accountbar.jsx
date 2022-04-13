@@ -70,15 +70,15 @@ const Accountbar = () => {
       </Modal>
       <style jsx>{`
         .btn-account {
-          color: #f47820;
-          border: none;
+          color: var(--chakra-colors-whiteAlpha-700);
+          border: 1px solid var(--chakra-colors-whiteAlpha-300);
           align-items: center;
-          background: rgba(255, 255, 255, 0.16);
+          background: rgba(255, 255, 255, 0);
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
         }
 
         .btn-account:hover {
-          background: rgba(255, 255, 255, 0.114)
+          background: var(--chakra-colors-whiteAlpha-300);
           color: #fff;
         }
       `}</style>

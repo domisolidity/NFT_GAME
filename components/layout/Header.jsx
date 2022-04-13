@@ -115,7 +115,7 @@ const Header = () => {
         }
 
         .header__accountbar:nth-child(4) {
-          grid-column: 7/9;
+          grid-column: 8/9;
         }
 
         .header__right_btns:nth-child(5) {
