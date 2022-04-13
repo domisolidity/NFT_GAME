@@ -26,7 +26,7 @@ const MissionReword = () => {
   console.log(claim20_Contract);
   console.log(gameTokenContract);
   const [dataList, setDataList] = useState();
-  const [selectedDataList, setSelectedDataList] = useState();
+  const [selectedMissionData, setSelectedMissionData] = useState();
   const [isData, setIsData] = useState(false);
   const [nextStep, setNextStep] = useState(false);
   const [lastStep, setLastStep] = useState(false);
@@ -35,6 +35,7 @@ const MissionReword = () => {
 
   const allChecked = checkedItems.every(Boolean);
   const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
+  const owner = process.env.NEXT_PUBLIC_OWNER;
 
   //랭킹 정보 불러오기
   const importMissionAchiever = async () => {
@@ -42,14 +43,12 @@ const MissionReword = () => {
       .get("/api/games/mission-achiever")
       .then(async (db) => {
         console.log(db.data);
-        const Result = [];
+        let result = [];
         for (let i = 0; i < db.data.length; i++) {
-          Result.push({
-            address: db.data[i].user_address,
-            count: db.data[i].count_mission,
-          });
+          result.push(Object.values(db.data[i]));
         }
-        setDataList(Result);
+        console.log(result);
+        setDataList(result);
         setIsData(true);
       })
       .catch(console.error());
@@ -68,11 +67,13 @@ const MissionReword = () => {
     for (let i = 0; i < checkedItems.length; i++) {
       if (checkedItems[i] == true) {
         selectedData.push(dataList[i]);
-        totalCount += dataList[i].count;
+        totalCount += dataList[i][1] * 10;
       }
     }
+    console.log(selectedData);
+    console.log(typeof totalCount);
     setTotalAllowance(totalCount);
-    setSelectedDataList(selectedData);
+    setSelectedMissionData(selectedData);
     setIsData(false);
     setNextStep(true);
   };
@@ -83,6 +84,52 @@ const MissionReword = () => {
   //     .call({ from: "0xB0475eB97e3895D508aADa880cf7De4A3fE86AEa" })
   //     .then((res) => console.log(res));
   // };
+
+  // @ refactoring ver.
+  const approveMissionClaim = async () => {
+    if (account != owner) {
+      alert("관리자 권한이 없는 계정입니다.");
+      return;
+    }
+    console.log(claim20_Contract._address);
+    console.log(totalAllowance);
+
+    await gameTokenContract.methods
+      .transfer(claim20_Contract._address, totalAllowance)
+      .send({ from: account })
+      .then((res) => {
+        console.log(res);
+        alert("다음은 미션 보상자별 인출 허용량 지정에 대한 서명입니다.");
+      })
+      .catch(console.error);
+    console.log(selectedMissionData);
+
+    await claim20_Contract.methods
+      .approveClaim_mission(selectedMissionData)
+      .send({ from: account })
+      .then(async (res) => {
+        console.log(res);
+        if (res.status) {
+          await axios.post("/api/games/mission/approved", { mission: selectedMissionData }).then((res) => {
+            console.log(res);
+            alert("승인 작업 완료");
+            setNextStep(false);
+            setLastStep(true);
+          });
+        }
+      })
+      .catch(console.error);
+  };
+  const test = async () => {
+    console.log(totalAllowance);
+    await gameTokenContract.methods
+      .allowance(claim20_Contract._address, account)
+      .call({ from: account })
+      .then((res) => {
+        console.log(res);
+        console.log("gg");
+      });
+  };
 
   // 랭킹정보에 따른 클레임양 선택 허용
   const approvedSome = async () => {
@@ -164,7 +211,9 @@ const MissionReword = () => {
           </Text>
         </Box>
         <Link href={"/admin"}>
-          <Button bg="whiteAlpha.300"> 관리자 홈으로</Button>
+          <a>
+            <Button bg="whiteAlpha.300"> 관리자 홈으로</Button>
+          </a>
         </Link>
         {/* <Button onClick={test_transferTOContract}>TEST</Button>
         <Button onClick={testtest}>TEST11</Button> */}
@@ -224,8 +273,8 @@ const MissionReword = () => {
                           }}
                         />
                       </Td>
-                      <Td>{list.address}</Td>
-                      <Td>{list.count}</Td>
+                      <Td>{list[0]}</Td>
+                      <Td>{list[1]}</Td>
                     </Tr>
                   );
                 })}
@@ -243,8 +292,11 @@ const MissionReword = () => {
               <Button bg="#414fa28f" onClick={previousStep} mr="2">
                 뒤로 가기
               </Button>
-              <Button bg="#414fa28f" onClick={approvedSome}>
+              <Button bg="#414fa28f" onClick={approveMissionClaim}>
                 클레임 허용
+              </Button>
+              <Button bg="#414fa28f" onClick={test}>
+                allowance양 확인
               </Button>
             </TableCaption>
             <Thead bg="whiteAlpha.200">
@@ -255,13 +307,13 @@ const MissionReword = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {selectedDataList &&
-                selectedDataList.map((list, index) => {
+              {selectedMissionData &&
+                selectedMissionData.map((list, index) => {
                   return (
                     <Tr key={index}>
-                      <Td>{list.address}</Td>
-                      <Td>{list.count}</Td>
-                      <Td>{list.count * 10}</Td>
+                      <Td>{list[0]}</Td>
+                      <Td>{list[1]}</Td>
+                      <Td>{list[1] * 10}</Td>
                     </Tr>
                   );
                 })}

@@ -19,13 +19,15 @@ contract Claim_20 is Ownable {
   struct WeeklyRank {
     address account;
     uint8 ranking;
+    string gameTitle;
     bool isApproved;
     bool isRewarded;
-    string gameTitle;
   }
   struct DailyAchiever {
     address account;
     uint8 count;
+    bool isApproved;
+    bool isRewarded;
   }
 
   uint private constant top1 = 100;
@@ -33,16 +35,18 @@ contract Claim_20 is Ownable {
   uint private constant top3 = 30;
   uint private constant top4To10 = 10;
 
-  modifier onlyRewarder(address _account) {
-    require(_account == msg.sender, "you are not owner.");
-    require(gametoken.allowance(admin, _account) > 0, "not exist reward");
-    _;
-  }
-  modifier onlyRangker(address _account) {
-    require(_account == msg.sender, "you are not owner.");
-    require(gametoken.allowance(admin, _account) > 0, "not exist reward");
-    _;
-  }
+  mapping(address => DailyAchiever[]) missionRewardList;
+
+  // modifier onlyRewarder(address _account) {
+  //   require(_account == msg.sender, "you are not owner.");
+  //   require(gametoken.allowance(admin, _account) > 0, "not exist reward");
+  //   _;
+  // }
+  // modifier onlyRangker(address _account) {
+  //   require(_account == msg.sender, "you are not owner.");
+  //   require(gametoken.allowance(admin, _account) > 0, "not exist reward");
+  //   _;
+  // }
 
   /* 
     Mission Reward Function 
@@ -51,17 +55,23 @@ contract Claim_20 is Ownable {
   // 미션 보상 클레임 허용
   function approveClaim_mission(DailyAchiever[] memory result) external onlyOwner {
     for (uint256 i = 0; i < result.length; i++) {
+      require(result[i].isApproved == false, "has already been approved");
       require(result[i].count > 0, "not exist reward");
       gametoken.increaseAllowance(result[i].account, result[i].count * 10);
+
+      result[i].isApproved = true;
     }
   }
 
   // 미션 보상 클레임
-  function claim_mission(address _account) external {
-    uint _reward = gametoken.allowance(address(this), _account);
-    gametoken.transferFrom(address(this), _account, _reward);
+  function claim_mission(
+    address _account,
+    uint _amount,
+    uint _currentTime
+  ) external {
+    gametoken.transferFrom(address(this), _account, _amount);
 
-    emit ClaimEvent("Mission", _account, _reward, block.timestamp);
+    emit ClaimEvent("Mission", _account, _amount, _currentTime);
   }
 
   /* 
@@ -90,6 +100,7 @@ contract Claim_20 is Ownable {
     for (uint i = 0; i < result.length; i++) {
       require(result[i].isApproved == true, "not approved");
       require(result[i].isRewarded == false, "has already been rewarded");
+      require(result[i].account == msg.sender, "you are not recipient");
 
       uint _reward;
       if (result[i].ranking == 1) {
@@ -102,6 +113,7 @@ contract Claim_20 is Ownable {
         _reward = top3;
         gametoken.transferFrom(address(this), result[i].account, _reward);
       }
+
       result[i].isRewarded = true;
       emit ClaimEvent("Ranking", result[i].account, _reward, currentTime);
     }

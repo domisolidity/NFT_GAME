@@ -95,7 +95,7 @@ const Mypage = () => {
       <style jsx>{`
         .mypage {
           display: flex;
-          margin: 0 3rem;
+          margin: 0 10em;
         }
         .sidebar {
           display: flex;
@@ -106,9 +106,9 @@ const Mypage = () => {
           border-right: 1px solid;
         }
         .content {
-          width: 100%;
+          width: 80%;
           height: auto;
-          margin: 0 1rem;
+          margin: 0 3rem;
         }
         .fixed {
           display: flex;

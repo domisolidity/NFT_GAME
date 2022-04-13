@@ -1,6 +1,9 @@
 import { Button, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Flex, Input, useClipboard } from "@chakra-ui/react";
+import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
+
 import {
   connectWallet,
   disconnectWallet,
@@ -10,8 +13,8 @@ import {
 const Login = () => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
-
-  const { errorMsg, auth } = blockchain;
+  const { account, errorMsg, auth } = blockchain;
+  const { hasCopied, onCopy } = useClipboard(account);
 
   useEffect(() => {
     getReconnect();
@@ -25,7 +28,7 @@ const Login = () => {
         method: "eth_requestAccounts",
       });
     }
-    console.log("로그인")
+    console.log("로그인");
     dispatch(connectWallet());
   };
 
@@ -39,9 +42,16 @@ const Login = () => {
   return (
     <>
       {auth ? (
-        <Button onClick={getDisConnectWallet}>Logout</Button>
+        <>
+          <Button onClick={onCopy} ml={2} mr={2}>
+            {hasCopied ? <CheckIcon /> : <CopyIcon />}
+          </Button>
+          <Button onClick={getDisConnectWallet}>Logout</Button>
+        </>
       ) : (
-        <Button onClick={getConnectWallet}>Login</Button>
+        <>
+          <Button onClick={getConnectWallet}>Login</Button>
+        </>
       )}
     </>
   );

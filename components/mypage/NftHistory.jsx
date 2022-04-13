@@ -16,27 +16,27 @@ import { useSelector } from "react-redux";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { todayTimeFormal } from "../../hooks/currentTime";
 
-const ClaimHistory = (props) => {
+const NftHistory = (props) => {
   const blockchain = useSelector((data) => data.blockchain);
   const { account } = blockchain;
 
-  const claimHistory = props.history;
-  const getClaimHistory = props.updateHistory;
+  const nftHistory = props.history;
+  const getNftHistory = props.updateHistory;
 
   const updateHistory = () => {
-    getClaimHistory();
+    getNftHistory();
   };
 
   useEffect(async () => {
-    if (!account || !claimHistory) return;
-    console.log(claimHistory);
-  }, [account, claimHistory]);
+    if (!account || !nftHistory) return;
+    console.log(nftHistory);
+  }, [account, nftHistory]);
 
   return (
     <Box m="0 auto" w="80%">
       <Box bg="#190929" p="3" mb="5">
         <Text fontSize="20">
-          Claim History{" "}
+          Nft History{" "}
           <span style={{ marginLeft: 10 }}>
             <Button variant="ghost" onClick={updateHistory}>
               <RepeatIcon />
@@ -48,20 +48,33 @@ const ClaimHistory = (props) => {
         <Table>
           <Thead>
             <Tr>
-              <Th>Reward Type</Th>
-              <Th>Reward Amount</Th>
-              <Th>Time</Th>
+              <Th>Type</Th>
+              <Th>from</Th>
+              <Th>to</Th>
+              <Th>time</Th>
               <Th>detail</Th>
             </Tr>
           </Thead>
-          {claimHistory
-            ? claimHistory.map((history, i) => {
+          {nftHistory
+            ? nftHistory.map((history, i) => {
                 return (
                   <Tbody key={i}>
                     <Tr>
                       {/* <Td>{`${history.account.substr(0,7)} ...... ${history.account.substr(38,41)}`}</Td> */}
-                      <Td>{history.value.rewardType}</Td>
-                      <Td> + {history.value.amount}</Td>
+                      <Td>{history.value.historyType}</Td>
+                      <Td>
+                        {`${history.value.from.substr(
+                          0,
+                          5
+                        )} ... ${history.value.from.substr(38, 41)}`}
+                      </Td>
+                      <Td>
+                        {`${history.value.to.substr(
+                          0,
+                          5
+                        )} ... ${history.value.to.substr(38, 41)}`}
+                      </Td>
+
                       <Td>{todayTimeFormal(Number(history.value.time))}</Td>
                       <Td>
                         <Link href={`https://etherscan.io/tx/${history.tx}`}>
@@ -79,4 +92,4 @@ const ClaimHistory = (props) => {
   );
 };
 
-export default ClaimHistory;
+export default NftHistory;
