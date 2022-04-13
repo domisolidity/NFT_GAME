@@ -41,6 +41,9 @@ export const authenticate = () => {
   const accessToken = Cookies.get(LS_KEY);
   const auth = accessToken && JSON.parse(accessToken).accessToken;
   console.log(" 🛠 authenticate 🛠");
+  console.log(accessToken);
+  console.log(auth);
+
   //토큰이 있을때 if문 실행
   if (auth) {
     console.log(" 🛠 auth 🛠");
