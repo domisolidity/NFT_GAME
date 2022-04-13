@@ -85,15 +85,12 @@ router.post("/minus-count", async (req, res) => {
     attributes: ["gameCount"],
     where: { user_address: account, game_title: gameTitle },
   });
-  // 차감 전 기회가 0이면 false
+  // 차감 전 기회가 0이면 안됨
   if (before.gameCount == 0) {
     res.send(false);
   } else {
     // 차감 전 횟수에 -1 해서 DB 갱신
-    await InGameUser.update(
-      { gameCount: before.gameCount - 1 },
-      { where: { user_address: account, game_title: gameTitle } }
-    );
+    await InGameUser.decrement({ gameCount: 1 }, { where: { user_address: account, game_title: gameTitle } });
     // 차감 했으면 true
     res.send(true);
   }

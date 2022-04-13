@@ -1,5 +1,10 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  connectWallet,
+  disconnectWallet,
+  reconnect,
+} from "../../redux/blockchain/blockchainActions";
 
 import Logo from "./Logo";
 import Searchbar from "../Seachbar";
@@ -15,11 +20,35 @@ import useModal from "../../hooks/useModal";
 // import Theme from "./Theme";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
-
-  const { auth } = blockchain;
-
+  const { account, errorMsg, auth } = blockchain;
+  console.log(auth);
   const { toggle, visible } = useModal();
+
+  // const getConnectWallet = async () => {
+  //   if (errorMsg == "메타마스크 로그인이 필요합니다.") {
+  //     console.log(11);
+  //     const popUp = await window.ethereum.request({
+  //       method: "eth_requestAccounts",
+  //     });
+  //   }
+  //   console.log("로그인");
+  //   dispatch(connectWallet());
+  // };
+
+  // const getDisConnectWallet = () => {
+  //   dispatch(disconnectWallet());
+  // };
+
+  const getReconnect = () => {
+    dispatch(reconnect());
+  };
+  useEffect(() => {
+    getReconnect();
+    // getConnectWallet();
+  }, []);
+
   return (
     <div className="header">
       <div className="header__logo">

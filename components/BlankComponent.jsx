@@ -24,9 +24,11 @@ const BlankComponent = ({ receivedText }) => {
       </div>
       <style jsx>{`
         .blank-box {
+          display: flex;
+          justify-content: center;
+          align-items: center;
           text-align: center;
           width: 100%;
-          margin-top: 100px;
           font-size: 30px;
           color: transparent;
           text-shadow: 0 0 20px #d1d2d0;

@@ -16,7 +16,6 @@ const Mypage = () => {
   const [hasMainNft, setHasMainNft] = useState(false);
   const [currentMainNft, setCurrentMainNft] = useState("");
   const data = useSelector((state) => state.data);
-  const { kdkd, auctionList } = data;
 
   useEffect(() => {
     returnMenu(menu);
@@ -30,8 +29,6 @@ const Mypage = () => {
         return <Collections />;
       case "claim":
         return <Claim />;
-      case "staking":
-        return <Staking hasMainNft={hasMainNft} getCurrentMainNft={getCurrentMainNft} />;
       default:
         break;
     }
@@ -48,10 +45,6 @@ const Mypage = () => {
   const renderClaim = (e) => {
     e.preventDefault();
     setMenu("claim");
-  };
-  const renderStaking = (e) => {
-    e.preventDefault();
-    setMenu("staking");
   };
 
   const getCurrentMainNft = (receivedMainNft) => {
@@ -75,9 +68,7 @@ const Mypage = () => {
           <Button onClick={renderClaim} m={4}>
             Claim
           </Button>
-          <Button onClick={renderStaking} m={4}>
-            Staking
-          </Button>
+
         </div>
         <div className="content">
           <div className="fixed">
@@ -89,12 +80,14 @@ const Mypage = () => {
               <TotalCard />
             </div> */}
             <div className="fixed_item">
-              <CurrentMainNft getCurrentMainNft={getCurrentMainNft} currentMainNftImg={currentMainNft} />
+              <CurrentMainNft
+                getCurrentMainNft={getCurrentMainNft}
+                currentMainNftImg={currentMainNft}
+              />
             </div>
             <div className="fixed_item">
               <NftAmount />
             </div>
-
           </div>
           <div className="menu">{returnMenu(menu)}</div>
         </div>
@@ -106,15 +99,8 @@ const Mypage = () => {
         }
         .sidebar {
           display: flex;
-<<<<<<< Updated upstream
-<<<<<<< HEAD
           min-width: 150px;
-=======
->>>>>>> kdw
           width: 10%;
-=======
-          width: 12vw;
->>>>>>> Stashed changes
           height: 65vh;
           flex-direction: column;
           border-right: 1px solid;
