@@ -182,7 +182,9 @@ const RankingReword = () => {
           </Text>
         </Box>
         <Link href={"/admin"}>
-          <Button bg="whiteAlpha.300">관리자 홈으로</Button>
+          <a>
+            <Button bg="whiteAlpha.300">관리자 홈으로</Button>
+          </a>
         </Link>
       </Flex>
       {isRankData ? (

@@ -53,7 +53,7 @@ router.get("/claim_rank", async (req, res) => {
 });
 
 // 클레임양 조회 요청
-router.post("/claimable", async (req, res) => {
+router.post("/claimable-rank", async (req, res) => {
   const { data } = req.body;
   console.log("랭킹ssss`");
   const rank = await Ranking.findAll({
@@ -67,36 +67,58 @@ router.post("/claimable", async (req, res) => {
   res.send(rank);
 });
 
+router.post("/claimable-mission", async (req, res) => {
+  const { data } = req.body;
+
+  await ClosingMission.findAll({
+    where: {
+      user_address: data,
+      isApproved: true,
+      isRewarded: false,
+    },
+    attributes: ["user_address", "isApproved", "isRewarded"],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch(console.error);
+});
+
 router.post("/rewarded", async (req, res) => {
-  const { rank } = req.body;
-  console.log(rank);
-  for (let i = 0; i < rank.length; i++) {
-    await Ranking.update(
-      { isRewarded: true },
-      {
-        where: {
-          user_address: rank[i][0],
-          game_title: rank[i][2],
-          ranking: rank[i][1],
-        },
-      }
-    );
+  try {
+    const { rank } = req.body;
+    console.log(rank);
+    for (let i = 0; i < rank.length; i++) {
+      console.log(rank[i][1]);
+      console.log(rank[i][2]);
+      await Ranking.update(
+        { isRewarded: true },
+        {
+          where: {
+            user_address: rank[i][0],
+            game_title: rank[i][2],
+            ranking: rank[i][1],
+          },
+        }
+      );
+    }
+    res.send(true);
+  } catch (error) {
+    console.error(error);
   }
 });
 
 // 클레임 허용 완료한 계정에 대해 랭크 삭제
-router.post("/deleteMIsiion", async (req, res) => {
-  const rank = req.body.rank;
-  for (let i = 0; i < rank.length; i++) {
+router.post("/deleteMission", async (req, res) => {
+  try {
+    const account = req.body.account;
     await ClosingMission.destroy({
-      where: {
-        game_title: rank[i][2],
-        ranking: rank[i][1],
-        user_address: rank[i][0],
-      },
+      where: { user_address: account },
     });
+    res.send(true);
+  } catch (error) {
+    console.error(error);
   }
-  res.send("삭제 완료");
 });
 
 // /** PATCH /api/users/:userId */

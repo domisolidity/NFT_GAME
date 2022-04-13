@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import {
   Box,
+  Button,
   Text,
   Table,
   Thead,
@@ -12,6 +13,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import { RepeatIcon } from "@chakra-ui/icons";
 import { todayTimeFormal } from "../../hooks/currentTime";
 
 const ClaimHistory = (props) => {
@@ -19,6 +21,11 @@ const ClaimHistory = (props) => {
   const { account } = blockchain;
 
   const claimHistory = props.history;
+  const getClaimHistory = props.updateHistory;
+
+  const updateHistory = () => {
+    getClaimHistory();
+  };
 
   useEffect(async () => {
     if (!account || !claimHistory) return;
@@ -28,7 +35,14 @@ const ClaimHistory = (props) => {
   return (
     <Box m="0 auto" w="80%">
       <Box bg="#190929" p="3" mb="5">
-        <Text fontSize="20">Claim History</Text>
+        <Text fontSize="20">
+          Claim History{" "}
+          <span style={{ marginLeft: 10 }}>
+            <Button variant="ghost" onClick={updateHistory}>
+              <RepeatIcon />
+            </Button>
+          </span>
+        </Text>
       </Box>
       <TableContainer>
         <Table>
