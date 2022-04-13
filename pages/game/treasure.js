@@ -70,7 +70,7 @@ const TreasureHunt = () => {
   // 게임 끝났을 때 링 찾은 상태면 서버에 점수 전송
   useEffect(async () => {
     if (state.gameStatus == GameStatus.VICTORY) {
-      GameInterface.sendScore(account, gameTitle, score, resultBonus).then((res) => console.log(res));
+      await GameInterface.sendScore(account, gameTitle, score, resultBonus).then((res) => console.log(res));
       setBestScore(await GameInterface.getMyBestScore(account, gameTitle));
       if (hasMission) {
         console.log("미션있음");
