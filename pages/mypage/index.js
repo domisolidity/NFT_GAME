@@ -16,7 +16,6 @@ const Mypage = () => {
   const [hasMainNft, setHasMainNft] = useState(false);
   const [currentMainNft, setCurrentMainNft] = useState("");
   const data = useSelector((state) => state.data);
-  const { kdkd, auctionList } = data;
 
   useEffect(() => {
     returnMenu(menu);
@@ -30,8 +29,6 @@ const Mypage = () => {
         return <Collections />;
       case "claim":
         return <Claim />;
-      case "staking":
-        return <Staking hasMainNft={hasMainNft} getCurrentMainNft={getCurrentMainNft} />;
       default:
         break;
     }
@@ -48,10 +45,6 @@ const Mypage = () => {
   const renderClaim = (e) => {
     e.preventDefault();
     setMenu("claim");
-  };
-  const renderStaking = (e) => {
-    e.preventDefault();
-    setMenu("staking");
   };
 
   const getCurrentMainNft = (receivedMainNft) => {
@@ -75,9 +68,7 @@ const Mypage = () => {
           <Button onClick={renderClaim} m={4}>
             Claim
           </Button>
-          <Button onClick={renderStaking} m={4}>
-            Staking
-          </Button>
+
         </div>
         <div className="content">
           <div className="fixed">
@@ -89,12 +80,14 @@ const Mypage = () => {
               <TotalCard />
             </div> */}
             <div className="fixed_item">
-              <CurrentMainNft getCurrentMainNft={getCurrentMainNft} currentMainNftImg={currentMainNft} />
+              <CurrentMainNft
+                getCurrentMainNft={getCurrentMainNft}
+                currentMainNftImg={currentMainNft}
+              />
             </div>
             <div className="fixed_item">
               <NftAmount />
             </div>
-
           </div>
           <div className="menu">{returnMenu(menu)}</div>
         </div>
@@ -102,23 +95,20 @@ const Mypage = () => {
       <style jsx>{`
         .mypage {
           display: flex;
-          margin: 0 3rem;
+          margin: 0 10em;
         }
         .sidebar {
           display: flex;
-<<<<<<< HEAD
           min-width: 150px;
-=======
->>>>>>> kdw
           width: 10%;
           height: 65vh;
           flex-direction: column;
           border-right: 1px solid;
         }
         .content {
-          width: 100%;
+          width: 80%;
           height: auto;
-          margin: 0 1rem;
+          margin: 0 3rem;
         }
         .fixed {
           display: flex;

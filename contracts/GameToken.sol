@@ -102,27 +102,27 @@ contract GameToken is Context, IERC20, Ownable {
     address recipient,
     uint256 amount
   ) public virtual override returns (bool) {
-    _transfer(sender, recipient, amount);
     _approve(sender, recipient, _allowances[sender][recipient].sub(amount, "BEP20: transfer amount exceeds allowance"));
+    _transfer(sender, recipient, amount);
     return true;
   }
 
   function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
-        address owner = _msgSender();
-        _approve(owner, spender, _allowances[owner][spender] + addedValue);
-        return true;
-    }
+    address owner = _msgSender();
+    _approve(owner, spender, _allowances[owner][spender] + addedValue);
+    return true;
+  }
 
-function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+  function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
     address owner = _msgSender();
     uint256 currentAllowance = allowance(owner, spender);
     require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
     unchecked {
-        _approve(owner, spender, currentAllowance - subtractedValue);
+      _approve(owner, spender, currentAllowance - subtractedValue);
     }
 
     return true;
-}
+  }
 
   function mint(uint256 amount) public virtual onlyOwner returns (bool) {
     _mint(_msgSender(), amount);

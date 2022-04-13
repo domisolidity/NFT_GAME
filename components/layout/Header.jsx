@@ -1,10 +1,16 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  connectWallet,
+  disconnectWallet,
+  reconnect,
+} from "../../redux/blockchain/blockchainActions";
 
 import Logo from "./Logo";
 import Searchbar from "../Seachbar";
 import Chainbar from "../log/Chainbar";
 import Accountbar from "../log/Accountbar";
+import Adminbar from "../log/Adminbar";
 import Login from "../log/Login";
 import TopNav from "./TopNav";
 import ConnectWallet from "../ConnectWallet";
@@ -14,11 +20,35 @@ import useModal from "../../hooks/useModal";
 // import Theme from "./Theme";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
-
-  const { auth } = blockchain;
-
+  const { account, errorMsg, auth } = blockchain;
+  console.log(auth);
   const { toggle, visible } = useModal();
+
+  // const getConnectWallet = async () => {
+  //   if (errorMsg == "메타마스크 로그인이 필요합니다.") {
+  //     console.log(11);
+  //     const popUp = await window.ethereum.request({
+  //       method: "eth_requestAccounts",
+  //     });
+  //   }
+  //   console.log("로그인");
+  //   dispatch(connectWallet());
+  // };
+
+  // const getDisConnectWallet = () => {
+  //   dispatch(disconnectWallet());
+  // };
+
+  const getReconnect = () => {
+    dispatch(reconnect());
+  };
+  useEffect(() => {
+    getReconnect();
+    // getConnectWallet();
+  }, []);
+
   return (
     <div className="header">
       <div className="header__logo">
@@ -56,6 +86,9 @@ const Header = () => {
           <Theme />
         </span> */}
       </div>
+      <div className="header__adminbar">
+        <Adminbar />
+      </div>
       <div className="header__navbar">
         <TopNav />
       </div>
@@ -85,13 +118,6 @@ const Header = () => {
           grid-column: 7/9;
         }
 
-        .header__chainbar2:nth-child(3) {
-          grid-column: 6;
-        }
-        .header__accountbar2:nth-child(4) {
-          grid-column: 7/9;
-        }
-
         .header__right_btns:nth-child(5) {
           grid-column: 9;
           justify-items: end;
@@ -99,8 +125,11 @@ const Header = () => {
         .header__right_btns > span {
           display: table-cell;
         }
+        .header__adminbar:nth-child(6) {
+          grid-column: 10;
+        }
 
-        .header__navbar:nth-child(6) {
+        .header__navbar:nth-child(7) {
           grid-row: 2;
           grid-column: 1/-1;
           /* border-top: 1px solid var(--chakra-colors-blue-200); */
