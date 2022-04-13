@@ -44,5 +44,9 @@ module.exports = class Game extends Sequelize.Model {
       foreignKey: "game_title",
       sourceKey: "gameTitle",
     });
+    db.Game.hasMany(db.DailyMission, {
+      foreignKey: "game_title",
+      sourceKey: "gameTitle",
+    });
   }
 };

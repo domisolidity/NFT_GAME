@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Dropzone from "react-dropzone";
-import Axios from "axios";
 import Cookies from "js-cookie";
-import jwtDecode from "jwt-decode";
 import { useSelector } from "react-redux";
 
 function ImageUpload(props) {
@@ -12,14 +10,17 @@ function ImageUpload(props) {
   const [Images, setImages] = useState([]);
   const [accessToken, setAccessToken] = useState("");
 
+  const getToken = Cookies.get(LS_KEY);
+  const parsedToken = getToken && JSON.parse(getToken).accessToken;
+
   const onDrop = (files) => {
-    const getToken = Cookies.get(LS_KEY);
-    const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
 
     let formData = new FormData();
 
-    formData.append("file", files[0]);
+    [].forEach.call(files, (f) => {
+      formData.append("image", f);
+    });
 
     fetch(`/api/users/uploadImage`, {
       body: formData,
@@ -31,15 +32,12 @@ function ImageUpload(props) {
     })
       .then((response) => response.json())
       .then((result) => {
-        if (result.success) {
-          setImages([result.image]);
-          props.refreshImg.updateImages([result.image]);
-        } else {
-          alert("Failed to save the Image in Server");
-        }
+        setImages(result);
+        props.refreshImg.updateImages(result);
       })
       .catch((err) => {
         console.log(err);
+        alert("Failed to save the Image in Server");
       });
   };
 
@@ -55,54 +53,76 @@ function ImageUpload(props) {
   return (
     <>
       <div className="dropzone_box">
-        <div className="dropzone-image_box">
-          {Images.map((image, index) => (
-            <div onClick={() => onDelete(image)}>
-              <img
-                key={index}
-                className="dropzone-image_box-img"
-                src={`/api/${image}`}
-                alt={"uploading profile"}
-              />
-            </div>
-          ))}
-        </div>
-        <div>
+        <div className="dropzone_box_title">
+          profile
           <Dropzone onDrop={onDrop} multiple={false} maxSize={800000000}>
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()}>
                 <input {...getInputProps()} />
-                <div className="add_photo_btn">사진 변경</div>
+                <button className="add_photo_btn">
+                  <i className="bx bx-image-add"></i>
+                </button>
               </div>
             )}
           </Dropzone>
         </div>
+        <div className="dropzone-image_box">
+          {Images &&
+            Images.map((image, index) => (
+              <div onClick={() => onDelete(image)}>
+                <img
+                  key={index}
+                  className="dropzone-image_box-img"
+                  src={Images[0]}
+                  alt={"uploading profile"}
+                />
+              </div>
+            ))}
+        </div>
+        <div></div>
       </div>
       <style jsx>{`
         .dropzone_box {
-          display: "block", 
-          justify-content: "space-between";
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+  
+        }
+        .dropzone_box_title {
+          display: flex;
+          justify-content: center;
+     
         }
         .dropzone-image_box {
           display: flex;
           flex-direction: column;
-          width: 300px;
-          min-height: 300px;
-          max-height: calc(100vh - 400px);
-          /* border-radius:50%; */
-          border: solid 1px white;
+          width: 10rem;
+          height: 10rem;
+          border-radius:50%;
+          border: solid 0.1rem;
+          color: #d1d2d0;
+          box-shadow: 0 0 0.1rem #d1d2d0, inset 0 0 0.1rem #d1d2d0, 0 0 0.5rem #d1d2d0,
+            inset 0 0 0.5rem #d1d2d0, 0 0 0.1rem #d1d2d0, inset 0 0 0.1rem #d1d2d0;
           overflow: auto;
+          margin: 1rem 0 3rem 0;
+          justify-content: center;
+
         }
         .dropzone-image_box-img{
           width: "100%",
-          height: "300px" 
+          height: auto,
+          
         }
         .add_photo_btn{
-          border: white solid 1px;
-          text-align: center;
-          height: 2rem;
+          font-size:1.8rem; 
+          margin: 0 1rem;
+
         }
       `}</style>
+      <link
+        href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+        rel="stylesheet"
+      ></link>
     </>
   );
 }

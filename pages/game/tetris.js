@@ -20,6 +20,9 @@ import GameInterface from "../../components/game/GameInterface";
 import { useSelector } from "react-redux";
 import GameItem from "../../components/game/GameItem";
 import GameSelectbar from "../../components/game/GameSelectbar";
+import BlankComponent from "../../components/BlankComponent";
+import { Box, Flex } from "@chakra-ui/react";
+import InGameProfile from "../../components/game/InGameProfile";
 
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -34,9 +37,14 @@ const Tetris = () => {
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
   const [chance, setChance] = useState("");
   const [gameItems, setGameItems] = useState("");
-  const [itemEffect, setItemEffect] = useState(1);
+  const [resultBonus, setResultBonus] = useState("");
+  const [previousScore, setPreviousScore] = useState("");
+  const [extraPoints, setExtraPoints] = useState(0);
+  const [extraScore, setExtraScore] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [bestScore, setBestScore] = useState("");
+  const [hasMission, setHasMission] = useState("");
+  const [mainNFT, setMainNFT] = useState("");
 
   // 키보드 스크롤 방지
   function stopScroll(e) {
@@ -45,21 +53,44 @@ const Tetris = () => {
     }
   }
 
+  // 반전 아이템 사용 시 현재 점수를 useState에 담기
+  useEffect(() => {
+    if (extraPoints) {
+      setExtraScore(score);
+      setPreviousScore(score);
+    }
+  }, [extraPoints]);
+
+  // 반전 아이템 사용 중 추가점수 부여
+  useEffect(() => {
+    if (extraPoints) {
+      setExtraScore(extraScore + (score - previousScore) * parseFloat(extraPoints));
+      setPreviousScore(score);
+    }
+  }, [score]);
+
+  // 페이지 진입 시 대표 NFT 받아오기
   useEffect(async () => {
     if (!(account && auth)) return;
-    // 사용자 초기화
-    await GameInterface.setParticipant(account, gameTitle);
-    // 사용자 게임횟수 불러오기
-    const recivedChance = await GameInterface.getMyChance(account, gameTitle);
-    setChance(recivedChance);
-    // 게임 아이템 및 사용자의 아이템 수량 불러오기
-    const recivedItems = await GameInterface.getGameItems();
-    setGameItems(recivedItems);
-    // 사용자 게임 기록 불러오기
-    const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
-    setBestScore(recivedBestScore);
-    window.addEventListener("keydown", stopScroll);
+    const mainNFT = await GameInterface.getMyNFT(account);
+    setMainNFT(mainNFT);
   }, [account, auth]);
+
+  // 로그인, 대표NFT까지 확인 됐으면
+  useEffect(async () => {
+    if (!(account && auth && gameTitle && mainNFT)) return;
+    await GameInterface.setParticipant(account, gameTitle); // 참여자 초기화
+    await GameInterface.initChance(account, gameTitle, mainNFT); // 게임횟수 초기화
+    setChance(await GameInterface.getMyChance(account, gameTitle)); // 횟수 불러오기
+    setGameItems(await GameInterface.getGameItems()); // 게임아이템 불러오기
+    setBestScore(await GameInterface.getMyBestScore(account, gameTitle)); // 최고점수 불러오기
+    // 사용자 일일미션 불러오기
+    const recivedMission = await GameInterface.getMission(account, gameTitle);
+    if (recivedMission) {
+      setHasMission(recivedMission);
+    } // 테트리스 게임에 방해가 되는 키보드 스크롤 기능 막기
+    window.addEventListener("keydown", stopScroll);
+  }, [mainNFT]);
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -68,7 +99,12 @@ const Tetris = () => {
 
   // 아이템 효과 담기
   const getItemEffect = async (recivedItemEffect) => {
-    setItemEffect(recivedItemEffect);
+    if (recivedItemEffect.resultBonus) {
+      setResultBonus(recivedItemEffect.resultBonus);
+    }
+    if (recivedItemEffect.extraPoints) {
+      setExtraPoints(recivedItemEffect.extraPoints);
+    }
   };
 
   // left-right
@@ -84,11 +120,17 @@ const Tetris = () => {
       return;
     }
     if (!window.confirm("횟수가 차감됩니다. 게임을 시작하시겠읍니까?")) return;
-    setIsPlaying(true); // 게임중으로 상태 변경
-    setItemEffect(1); // 아이템 효과 초기화
-    await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
+    const isMinusGameCount = await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
+    if (!isMinusGameCount.data) {
+      alert("게임 횟수에 문제 있음");
+      return;
+    }
     const recivedChance = await GameInterface.getMyChance(account, gameTitle);
     setChance(recivedChance); // 횟수 차감됐으니 횟수 다시 불러오기
+    setIsPlaying(true); // 게임중으로 상태 변경
+    setResultBonus(""); // 아이템 효과 초기화
+    setExtraPoints(""); // 아이템 효과 초기화
+    setExtraScore(""); // 아이템 효과 초기화
     //reset everything
     setStage(createStage());
     setDropTime(1000); // 1 sec
@@ -111,7 +153,22 @@ const Tetris = () => {
       if (player.pos.y < 1) {
         setGameOver(true);
         setDropTime(null);
-        await GameInterface.sendScore(account, gameTitle, score, itemEffect);
+        if (extraScore) {
+          await GameInterface.sendScore(account, gameTitle, extraScore, resultBonus);
+        } else {
+          await GameInterface.sendScore(account, gameTitle, score, resultBonus);
+        }
+        if (hasMission) {
+          console.log("미션있음");
+          // 이미 일일미션 달성 상태면 아무것도 안하기
+          if (hasMission.attainment) return;
+          // 제거한 줄이 미션 제시량 이상이면 달성으로 업데이트
+          if (rows >= hasMission.DailyMission.targetValue) {
+            await GameInterface.updateMission(account, hasMission.mission_id);
+            const recivedMission = await GameInterface.getMission(account, gameTitle);
+            setHasMission(recivedMission);
+          }
+        }
         const recivedBestScore = await GameInterface.getMyBestScore(account, gameTitle);
         setBestScore(recivedBestScore);
         setIsPlaying(false);
@@ -124,8 +181,11 @@ const Tetris = () => {
 
   const keyUp = ({ keyCode }) => {
     if (gameOver) return;
-
-    if (keyCode === 40) {
+    if (extraPoints) {
+      if (keyCode === 38) {
+        setDropTime(1000 / (level + 1) + 100); // 1 sec
+      }
+    } else if (keyCode === 40) {
       setDropTime(1000 / (level + 1) + 100); // 1 sec
     }
   };
@@ -137,6 +197,25 @@ const Tetris = () => {
 
   const move = ({ keyCode }) => {
     if (!gameOver) {
+      if (extraPoints) {
+        switch (keyCode) {
+          case 37:
+            keyCode = 39;
+            break;
+          case 39:
+            keyCode = 37;
+            break;
+          case 38:
+            keyCode = 40;
+            break;
+          case 40:
+            keyCode = 38;
+            break;
+
+          default:
+            break;
+        }
+      }
       if (keyCode === 37) {
         //left
         movePlayer(-1);
@@ -158,45 +237,57 @@ const Tetris = () => {
   }, dropTime);
 
   return (
-    // 키 누름을 감지하기 위해 감싸는 스타일 래퍼
-    <>
-      <GameSelectbar />
-      <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
-        <StyledTetris>
-          <Stage stage={stage} gameOver={gameOver} />
-          <aside>
-            <div>
-              <Display text={`Chance: ${chance}`} />
-              <Display text={`Best score: ${bestScore}`} />
+    <Flex m={"0 10px"}>
+      <InGameProfile filledValue={score} hasMission={hasMission} />
+      {account && auth ? (
+        <Box w={"100%"}>
+          <GameSelectbar />
+          {/* 키 누름을 감지하기 위해 감싸는 스타일 래퍼 */}
+          <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
+            <StyledTetris>
+              <Stage stage={stage} gameOver={gameOver} />
+              <aside>
+                <div>
+                  <Display text={`Chance: ${chance}`} />
+                  <Display text={`Best score: ${bestScore}`} />
 
-              {itemEffect == 1 ? (
-                <Display text={`Score: ${score}`} />
-              ) : (
-                <Display text={`Score: ${score} x${itemEffect}`} />
-              )}
+                  {extraScore && resultBonus ? (
+                    <Display text={`Score: ${extraScore} x${resultBonus}`} />
+                  ) : extraScore ? (
+                    <Display text={`Score: ${extraScore}`} />
+                  ) : resultBonus ? (
+                    <Display text={`Score: ${score} x${resultBonus}`} />
+                  ) : (
+                    <Display text={`Score: ${score}`} />
+                  )}
 
-              <Display text={`Rows: ${rows}`} />
-              <Display text={`Level: ${level}`} />
-            </div>
-            <StartButton callback={startGame} isPlaying={isPlaying} />
-          </aside>
-          <div>
-            {gameItems &&
-              gameItems.map((item) => (
-                <GameItem
-                  key={item.itemId}
-                  item={item}
-                  gameTitle={gameTitle}
-                  getItemEffect={getItemEffect}
-                  itemEffect={itemEffect}
-                  isPlaying={isPlaying}
-                  updateChance={updateChance}
-                />
-              ))}
-          </div>
-        </StyledTetris>
-      </StyledTetrisWrapper>
-    </>
+                  <Display text={`Rows: ${rows}`} />
+                  <Display text={`Level: ${level}`} />
+                </div>
+                <StartButton callback={startGame} isPlaying={isPlaying} />
+              </aside>
+              <div>
+                {gameItems &&
+                  gameItems.map((item) => (
+                    <GameItem
+                      key={item.itemId}
+                      item={item}
+                      gameTitle={gameTitle}
+                      getItemEffect={getItemEffect}
+                      resultBonus={resultBonus}
+                      extraPoints={extraPoints}
+                      isPlaying={isPlaying}
+                      updateChance={updateChance}
+                    />
+                  ))}
+              </div>
+            </StyledTetris>
+          </StyledTetrisWrapper>
+        </Box>
+      ) : (
+        <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
+      )}
+    </Flex>
   );
 };
 

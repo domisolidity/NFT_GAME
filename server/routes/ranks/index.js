@@ -30,4 +30,31 @@ router.post("/past-ranking", async (req, res) => {
   res.send(pastRankData);
 });
 
+router.get("/", async (req, res) => {
+  console.log("랭킹`");
+  const rank = await Ranking.findAll({
+    where: { isApproved: false },
+    attributes: ["user_address", "ranking", "game_title", "isApproved", "isRewarded"],
+    order: [["game_title"], ["ranking"]],
+  });
+  res.send(rank);
+});
+
+router.post("/approved", async (req, res) => {
+  const rank = req.body.rank;
+  console.log(rank);
+  for (let i = 0; i < rank.length; i++) {
+    await Ranking.update(
+      { isApproved: true },
+      {
+        where: {
+          user_address: rank[i][0],
+          game_title: rank[i][2],
+          ranking: rank[i][1],
+        },
+      }
+    );
+  }
+});
+
 module.exports = router;

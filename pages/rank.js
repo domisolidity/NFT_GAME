@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { Flex, Box } from "@chakra-ui/react";
 import axios from "axios";
 import GameInterface from "../components/game/GameInterface";
@@ -35,27 +34,27 @@ const Rank = ({ gameList }) => {
   // 게임이 선택되면 해당 게임 현재순위, 역대순위 받아다 useState에 담아주기
   useEffect(() => {
     if (!selectedGameTitle) return;
-    getCurrentRankData();
-    getPastRankData();
+    getCurrentRankData(); // 현재순위 받아와
+    getPastRankData(); // 과거순위 받아와
   }, [selectedGameTitle]);
 
   return (
-    <Flex m={"0 10px"}>
+    <Flex maxWidth={"1000px"} margin="0 auto" justifyContent={"center"}>
       <RankSelectbar gameList={gameList} getSelectedGameTitle={getSelectedGameTitle} />
       {selectedGameTitle ? (
-        <Flex flexDirection={"column"} w={"100%"} textAlign="center">
+        <Flex flexDirection={"column"} textAlign="center">
           <Box>{selectedGameTitle} 게임의 순위입니다.</Box>
           <Flex>
-            <Box w={"100%"}>
+            <Box>
               <CurrentRanking currentRankData={currentRankData} />
             </Box>
-            <Box w={"30%"} minWidth="300px">
+            <Box minWidth="300px">
               <PastRanking pastRankData={pastRankData} />
             </Box>
           </Flex>
         </Flex>
       ) : (
-        <BlankComponent receivedText={"게임을 선택하여 게임별 참여자들의 순서를 확인하세요!"} />
+        <BlankComponent receivedText={"게임을 선택하여 참여자들의 게임별 순위를 확인하세요!"} />
       )}
     </Flex>
   );
@@ -64,11 +63,8 @@ const Rank = ({ gameList }) => {
 export default Rank;
 
 export async function getStaticProps() {
-  // const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-  // const data = res.data;
-
+  // 게임리스트 받아오기
   const gameList = GameInterface.gameList;
-
   return {
     props: {
       gameList: gameList,

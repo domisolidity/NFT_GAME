@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../../models");
+const { User, Ranking, ClosingMission } = require("../../models");
 const jwt = require("express-jwt");
 
 const { config } = require("../../config");
 
 /** GET /api/users */
 router.get("/", async (req, res, next) => {
-  console.log(1)
+  console.log(1);
   // If a query string ?publicAddress=... is given, then filter results
 
   const whereClause =
     req.query && req.query.publicAddress
       ? {
-        where: { publicAddress: req.query.publicAddress },
-      }
+          where: { publicAddress: req.query.publicAddress },
+        }
       : undefined;
 
   return User.findAll(whereClause)
@@ -25,7 +25,7 @@ router.get("/", async (req, res, next) => {
 /** GET /api/users/:userId */
 /** Authenticated route */
 router.get("/:userId", jwt(config), async (req, res, next) => {
-  console.log(2)
+  console.log(2);
   if (req.user.payload.id !== +req.params.userId) {
     return res.status(401).send({ error: "You can can only access yourself" });
   }
@@ -41,6 +41,84 @@ router.post("/", async (req, res, next) => {
   User.create(req.body)
     .then((user) => res.json(user))
     .catch(next);
+});
+
+router.get("/claim_rank", async (req, res) => {
+  const { account } = req.body;
+  await Ranking.findAll({
+    where: { user_address: account },
+  })
+    .then((data) => res.send(data))
+    .catch(console.error());
+});
+
+// 클레임양 조회 요청
+router.post("/claimable-rank", async (req, res) => {
+  const { data } = req.body;
+  console.log("랭킹ssss`");
+  const rank = await Ranking.findAll({
+    where: {
+      user_address: data,
+      isApproved: true,
+      isRewarded: false,
+    },
+    attributes: ["user_address", "ranking", "game_title", "isApproved", "isRewarded"],
+  });
+  res.send(rank);
+});
+
+router.post("/claimable-mission", async (req, res) => {
+  const { data } = req.body;
+
+  await ClosingMission.findAll({
+    where: {
+      user_address: data,
+      isApproved: true,
+      isRewarded: false,
+    },
+    attributes: ["user_address", "isApproved", "isRewarded"],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch(console.error);
+});
+
+router.post("/rewarded", async (req, res) => {
+  try {
+    const { rank } = req.body;
+    console.log(rank);
+    for (let i = 0; i < rank.length; i++) {
+      console.log(rank[i][1]);
+      console.log(rank[i][2]);
+      await Ranking.update(
+        { isRewarded: true },
+        {
+          where: {
+            user_address: rank[i][0],
+            game_title: rank[i][2],
+            ranking: rank[i][1],
+          },
+        }
+      );
+    }
+    res.send(true);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// 클레임 허용 완료한 계정에 대해 랭크 삭제
+router.post("/deleteMission", async (req, res) => {
+  try {
+    const account = req.body.account;
+    await ClosingMission.destroy({
+      where: { user_address: account },
+    });
+    res.send(true);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // /** PATCH /api/users/:userId */

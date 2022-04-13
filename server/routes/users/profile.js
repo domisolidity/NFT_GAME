@@ -9,8 +9,8 @@ const { config } = require("../../config");
 /** Authenticated route */
 router.patch("/:userId", jwt(config), async (req, res, next) => {
   // Only allow to fetch current user
-  console.log(4)
-  console.log(req.body)
+  console.log(4);
+  console.log(req.body);
   if (req.user.payload.id !== +req.params.userId) {
     return res.status(401).send({ error: "You can can only access yourself" });
   }
@@ -24,14 +24,22 @@ router.patch("/:userId", jwt(config), async (req, res, next) => {
     })
     .then((user) => {
       return user
-        ? res.json(user)
+        ? res.json({ user: user, success: true })
         : res.status(401).send({
-          error: `User with publicAddress ${req.params.userId} is not found in database`,
-        });
+            error: `User with publicAddress ${req.params.userId} is not found in database`,
+          });
     })
     .catch(next);
 });
 
+/* 대표 NFT 토큰id 받아오기 */
+router.post("/my-token-id", async (req, res) => {
+  console.log("미션 등록");
+  const account = req.body.account;
 
+  const response = await User.findOne({ where: { publicAddress: account }, attributes: ["mainNft"] });
+
+  res.send(response);
+});
 
 module.exports = router;

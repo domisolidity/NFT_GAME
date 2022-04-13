@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Grid, GridItem, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import NetworkCard from "../../components/NetworkCard";
 import ProfileCard from "../../components/ProfileCard";
-import Inventory from '../../components/Inventory'
+import Inventory from "../../components/Inventory";
 import Collections from "../../components/Collections";
+import TotalCard from "../../components/TotalCard";
+import Claim from "../../components/Claim";
+import Staking from "../../components/Staking";
+import { useSelector } from "react-redux";
+import CurrentMainNft from "../../components/CurrentMainNft";
+import NftAmount from "../../components/NftAmount";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
+  const [hasMainNft, setHasMainNft] = useState(false);
+  const [currentMainNft, setCurrentMainNft] = useState("");
+  const data = useSelector((state) => state.data);
 
   useEffect(() => {
     returnMenu(menu);
@@ -15,9 +24,11 @@ const Mypage = () => {
   const returnMenu = (display) => {
     switch (display) {
       case "items":
-        return <Inventory />
+        return <Inventory />;
       case "nfts":
-        return <Collections />
+        return <Collections />;
+      case "claim":
+        return <Claim />;
       default:
         break;
     }
@@ -31,37 +42,85 @@ const Mypage = () => {
     e.preventDefault();
     setMenu("nfts");
   };
+  const renderClaim = (e) => {
+    e.preventDefault();
+    setMenu("claim");
+  };
+
+  const getCurrentMainNft = (receivedMainNft) => {
+    if (receivedMainNft) {
+      setHasMainNft(true);
+      setCurrentMainNft(receivedMainNft);
+    }
+  };
 
   return (
     <>
-      <Grid
-        height="85vh"
-        padding="0 4vw"
-        templateRows="repeat(5, minmax(10rem,1rem))" //세로
-        templateColumns="repeat(7, minmax(11rem,1rem))" //가로
-        gap={1}
-      >
-        <GridItem bg="whiteAlpha.100" borderRight={"solid 0.1rem"} colSpan={1} rowSpan={7}>
+      <div className="mypage">
+        <div className="sidebar">
           <ProfileCard />
-          <Flex flexDir={"column"}>
-            <Button onClick={renderItems} m={3}>아이템</Button>
-            <Button onClick={renderNfts} m={3}>NFT</Button>
-          </Flex>
-        </GridItem>
+          <Button onClick={renderItems} m={4}>
+            아이템
+          </Button>
+          <Button onClick={renderNfts} m={4}>
+            NFT
+          </Button>
+          <Button onClick={renderClaim} m={4}>
+            Claim
+          </Button>
 
-        <GridItem colSpan={2} rowSpan={1}>
-          <NetworkCard />
-        </GridItem>
-        {/* <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={2}>
-          지갑
-        </GridItem>
-        <GridItem bg="whiteAlpha.100" colSpan={2} rowSpan={2}>
-          현재등수?
-        </GridItem> */}
-        <GridItem bg="whiteAlpha.100" colSpan={6} rowSpan={6}>
-          {returnMenu(menu)}
-        </GridItem>
-      </Grid>
+        </div>
+        <div className="content">
+          <div className="fixed">
+            <div className="fixed_item"></div>
+            <div className="fixed_item">
+              <NetworkCard />
+            </div>
+            {/* <div className="fixed_item">
+              <TotalCard />
+            </div> */}
+            <div className="fixed_item">
+              <CurrentMainNft
+                getCurrentMainNft={getCurrentMainNft}
+                currentMainNftImg={currentMainNft}
+              />
+            </div>
+            <div className="fixed_item">
+              <NftAmount />
+            </div>
+          </div>
+          <div className="menu">{returnMenu(menu)}</div>
+        </div>
+      </div>
+      <style jsx>{`
+        .mypage {
+          display: flex;
+          margin: 0 10em;
+        }
+        .sidebar {
+          display: flex;
+          min-width: 150px;
+          width: 10%;
+          height: 65vh;
+          flex-direction: column;
+          border-right: 1px solid;
+        }
+        .content {
+          width: 80%;
+          height: auto;
+          margin: 0 3rem;
+        }
+        .fixed {
+          display: flex;
+        }
+
+        .fixed_item {
+          margin-right: 2rem;
+        }
+        .menu {
+          margin: 2rem 1rem;
+        }
+      `}</style>
     </>
   );
 };

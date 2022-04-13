@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Text, Image, Button,Heading } from "@chakra-ui/react";
+import { Box, Flex, Text, Image, Button } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import NftCard from "./NftCard.jsx";
-import Swal from "sweetalert2";
 import axios from "axios";
 
 const NftMint = () => {
@@ -16,56 +15,78 @@ const NftMint = () => {
   const [success, setSuccess] = useState(false);
   const [viewResult, setViewResult] = useState(false);
   const [mintedNft, setMintedNft] = useState();
+  const [redAmount, setRedAmount] = useState(0);
+  const [greenAmount, setGreenAmount] = useState(0);
+  const [purpleAmount, setPurpleAmount] = useState(0);
 
-  
   // @ 민팅 함수
   const minting = async (grade) => {
-
     try {
       setLoading(true);
       console.log(grade);
       let price;
+      let amount;
       if (grade == "red") {
         price = "0.3";
+        amount = redAmount;
       } else if (grade == "green") {
         price = "0.5";
+        amount = greenAmount;
       } else if (grade == "purple") {
         price = "1";
+        amount = purpleAmount;
       }
 
       //민팅 메서드 요청
       const response = await nftContract.methods
-      .create(account, process.env.NEXT_PUBLIC_METADATA, grade)
-      .send({ from: account, value: web3.utils.toWei(price, "ether") })
-      
+        .create(
+          account,
+          process.env.NEXT_PUBLIC_METADATA,
+          grade,
+          amount,
+          Date.now()
+        )
+        .send({
+          from: account,
+          value: web3.utils.toWei(price, "ether") * amount,
+        });
+
       //민팅 성공시
       if (response) {
         const baseUrl = "http://127.0.0.1:8080/ipfs";
         setLoading(false);
         // 민팅한 nft정보 불러오기
-        const result = await nftContract.methods.getMyLastNft(account).call({from:account})
-        await axios.get(`${baseUrl}${result.uri.slice(6)}/${result.id}.json`).then(res=>{
-          console.log(res)
-          console.log(res.data.attributes)
-          setMintedNft({
-            id: result.id,
-            grade: res.data.grade,
-            attributes: res.data.attributes,
-            name: res.data.name,
-            image: `${baseUrl}${res.data.image.slice(6)}`,
-            description: res.data.description,
-          })
-        })
+        const result = await nftContract.methods
+          .getMyLastNft(account)
+          .call({ from: account });
+
+        await axios
+          .get(`${baseUrl}${result.uri.slice(6)}/${result.id}.json`)
+          .then((res) => {
+            console.log(res);
+            console.log(res.data.attributes);
+
+            setMintedNft({
+              id: result.id,
+              grade: res.data.grade,
+              attributes: res.data.attributes,
+              name: res.data.name,
+              image: `${baseUrl}${res.data.image.slice(6)}`,
+              description: res.data.description,
+            });
+          });
         setViewResult(true); // 민팅시 nft정보 띄우는 트리거 역할
-        document.querySelector(".minted").scrollIntoView({behavior:'smooth', block: 'center'});
+        document
+          .querySelector(".minted")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
         success ? setSuccess(false) : setSuccess(true); // 남은 nft 업데이트하는 트리거 역할
+
         // Swal.fire({
         //   icon: "success",
         //   title: "Minting Success",
         //   text: "정상 적으로 민팅 되었습니다.",
         //   footer: `<a href="/mypage">마이페이지에서 확인</a>`,
         // });
-
       }
     } catch (error) {
       console.log("-에러 내용- \n", error);
@@ -90,6 +111,41 @@ const NftMint = () => {
     }
   };
 
+  const increaseAmount = (grade) => {
+    if (grade == "red") {
+      if (redAmount == 3) {
+        alert("최대 3개까지 구매 가능");
+        return;
+      }
+      setRedAmount(redAmount + 1);
+    } else if (grade == "green") {
+      if (greenAmount == 3) {
+        alert("최대 3개까지 구매 가능");
+        return;
+      }
+      setGreenAmount(greenAmount + 1);
+    } else if (grade == "purple") {
+      if (purpleAmount == 3) {
+        alert("최대 3개까지 구매 가능");
+        return;
+      }
+      setPurpleAmount(purpleAmount + 1);
+    }
+  };
+
+  const decreaseAmount = (grade) => {
+    if (grade == "red") {
+      if (redAmount == 0) return;
+      setRedAmount(redAmount - 1);
+    } else if (grade == "green") {
+      if (greenAmount == 0) return;
+      setGreenAmount(greenAmount - 1);
+    } else if (grade == "purple") {
+      if (purpleAmount == 0) return;
+      setPurpleAmount(purpleAmount - 1);
+    }
+  };
+
   useEffect(async () => {
     if (!account) return;
     await remainedNft();
@@ -98,48 +154,71 @@ const NftMint = () => {
     return () => {
       setViewResult(false);
     };
-  }, [account,success]);
-
+  }, [account, success]);
 
   return (
-    <Box mt={6}>
-      <Flex className="ekek"  >
+    <Box mt="5">
+      <Flex justify="space-around" w="70vw">
         <div className="card red">
           <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
             Nfts : {redNfts} / 60
           </Text>
-          <Text fontSize={28} fontWeight="bold" mt={10}>
+          <Text fontSize={28} fontWeight="bold" mt={2}>
             Holder NFT <br /> Red
           </Text>
-          <Text fontSize={16} mt={4}>
-            (홀더 인증용 NFT)
-          </Text>
-          <Flex justify="space-around" padding={10} mt={6}>
-            <Box>
-              <Image
-                display="inline"
-                src={"/images/eth.svg"}
-                mr={10}
-                boxSize="2rem"
-                bg="whiteAlpha.100"
-                borderRadius={50}
-              />
-              <Text
-                display="inline"
-                verticalAlign={8}
-                fontSize="xl"
-                fontWeight="700"
-              >
-                0.3 ETH
-              </Text>
-            </Box>
+          <Text fontSize={16}>(홀더 인증용 NFT)</Text>
+
+          <Flex justify="center" mt="5vh" mb="5">
+            <Text lineHeight="8" mr="3">
+              price
+            </Text>
+            <Text
+              display="inline"
+              verticalAlign={8}
+              fontSize="xl"
+              fontWeight="700"
+            >
+              0.3 ETH
+            </Text>
+          </Flex>
+          <Flex justify="center" mb="5">
+            <Button variant="ghost" onClick={() => decreaseAmount("red")}>
+              -
+            </Button>
+            <Text m="0px 10px" lineHeight="10">
+              {redAmount}
+            </Text>
+            <Button variant="ghost" onClick={() => increaseAmount("red")}>
+              +
+            </Button>
+          </Flex>
+          <Flex justify="center" mb="4vh">
+            <Text lineHeight="8" mr="3">
+              Total
+            </Text>
+            <Image
+              display="inline"
+              src={"/images/eth.svg"}
+              mr={2}
+              boxSize="2rem"
+              bg="whiteAlpha.100"
+              borderRadius={50}
+            />
+            <Text
+              display="inline"
+              verticalAlign={8}
+              fontSize="xl"
+              fontWeight="700"
+            >
+              {(0.3 * redAmount).toFixed(1)} ETH
+            </Text>
           </Flex>
           <Box>
             <Button
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("red")}
             >
@@ -148,42 +227,66 @@ const NftMint = () => {
           </Box>
         </div>
 
-        <div className="card green" >
+        <div className="card green">
           <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
             Nfts : {greenNft} / 30
           </Text>
-          <Text fontSize={28} fontWeight="bold" mt={10}>
+          <Text fontSize={28} fontWeight="bold" mt={2}>
             Holder NFT <br /> Green
           </Text>
-          <Text fontSize={16} mt={4}>
-            (홀더 인증용 NFT)
-          </Text>
-          <Flex justify="space-around" padding={10} mt={6}>
-            <Box>
-              <Image
-                display="inline"
-                src={"/images/eth.svg"}
-                mr={10}
-                boxSize="2rem"
-                bg="whiteAlpha.100"
-                borderRadius={50}
-              />
-              <Text
-                display="inline"
-                verticalAlign={8}
-                fontSize="xl"
-                fontWeight="700"
-              >
-                0.5 ETH
-              </Text>
-            </Box>
+          <Text fontSize={16}>(홀더 인증용 NFT)</Text>
+
+          <Flex justify="center" mt="5vh" mb="5">
+            <Text lineHeight="8" mr="3">
+              price
+            </Text>
+            <Text
+              display="inline"
+              verticalAlign={8}
+              fontSize="xl"
+              fontWeight="700"
+            >
+              0.5 ETH
+            </Text>
+          </Flex>
+          <Flex justify="center" mb="5">
+            <Button variant="ghost" onClick={() => decreaseAmount("green")}>
+              -
+            </Button>
+            <Text m="0px 10px" lineHeight="10">
+              {greenAmount}
+            </Text>
+            <Button variant="ghost" onClick={() => increaseAmount("green")}>
+              +
+            </Button>
+          </Flex>
+          <Flex justify="center" mb="4vh">
+            <Text lineHeight="8" mr="3">
+              Total
+            </Text>
+            <Image
+              display="inline"
+              src={"/images/eth.svg"}
+              mr={2}
+              boxSize="2rem"
+              bg="whiteAlpha.100"
+              borderRadius={50}
+            />
+            <Text
+              display="inline"
+              verticalAlign={8}
+              fontSize="xl"
+              fontWeight="700"
+            >
+              {(0.5 * greenAmount).toFixed(1)} ETH
+            </Text>
           </Flex>
           <Box>
             <Button
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("green")}
             >
@@ -196,38 +299,63 @@ const NftMint = () => {
           <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
             Nfts : {purpleNft} / 10
           </Text>
-          <Text fontSize={28} fontWeight="bold" mt={10}>
+          <Text fontSize={28} fontWeight="bold" mt={2}>
             Holder NFT <br /> Purple
           </Text>
-          <Text fontSize={16} mt={4}>
-            (홀더 인증용 NFT)
-          </Text>
-          <Flex justify="space-around" padding={10} mt={6}>
-            <Box>
-              <Image
-                display="inline"
-                src={"/images/eth.svg"}
-                mr={10}
-                boxSize="2rem"
-                bg="whiteAlpha.100"
-                borderRadius={50}
-              />
-              <Text
-                display="inline"
-                verticalAlign={8}
-                fontSize="xl"
-                fontWeight="700"
-              >
-                1 ETH
-              </Text>
-            </Box>
+          <Text fontSize={16}>(홀더 인증용 NFT)</Text>
+
+          <Flex justify="center" mt="5vh" mb="5">
+            <Text lineHeight="8" mr="3">
+              price
+            </Text>
+            <Text
+              display="inline"
+              verticalAlign={8}
+              fontSize="xl"
+              fontWeight="700"
+            >
+              1.0 ETH
+            </Text>
+          </Flex>
+          <Flex justify="center" mb="5">
+            <Button variant="ghost" onClick={() => decreaseAmount("purple")}>
+              -
+            </Button>
+            <Text m="0px 10px" lineHeight="10">
+              {purpleAmount}
+            </Text>
+            <Button variant="ghost" onClick={() => increaseAmount("purple")}>
+              +
+            </Button>
+          </Flex>
+          <Flex justify="center" mb="4vh">
+            <Text lineHeight="8" mr="3">
+              Total
+            </Text>
+            <Image
+              display="inline"
+              src={"/images/eth.svg"}
+              mr={2}
+              boxSize="2rem"
+              bg="whiteAlpha.100"
+              borderRadius={50}
+            />
+            <Text
+              display="inline"
+              verticalAlign={8}
+              fontSize="xl"
+              fontWeight="700"
+            >
+              {(1 * purpleAmount).toFixed(1)} ETH
+            </Text>
           </Flex>
           <Box>
             <Button
+              className="minted"
               disabled={loading ? 1 : 0}
               w={200}
               loadingText="Minting.."
-              colorScheme="teal"
+              bg="blackAlpha.300"
               variant="solid"
               onClick={() => minting("purple")}
             >
@@ -236,26 +364,46 @@ const NftMint = () => {
           </Box>
         </div>
       </Flex>
-      {viewResult && 
-      <Box className="minted" bg="#000000b3" w="70vw" h="65vh" padding="10" borderRadius="20" mt="40" >
-        <Heading >Minted Nft</Heading>
-        <Flex  justify="space-around" w="70vw">
-          <NftCard nftInfo={mintedNft}/>
-        </Flex>
-      </Box>
-      }
+      {viewResult && (
+        <>
+          <Text mt="150" fontSize="25">
+            <span>Minting Nft</span>
+          </Text>
+          <Box
+            bg="#000000b3"
+            minW={"600px"}
+            w="70vw"
+            padding="10"
+            borderRadius="20"
+            mt="70"
+          >
+            <Flex justify="space-around" w="70vw">
+              <NftCard nftInfo={mintedNft} />;
+              {/* {mintedNft &&
+                mintedNft.map((i, nft) => {
+                  <NftCard key={i} nftInfo={nft} />;
+                })}{" "} */}
+            </Flex>
+          </Box>
+        </>
+      )}
 
       <style jsx>{`
-        .ekek{
-          justify-content:"space-around"
-          width:"70vw"
+        span {
+          font-size: 35px;
+          background: linear-gradient(#f1f1f1 23%, #818181 100%);
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          font-weight: 900;
         }
-        .card{
+
+        .card {
           width: 360px;
           height: 500px;
           border-radius: 10px;
         }
-        .red{
+        .red {
           border: 2px solid #917a7a;
           background-image: linear-gradient(
             310deg,
@@ -273,7 +421,7 @@ const NftMint = () => {
             hsl(344deg 69% 43%) 100%
           );
         }
-        .green{ 
+        .green {
           border: 2px solid #5c8665;
           background-image: linear-gradient(
             305deg,
@@ -290,23 +438,23 @@ const NftMint = () => {
           );
         }
 
-        .purple{
+        .purple {
           border: 2px solid #78709c;
           background-image: linear-gradient(
-          310deg,
-          hsl(256deg 64% 39%) 0%,
-          hsl(253deg 61% 34%) 8%,
-          hsl(249deg 58% 29%) 17%,
-          hsl(247deg 55% 23%) 27%,
-          hsl(245deg 52% 18%) 37%,
-          hsl(246deg 50% 13%) 47%,
-          hsl(246deg 50% 13%) 57%,
-          hsl(245deg 52% 18%) 67%,
-          hsl(247deg 55% 23%) 76%,
-          hsl(249deg 58% 29%) 85%,
-          hsl(253deg 61% 34%) 93%,
-          hsl(256deg 64% 39%) 100%
-        );
+            310deg,
+            hsl(256deg 64% 39%) 0%,
+            hsl(253deg 61% 34%) 8%,
+            hsl(249deg 58% 29%) 17%,
+            hsl(247deg 55% 23%) 27%,
+            hsl(245deg 52% 18%) 37%,
+            hsl(246deg 50% 13%) 47%,
+            hsl(246deg 50% 13%) 57%,
+            hsl(245deg 52% 18%) 67%,
+            hsl(247deg 55% 23%) 76%,
+            hsl(249deg 58% 29%) 85%,
+            hsl(253deg 61% 34%) 93%,
+            hsl(256deg 64% 39%) 100%
+          );
         }
       `}</style>
     </Box>
