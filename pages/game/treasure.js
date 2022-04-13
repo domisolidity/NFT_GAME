@@ -50,9 +50,13 @@ const TreasureHunt = () => {
       return;
     }
     if (!window.confirm("게임기회가 차감됩니다. 게임을 시작하시겠나이까?")) return;
+    const isMinusGameCount = await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
+    if (!isMinusGameCount.data) {
+      alert("게임 횟수에 문제 있음");
+      return;
+    }
     setIsPlaying(true); // 게임중으로 상태 변경
     setResultBonus(""); // 아이템 효과 초기화
-    await GameInterface.minusGameCount(account, gameTitle);
     const recivedChance = await GameInterface.getMyChance(account, gameTitle);
     setChance(recivedChance); // 횟수 차감됐으니 횟수 다시 불러오기
   };

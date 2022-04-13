@@ -77,9 +77,13 @@ const StackingBlocks = () => {
       )
     )
       return;
+    const isMinusGameCount = await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
+    if (!isMinusGameCount.data) {
+      alert("게임 횟수에 문제 있음");
+      return;
+    }
     setIsPlaying(true);
     setGameEnded(false); // 게임상태 변경
-    await GameInterface.minusGameCount(account, gameTitle); // 횟수 차감
     const recivedChance = await GameInterface.getMyChance(account, gameTitle);
     setChance(recivedChance); // 횟수 차감됐으니 횟수 다시 불러오기
     setResultBonus(""); // 이전판 아이템 효과 제거
