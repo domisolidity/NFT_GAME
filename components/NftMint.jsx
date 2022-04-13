@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Image, Button } from "@chakra-ui/react";
-import { useSelector, useDispatch } from "react-redux";
-import NftCard from "./NftCard.jsx";
+import { useSelector } from "react-redux";
 import axios from "axios";
+import MintedNfts from "./nft/MintedNfts.jsx";
 
-const NftMint = () => {
+const NftMint = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, nftContract } = blockchain;
   console.log("nftContract", nftContract);
@@ -19,26 +19,43 @@ const NftMint = () => {
   const [greenAmount, setGreenAmount] = useState(0);
   const [purpleAmount, setPurpleAmount] = useState(0);
 
+  const myNftAmount = props.myNftAmount;
+
   // @ 민팅 함수
   const minting = async (grade) => {
     try {
+      if (myNftAmount == 3) {
+        alert("Nft는 최대 3개 까지만 민팅 가능합니다.");
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       console.log(grade);
       let price;
-      let amount;
-      if (grade == "red") {
+      let amount = 0;
+      if (grade == 1) {
         price = "0.3";
         amount = redAmount;
-      } else if (grade == "green") {
+      } else if (grade == 2) {
         price = "0.5";
         amount = greenAmount;
-      } else if (grade == "purple") {
+      } else if (grade == 3) {
         price = "1";
         amount = purpleAmount;
       }
+      console.log(amount);
+      console.log(myNftAmount);
+      console.log(myNftAmount + amount);
+      if (Number(myNftAmount) + amount > 3) {
+        alert(
+          `Nft는 최대 3번(갯수 기준) 까지 민팅 가능합니다. \n 현재 민팅 횟수 (${myNftAmount} / 3)`
+        );
+        setLoading(false);
+        return;
+      }
 
       //민팅 메서드 요청
-      const response = await nftContract.methods
+      const result = await nftContract.methods
         .create(
           account,
           process.env.NEXT_PUBLIC_METADATA,
@@ -49,45 +66,48 @@ const NftMint = () => {
         .send({
           from: account,
           value: web3.utils.toWei(price, "ether") * amount,
+        })
+        .then((res) => {
+          console.log(res);
         });
 
-      //민팅 성공시
-      if (response) {
-        const baseUrl = "http://127.0.0.1:8080/ipfs";
+      if (result) {
+        console.log(result);
         setLoading(false);
-        // 민팅한 nft정보 불러오기
-        const result = await nftContract.methods
-          .getMyLastNft(account)
-          .call({ from: account });
-
-        await axios
-          .get(`${baseUrl}${result.uri.slice(6)}/${result.id}.json`)
-          .then((res) => {
-            console.log(res);
-            console.log(res.data.attributes);
-
-            setMintedNft({
-              id: result.id,
-              grade: res.data.grade,
-              attributes: res.data.attributes,
-              name: res.data.name,
-              image: `${baseUrl}${res.data.image.slice(6)}`,
-              description: res.data.description,
+        const baseUrl = "http://127.0.0.1:8080/ipfs";
+        let mintedNfts = [];
+        for (let i = 0; i < result.length; i++) {
+          await axios
+            .get(`${baseUrl}${result[i].uri.slice(6)}/${result[i].id}.json`)
+            .then((res) => {
+              console.log(res);
+              console.log(res.data.attributes);
+              mintedNfts.push({
+                id: result[i].id,
+                grade: res.data.grade,
+                attributes: res.data.attributes,
+                name: res.data.name,
+                image: `${baseUrl}${res.data.image.slice(6)}`,
+                description: res.data.description,
+              });
             });
-          });
+        }
+        console.log(mintedNfts);
+        setMintedNft(mintedNfts);
         setViewResult(true); // 민팅시 nft정보 띄우는 트리거 역할
         document
           .querySelector(".minted")
           .scrollIntoView({ behavior: "smooth", block: "start" });
-        success ? setSuccess(false) : setSuccess(true); // 남은 nft 업데이트하는 트리거 역할
 
-        // Swal.fire({
-        //   icon: "success",
-        //   title: "Minting Success",
-        //   text: "정상 적으로 민팅 되었습니다.",
-        //   footer: `<a href="/mypage">마이페이지에서 확인</a>`,
-        // });
+        success ? setSuccess(false) : setSuccess(true); // 남은 nft 업데이트하는 트리거 역할
       }
+
+      // Swal.fire({
+      //   icon: "success",
+      //   title: "Minting Success",
+      //   text: "정상 적으로 민팅 되었습니다.",
+      //   footer: `<a href="/mypage">마이페이지에서 확인</a>`,
+      // });
     } catch (error) {
       console.log("-에러 내용- \n", error);
       setLoading(false);
@@ -152,6 +172,7 @@ const NftMint = () => {
 
     // 언마운트 역할
     return () => {
+      setMintedNft([]);
       setViewResult(false);
     };
   }, [account, success]);
@@ -220,7 +241,7 @@ const NftMint = () => {
               loadingText="Minting.."
               bg="blackAlpha.300"
               variant="solid"
-              onClick={() => minting("red")}
+              onClick={() => minting(1)}
             >
               MINT
             </Button>
@@ -288,7 +309,7 @@ const NftMint = () => {
               loadingText="Minting.."
               bg="blackAlpha.300"
               variant="solid"
-              onClick={() => minting("green")}
+              onClick={() => minting(2)}
             >
               MINT
             </Button>
@@ -357,7 +378,7 @@ const NftMint = () => {
               loadingText="Minting.."
               bg="blackAlpha.300"
               variant="solid"
-              onClick={() => minting("purple")}
+              onClick={() => minting(3)}
             >
               MINT
             </Button>
@@ -378,7 +399,8 @@ const NftMint = () => {
             mt="70"
           >
             <Flex justify="space-around" w="70vw">
-              <NftCard nftInfo={mintedNft} />;
+              <MintedNfts nftInfo={mintedNft} />
+              {/* <NftCard nftInfo={mintedNft} />; */}
               {/* {mintedNft &&
                 mintedNft.map((i, nft) => {
                   <NftCard key={i} nftInfo={nft} />;
