@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
-import ItemImage from "./ItemImage";
+import {
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
-const ItemCard = (props) => {
+import { useSelector } from "react-redux";
+
+const itemCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, gameTokenContract } = blockchain;
   const item = props.item;
@@ -44,27 +53,79 @@ const ItemCard = (props) => {
   useEffect(() => {
     getMyItemQuantity();
   }, [account, auth]);
-
   return (
-    <GridItem
-      colSpan={1}
-      bg="tomato"
-      width="200px"
-      wordBreak="break-all"
-      textAlign="center"
-    >
-      <Box w={"200px"}>
-        <ItemImage itemId={item.itemId} />
-      </Box>
-      <Box>{item.itemName}</Box>
-      <Box>{myItemQuantity}개 보유 중</Box>
-      <Box>{item.itemPrice} $</Box>
-      <Box>{item.itemDescription}</Box>
-      <Button onClick={buyItem} colorScheme={"blue"}>
-        구매
-      </Button>
-    </GridItem>
+    <Center py={6}>
+      <Stack
+        borderWidth="1px"
+        borderRadius="lg"
+        w={{ sm: "100%", md: "540px" }}
+        height={{ sm: "476px", md: "20rem" }}
+        direction={{ base: "column", md: "row" }}
+        bg={useColorModeValue("white", "gray.900")}
+        boxShadow={"2xl"}
+        padding={4}
+      >
+        <Flex flex={1} bg="blue.200">
+          <Image
+            objectFit="cover"
+            boxSize="100%"
+            src={`../images/item_${item.itemId}.png`}
+          />
+        </Flex>
+        <Stack
+          flex={1}
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          p={1}
+          pt={2}
+        >
+          <Heading fontSize={"2xl"} fontFamily={"body"} m={4}>
+            {item.itemName}
+          </Heading>
+          <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
+            {myItemQuantity}개 보유 중
+          </Text>
+          <Text
+            textAlign={"center"}
+            color={useColorModeValue("gray.700", "gray.400")}
+            px={3}
+          >
+            {item.itemDescription}
+          </Text>
+
+          <Stack
+            width={"100%"}
+            mt={"2rem"}
+            direction={"row"}
+            padding={2}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Button
+              flex={1}
+              fontSize={"sm"}
+              rounded={"full"}
+              bg={"blue.400"}
+              color={"white"}
+              boxShadow={
+                "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+              }
+              _hover={{
+                bg: "blue.500",
+              }}
+              _focus={{
+                bg: "blue.500",
+              }}
+              onClick={buyItem}
+            >
+              구매
+            </Button>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Center>
   );
 };
 
-export default ItemCard;
+export default itemCard;

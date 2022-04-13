@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Flex, Box } from "@chakra-ui/react";
+import { Flex, Box, Heading, Text } from "@chakra-ui/react";
+import { InfoIcon } from '@chakra-ui/icons';
 import axios from "axios";
 import GameInterface from "../components/game/GameInterface";
 import RankSelectbar from "../components/rank/RankSelectbar";
@@ -54,7 +55,15 @@ const Rank = ({ gameList }) => {
           </Flex>
         </Flex>
       ) : (
-        <BlankComponent receivedText={"게임을 선택하여 참여자들의 게임별 순위를 확인하세요!"} />
+        <Box textAlign="center" py={10} px={6}>
+          <InfoIcon boxSize={'50px'} color={'blue.200'} />
+          <Heading as="h2" size="xl" mt={6} mb={2}>
+            <BlankComponent receivedText={"게임을 선택하여 참여자들의 게임별 순위를 확인하세요!"} />
+          </Heading>
+          <Text color={'gray.500'} p={5} fontSize={"1.2rem"}>
+            매 주, 각 게임의 1~3위에게는 보상이 주어집니다.
+          </Text>
+        </Box>
       )}
     </Flex>
   );
@@ -71,3 +80,5 @@ export async function getStaticProps() {
     },
   };
 }
+
+
