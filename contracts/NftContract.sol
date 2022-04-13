@@ -16,6 +16,8 @@ contract NftContract is ERC721Enumerable {
   // Counters.Counter private tokenIds_green; //잠깐만 public 사용중
   // Counters.Counter private tokenIds_purple; //잠깐만 public 사용중
 
+  event NftHistory(uint indexed tokenId, address from, address to, uint time, string historyType);
+
   uint16 public tokenIds_red;
   uint16 public tokenIds_green = 60;
   uint16 public tokenIds_purple = 90;
@@ -101,29 +103,34 @@ contract NftContract is ERC721Enumerable {
   function create(
     address _to,
     string memory _tokenURI,
-    string memory _grade
+    string memory _grade,
+    uint _amount,
+    uint _timestamp
   ) public payable {
     bool red = keccak256(abi.encodePacked(_grade)) == keccak256(abi.encodePacked("red"));
     bool green = keccak256(abi.encodePacked(_grade)) == keccak256(abi.encodePacked("green"));
     bool purple = keccak256(abi.encodePacked(_grade)) == keccak256(abi.encodePacked("purple"));
+
     require(red || green || purple, "This is the wrong approach.");
     require(remainedRed > 0 || remainedGreen > 0 || remainedPurple > 0, "All quantities have been exhausted.");
+    require(_amount <= 3, "ddd");
 
     uint16 tokenId;
+
     if (red) {
-      require(msg.value == 0.3 ether, "value error");
+      require(msg.value == (0.3 ether * _amount), "value error");
       tokenIds_red++;
       tokenId = tokenIds_red;
       remainedRed = 60 - tokenIds_red;
       myNfts[msg.sender].push(RenderToken(tokenId, _tokenURI));
     } else if (green) {
-      require(msg.value == 0.5 ether, "value error");
+      require(msg.value == (0.5 ether * _amount), "value error");
       tokenIds_green++;
       tokenId = tokenIds_green;
       remainedGreen = 90 - tokenIds_green;
       myNfts[msg.sender].push(RenderToken(tokenId, _tokenURI));
     } else if (purple) {
-      require(msg.value == 1 ether, "value error");
+      require(msg.value == (1 ether * _amount), "value error");
       tokenIds_purple++;
       tokenId = tokenIds_purple;
       remainedPurple = 100 - tokenIds_purple;
@@ -133,6 +140,20 @@ contract NftContract is ERC721Enumerable {
     _mint(_to, tokenId);
     _setTokenURI(tokenId, _tokenURI);
     //setApprovalForAll(배포한 거래 계약 주소, true); => 에러모음에 적기
+    //(uint tokenId, address from, address to, uint time, string historyType
+    emit NftHistory(tokenId, address(this), _to, _timestamp, "Mint");
+
+    // return();
+  }
+
+  function nftEventTrigger(
+    uint tokenId,
+    address from,
+    address to,
+    uint time,
+    string memory historyType
+  ) public {
+    emit NftHistory(tokenId, from, to, time, historyType);
   }
 
   function getMyLastNft(address _account) public view returns (RenderToken memory) {
