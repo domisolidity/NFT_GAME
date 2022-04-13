@@ -44,10 +44,10 @@ const Rank = ({ gameList }) => {
       <RankSelectbar gameList={gameList} getSelectedGameTitle={getSelectedGameTitle} />
       {selectedGameTitle ? (
         <Flex flexDirection={"column"} textAlign="center">
-          <Box>{selectedGameTitle} 게임의 순위입니다.</Box>
+          {/* <Box>{selectedGameTitle} 게임의 순위입니다.</Box> */}
           <Flex>
             <Box>
-              <CurrentRanking currentRankData={currentRankData} />
+              <CurrentRanking currentRankData={currentRankData} selectedGameTitle={selectedGameTitle} />
             </Box>
             <Box minWidth="300px">
               <PastRanking pastRankData={pastRankData} />
@@ -66,6 +66,7 @@ const Rank = ({ gameList }) => {
         </Box>
       )}
     </Flex>
+
   );
 };
 
