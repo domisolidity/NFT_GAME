@@ -147,12 +147,14 @@ const ProfileCard = () => {
         {Images ? (
           <>
             <img src={Images} alt="프로필이미지" />
-            <div>{userName}</div>
+            {userName}
           </>
         ) : (
-          <img src={"/circle.png"} alt="프로필이미지" onClick={toggle} />
+          <>
+            <img src={"/circle.png"} alt="프로필이미지" onClick={toggle} />
+            <div>player</div>
+          </>
         )}
-        {userName ? userName : <div>playre</div>}
       </div>
       <style jsx>{`
         .profile_content {

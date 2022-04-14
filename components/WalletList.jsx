@@ -61,7 +61,7 @@ const WalletList = (props) => {
             <div> Metamask </div>
             <div>
               <img
-                src="https://bunicorn.exchange/images/connectors/metamask.png"
+                src="/metamask.png"
                 height="28"
                 width="28"
                 className="v-align-middle"
@@ -69,124 +69,6 @@ const WalletList = (props) => {
             </div>
           </button>
         </a>
-        <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> Binance Chain Wallet </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/bsc.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        {/* <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> TrustWallet </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/trustwallet.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> MathWallet </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/mathwallet.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> TokenPocket </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/tokenpocket.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> SafePal Wallet </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/safepalwallet.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> WalletConnect </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/walletconnect.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> ONTO Wallet </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/ontowallet.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> Coin98 Wallet </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/coin98.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        <a target="_blank" className="mb-2 d-block item-connect">
-          <button className="button width-full v-align-middle d-flex">
-            <div> Clover Wallet </div>
-            <div>
-              <img
-                src="https://bunicorn.exchange/images/connectors/clover.png"
-                height="28"
-                width="28"
-                className="v-align-middle"
-              />
-            </div>
-          </button>
-        </a>
-        <div className="learn-connect"></div> */}
       </div>
 
       <style jsx>{`
