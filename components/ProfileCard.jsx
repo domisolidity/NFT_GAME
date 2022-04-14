@@ -78,7 +78,6 @@ const ProfileCard = () => {
   };
 
   const onSubmit = (e, data) => {
-    console.log(process.env);
     e.preventDefault();
 
     // if (!userName || Images.length == 0) {
@@ -153,6 +152,7 @@ const ProfileCard = () => {
         ) : (
           <img src={"/circle.png"} alt="프로필이미지" onClick={toggle} />
         )}
+        {userName ? userName : <div>playre</div>}
       </div>
       <style jsx>{`
         .profile_content {
@@ -173,8 +173,6 @@ const ProfileCard = () => {
           cursor: pointer;
         }
         .profile_modal {
-          border: solid 1px;
-          background-color: #0f263e;
           padding: 3rem;
         }
         .profile_modal div {

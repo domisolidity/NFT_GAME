@@ -1,72 +1,89 @@
 import React from "react";
+// Chakra imports
+import {
+  Table,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useColorModeValue,
+} from "@chakra-ui/react";
+// Custom components
+import Card from "../Card/Card";
+import CardBody from "../Card/CardBody.js";
+import CardHeader from "../Card/CardHeader.js";
+import TablesTableRow from "../Tables/TablesTableRow";
 import { useSelector } from "react-redux";
+import RankingTable from "./RankingTable";
 
-const CurrentRanking = ({ currentRankData }) => {
+const CurrentRanking = ({ currentRankData, selectedGameTitle }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
+  const textColor = useColorModeValue("gray.700", "white");
+
   return (
     <>
-      <div className={"ranking-table"}>
-        <div>Ranking</div>
-        <div>Player</div>
-        <div>Score</div>
-        <div>Updated at</div>
-      </div>
-      {currentRankData.length > 0 &&
-        currentRankData.map((user, index) => {
-          // 날짜 원하는 스타일로 출력하기 위해 정제
-          const tempUpdatedAt = new Date(user.updatedAt);
-          const tempMonth = tempUpdatedAt.getMonth() + 1;
-          const tempDate = tempUpdatedAt.getDate();
-          const tempHours = tempUpdatedAt.getHours();
-          const tempMinutes = tempUpdatedAt.getMinutes();
-          const tempSeconds = tempUpdatedAt.getSeconds();
-          const updatedAt = `${tempMonth}/${tempDate} ${tempHours}:${tempMinutes}:${tempSeconds}`;
+      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <CardHeader p="6px 0px 22px 0px">
+          <Text fontSize="xl" color={textColor} fontWeight="bold">
+            {selectedGameTitle}
+          </Text>
+        </CardHeader>
+        <CardBody>
+          <Table variant="simple" color={textColor}>
+            <Thead>
+              <Tr my=".9rem" pl="0px" color="gray.400">
+                {[
+                  "Rnaking",
+                  "profile",
+                  "player",
+                  "score",
+                  "updated at",
+                  "",
+                ].map((caption, idx) => {
+                  return (
+                    <Th
+                      color="gray.400"
+                      key={idx}
+                      ps={idx === 0 ? "0px" : null}
+                    >
+                      {caption}
+                    </Th>
+                  );
+                })}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {currentRankData.map((user, i) => {
+                console.log(user);
+                console.log(i);
+                const tempUpdatedAt = new Date(user.updatedAt);
+                const tempMonth = tempUpdatedAt.getMonth() + 1;
+                const tempDate = tempUpdatedAt.getDate();
+                const tempHours = tempUpdatedAt.getHours();
+                const tempMinutes = tempUpdatedAt.getMinutes();
+                const tempSeconds = tempUpdatedAt.getSeconds();
+                const updatedAt = `${tempMonth}/${tempDate} ${tempHours}:${tempMinutes}:${tempSeconds}`;
 
-          return (
-            <div
-              className={
-                auth && user.user_address == account
-                  ? "ranking-table my-record"
-                  : "ranking-table"
-              }
-              key={user.inGameUserId}
-            >
-              <div>{index + 1}</div>
-              <div>
-                {user.user_address.substr(0, 5)}...
-                {user.user_address.substr(user.user_address.length - 4, 4)}
-              </div>
-              <div>{user.gameScore}</div>
-              <div>{`${updatedAt}`}</div>
-            </div>
-          );
-        })}
-      <style jsx>{`
-        .ranking-table {
-          gap: 10px;
-          width: 100%;
-          display: flex;
-          justify-content: space-evenly;
-        }
-        .ranking-table div:nth-child(1) {
-          min-width: 70px;
-        }
-        .ranking-table div:nth-child(2) {
-          min-width: 140px;
-        }
-        .ranking-table div:nth-child(3) {
-          min-width: 70px;
-        }
-        .ranking-table div:nth-child(4) {
-          min-width: 140px;
-        }
-        .my-record {
-          color: yellow;
-          text-shadow: 0 0 10px white, 0 0 10px white, 0 0 10px white,
-            0 0 10px white, 0 0 10px white;
-        }
-      `}</style>
+                const ranking = i + 1;
+
+                return (
+                  <TablesTableRow
+                    key={i}
+                    ranking={ranking}
+                    logo={user.logo}
+                    domain={user.domain}
+                    player={user.user_address}
+                    score={user.gameScore}
+                    date={updatedAt}
+                  />
+                );
+              })}
+            </Tbody>
+          </Table>
+        </CardBody>
+      </Card>
     </>
   );
 };

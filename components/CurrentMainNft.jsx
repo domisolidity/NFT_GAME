@@ -16,6 +16,7 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   const [accessToken, setAccessToken] = useState("");
   const [currentMainNft, setcurrentMainNft] = useState("");
   const [currentImage, setCurrentImage] = useState("");
+  const [nftGrade, setNftGrade] = useState("");
   const { toggle, visible } = useModal();
 
   const LS_KEY = "login-with-metamask:auth";
@@ -53,18 +54,14 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
         .getMyToken(account)
         .call({ from: account })
         .then(async (result) => {
-          console.log("getMyToken", result);
-          console.log(currentMainNft);
-
           if (!result) return true;
           for (const info of result) {
-            console.log(info);
-            console.log(info.id);
             if (info.id == currentMainNftImg) {
               const response = await axios.get(
                 `${baseUri}${info.uri.slice(6)}/${info.id}.json`
               );
               setCurrentImage(`${baseUri}${response.data.image.slice(6)}`);
+              setNftGrade(info.grade);
               return;
             }
           }
@@ -75,7 +72,7 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   };
 
   return (
-    <div className="nft-block">
+    <div className={`nft-block ${nftGrade}`}>
       <Modal toggle={toggle} visible={visible}>
         <ChoiceNft toggle={toggle} getCurrentMainNft={getCurrentMainNft} />
       </Modal>
@@ -103,6 +100,16 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
           width: 250px;
           height: 160px;
           align-items: center;
+        }
+
+        .nft-block.purple {
+          background-color: var(--chakra-colors-purple-700);
+        }
+        .nft-block.green {
+          background-color: var(--chakra-colors-green-700);
+        }
+        .nft-block.red {
+          background-color: var(--chakra-colors-red-700);
         }
 
         .nft-block-title {

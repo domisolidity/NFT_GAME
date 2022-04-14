@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button, Icon } from "@chakra-ui/react";
 import NetworkCard from "../../components/NetworkCard";
 import ProfileCard from "../../components/ProfileCard";
 import Inventory from "../../components/Inventory";
@@ -10,6 +10,7 @@ import Staking from "../../components/Staking";
 import { useSelector } from "react-redux";
 import CurrentMainNft from "../../components/CurrentMainNft";
 import NftAmount from "../../components/NftAmount";
+import TotalNftAmountCard from "../../components/TotalNftAmountCard";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
@@ -86,7 +87,12 @@ const Mypage = () => {
               />
             </div>
             <div className="fixed_item">
-              <NftAmount />
+              <TotalNftAmountCard
+                // icon={<Icon h={"24px"} w={"24px"} color='white' as={FaWallet} />}
+                // title={"Salary"}
+                description={"Total amount"}
+                amount={"Total amount"}
+              />
             </div>
           </div>
           <div className="menu">{returnMenu(menu)}</div>
