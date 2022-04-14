@@ -35,7 +35,7 @@ const TotalNftAmountCard = ({ icon, title, description, amount }) => {
       <CardBody>
         <Flex direction="column" align="center" w="100%" py="14px">
           <IconBox as="box" h={"60px"} w={"60px"} bg={"#0f263e"}>
-            {totalAmount}
+            {!totalAmount ? totalAmount : "0"}
           </IconBox>
           <Flex
             direction="column"

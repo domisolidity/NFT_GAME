@@ -146,7 +146,7 @@ const ProfileCard = () => {
 
         {Images ? (
           <>
-            <img src={Images} alt="프로필이미지" />
+            <img src={Images} alt="프로필이미지" onClick={toggle} />
             {userName}
           </>
         ) : (
