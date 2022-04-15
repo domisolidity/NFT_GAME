@@ -67,11 +67,11 @@ const RankingReword = () => {
       if (checkedItems[i] == true) {
         selectedRankData.push(rankData[i]);
         if (rankData[i][1] == 1) {
-          totalCount += 100;
-        } else if (rankData[i][1] == 2) {
           totalCount += 50;
-        } else if (rankData[i][1] == 3) {
+        } else if (rankData[i][1] == 2) {
           totalCount += 30;
+        } else if (rankData[i][1] == 3) {
+          totalCount += 10;
         }
       }
     }
@@ -289,7 +289,7 @@ const RankingReword = () => {
                       <Td>{rank[1]}</Td>
                       <Td>{rank[3]}</Td>
                       <Td>{rank[0]}</Td>
-                      <Td>{rank[1] == 1 ? 100 : rank[1] == 2 ? 50 : 30}</Td>
+                      <Td>{rank[1] == 1 ? 50 : rank[1] == 2 ? 30 : 10}</Td>
                     </Tr>
                   );
                 })}

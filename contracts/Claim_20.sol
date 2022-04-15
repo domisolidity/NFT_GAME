@@ -30,10 +30,9 @@ contract Claim_20 is Ownable {
     bool isRewarded;
   }
 
-  uint private constant top1 = 100;
-  uint private constant top2 = 50;
-  uint private constant top3 = 30;
-  uint private constant top4To10 = 10;
+  uint private constant top1 = 50;
+  uint private constant top2 = 30;
+  uint private constant top3 = 10;
 
   mapping(address => DailyAchiever[]) missionRewardList;
 
@@ -57,7 +56,7 @@ contract Claim_20 is Ownable {
     for (uint256 i = 0; i < result.length; i++) {
       require(result[i].isApproved == false, "has already been approved");
       require(result[i].count > 0, "not exist reward");
-      gametoken.increaseAllowance(result[i].account, result[i].count * 10);
+      gametoken.increaseAllowance(result[i].account, result[i].count);
 
       result[i].isApproved = true;
     }

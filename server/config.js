@@ -58,11 +58,11 @@ const gameList = [
 /* 아이템 목록 */
 const itemList = [
   { itemName: "아쉬워", itemPrice: 1, itemDescription: "잔여 횟수가 1 증가합니다" },
-  { itemName: "겜돌이", itemPrice: 4, itemDescription: "잔여 횟수가 5 증가합니다" },
-  { itemName: "중독자", itemPrice: 7, itemDescription: "잔여 횟수가 10 증가합니다" },
-  { itemName: "자본의 맛", itemPrice: 1, itemDescription: "게임결과에 5%만큼 점수가 가산됩니다" },
-  { itemName: "자본주의", itemPrice: 5, itemDescription: "게임결과에 10%만큼 점수가 가산됩니다" },
-  { itemName: "자낳괴", itemPrice: 15, itemDescription: "게임결과에 15%만큼 점수가 가산됩니다" },
+  { itemName: "겜돌이", itemPrice: 2, itemDescription: "잔여 횟수가 5 증가합니다" },
+  { itemName: "중독자", itemPrice: 3, itemDescription: "잔여 횟수가 10 증가합니다" },
+  { itemName: "자본의 맛", itemPrice: 0.1, itemDescription: "게임결과에 5%만큼 점수가 가산됩니다" },
+  { itemName: "자본주의", itemPrice: 0.2, itemDescription: "게임결과에 10%만큼 점수가 가산됩니다" },
+  { itemName: "자낳괴", itemPrice: 0.3, itemDescription: "게임결과에 15%만큼 점수가 가산됩니다" },
   {
     itemName: "혼돈의 카오스",
     itemPrice: 10,
@@ -295,8 +295,8 @@ const weeklySchedule = async () => {
 /* 하루 한번 일일미션 등록시켜주기 */
 const dailylySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
-  rule.hour = 9;
-  rule.minute = 1;
+  rule.hour = 14;
+  rule.minute = 5;
   const job = schedule.scheduleJob(rule, function () {
     missionAggregation(); // 일일미션 집계
   });
