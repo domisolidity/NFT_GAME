@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Flex, Box, Heading, Text } from "@chakra-ui/react";
-import { InfoIcon } from '@chakra-ui/icons';
+import { InfoIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import GameInterface from "../components/game/GameInterface";
 import RankSelectbar from "../components/rank/RankSelectbar";
@@ -40,27 +40,24 @@ const Rank = ({ gameList }) => {
   }, [selectedGameTitle]);
 
   return (
-    <Flex maxWidth={"1000px"} margin="0 auto" justifyContent={"center"}>
+    <Flex maxWidth={"1000px"} margin="0 auto" justifyContent={"space-between"}>
       <RankSelectbar gameList={gameList} getSelectedGameTitle={getSelectedGameTitle} />
       {selectedGameTitle ? (
-        <Flex flexDirection={"column"} textAlign="center">
-          <Box>{selectedGameTitle} 게임의 순위입니다.</Box>
-          <Flex>
-            <Box>
-              <CurrentRanking currentRankData={currentRankData} />
-            </Box>
-            <Box minWidth="300px">
-              <PastRanking pastRankData={pastRankData} />
-            </Box>
-          </Flex>
+        <Flex m="20px" p={"20px"} borderRadius="10px" outline="solid 5px" textAlign="center">
+          <Box marginRight={"10px"} maxHeight={"70vh"} overflow="auto">
+            <CurrentRanking currentRankData={currentRankData} />
+          </Box>
+          <Box minWidth="300px" maxHeight={"70vh"} overflow="auto" borderLeft="3px solid">
+            <PastRanking pastRankData={pastRankData} />
+          </Box>
         </Flex>
       ) : (
         <Box textAlign="center" py={10} px={6}>
-          <InfoIcon boxSize={'50px'} color={'blue.200'} />
+          <InfoIcon boxSize={"50px"} color={"blue.200"} />
           <Heading as="h2" size="xl" mt={6} mb={2}>
             <BlankComponent receivedText={"게임을 선택하여 참여자들의 게임별 순위를 확인하세요!"} />
           </Heading>
-          <Text color={'gray.500'} p={5} fontSize={"1.2rem"}>
+          <Text color={"gray.500"} p={5} fontSize={"1.2rem"}>
             매 주, 각 게임의 1~3위에게는 보상이 주어집니다.
           </Text>
         </Box>
@@ -80,5 +77,3 @@ export async function getStaticProps() {
     },
   };
 }
-
-

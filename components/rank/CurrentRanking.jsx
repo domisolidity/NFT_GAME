@@ -6,7 +6,7 @@ const CurrentRanking = ({ currentRankData }) => {
   const { account, auth } = blockchain;
   return (
     <>
-      <div className={"ranking-table"}>
+      <div className={"ranking-table title"}>
         <div>Ranking</div>
         <div>Player</div>
         <div>Score</div>
@@ -48,6 +48,9 @@ const CurrentRanking = ({ currentRankData }) => {
           width: 100%;
           display: flex;
           justify-content: space-evenly;
+        }
+        .ranking-table.title {
+          margin-bottom: 10px;
         }
         .ranking-table div:nth-child(1) {
           min-width: 70px;

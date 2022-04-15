@@ -96,7 +96,7 @@ const PastRanking = ({ pastRankData }) => {
   };
 
   return (
-    <Flex flexDirection={"column"}>
+    <Flex flexDirection={"column"} m="10px">
       {processedRankData.length > 0 &&
         processedRankData.map((weeks, index) => {
           return <PastWeek weeks={weeks} key={index} />;
