@@ -7,6 +7,7 @@ import topbar_items from "../../assets/JsonData/topbar_router.json";
 
 const TopNav = () => {
   const router = useRouter();
+  console.log(router);
 
   const activeItem = topbar_items.findIndex(
     (item) => item.route === router.pathname

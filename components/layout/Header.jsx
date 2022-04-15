@@ -59,40 +59,39 @@ const Header = () => {
       </div>
       {auth ? (
         <>
-          <div className="header__chainbar">
+          <div className="header__chainbar2">
             <Chainbar />
           </div>
-          <div className="header__accountbar">
+          <div className="header__right_btns">
             <Accountbar />
           </div>
         </>
       ) : (
         <>
           <div className="header__chainbar"></div>
-          <div className="header__accountbar"></div>
-        </>
-      )}
-      <div className="header__right_btns">
-        {!auth ? (
-          <span>
-            <ConnectWallet toggle={toggle} />
-            <Modal visible={visible} toggle={toggle}>
-              <WalletList toggle={toggle} />
-            </Modal>
-          </span>
-        ) : null}
+          <div className="header__right_btns">
+            {!auth ? (
+              <span>
+                <ConnectWallet toggle={toggle} />
+                <Modal visible={visible} toggle={toggle}>
+                  <WalletList toggle={toggle} />
+                </Modal>
+              </span>
+            ) : null}
 
-        {/* <span>
+            {/* <span>
           <Theme />
         </span> */}
-      </div>
+          </div>
+        </>
+      )}
       <div className="header__adminbar">
         <Adminbar />
       </div>
       <div className="header__navbar">
         <TopNav />
       </div>
-      <style global jsx>{`
+      <style jsx>{`
         .header {
           display: grid;
           grid-template-rows: repeat(2, minmax(2rem, auto));
@@ -113,23 +112,21 @@ const Header = () => {
         .header__chainbar:nth-child(3) {
           grid-column: 6;
         }
-
-        .header__accountbar:nth-child(4) {
-          grid-column: 8/9;
+        .header__chainbar2:nth-child(3) {
+          grid-column: 8;
         }
-
-        .header__right_btns:nth-child(5) {
+        .header__right_btns:nth-child(4) {
           grid-column: 9;
           justify-items: end;
         }
         .header__right_btns > span {
           display: table-cell;
         }
-        .header__adminbar:nth-child(6) {
+        .header__adminbar:nth-child(5) {
           grid-column: 10;
         }
 
-        .header__navbar:nth-child(7) {
+        .header__navbar:nth-child(6) {
           grid-row: 2;
           grid-column: 1/-1;
           /* border-top: 1px solid var(--chakra-colors-blue-200); */
