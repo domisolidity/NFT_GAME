@@ -1,134 +1,87 @@
-import React from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-// import RetroGames from "../assets/retro_games_blur.png";
-import NeonCard from "../components/NeonCard";
-import GameInfoCard from "../components/GameInfoCard";
-import { useSelector } from "react-redux";
+import FullScreen from '../components/Layout/Frame/FullScreen'
+import {
+  Box,
+  Flex,
+  Button,
+  Heading,
+  Input,
+  Link,
+  Switch,
+  Text,
+  useColorModeValue,
+  Image,
+} from "@chakra-ui/react";
+import NeonCard from '../components/NeonCard';
 
-const Main = () => {
 
-  return (<></>
-    // <div className="Main">
-    //   <div className="main__content">
-    //     <div className="main__top_item">
-    //       <img src="/retro_games_blur.png" />
-    //     </div>
-    //     <div className="main__top_item">
-    //       <div className="main__top_item_head">
-    //         Let's Play, <br />
-    //         earn and collect!
-    //       </div>
-    //       <div className="main__top_item_middle">
-    //         Doremi Game provides various mini-games. <br />
-    //         Weekly ranking winners will be rewarded. <br />
-    //         Don't miss this great opportunity.
-    //       </div>
-    //       <div className="main__top_item_bottom">
-    //         <div className="main__top_item_bottom_line">
-    //           {/* <Link href={account && auth ? "/game" : "/"}>
-    //             <a onClick={account && auth ? null : test}>
-    //               <NeonCard type={1} text={"Play"} />
-    //             </a>
-    //           </Link> */}
-    //         </div>
-    //         <div className="main__top_item_bottom_linesecond">
-    //           {/* <Link href="/rank">
-    //             <a>
-    //               <NeonCard type={2} text={"Earn"} />
-    //             </a>
-    //           </Link> */}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <div className="main__bottom"></div>
-    //   <style jsx>{`
-    //     .main {
-    //       display: grid;
-    //       grid-template-rows: repeat(4, 1fr);
-    //       grid-template-columns: repeat(4, 1fr);
-    //       align-items: center;
-    //       justify-items: center;
-    //     }
+export default function Main() {
+  // Chakra color mode
+  const titleColor = useColorModeValue("teal.300", "teal.200");
+  const textColor = useColorModeValue("gray.400", "white");
+  return (
+    <Flex position='relative'
 
-    //     .main__content {
-    //       grid-row: 1/3;
-    //       grid-column: 1/5;
-    //       display: flex;
-    //       justify-content: center;
-    //     }
+    //  mb='40px'
+    >
+      <Flex
+        h={{ sm: "initial", md: "75vh", lg: "85vh" }}
+        w='100%'
+        maxW='1044px'
+        mx='auto'
+        justifyContent='space-between'
+        mb='30px'
+        pt={{ sm: "100px", md: "0px" }}>
+        <Flex
+          alignItems='center'
+          justifyContent='start'
+          style={{ userSelect: "none" }}
+          w={{ base: "100%", md: "50%", lg: "42%" }}>
+          <Flex
+            direction='column'
+            w='100%'
+            background='transparent'
+            p='48px'
+            mt={{ md: "150px", lg: "80px" }}>
+            <Heading color={titleColor} fontSize='32px' mb='10px'>
+              Welcome !
+            </Heading>
+            <Text
+              mb='36px'
+              ms='4px'
+              color={textColor}
+              fontWeight='bold'
+              fontSize='16px'>
+              Doremi Games
+            </Text>
+          </Flex>
+        </Flex>
+        <Box
+          display={{ base: "none", md: "block" }}
+          overflowX='hidden'
+          h='100%'
+          w='100%'
+          // position='absolute'
+          right='0px'
+        >
+          <Box
+            bgImage={"/Frame.png"}
+            w='100%'
+            h='100%'
+            // bgSize='cover'
+            bgPosition='50%'
+            position='absolute'
+            borderBottomLeftRadius='20px'
+          >
+          </Box>
+        </Box>
+      </Flex>
+    </Flex>
+  )
+}
 
-    //     .main__top_item {
-    //       margin: 5rem;
-    //     }
-    //     .main__top_item > img {
-    //       width: 16rem;
-    //     }
-
-    //     .main__top_item_head {
-    //       font-size: 2.3rem;
-    //       font-weight: bold;
-    //       font-style: italic;
-    //       color: #d4eaff;
-    //       text-shadow: 0 0 0 transparent, 0 0 1rem #d1d2d0, 0 0 0.1rem rgba(38, 149, 255, 0.5), 0 0 0.1rem #d1d2d0,
-    //         0 0 0.1rem #d1d2d0, 0 0 0.1rem #d1d2d0, 0 0 0.1rem #d1d2d0, 0 0 0.1rem #d1d2d0;
-    //     }
-
-    //     .main__top_item_middle {
-    //       margin: 2rem 0 2.6rem 0;
-    //       font-size: 1.2rem;
-    //     }
-
-    //     .main__top_item_bottom {
-    //       display: flex;
-    //       font-size: 1.5rem;
-    //     }
-    //     .main__top_item_bottom_line {
-    //       border: solid 0.1rem;
-    //       border-radius: 0.5rem;
-    //       color: #d1d2d0;
-    //       box-shadow: 0 0 0.1rem #d1d2d0, inset 0 0 0.1rem #d1d2d0, 0 0 0.5rem #d1d2d0, inset 0 0 0.5rem #d1d2d0,
-    //         0 0 0.1rem #d1d2d0, inset 0 0 0.1rem #d1d2d0;
-    //       padding: 0 3rem;
-    //       margin-right: 2.5rem;
-    //     }
-    //     .main__top_item_bottom_linesecond {
-    //       border: solid 0.1rem;
-    //       border-radius: 0.5rem;
-    //       color: #d1d2d0;
-    //       box-shadow: 0 0 0.1rem #d1d2d0, inset 0 0 0.1rem #d1d2d0, 0 0 0.5rem #d1d2d0, inset 0 0 0.5rem #d1d2d0,
-    //         0 0 0.1rem #d1d2d0, inset 0 0 0.1rem #d1d2d0;
-    //       padding: 0 3rem;
-    //       margin-right: 2.5rem;
-    //     }
-
-    //     .main__top_item_bottom_line:hover {
-    //       border: solid 0.1rem;
-    //       border-radius: 0.5rem;
-    //       color: #d1d2d0;
-    //       box-shadow: 0 0 0.1rem #ee05f2, inset 0 0 0.1rem #ee05f2, 0 0 0.5rem #ee05f2, inset 0 0 0.5rem #ee05f2,
-    //         0 0 0.1rem #ee05f2, inset 0 0 0.1rem #ee05f2;
-    //       padding: 0 3rem;
-    //       margin-right: 2.5rem;
-    //     }
-
-    //     .main__top_item_bottom_linesecond:hover {
-    //       border: solid 0.1rem;
-    //       border-radius: 0.5rem;
-    //       color: #d1d2d0;
-    //       box-shadow: 0 0 0.1rem #0511f2, inset 0 0 0.1rem #0511f2, 0 0 0.5rem #0511f2, inset 0 0 0.5rem #0511f2,
-    //         0 0 0.1rem #0511f2, inset 0 0 0.1rem #0511f2;
-    //       padding: 0 3rem;
-    //       margin-right: 2.5rem;
-    //     }
-    //     .main__bottom {
-    //       grid-row: 3/5;
-    //       grid-column: 1/5;
-    //     }
-    //   `}</style>
-    // </div>
+// getLayout property
+Main.getLayout = function getLayout(page) {
+  return (
+    <FullScreen>{page}</FullScreen>
   );
 };
-
-export default Main;
