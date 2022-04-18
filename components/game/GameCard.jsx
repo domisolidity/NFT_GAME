@@ -49,6 +49,7 @@ const GameCard = ({ game }) => {
           color: #1e315f;
           font-size: 50px;
           font-weight: bold;
+          -webkit-box-reflect: below 0px linear-gradient(#0001, #0004);
         }
         .game-card:hover .effect-box {
           animation: animate 4s linear infinite;
