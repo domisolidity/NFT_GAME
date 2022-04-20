@@ -3,6 +3,7 @@ const router = express.Router();
 const { Game, InGameUser, Ranking, MissionInUser, DailyMission, ClosingMission } = require("../../models");
 const { missionReg, initChance } = require("../../config");
 const Sequelize = require("sequelize");
+
 /* 게임목록 불러오기 */
 router.get("/game-list", async (req, res) => {
   const response = await Game.findAll({}).catch((err) => console.log(err));
@@ -22,7 +23,7 @@ router.post("/set-participant", async (req, res) => {
   // 이번 주 차 게임에 참여한 기록이 없으면 DB에 생성해주기
   if (!response) {
     await InGameUser.create({ user_address: account, game_title: gameTitle });
-    res.send(true);
+    res.send(true); // 클라이언트 단에서 분기용으로 bool값 send
   } else {
     res.send(false);
   }
