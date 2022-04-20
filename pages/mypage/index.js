@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Icon } from "@chakra-ui/react";
+import { Button, Flex, Icon } from "@chakra-ui/react";
 import NetworkCard from "../../components/NetworkCard";
 import ProfileCard from "../../components/ProfileCard";
 import Inventory from "../../components/Inventory";
@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import CurrentMainNft from "../../components/CurrentMainNft";
 import NftAmount from "../../components/NftAmount";
 import TotalNftAmountCard from "../../components/TotalNftAmountCard";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
@@ -57,7 +58,7 @@ const Mypage = () => {
 
   return (
     <>
-      <div className="mypage">
+      <Flex pt={{ base: "120px", md: "75px" }}>
         <div className="sidebar">
           <ProfileCard />
           <Button onClick={renderItems} m={4}>
@@ -97,7 +98,7 @@ const Mypage = () => {
           </div>
           <div className="menu">{returnMenu(menu)}</div>
         </div>
-      </div>
+      </Flex>
       <style jsx>{`
         .mypage {
           display: flex;
@@ -132,3 +133,9 @@ const Mypage = () => {
 };
 
 export default Mypage;
+
+// getLayout property
+Mypage.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+

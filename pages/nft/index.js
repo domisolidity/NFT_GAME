@@ -4,6 +4,7 @@ import Tier from "../../components/nft/Tier";
 import NftTransfer from "../../components/NftTransfer";
 import NftMint from "../../components/NftMint";
 import { useSelector, useDispatch } from "react-redux";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 const Nft = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract } = blockchain;
@@ -21,7 +22,8 @@ const Nft = () => {
       });
   }, [account]);
   return (
-    <Box align="center" pb={20}>
+
+    <Box align="center" pb={20} pt={{ base: "120px", md: "75px" }}>
       <Tier />
       <Box w="400px" mb={70}>
         <Text mt="150" fontSize="25" w="200px">
@@ -53,3 +55,8 @@ const Nft = () => {
 };
 
 export default Nft;
+
+// getLayout property
+Nft.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
