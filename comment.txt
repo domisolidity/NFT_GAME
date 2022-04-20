@@ -14,6 +14,9 @@ npx prettier -c .
 npx prettier --list-different .
 npx prettier -l .
 
+@ remix console 찍는 법
+import "hardhat/console.
+
 
 @ 깃 푸쉬 규칙 
 Feat - 새로운 기능 추가
