@@ -15,14 +15,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Assets
-import avatar1 from "../../assets/img/avatars/avatar1.png";
-import avatar2 from "../../assets/img/avatars/avatar2.png";
-import avatar3 from "../../assets/img/avatars/avatar3.png";
 // Custom Icons
 import { ProfileIcon, SettingsIcon } from "../Icons/Icons";
 // Custom Components
-import { ItemContent } from "../Menu/ItemContent";
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import React from "react";
@@ -93,7 +88,7 @@ export default function HeaderLinks(props) {
           borderRadius="inherit"
         />
       </InputGroup>
-      {/* <NavLink to="/auth/signin">
+      {/* <NavLink to="/">
         <Button
           ms="0px"
           px="0px"
@@ -129,33 +124,16 @@ export default function HeaderLinks(props) {
         </MenuButton>
         <MenuList p="16px 8px">
           <Flex flexDirection="column">
-            <MenuItem borderRadius="8px" mb="10px">
+            {/* <MenuItem borderRadius="8px" mb="10px">
               <ItemContent
-                time="13 minutes ago"
-                info="from Alicia"
+                time="1minutes ago"
+                info="hi!!"
                 boldInfo="New Message"
-                aName="Alicia"
-                aSrc={avatar1}
+                aName="나야나"
+                aSrc={Profile}
               />
-            </MenuItem>
-            <MenuItem borderRadius="8px" mb="10px">
-              <ItemContent
-                time="2 days ago"
-                info="by Josh Henry"
-                boldInfo="New Album"
-                aName="Josh Henry"
-                aSrc={avatar2}
-              />
-            </MenuItem>
-            <MenuItem borderRadius="8px">
-              <ItemContent
-                time="3 days ago"
-                info="Payment succesfully completed!"
-                boldInfo=""
-                aName="Kara"
-                aSrc={avatar3}
-              />
-            </MenuItem>
+    </MenuItem>*/}
+
           </Flex>
         </MenuList>
       </Menu>
