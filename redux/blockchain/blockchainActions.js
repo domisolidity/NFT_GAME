@@ -5,6 +5,7 @@ import NftDealContract from "../../contracts/artifacts/NftDealContract.json";
 import GameTokenContract from "../../contracts/artifacts/GameToken.json";
 import Claim20_Contract from "../../contracts/artifacts/Claim_20.json";
 import AuctionCreatorContract from "../../contracts/artifacts/AuctionCreator.json";
+import Staking from "../../contracts/artifacts/Staking.json";
 import jwtDecode from "jwt-decode";
 import { fetchData } from "../data/dataActions";
 import Cookies from "js-cookie";
@@ -105,6 +106,7 @@ export const reconnect = () => {
       const auctionCreator_NetworkData = await AuctionCreatorContract.networks[networkId];
       const gameToken_NetworkData = await GameTokenContract.networks[networkId];
       const claim20_NetworkData = await Claim20_Contract.networks[networkId];
+      const stakingNetworkData = await Staking.networks[networkId];
 
       const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
       const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDeal_NetworkData.address);
@@ -114,6 +116,7 @@ export const reconnect = () => {
       );
       const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
       const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
+      const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
 
       dispatch(
         connectSuccess({
@@ -124,6 +127,7 @@ export const reconnect = () => {
           gameTokenContract: gameTokenContract,
           auctionCreatorContract: auctionCreatorContract,
           claim20_Contract: claim20_Contract,
+          stakingContract: stakingContract,
           web3: web3,
         })
       );
@@ -190,6 +194,7 @@ export const connectWallet = () => {
           const auctionCreatorNetworkData = await AuctionCreatorContract.networks[networkId];
           const gameTokenNetworkData = await GameTokenContract.networks[networkId];
           const claim20_NetworkData = await Claim20_Contract.networks[networkId];
+          const stakingNetworkData = await Staking.networks[networkId];
 
           const nftContract = new web3.eth.Contract(NftContract.abi, nftNetwork.address);
           const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDealNetworkData.address);
@@ -199,6 +204,7 @@ export const connectWallet = () => {
           );
           const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameTokenNetworkData.address);
           const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
+          const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
 
           console.log("gameTokenNetworkData.address", gameTokenNetworkData.address);
           console.log("claim20_NetworkData.address", claim20_NetworkData.address);
@@ -276,6 +282,7 @@ export const connectWallet = () => {
               gameTokenContract: gameTokenContract,
               auctionCreatorContract: auctionCreatorContract,
               claim20_Contract: claim20_Contract,
+              stakingContract: stakingContract,
               web3: web3,
             })
           );

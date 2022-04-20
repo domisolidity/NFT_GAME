@@ -7,7 +7,7 @@ import jwtDecode from "jwt-decode";
 import MyNftsCard from "../components/MyNftsCard";
 const ChoiceNft = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, nftContract } = blockchain;
+  const { account, nftContract, stakingContract } = blockchain;
 
   const { toggle, getCurrentMainNft } = props;
 
@@ -98,34 +98,54 @@ const ChoiceNft = (props) => {
   let disable = "disable";
   if (selectNft) disable = "";
 
-  const getSubmit = () => {
-    if (!selectNft) return;
+  const getSubmit = async () => {
+    console.log(selectNft);
 
-    const {
-      payload: { id },
-    } = jwtDecode(accessToken);
+    // if (!selectNft) return;
 
-    const variables = {
-      mainNft: selectNft,
-    };
+    // const {
+    //   payload: { id },
+    // } = jwtDecode(accessToken);
 
-    fetch(`/api/users/profile/${id}`, {
-      body: JSON.stringify(variables),
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      method: "PATCH",
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        setcurrentMainNft(result.user.mainNft);
-        alert("한 주간 유지됩니다.");
-        toggle();
-      })
-      .catch((err) => {
-        alert("다시 선택해주세요.");
-      });
+    // const variables = {
+    //   mainNft: selectNft,
+    // };
+
+    // await fetch(`/api/users/profile/${id}`, {
+    //   body: JSON.stringify(variables),
+    //   headers: {
+    //     Authorization: `Bearer ${accessToken}`,
+    //     "Content-Type": "application/json",
+    //   },
+    //   method: "PATCH",
+    // })
+    //   .then((response) => response.json())
+    //   .then((result) => {
+    //     setcurrentMainNft(result.user.mainNft);
+    //     alert("한 주간 유지됩니다.");
+    //     toggle();
+    //   })
+    //   .catch((err) => {
+    //     alert("다시 선택해주세요.");
+    //   });
+
+    // const isApprovedForAll = await nftContract.methods
+    //   .isApprovedForAll(account, stakingContract._address)
+    //   .call();
+    // if (!isApprovedForAll) {
+    //   await nftContract.methods
+    //     .setApprovalForAll(stakingContract._address, true)
+    //     .send({ from: account })
+    //     .then((result) => {
+    //       if (result) {
+    //         console.log(result);
+    //       }
+    //     });
+    // }
+    // await stakingContract.methods.nftStake(selectNft).send({ from: account });
+
+    const asdf = await nftContract.methods.ownerOf(91).call();
+    console.log(asdf);
   };
 
   return (
