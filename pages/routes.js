@@ -1,6 +1,6 @@
 // import
 import Home from "./home";
-import Mypage from "./mypage";
+// import Mypage from "./mypage/index";
 import {
   HomeIcon,
   StatsIcon,
@@ -25,32 +25,32 @@ var dashRoutes = [
     icon: <StatsIcon color="inherit" />,
     component: Home,
     layout: "/SideBarScreen",
-    subName: [
-      {
-        path: "/rank",
-        name: "블록쌓기",
-        icon: <StatsIcon color="inherit" />,
-        secondaryNavbar: true,
-        component: Mypage,
-        layout: "/Home",
-      },
-      {
-        path: "/rank",
-        name: "테트리스",
-        icon: <StatsIcon color="inherit" />,
-        secondaryNavbar: true,
-        component: Mypage,
-        layout: "/Home",
-      },
-      {
-        path: "/rank",
-        name: "보물찾기",
-        icon: <StatsIcon color="inherit" />,
-        secondaryNavbar: true,
-        component: Mypage,
-        layout: "/Home",
-      },
-    ],
+    // subName: [
+    //   {
+    //     path: "/rank",
+    //     name: "블록쌓기",
+    //     icon: <StatsIcon color="inherit" />,
+    //     secondaryNavbar: true,
+    //     component: Mypage,
+    //     layout: "/Home",
+    //   },
+    //   {
+    //     path: "/rank",
+    //     name: "테트리스",
+    //     icon: <StatsIcon color="inherit" />,
+    //     secondaryNavbar: true,
+    //     component: Mypage,
+    //     layout: "/Home",
+    //   },
+    //   {
+    //     path: "/rank",
+    //     name: "보물찾기",
+    //     icon: <StatsIcon color="inherit" />,
+    //     secondaryNavbar: true,
+    //     component: Mypage,
+    //     layout: "/Home",
+    //   },
+    // ],
   },
   {
     path: "/game",
@@ -87,7 +87,7 @@ var dashRoutes = [
         name: "My Page",
         icon: <PersonIcon color="inherit" />,
         secondaryNavbar: true,
-        component: Mypage,
+        component: Home,
         layout: "/Home",
       },
     ],
