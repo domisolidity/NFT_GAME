@@ -30,6 +30,7 @@ const blockchainReducer = (state = initialState, action) => {
         gameTokenContract: action.payload.gameTokenContract,
         auctionCreatorContract: action.payload.auctionCreatorContract,
         claim20_Contract: action.payload.claim20_Contract,
+        stakingContract: action.payload.stakingContract,
         web3: action.payload.web3,
         errorMsg: "",
       };

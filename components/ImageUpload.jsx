@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
@@ -12,6 +12,10 @@ function ImageUpload(props) {
 
   const getToken = Cookies.get(LS_KEY);
   const parsedToken = getToken && JSON.parse(getToken).accessToken;
+
+  useEffect(() => {
+    console.log(Images);
+  }, [Images]);
 
   const onDrop = (files) => {
     setAccessToken(parsedToken);

@@ -24,6 +24,8 @@ import BlankComponent from "../../components/BlankComponent";
 import { Box, Flex } from "@chakra-ui/react";
 import InGameProfile from "../../components/game/InGameProfile";
 
+import FullScreen from '../../components/Layout/Frame/FullScreen'
+
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
@@ -237,7 +239,7 @@ const Tetris = () => {
   }, dropTime);
 
   return (
-    <Flex m={"0 10px"}>
+    <Flex mt={"120px"}>
       <InGameProfile filledValue={score} hasMission={hasMission} />
       {account && auth ? (
         <Box w={"100%"}>
@@ -292,3 +294,11 @@ const Tetris = () => {
 };
 
 export default Tetris;
+
+// getLayout property
+Tetris.getLayout = function getLayout(page) {
+  return (
+    <FullScreen>{page}</FullScreen>
+  );
+};
+

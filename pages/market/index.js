@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Button } from "@chakra-ui/react";
+import { Grid, Button, Flex } from "@chakra-ui/react";
 
 import Market_nft from "../../components/Market_nft";
 import Market_item from "../../components/Market_item";
 import Market_nft_auction from "../../components/market/Market_nft_auction";
 import { useSelector } from "react-redux";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Market = () => {
   const [menu, setMenu] = useState("items");
@@ -38,7 +39,7 @@ const Market = () => {
   };
 
   return (
-    <>
+    <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>
       <Button onClick={renderItems} m={4}>
         ITEM
       </Button>
@@ -59,8 +60,13 @@ const Market = () => {
       >
         {returnMenu(menu)}
       </Grid>
-    </>
+    </Flex>
   );
 };
 
 export default Market;
+
+// getLayout property
+Market.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
