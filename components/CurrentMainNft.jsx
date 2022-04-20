@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useModal from "../hooks/useModal";
 import ChoiceNft from "./ChoiceNft";
-import Modal from "./Modal";
+
 import StakingCard from "./StakingCard";
 const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   console.log(getCurrentMainNft);
@@ -73,9 +73,9 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
 
   return (
     <div className={`nft-block ${nftGrade}`}>
-      <Modal toggle={toggle} visible={visible}>
+      {/* <Modal toggle={toggle} visible={visible}>
         <ChoiceNft toggle={toggle} getCurrentMainNft={getCurrentMainNft} />
-      </Modal>
+      </Modal> */}
       <div className="nft-block-title">
         MAIN NFT
         <Tooltip hasArrow label="대표 NFT를 설정하시면, 1 주일간 유지됩니다.">
