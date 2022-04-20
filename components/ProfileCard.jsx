@@ -15,7 +15,7 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import Modal from "./Modal";
+
 import ImageUpload from "./ImageUpload";
 import useModal from "../hooks/useModal";
 
@@ -125,7 +125,7 @@ const ProfileCard = () => {
   return (
     <>
       <div className="profile_content">
-        <Modal toggle={toggle} visible={visible}>
+        {/* <Modal toggle={toggle} visible={visible}>
           <form className="profile_modal" onSubmit={onSubmit}>
             <ImageUpload refreshImg={imgFile} />
             <div>nick name</div>
@@ -142,7 +142,7 @@ const ProfileCard = () => {
               </Button>
             </div>
           </form>
-        </Modal>
+        </Modal> */}
 
         {Images ? (
           <>

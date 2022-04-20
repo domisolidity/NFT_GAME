@@ -2,9 +2,12 @@
 pragma solidity ^0.8.0;
 
 import "./Auction.sol";
+import "./NftDealContract.sol";
 
 // 경매 컨트랙트 생성용 컨트랙트
 contract AuctionCreator {
+  NftDealContract public nftDealContract;
+
   mapping(uint => Auction) public auctionToId;
   uint private endBlock;
 
@@ -17,6 +20,10 @@ contract AuctionCreator {
   }
   AuctionNft[] public auctionNfts;
 
+  constructor(address _nftDealContract) {
+    nftDealContract = NftDealContract(_nftDealContract);
+  }
+
   //경매 컨트랙트 생성 함수
   function createAuction(
     uint8 _tokenId,
@@ -25,6 +32,7 @@ contract AuctionCreator {
     uint _remainedBlock,
     uint _expirationTime
   ) public {
+    require(!nftDealContract.onSale(_tokenId), "this token is saling");
     Auction newAuction = new Auction(msg.sender, _nftContractAddres, _startBid, _remainedBlock, _tokenId);
     auctionToId[_tokenId] = newAuction;
 

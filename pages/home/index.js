@@ -6,11 +6,6 @@ import {
   SimpleGrid,
   useColorModeValue,
 } from "@chakra-ui/react";
-// assets
-import peopleImage from "../../assets/img/people-image.png";
-import logoChakra from "../../assets/svg/logo-white.svg";
-import BarChart from "../../components/Charts/BarChart";
-import LineChart from "../../components/Charts/LineChart";
 // Custom icons
 import {
   CartIcon,
@@ -18,14 +13,8 @@ import {
   GlobeIcon,
   WalletIcon,
 } from "../../components/Icons/Icons";
-import { dashboardTableData, timelineData } from "../../variables/general";
-import ActiveUsers from "../../components/Dashboard/ActiveUsers";
-import BuiltByDevelopers from "../../components/Dashboard/BuiltByDevelopers";
-import MiniStatus from "../../components/Dashboard/MiniStatus";
-import OrdersOverview from "../../components/Dashboard/OrdersOverview";
-import Projects from "../../components/Dashboard/Projects";
-import SalesOverview from "../../components/Dashboard/SalesOverview";
-import WorkWithTheRockets from "../../components/Dashboard/WorkWithTheRockets";
+import MiniStatus from "../../components/Home/MiniStatus"
+
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
