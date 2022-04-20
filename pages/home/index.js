@@ -104,11 +104,11 @@ export default function Home() {
         templateRows={{ md: "1fr auto", lg: "1fr" }}
         my='26px'
         gap='24px'>
-        <OrdersOverview
+        {/* <OrdersOverview
           title={"Overview"}
           amount={30}
           data={timelineData}
-        />
+        /> */}
       </Grid>
     </Flex >
 

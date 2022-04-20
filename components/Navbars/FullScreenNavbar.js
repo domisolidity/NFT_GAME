@@ -9,7 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
-  CreativeTimLogo,
+  TimLogo,
   DocumentIcon,
   HomeIcon,
   PersonIcon,
@@ -83,7 +83,7 @@ export default function FullScreenNavbar(props) {
       alignItems="center"
       color={mainText}
     >
-      <CreativeTimLogo w="32px" h="32px" me="10px" />
+      <TimLogo w="32px" h="32px" me="10px" />
       <Text fontSize="sm" mt="3px">
         {logoText}
       </Text>
