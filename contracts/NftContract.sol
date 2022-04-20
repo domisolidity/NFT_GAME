@@ -6,8 +6,6 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721En
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
 
-// import "./BEP20/SafeMath.sol";
-
 contract NftContract is ERC721Enumerable {
   using Counters for Counters.Counter;
   using SafeMath for uint;
@@ -118,17 +116,17 @@ contract NftContract is ERC721Enumerable {
       uint16 tokenId;
 
       if (_grade == 1) {
-        require(msg.value == 0.3 ether * _amount, "value error");
+        require(msg.value == 0.0003 ether * _amount, "value error");
         tokenIds_red++;
         tokenId = tokenIds_red;
         remainedRed = 60 - tokenIds_red;
       } else if (_grade == 2) {
-        require(msg.value == 0.5 ether * _amount, "value error");
+        require(msg.value == 0.0005 ether * _amount, "value error");
         tokenIds_green++;
         tokenId = tokenIds_green;
         remainedGreen = 90 - tokenIds_green;
       } else if (_grade == 3) {
-        require(msg.value == 1 ether * _amount, "value error");
+        require(msg.value == 0.001 ether * _amount, "value error");
         tokenIds_purple++;
         tokenId = tokenIds_purple;
         remainedPurple = 100 - tokenIds_purple;
