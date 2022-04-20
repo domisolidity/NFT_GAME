@@ -180,15 +180,8 @@ export default function Navbar(props) {
             fixed={props.fixed}
           />
         </Box>
-        {/* <ConnectWallet toggle={toggle} />
-        <Modal visible={visible} toggle={toggle}>
-          <WalletList toggle={toggle} />
-        </Modal> */}
-
         {/* Connnect to a wallet btn */}
         {!auth ? ConnectWalletBtn() : AccountbarBtn()}
-
-
       </Flex>
     </Flex>
   );

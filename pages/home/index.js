@@ -13,6 +13,7 @@ import {
   GlobeIcon,
   WalletIcon,
 } from "../../components/Icons/Icons";
+import MiniStatus from "../../components/Home/MiniStatus"
 
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import { useSelector } from "react-redux";
@@ -60,7 +61,7 @@ export default function Home() {
   return (
     <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px'>
-        {/* <MiniStatus
+        <MiniStatus
           title={"Etherium"}
           amount={ethBalance ? ethBalance : "---"}
           unit={"ETH"}
@@ -83,7 +84,7 @@ export default function Home() {
           amount={"13"}
           unit={"Items"}
           icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
-        /> */}
+        />
       </SimpleGrid>
       <Grid
         templateColumns={{
