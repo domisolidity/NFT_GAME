@@ -82,12 +82,11 @@ const ClaimInfoCard = (props) => {
     await getClaimHistory();
     console.log(account);
     console.log(claim20_Contract);
-    return () => setRewardAmount(0);
+    return () => {
+      setRewardAmount_mission(0);
+      setRewardAmount_rank(0);
+    };
   }, [account]);
-  // useEffect(async () => {
-  //   if (!account || !claimHistory) return;
-  //   console.log(claimHistory[0].value.rewardType);
-  // }, [account, claimHistory]);
 
   return (
     <>

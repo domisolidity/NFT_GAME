@@ -23,8 +23,7 @@ import { useSelector } from "react-redux";
 const RankingReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, gameTokenContract, claim20_Contract } = blockchain;
-  console.log(claim20_Contract);
-  console.log(gameTokenContract);
+
   const [rankData, setRankData] = useState();
   const [selectedRankData, setSelectedRankData] = useState();
   const [isRankData, setIsRankData] = useState(false);
@@ -32,6 +31,7 @@ const RankingReword = () => {
   const [lastStep, setLastStep] = useState(false);
   const [totalAllowance, setTotalAllowance] = useState(0);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const allChecked = checkedItems.every(Boolean);
   const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
@@ -83,70 +83,42 @@ const RankingReword = () => {
 
   // step 3) 선택한 데이터에 대한 보상량 승인 작업
   const approveRankClaim = async () => {
-    console.log(account);
-    console.log(typeof account);
-    console.log(owner);
+    try {
+      if (account != owner) {
+        alert("권한이 없습니다.");
+        return;
+      }
+      console.log("selectedRankData", selectedRankData);
 
-    if (account != owner) {
-      alert("권한이 없습니다.");
-      return;
+      setLoading(true);
+      // 1) 클레임 컨트랙트 주소로 토큰 이동
+      await gameTokenContract.methods
+        .transfer(claim20_Contract._address, totalAllowance)
+        .send({ from: account })
+        .then((res) => {
+          console.log(res);
+          alert("다음은 랭커별 인출 허용량 지정에 대한 승인 서명입니다.");
+        });
+
+      // 2) 랭커(조건)별 allowance 지정
+      console.log(selectedRankData);
+      await claim20_Contract.methods
+        .approveClaim_rank(selectedRankData)
+        .send({ from: account })
+        .then(async (res) => {
+          console.log(res);
+          // 3) db에 approve 된 상태로 업데이트
+          await axios.post("/api/ranks/approved", { rank: selectedRankData }).then(() => {
+            alert("승인 작업 완료");
+            setNextStep(false);
+            setLastStep(true);
+          });
+        });
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
     }
-    console.log("selectedRankData", selectedRankData);
-
-    // 1) 클레임 컨트랙트 주소로 토큰 이동
-    await gameTokenContract.methods
-      .transfer(claim20_Contract._address, totalAllowance)
-      .send({ from: account })
-      .then((res) => {
-        console.log(res);
-        alert("다음은 랭커별 인출 허용량 지정에 대한 승인 서명입니다.");
-      })
-      .catch(console.error);
-
-    // 2) 랭커(조건)별 allowance 지정
-    console.log(selectedRankData);
-    await claim20_Contract.methods
-      .approveClaim_rank(selectedRankData)
-      .send({ from: account })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch(console.error);
-
-    // 3) db에 approve 된 상태로 업데이트
-    await axios
-      .post("/api/ranks/approved", { rank: selectedRankData })
-      .then((res) => {
-        console.log(res);
-        alert("승인 작업 완료");
-      })
-      .catch(console.error);
-
-    setNextStep(false);
-    setLastStep(true);
   };
-
-  // // 랭킹정보에 따른 클레임양 선택 허용
-  // const claim_rank = async () => {
-  //   console.log("checkedItems", checkedItems);
-
-  //   //선택한 계정에 한해 클레임 허용
-  //   console.log("claim", claim20_Contract);
-  //   await claim20_Contract.methods
-  //     .approveClaim_rank(selectedRankData)
-  //     .send({ from: account })
-  //     .then((result) => {
-  //       console.log(result);
-  //     })
-  //     .catch((err) => console.error(err));
-
-  //   setNextStep(false);
-  //   setLastStep(true);
-  //   // // 클레임 허용한 계정 랭킹db에서삭제
-  //   // await axios.post("/api/ranks/deleteRank",{rank:selectedRankData}).then(result=>{
-  //   //     console.log(result.data);
-  //   // }).catch(console.error());
-  // };
 
   const previousStep = () => {
     if (isRankData) {
@@ -265,7 +237,12 @@ const RankingReword = () => {
               <Button bg="#414fa28f" onClick={previousStep} mr="2">
                 뒤로 가기
               </Button>
-              <Button bg="#414fa28f" onClick={approveRankClaim}>
+              <Button
+                isLoading={loading ? 1 : null}
+                loadingText="Approving..."
+                bg="#414fa28f"
+                onClick={approveRankClaim}
+              >
                 클레임 허용
               </Button>
             </TableCaption>

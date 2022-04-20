@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-const NetworkCard = () => {
+const NetworkCard = (props) => {
+  const update = props.update;
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, gameTokenContract } = blockchain;
 
@@ -22,9 +23,7 @@ const NetworkCard = () => {
       .balanceOf(account)
       .call({ from: account })
       .then((tokenBalance) => {
-        console.log(tokenBalance);
-        balance = web3.utils.fromWei(tokenBalance);
-        setTokenBalance(balance.slice(0, 5));
+        setTokenBalance(tokenBalance);
       })
       .catch(console.error());
   };
@@ -33,7 +32,7 @@ const NetworkCard = () => {
     if (!account) return false;
     await getEthBalance();
     await getTokenBalance();
-  }, [account]);
+  }, [account, update]);
 
   return (
     <div className="general-wrapper">
@@ -54,7 +53,7 @@ const NetworkCard = () => {
           <div className="eth-balances">
             <p className="crypto-balance">{ethBalance}</p>
             <p className="crypto-name">ETH</p>
-            <p className="fiat-balance">0.00 USD</p>
+            {/* <p className="fiat-balance">0.00 USD</p> */}
           </div>
         </div>
         <div className="sand">
@@ -65,14 +64,14 @@ const NetworkCard = () => {
           />
           <div className="sand-balances">
             <p className="crypto-balance is-color-yellow">{tokenBalance}</p>
-            <p className="crypto-name is-color-yellow">DTG</p>
-            <p className="fiat-balance">0.00 USD</p>
+            <p className="crypto-name is-color-yellow">DMG</p>
+            {/*  #2748c9, #5e7cf2 */}
           </div>
         </div>
       </section>
       <style jsx>{`
         .general-wrapper {
-          background-image: linear-gradient(242deg, #2748c9, #5e7cf2);
+          background-image: linear-gradient(242deg, #5e56d3, #5e7cf2);
           width: 350px;
           height: 160px;
           padding: 20.38px 0 0 20px;

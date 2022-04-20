@@ -30,6 +30,7 @@ const ClaimHistory = (props) => {
   useEffect(async () => {
     if (!account || !claimHistory) return;
     console.log(claimHistory);
+    console.log(claimHistory == []);
   }, [account, claimHistory]);
 
   return (
@@ -64,7 +65,9 @@ const ClaimHistory = (props) => {
                       <Td> + {history.value.amount}</Td>
                       <Td>{todayTimeFormal(Number(history.value.time))}</Td>
                       <Td>
-                        <Link href={`https://etherscan.io/tx/${history.tx}`}>
+                        <Link
+                          href={`https://rinkeby.etherscan.io/tx/${history.tx}`}
+                        >
                           <a style={{ color: "#8eb8e0" }}>view etherscan</a>
                         </Link>
                       </Td>
@@ -75,6 +78,11 @@ const ClaimHistory = (props) => {
             : null}
         </Table>
       </TableContainer>
+      {claimHistory && claimHistory.length == 0 && (
+        <Box align="center" mt="5">
+          no data
+        </Box>
+      )}
     </Box>
   );
 };

@@ -111,7 +111,7 @@ const Game = () => {
           <>
             <Img w="160px" src={currentImage} />
             <Box>
-              <Text>오느래 밋숀</Text>
+              <Text>오늘의 미션</Text>
               <Flex justifyContent={"center"}>
                 {dailyMission.map((mission, index) => {
                   return (
@@ -134,7 +134,7 @@ const Game = () => {
             </Box>
           </>
         ) : (
-          <BlankComponent receivedText={"대표 NFT가 지정되지 않았읍니다"} />
+          <BlankComponent receivedText={"대표 NFT가 지정되지 않았습니다"} />
         )}
       </Flex>
       <Box w={"100%"} minHeight={"400px"} position={`relative`}>

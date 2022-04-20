@@ -1,30 +1,37 @@
 import { applyMiddleware, compose, createStore, combineReducers } from "redux";
-import { createWrapper } from 'next-redux-wrapper';
+import { HYDRATE, createWrapper } from "next-redux-wrapper";
 import thunk from "redux-thunk";
-import { composeWithDevTools } from 'redux-devtools-extension';
 import blockchainReducer from "./blockchain/blockchainReducer";
 import dataReducer from "./data/dataReducer";
 
-const rootReducer = combineReducers({
+const bindMiddleware = (middleware) => {
+  if (process.env.NODE_ENV !== "production") {
+    const { composeWithDevTools } = require("redux-devtools-extension");
+    return composeWithDevTools(applyMiddleware(...middleware));
+  }
+  return applyMiddleware(...middleware);
+};
+const combinedReducer = combineReducers({
   blockchain: blockchainReducer,
   data: dataReducer,
 });
 
-const middleware = [thunk];
-
-const composeEnhancers =
-  process.env.NODE_ENV === 'production'
-    ? compose(applyMiddleware(...middleware))
-    : composeWithDevTools(applyMiddleware(...middleware));
+// const reducer = (state, action) => {
+//   if (action.type === HYDRATE) {
+//     const nextState = {
+//       ...state, // use previous state
+//       ...action.payload, // apply delta from hydration
+//     };
+//     if (state.count.count) nextState.count.count = state.count.count; // preserve count value on client side navigation
+//     return nextState;
+//   } else {
+//     return combinedReducer(state, action);
+//   }
+// };
 
 const configureStore = () => {
-  const store = createStore(rootReducer, composeEnhancers);
-  return store
+  const store = createStore(combinedReducer, bindMiddleware([thunk]));
+  return store;
 };
 
-
-const wrapper = createWrapper(configureStore, {
-  debug: process.env.NODE_ENV === 'development,'
-});
-
-export default wrapper;
+export const wrapper = createWrapper(configureStore);
