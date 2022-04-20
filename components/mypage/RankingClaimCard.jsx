@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Button } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+
 const RankingClaimCard = (props) => {
   const claimInfo = props.claimInfo;
   const rewardAmount = props.reward;
@@ -8,37 +10,47 @@ const RankingClaimCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, claim20_Contract } = blockchain;
 
+  const [loading, setLoading] = useState(false);
+
   // 랭킹 클레임
   const claimRank = async () => {
-    console.log("클레임");
-    console.log(claimInfo);
-    if (claimInfo.length == 0) {
-      alert("보상 받을 리워드가 없습니다.");
-      return;
-    }
-    for (let i = 0; i < claimInfo.length; i++) {
-      if (claimInfo[i].isApproved == false || claimInfo[i].isRewarded == true) {
-        alert("이미 보상 받았거나 아직 승인 받지 않았습니다.");
+    try {
+      console.log("클레임");
+      if (claimInfo.length == 0) {
+        alert("보상 받을 리워드가 없습니다.");
+        return;
       }
-    }
-
-    console.log(claimInfo);
-    await claim20_Contract.methods
-      .claim_rank(claimInfo, Date.now())
-      .send({ from: account })
-      .then(async (res) => {
-        console.log(res);
-        if (res.status) {
-          alert("클레임 성공");
-          await axios
-            .post("/api/users/rewarded", { rank: claimInfo })
-            .then((res) => {
-              console.log(res);
-            });
+      for (let i = 0; i < claimInfo.length; i++) {
+        if (
+          claimInfo[i].isApproved == false ||
+          claimInfo[i].isRewarded == true
+        ) {
+          alert("이미 보상 받았거나 아직 승인 받지 않았습니다.");
         }
-      })
-      .catch(console.error);
-    await updateReward();
+      }
+
+      console.log(claimInfo);
+      setLoading(true);
+      await claim20_Contract.methods
+        .claim_rank(claimInfo, Date.now())
+        .send({ from: account })
+        .then(async (res) => {
+          console.log(res);
+          if (res.status) {
+            alert("클레임 성공");
+            await axios
+              .post("/api/users/rewarded", { rank: claimInfo })
+              .then((res) => {
+                console.log(res);
+              });
+          }
+          setLoading(false);
+        });
+      await updateReward();
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,7 +80,13 @@ const RankingClaimCard = (props) => {
             </div>
           </div>
         </div>
-        <Button onClick={claimRank}>Claim</Button>
+        <Button
+          isLoading={loading ? 1 : null}
+          loadingText="Minting.."
+          onClick={claimRank}
+        >
+          Claim
+        </Button>
       </div>
       <style jsx>{`
         .showPool {
@@ -89,6 +107,9 @@ const RankingClaimCard = (props) => {
           border-color: #7d60a1;
           border-radius: 5px;
           border-width: 2px;
+        }
+        .lp-weekly {
+          margin: 0 auto;
         }
         .lp-info {
           width: 100%;

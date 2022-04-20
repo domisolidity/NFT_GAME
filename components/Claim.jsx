@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import ClaimInfoCard from "./ClaimInfoCard";
-import Modal from "./Modal";
+
 import RewardCard from "./rewardCard";
 
 const Claim = () => {

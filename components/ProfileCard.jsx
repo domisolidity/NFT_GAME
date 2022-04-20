@@ -15,7 +15,7 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import Modal from "./Modal";
+
 import ImageUpload from "./ImageUpload";
 import useModal from "../hooks/useModal";
 
@@ -125,7 +125,7 @@ const ProfileCard = () => {
   return (
     <>
       <div className="profile_content">
-        <Modal toggle={toggle} visible={visible}>
+        {/* <Modal toggle={toggle} visible={visible}>
           <form className="profile_modal" onSubmit={onSubmit}>
             <ImageUpload refreshImg={imgFile} />
             <div>nick name</div>
@@ -142,17 +142,19 @@ const ProfileCard = () => {
               </Button>
             </div>
           </form>
-        </Modal>
+        </Modal> */}
 
         {Images ? (
           <>
-            <img src={Images} alt="프로필이미지" />
-            <div>{userName}</div>
+            <img src={Images} alt="프로필이미지" onClick={toggle} />
+            {userName}
           </>
         ) : (
-          <img src={"/circle.png"} alt="프로필이미지" onClick={toggle} />
+          <>
+            <img src={"/circle.png"} alt="프로필이미지" onClick={toggle} />
+            <div>player</div>
+          </>
         )}
-        {userName ? userName : <div>playre</div>}
       </div>
       <style jsx>{`
         .profile_content {

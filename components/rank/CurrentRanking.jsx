@@ -17,31 +17,21 @@ import TablesTableRow from "../Tables/TablesTableRow";
 import { useSelector } from "react-redux";
 import RankingTable from "./RankingTable";
 
-const CurrentRanking = ({ currentRankData, selectedGameTitle }) => {
-  const blockchain = useSelector((state) => state.blockchain);
-  const { account, auth } = blockchain;
+const CurrentRanking = ({ currentRankData, captions, title }) => {
   const textColor = useColorModeValue("gray.700", "white");
-
   return (
     <>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card overflowX={{ sm: "scroll", xl: "hidden" }} mt={10}>
         <CardHeader p="6px 0px 22px 0px">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
-            {selectedGameTitle}
+            {title}
           </Text>
         </CardHeader>
         <CardBody>
           <Table variant="simple" color={textColor}>
             <Thead>
               <Tr my=".9rem" pl="0px" color="gray.400">
-                {[
-                  "Rnaking",
-                  "profile",
-                  "player",
-                  "score",
-                  "updated at",
-                  "",
-                ].map((caption, idx) => {
+                {captions.map((caption, idx) => {
                   return (
                     <Th
                       color="gray.400"
@@ -56,8 +46,6 @@ const CurrentRanking = ({ currentRankData, selectedGameTitle }) => {
             </Thead>
             <Tbody>
               {currentRankData.map((user, i) => {
-                console.log(user);
-                console.log(i);
                 const tempUpdatedAt = new Date(user.updatedAt);
                 const tempMonth = tempUpdatedAt.getMonth() + 1;
                 const tempDate = tempUpdatedAt.getDate();
@@ -76,7 +64,7 @@ const CurrentRanking = ({ currentRankData, selectedGameTitle }) => {
                     domain={user.domain}
                     player={user.user_address}
                     score={user.gameScore}
-                    date={updatedAt}
+                    date={user.updatedAt ? updatedAt : null}
                   />
                 );
               })}

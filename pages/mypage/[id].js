@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import AuctionContract from "../../contracts/artifacts/Auction.json";
 import { useRouter } from "next/router";
 import { addAuctionList } from "../../redux/data/dataActions";
 import { Box, Grid, GridItem, Flex, Image, Button, Heading, Text, Input } from "@chakra-ui/react";
@@ -8,15 +7,10 @@ import NftHistory from "../../components/mypage/NftHistory";
 
 const NftDetail_my = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.data);
-  const { auctionList, kdkd } = data;
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, nftContract, nftDealContract, auctionCreatorContract } = blockchain;
   const router = useRouter();
-  console.log(router);
   const { id, grade, attributes, name, image, description } = router.query;
-
-  console.log("attributes", attributes);
 
   const [isApproved, setIsApproved] = useState(false);
   const [price, setPrice] = useState();
@@ -25,94 +19,64 @@ const NftDetail_my = () => {
   const [saleType, setSaleType] = useState(false);
   const [startingBid, setStartingBid] = useState();
   const [expirationDate, setExpirationDate] = useState();
-  const [nftHistory, setNftHistory] = useState();
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
   // 경매 생성 함수
   const createAuction = async () => {
-    if (onAuction) {
-      alert("이미 경매 판매중입니다.");
-    } else if (!startingBid || !expirationDate) {
-      alert("가격 또는 종료일자를 입력해주세요");
-      return false;
+    try {
+      if (onAuction) {
+        alert("이미 경매 판매중입니다.");
+      } else if (!startingBid || !expirationDate) {
+        alert("가격 또는 종료일자를 입력해주세요");
+        return false;
+      }
+      console.log("startingBid", startingBid);
+      console.log("expirationDate", expirationDate);
+
+      const expirationTime = new Date(expirationDate).getTime();
+      const currentTime = Date.now();
+      // (종료시간 - 현재시간) / ms단위 / 블록생성주기
+      const _covertToBlockTime = Math.ceil((expirationTime - currentTime) / 1000 / 15);
+      console.log(_covertToBlockTime);
+
+      const _startingBid = web3.utils.toWei(startingBid, "ether");
+
+      setLoading(true);
+      await auctionCreatorContract.methods
+        .createAuction(id, nftContract._address, _startingBid, _covertToBlockTime, expirationTime)
+        .send({ from: account })
+        .then((res) => {
+          console.log("res", res);
+          dispatch(addAuctionList(id, grade, attributes, name, image, description));
+        });
+      alert("경매 권한 승인");
+      await auctionCreatorContract.methods
+        .getAuctionAddress(id)
+        .call({ from: account })
+        .then(async (address) => {
+          // const auctionContract = new web3.eth.Contract(AuctionContract.abi, address);
+          // console.log(auctionContract);
+          await nftContract.methods
+            .setApprovalForAll(address, true)
+            .send({ from: account })
+            .then((res) => {
+              console.log(res);
+              setLoading(false);
+            });
+        });
+
+      setOnAuction(true);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
     }
-    console.log("startingBid", startingBid);
-    console.log("expirationDate", expirationDate);
-
-    const expirationTime = new Date(expirationDate).getTime();
-    const currentTime = Date.now();
-    // (종료시간 - 현재시간) / ms단위 / 블록생성주기
-    const _covertToBlockTime = Math.ceil((expirationTime - currentTime) / 1000 / 15);
-    console.log(_covertToBlockTime);
-
-    const _startingBid = web3.utils.toWei(startingBid, "ether");
-
-    await auctionCreatorContract.methods
-      .createAuction(id, nftContract._address, _startingBid, _covertToBlockTime, expirationTime)
-      .send({ from: account })
-      .then((res) => {
-        console.log("res", res);
-        dispatch(addAuctionList(id, grade, attributes, name, image, description));
-      });
-    alert("경매 권한 승인");
-    await auctionCreatorContract.methods
-      .getAuctionAddress(id)
-      .call({ from: account })
-      .then(async (address) => {
-        // const auctionContract = new web3.eth.Contract(AuctionContract.abi, address);
-        // console.log(auctionContract);
-        await nftContract.methods
-          .setApprovalForAll(address, true)
-          .send({ from: account })
-          .then((res) => {
-            console.log(res);
-          });
-      });
-
-    setOnAuction(true);
-  };
-
-  const getNftHistory = async () => {
-    await nftContract
-      .getPastEvents("NftHistory", {
-        filter: { tokenId: id },
-        fromBlock: 0,
-        toBlock: "latest",
-      })
-      .then((res) => {
-        console.log(res);
-        let returnValuesArr = [];
-        for (const history of res) {
-          returnValuesArr.push({
-            value: history.returnValues,
-            tx: history.transactionHash,
-          });
-        }
-        setNftHistory(returnValuesArr);
-      });
-  };
-
-  // auctionContract 생성 확인 및 경매중 설정
-  const getAuctionContract = async () => {
-    console.log("auctionList", auctionList);
-    console.log("kdkd", kdkd);
-    await auctionCreatorContract.methods
-      .getAuctionList(account, id)
-      .call({ from: account })
-      .then(async (address) => {
-        const auctionContract = new web3.eth.Contract(AuctionContract.abi, address);
-        console.log(auctionContract);
-        await nftContract.methods
-          .setApprovalForAll(address, true)
-          .send({ from: account })
-          .then((res) => {
-            console.log(res);
-          });
-      });
   };
 
   // 판매 승인
   const approveSell = async (bool) => {
     try {
+      setLoading2(true);
       console.log(!bool);
       console.log(nftDealContract._address);
       await nftContract.methods
@@ -121,10 +85,12 @@ const NftDetail_my = () => {
         .then((result) => {
           if (result) {
             console.log(result);
+            setLoading2(false);
             isApprovedCheck();
           }
         });
     } catch (error) {
+      setLoading2(false);
       console.log(error);
     }
   };
@@ -134,6 +100,7 @@ const NftDetail_my = () => {
     try {
       if (onsale) {
         alert("이미 판매중입니다.");
+        return;
       }
       if (!isApproved) {
         alert("판매 승인을 먼저 받아주세요");
@@ -142,30 +109,36 @@ const NftDetail_my = () => {
         alert("가격을 입력해주세요");
         return false;
       }
+      setLoading(true);
       await nftDealContract.methods
         .sellNft(id, web3.utils.toWei(price, "ether"))
         .send({ from: account })
         .then((result) => {
           console.log(result);
+          setLoading(false);
           onSaleCheck();
         });
       console.log(id);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
   // 판매 취소
   const cancelSellNft = async () => {
     try {
+      setLoading(true);
       await nftDealContract.methods
         .cancelSell(id)
         .send({ from: account })
         .then((res) => {
+          setLoading(false);
           console.log(res);
           onSaleCheck();
         });
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -198,19 +171,12 @@ const NftDetail_my = () => {
     }
   };
 
-  // // 경매 등록여부 확인
-  // const onAuctioningCheck = async() =>{
-
-  // }
-
   const convertToBlockNumber = (e) => {
     setExpirationDate(e.target.value);
   };
 
   useEffect(async () => {
     if (!account) return false;
-    // console.log("허용여부확인");
-    await getNftHistory();
     await isApprovedCheck();
     await onSaleCheck();
   }, [account]);
@@ -234,20 +200,15 @@ const NftDetail_my = () => {
                 Properties
               </Heading>
               <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}>
-                {/* {attr[0] &&
-                  attr.map((attribute, i) => {
+                {attributes &&
+                  JSON.parse(attributes).map((attribute, i) => {
                     return (
-                      <GridItem
-                        key={i}
-                        align="center"
-                        border="2px solid #2b7997"
-                        borderRadius={15}
-                      >
+                      <GridItem key={i} align="center" border="2px solid #2b7997" borderRadius={15}>
                         <Text fontWeight="bold">{attribute.trait_type}</Text>
                         <Text>{attribute.value}</Text>
                       </GridItem>
                     );
-                  })} */}
+                  })}
               </Grid>
             </Box>
           </Flex>
@@ -300,7 +261,10 @@ const NftDetail_my = () => {
               <>
                 {onsale ? (
                   <Flex justify="center" mt="10">
-                    <Button onClick={cancelSellNft}> 판매 취소 </Button>
+                    <Button isLoading={loading ? 1 : null} loadingText="Canceling.." onClick={cancelSellNft}>
+                      {" "}
+                      판매 취소{" "}
+                    </Button>
                   </Flex>
                 ) : (
                   <>
@@ -315,13 +279,22 @@ const NftDetail_my = () => {
                     </Flex>
                     <Flex justify="center" mt="10">
                       <Button
+                        isLoading={loading2 ? 1 : null}
+                        loadingText="approving.."
                         onClick={() => approveSell(isApproved)}
                         colorScheme="linkedin"
-                        disabled={onAuction ? 1 : 0}
+                        disabled={onAuction || loading ? 1 : 0}
                       >
                         {isApproved ? <span>판매 권한 철회</span> : <span>판매 권한 승인</span>}
                       </Button>
-                      <Button ml="5" onClick={submitSell} colorScheme="linkedin" disabled={onAuction ? 1 : 0}>
+                      <Button
+                        isLoading={loading ? 1 : null}
+                        loadingText="add marketPlace.."
+                        ml="5"
+                        onClick={submitSell}
+                        colorScheme="linkedin"
+                        disabled={onAuction || loading2 ? 1 : 0}
+                      >
                         판매 등록
                       </Button>
                     </Flex>
@@ -347,13 +320,16 @@ const NftDetail_my = () => {
                       <Input w="60" type="datetime-local" onChange={convertToBlockNumber} />
                     </Flex>
                     <Flex justify="center" mt="10">
-                      <Button ml="5" onClick={createAuction} colorScheme="linkedin" disabled={onsale ? 1 : 0}>
+                      <Button
+                        isLoading={loading ? 1 : null}
+                        loadingText="Canceling.."
+                        ml="5"
+                        onClick={createAuction}
+                        colorScheme="linkedin"
+                        disabled={onsale ? 1 : 0}
+                      >
                         {" "}
                         경매 등록
-                      </Button>
-                      <Button ml="5" onClick={getAuctionContract} colorScheme="linkedin">
-                        {" "}
-                        getAuctionAddress
                       </Button>
                     </Flex>
                   </Box>
@@ -370,7 +346,7 @@ const NftDetail_my = () => {
                 to Address
               </Text>{" "}
               <Input w="200" />
-              <Button ml="2" colorScheme="linkedin">
+              <Button ml="2" colorScheme="linkedin" disabled={onAuction || onsale || loading || loading2 ? 1 : 0}>
                 Present
               </Button>
             </Flex>
@@ -378,7 +354,7 @@ const NftDetail_my = () => {
         </GridItem>
 
         <GridItem colSpan={5} bg="whiteAlpha.100" padding={5}>
-          <NftHistory history={nftHistory} updateHistory={getNftHistory} />
+          <NftHistory tokenId={id} />
         </GridItem>
       </Grid>
     </>

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { Button, Flex } from "@chakra-ui/react";
+import { Button, Flex, useColorModeValue } from "@chakra-ui/react";
 
 const RankSelectbar = ({ gameList, getSelectedGameTitle }) => {
+  // const bgColor = useColorModeValue("#F8F9FA", "gray.800");
   useEffect(() => {
     const buttons = document.querySelectorAll(".rank-menu-button");
     buttons.forEach((btn) => {
@@ -25,31 +26,20 @@ const RankSelectbar = ({ gameList, getSelectedGameTitle }) => {
   };
 
   return (
-    <Flex m={"0 10px"} flexDirection={"column"}>
+    <Flex m={"0 10px"} flexDirection={"row"}>
       {gameList.map((game) => (
-        <button
-          className="rank-menu-button"
+        <Button
+          w={"100px"}
+          h={"100px"}
           name={game.gameTitle}
           key={game.gameId}
           onClick={selectGame}
+          m={"0 10px"}
+          // bgColor={bgColor}
         >
           {game.gameTitle}
-        </button>
+        </Button>
       ))}
-      <style jsx>{`
-        .rank-menu-button {
-          margin: 10px 5px;
-          background-color: rgba(255, 255, 255, 0.08);
-          border-radius: 8px;
-          padding: 10px;
-        }
-        .rank-menu-button:hover {
-          background-color: #7e09bd5c;
-        }
-        .rank-menu-button.active {
-          background-color: #7e09bd5c;
-        }
-      `}</style>
     </Flex>
   );
 };

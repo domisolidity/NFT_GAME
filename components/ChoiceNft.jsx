@@ -7,9 +7,9 @@ import jwtDecode from "jwt-decode";
 import MyNftsCard from "../components/MyNftsCard";
 const ChoiceNft = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, nftContract } = blockchain;
+  const { account, nftContract, stakingContract } = blockchain;
 
-  const { toggle, getCurrentMainNft } = props;
+  const { onClose, getCurrentMainNft } = props;
 
   const [myNfts, setMyNfts] = useState([]);
   const [currentMainNft, setcurrentMainNft] = useState("");
@@ -98,7 +98,9 @@ const ChoiceNft = (props) => {
   let disable = "disable";
   if (selectNft) disable = "";
 
-  const getSubmit = () => {
+  const getSubmit = async () => {
+    console.log(selectNft);
+
     if (!selectNft) return;
 
     const {
@@ -109,7 +111,7 @@ const ChoiceNft = (props) => {
       mainNft: selectNft,
     };
 
-    fetch(`/api/users/profile/${id}`, {
+    await fetch(`/api/users/profile/${id}`, {
       body: JSON.stringify(variables),
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -121,11 +123,29 @@ const ChoiceNft = (props) => {
       .then((result) => {
         setcurrentMainNft(result.user.mainNft);
         alert("한 주간 유지됩니다.");
-        toggle();
+        onClose();
       })
       .catch((err) => {
         alert("다시 선택해주세요.");
       });
+
+    const isApprovedForAll = await nftContract.methods
+      .isApprovedForAll(account, stakingContract._address)
+      .call();
+    if (!isApprovedForAll) {
+      await nftContract.methods
+        .setApprovalForAll(stakingContract._address, true)
+        .send({ from: account })
+        .then((result) => {
+          if (result) {
+            console.log(result);
+          }
+        });
+    }
+    await stakingContract.methods.nftStake(selectNft).send({ from: account });
+
+    const asdf = await nftContract.methods.ownerOf(91).call();
+    console.log(asdf);
   };
 
   return (
@@ -181,7 +201,7 @@ const ChoiceNft = (props) => {
         <button
           className="button button button-cancel"
           type="button"
-          onClick={toggle}
+          onClick={onClose}
         >
           Cancel
         </button>

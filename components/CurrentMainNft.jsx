@@ -1,14 +1,26 @@
-import { Tooltip } from "@chakra-ui/react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import useModal from "../hooks/useModal";
+
 import ChoiceNft from "./ChoiceNft";
-import Modal from "./Modal";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react";
+
 import StakingCard from "./StakingCard";
+import { Separator } from "./Separator/Separator";
 const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   console.log(getCurrentMainNft);
   console.log(currentMainNftImg);
   const blockchain = useSelector((state) => state.blockchain);
@@ -17,7 +29,6 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   const [currentMainNft, setcurrentMainNft] = useState("");
   const [currentImage, setCurrentImage] = useState("");
   const [nftGrade, setNftGrade] = useState("");
-  const { toggle, visible } = useModal();
 
   const LS_KEY = "login-with-metamask:auth";
   const baseUri = "http://127.0.0.1:8080/ipfs";
@@ -73,8 +84,22 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
 
   return (
     <div className={`nft-block ${nftGrade}`}>
-      <Modal toggle={toggle} visible={visible}>
+      {/* <Modal toggle={toggle} visible={visible}>
         <ChoiceNft toggle={toggle} getCurrentMainNft={getCurrentMainNft} />
+      </Modal> */}
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Account</ModalHeader>
+          <Separator />
+          <ModalCloseButton />
+          <ModalBody>
+            <ChoiceNft
+              onClose={onClose}
+              getCurrentMainNft={getCurrentMainNft}
+            />
+          </ModalBody>
+        </ModalContent>
       </Modal>
       <div className="nft-block-title">
         MAIN NFT
@@ -83,10 +108,15 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
         </Tooltip>
       </div>
       {currentImage ? (
-        <img src={currentImage} className="nft-img" onClick={toggle} />
+        <img src={currentImage} className="nft-img" onClick={onClose} />
       ) : (
         <div className="nft-img plus">
-          <img src={"plus.svg"} className="add-nft" onClick={toggle} />
+          <img
+            src={"plus.svg"}
+            className="add-nft"
+            // onClick={onClose}
+            onClick={onOpen}
+          />
         </div>
       )}
 
