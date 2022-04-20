@@ -14,6 +14,7 @@ import BlankComponent from "../../components/BlankComponent";
 import { Box, Flex } from "@chakra-ui/react";
 import InGameProfile from "../../components/game/InGameProfile";
 
+import FullScreen from '../../components/Layout/Frame/FullScreen'
 const TreasureHunt = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
@@ -109,7 +110,7 @@ const TreasureHunt = () => {
   }, [mainNFT]);
 
   return (
-    <Flex m={"0 10px"}>
+    <Flex mt={"120px"}>
       <InGameProfile filledValue={score} hasMission={hasMission} />
       {account && auth && mainNFT ? (
         <Box w={"100%"}>
@@ -233,3 +234,10 @@ const TreasureHunt = () => {
 };
 
 export default TreasureHunt;
+
+// getLayout property
+TreasureHunt.getLayout = function getLayout(page) {
+  return (
+    <FullScreen>{page}</FullScreen>
+  );
+};
