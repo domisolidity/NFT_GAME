@@ -21,21 +21,15 @@ const Tier = () => {
           </tr>
           <tr>
             <td className="subject">Daily 미션 할당량</td>
+            <td>1 </td>
+            <td>2 </td>
             <td>3 </td>
-            <td>5 </td>
-            <td>7 </td>
           </tr>
           <tr>
-            <td className="subject">채굴 보상</td>
+            <td className="subject">스테이킹 보상</td>
             <td>1% </td>
             <td>2% </td>
             <td>3% </td>
-          </tr>
-          <tr>
-            <td className="subject">투표 참여 권한</td>
-            <td></td>
-            <td>O </td>
-            <td>O </td>
           </tr>
           <tr>
             <td className="subject">Nft Number Start</td>

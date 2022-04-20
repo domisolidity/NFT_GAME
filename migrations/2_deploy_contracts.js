@@ -9,7 +9,7 @@ module.exports = async function (deployer) {
   // BEP721
   await deployer.deploy(NftContract);
   await deployer.deploy(NftDealContract, NftContract.address);
-  await deployer.deploy(AuctionCreator);
+  await deployer.deploy(AuctionCreator, NftDealContract.address);
 
   // BEP20
   await deployer.deploy(GameToken);

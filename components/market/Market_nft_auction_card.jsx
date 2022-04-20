@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Box,
-  Grid,
-  GridItem,
-  Flex,
-  Image,
-  Button,
-  Text,
-} from "@chakra-ui/react";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import { Box, Flex, Image, Button, Text } from "@chakra-ui/react";
 import Countdown from "../Countdown.jsx";
-import _ from "lodash";
 
 const Market_nft_auction_card = ({ nft }) => {
   const asdf = (data) => {};
@@ -45,7 +34,6 @@ const Market_nft_auction_card = ({ nft }) => {
       <Text align="left">
         <Countdown remain={nft.remainTime} setEnd={asdf} />
       </Text>
-      <Text>{/* {nft.price} ETH */}</Text>
       <Box h="10%" mt="30">
         <Link
           href={{
@@ -53,7 +41,7 @@ const Market_nft_auction_card = ({ nft }) => {
             query: {
               id: nft.tokenId,
               grade: nft.grade,
-              attributes: nft.attributes,
+              attributes: JSON.stringify(nft.attributes),
               name: nft.name,
               image: nft.image,
               description: nft.description,

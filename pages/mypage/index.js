@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button, Flex, Icon, Grid, GridItem } from "@chakra-ui/react";
 import NetworkCard from "../../components/NetworkCard";
 import ProfileCard from "../../components/ProfileCard";
 import Inventory from "../../components/Inventory";
@@ -10,13 +10,19 @@ import Staking from "../../components/Staking";
 import { useSelector } from "react-redux";
 import CurrentMainNft from "../../components/CurrentMainNft";
 import NftAmount from "../../components/NftAmount";
+import TotalNftAmountCard from "../../components/TotalNftAmountCard";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
+import ClaimInfoCard from "../../components/ClaimInfoCard";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");
   const [hasMainNft, setHasMainNft] = useState(false);
   const [currentMainNft, setCurrentMainNft] = useState("");
+  const [updateTrigger, setUpdateTrigger] = useState();
   const data = useSelector((state) => state.data);
-
+  const updateToken = () => {
+    setUpdateTrigger(!updateTrigger);
+  };
   useEffect(() => {
     returnMenu(menu);
   }, [menu]);
@@ -28,7 +34,7 @@ const Mypage = () => {
       case "nfts":
         return <Collections />;
       case "claim":
-        return <Claim />;
+        return <ClaimInfoCard onUpdate={updateToken} />;
       default:
         break;
     }
@@ -56,7 +62,7 @@ const Mypage = () => {
 
   return (
     <>
-      <div className="mypage">
+      <Flex pt={{ base: "120px", md: "75px" }}>
         <div className="sidebar">
           <ProfileCard />
           <Button onClick={renderItems} m={4}>
@@ -68,30 +74,31 @@ const Mypage = () => {
           <Button onClick={renderClaim} m={4}>
             Claim
           </Button>
-
         </div>
         <div className="content">
           <div className="fixed">
             <div className="fixed_item"></div>
             <div className="fixed_item">
-              <NetworkCard />
+              <NetworkCard update={updateTrigger} />
             </div>
             {/* <div className="fixed_item">
               <TotalCard />
             </div> */}
             <div className="fixed_item">
-              <CurrentMainNft
-                getCurrentMainNft={getCurrentMainNft}
-                currentMainNftImg={currentMainNft}
-              />
+              <CurrentMainNft getCurrentMainNft={getCurrentMainNft} currentMainNftImg={currentMainNft} />
             </div>
             <div className="fixed_item">
-              <NftAmount />
+              <TotalNftAmountCard
+                // icon={<Icon h={"24px"} w={"24px"} color='white' as={FaWallet} />}
+                // title={"Salary"}
+                description={"Total amount"}
+                amount={"Total amount"}
+              />
             </div>
           </div>
           <div className="menu">{returnMenu(menu)}</div>
         </div>
-      </div>
+      </Flex>
       <style jsx>{`
         .mypage {
           display: flex;
@@ -126,3 +133,9 @@ const Mypage = () => {
 };
 
 export default Mypage;
+
+// getLayout property
+Mypage.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+

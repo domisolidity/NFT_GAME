@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Box,
@@ -18,23 +18,50 @@ import { todayTimeFormal } from "../../hooks/currentTime";
 
 const NftHistory = (props) => {
   const blockchain = useSelector((data) => data.blockchain);
-  const { account } = blockchain;
+  const { account, nftContract } = blockchain;
 
-  const nftHistory = props.history;
-  const getNftHistory = props.updateHistory;
+  const [nftHistory, setNftHistory] = useState();
+
+  // const nftHistory = props.history;
+  const tokenId = props.tokenId;
+  // const getNftHistory = props.updateHistory;
+
+  //=================================================
+  const getNftHistory = async () => {
+    await nftContract
+      .getPastEvents("NftHistory", {
+        filter: { tokenId: tokenId },
+        fromBlock: 0,
+        toBlock: "latest",
+      })
+      .then((res) => {
+        console.log(res);
+        let returnValuesArr = [];
+        for (const history of res) {
+          returnValuesArr.push({
+            value: history.returnValues,
+            tx: history.transactionHash,
+          });
+        }
+        setNftHistory(returnValuesArr);
+      });
+  };
+
+  //=================================================
 
   const updateHistory = () => {
     getNftHistory();
   };
 
   useEffect(async () => {
-    if (!account || !nftHistory) return;
+    if (!account) return;
     console.log(nftHistory);
-  }, [account, nftHistory]);
+    await getNftHistory();
+  }, [account]);
 
   return (
     <Box m="0 auto" w="80%">
-      <Box bg="#190929" p="3" mb="5">
+      <Box p="3" mb="5" bg="#182749">
         <Text fontSize="20">
           Nft History{" "}
           <span style={{ marginLeft: 10 }}>
@@ -47,7 +74,7 @@ const NftHistory = (props) => {
       <TableContainer>
         <Table>
           <Thead>
-            <Tr>
+            <Tr bg="#1827493e">
               <Th>Type</Th>
               <Th>from</Th>
               <Th>to</Th>
@@ -77,7 +104,9 @@ const NftHistory = (props) => {
 
                       <Td>{todayTimeFormal(Number(history.value.time))}</Td>
                       <Td>
-                        <Link href={`https://etherscan.io/tx/${history.tx}`}>
+                        <Link
+                          href={`https://rinkeby.etherscan.io/tx/${history.tx}`}
+                        >
                           <a style={{ color: "#8eb8e0" }}>view etherscan</a>
                         </Link>
                       </Td>

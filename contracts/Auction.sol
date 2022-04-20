@@ -157,6 +157,7 @@ contract Auction {
           recipient = highestBidder;
           value = bids[highestBidder] - highestBindingBid;
           nftContractAddres.safeTransferFrom(owner, highestBidder, id);
+          nftContractAddres.nftEventTrigger(_tokenId, owner, recipient, _timestamp, "Acution");
         } else {
           // 일반 입찰자 경매 정산.
           recipient = payable(msg.sender);
@@ -169,7 +170,6 @@ contract Auction {
     onAuctioning[_tokenId] = false;
 
     // nft history 이벤트 트리거
-    nftContractAddres.nftEventTrigger(_tokenId, owner, recipient, _timestamp, "Acution");
   }
 
   function isAuctionCheck(uint _tokenId) public view returns (bool) {
@@ -189,6 +189,10 @@ contract Auction {
     )
   {
     return (auctionState, startBid, bidIncrement, startBlock, block.number, endBlock);
+  }
+
+  function getEoa() external view returns (address) {
+    return owner;
   }
 
   function getStartBid() external view returns (uint) {

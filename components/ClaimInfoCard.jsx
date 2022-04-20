@@ -6,7 +6,7 @@ import ClaimHistory from "./mypage/ClaimHistory";
 import MissionClaimCard from "./mypage/MissionClaimCard";
 import RankingClaimCard from "./mypage/RankingClaimCard";
 
-const ClaimInfoCard = () => {
+const ClaimInfoCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, claim20_Contract } = blockchain;
 
@@ -27,11 +27,11 @@ const ClaimInfoCard = () => {
         for (let i = 0; i < rank.data.length; i++) {
           console.log(rank.data.ranking);
           if (rank.data[i].ranking == 1) {
-            rankRewardAmount += 100;
-          } else if (rank.data[i].ranking == 2) {
             rankRewardAmount += 50;
-          } else if (rank.data[i].ranking == 3) {
+          } else if (rank.data[i].ranking == 2) {
             rankRewardAmount += 30;
+          } else if (rank.data[i].ranking == 3) {
+            rankRewardAmount += 10;
           }
           rewardData.push(Object.values(rank.data[i]));
         }
@@ -48,8 +48,9 @@ const ClaimInfoCard = () => {
           missionRewardData.push(Object.values(mission.data[i]));
         }
 
-        setRewardAmount_mission(mission.data.length * 10);
+        setRewardAmount_mission(mission.data.length);
         setClaimableMission(missionRewardData);
+        props.onUpdate();
       });
   };
 
@@ -81,12 +82,11 @@ const ClaimInfoCard = () => {
     await getClaimHistory();
     console.log(account);
     console.log(claim20_Contract);
-    return () => setRewardAmount(0);
+    return () => {
+      setRewardAmount_mission(0);
+      setRewardAmount_rank(0);
+    };
   }, [account]);
-  // useEffect(async () => {
-  //   if (!account || !claimHistory) return;
-  //   console.log(claimHistory[0].value.rewardType);
-  // }, [account, claimHistory]);
 
   return (
     <>

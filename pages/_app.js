@@ -1,48 +1,20 @@
-import '../styles/globals.css'
-import '../styles/primerRaw.css'
 import { ChakraProvider } from "@chakra-ui/react";
-import wrapper from '../redux/store';
-import Header from "../components/layout/Header.jsx";
-import Footer from "../components/layout/Footer.jsx";
-import Head from "next/head"
+import { wrapper } from '../redux/store';
+import theme from "../theme/theme.js";
+import Seo from "../components/layout/Seo";
+import { useRouter } from 'next/router';
 
-
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
+  const router = useRouter()
+  // Use the layout defined at the page level, if available
+  const getLayout = Component.getLayout || ((page) => page)
   return (
-
-    // <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-    <ChakraProvider>
-      <Head>
-        <title>Doremifasolidity</title>
-      </Head>
-      <div className="layout">
-        <div className="layout__header">
-          <Header />
-        </div>
-        <div className="layout__content">
-          <Component {...pageProps} />
-        </div>
-        <div className="layout__footer">
-          <Footer />
-        </div>
-      </div>
+    <ChakraProvider theme={theme} resetCss={false}>
+      <Seo title={`${router.pathname.slice(1)}`} />
+      {getLayout(<Component {...pageProps} />)}
     </ChakraProvider>
-  )
+  );
 }
-
-// export const getServerSideProps = wrapper.getServerSideProps(
-//   store =>
-//     async ({ req }) => {
-//       console.log("서버")
-//       const cookie = req ? req.headers.cookie : '';
-//       axios.defaults.headers.Cookie = '';
-//       if (req && cookie) {
-//         axios.defaults.headers.Cookie = cookie;
-//       }
-
-//       // store.dispatch(myInfoRequestAction());
-//     },
-// );
 
 
 export default wrapper.withRedux(MyApp)
