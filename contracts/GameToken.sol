@@ -21,8 +21,8 @@ contract GameToken is Context, IERC20, Ownable {
   constructor() {
     _name = "DoremiGame Token";
     _symbol = "DMG";
-    _decimals = 18;
-    _totalSupply = 10000 * 10**18;
+    _decimals = 0;
+    _totalSupply = 1000000;
     _owner = msg.sender;
     _balances[_owner] = _totalSupply;
     // _balances[_owner] = _totalSupply;

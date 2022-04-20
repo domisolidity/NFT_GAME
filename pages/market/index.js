@@ -41,13 +41,13 @@ const Market = () => {
   return (
     <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>
       <Button onClick={renderItems} m={4}>
-        아이템
+        ITEM
       </Button>
       <Button onClick={renderNfts} m={4}>
-        에네프티
+        NFT
       </Button>
       <Button onClick={renderAuction} m={4}>
-        경마ㅣ장
+        AUCTION
       </Button>
       <Grid
         mt="2%"

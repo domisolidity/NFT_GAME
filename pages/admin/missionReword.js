@@ -23,8 +23,7 @@ import { useSelector } from "react-redux";
 const MissionReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, gameTokenContract, claim20_Contract } = blockchain;
-  console.log(claim20_Contract);
-  console.log(gameTokenContract);
+
   const [dataList, setDataList] = useState();
   const [selectedMissionData, setSelectedMissionData] = useState();
   const [isData, setIsData] = useState(false);
@@ -32,12 +31,12 @@ const MissionReword = () => {
   const [lastStep, setLastStep] = useState(false);
   const [totalAllowance, setTotalAllowance] = useState(0);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const allChecked = checkedItems.every(Boolean);
   const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
   const owner = process.env.NEXT_PUBLIC_OWNER;
 
-  //랭킹 정보 불러오기
   const importMissionAchiever = async () => {
     await axios
       .get("/api/games/mission-achiever")
@@ -67,7 +66,7 @@ const MissionReword = () => {
     for (let i = 0; i < checkedItems.length; i++) {
       if (checkedItems[i] == true) {
         selectedData.push(dataList[i]);
-        totalCount += dataList[i][1] * 10;
+        totalCount += dataList[i][1];
       }
     }
     console.log(selectedData);
@@ -78,104 +77,40 @@ const MissionReword = () => {
     setNextStep(true);
   };
 
-  // const testtest = async () => {
-  //   await gameTokenContract.methods
-  //     .allowance("0xB0475eB97e3895D508aADa880cf7De4A3fE86AEa", "0xfa55215946f348d884b8c017448416a55c840404")
-  //     .call({ from: "0xB0475eB97e3895D508aADa880cf7De4A3fE86AEa" })
-  //     .then((res) => console.log(res));
-  // };
-
-  // @ refactoring ver.
   const approveMissionClaim = async () => {
-    if (account != owner) {
-      alert("관리자 권한이 없는 계정입니다.");
-      return;
+    try {
+      if (account != owner) {
+        alert("관리자 권한이 없는 계정입니다.");
+        return;
+      }
+      console.log(claim20_Contract._address);
+      setLoading(true);
+      await gameTokenContract.methods
+        .transfer(claim20_Contract._address, totalAllowance)
+        .send({ from: account })
+        .then((res) => {
+          console.log(res);
+          alert("다음은 미션 보상자별 인출 허용량 지정에 대한 서명입니다.");
+        });
+
+      await claim20_Contract.methods
+        .approveClaim_mission(selectedMissionData)
+        .send({ from: account })
+        .then(async (res) => {
+          console.log(res);
+          if (res.status) {
+            await axios.post("/api/games/mission/approved", { mission: selectedMissionData }).then(() => {
+              setLoading(false);
+              alert("승인 작업 완료");
+              setNextStep(false);
+              setLastStep(true);
+            });
+          }
+        });
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
     }
-    console.log(claim20_Contract._address);
-    console.log(totalAllowance);
-
-    await gameTokenContract.methods
-      .transfer(claim20_Contract._address, totalAllowance)
-      .send({ from: account })
-      .then((res) => {
-        console.log(res);
-        alert("다음은 미션 보상자별 인출 허용량 지정에 대한 서명입니다.");
-      })
-      .catch(console.error);
-    console.log(selectedMissionData);
-
-    await claim20_Contract.methods
-      .approveClaim_mission(selectedMissionData)
-      .send({ from: account })
-      .then(async (res) => {
-        console.log(res);
-        if (res.status) {
-          await axios.post("/api/games/mission/approved", { mission: selectedMissionData }).then((res) => {
-            console.log(res);
-            alert("승인 작업 완료");
-            setNextStep(false);
-            setLastStep(true);
-          });
-        }
-      })
-      .catch(console.error);
-  };
-  const test = async () => {
-    console.log(totalAllowance);
-    await gameTokenContract.methods
-      .allowance(claim20_Contract._address, account)
-      .call({ from: account })
-      .then((res) => {
-        console.log(res);
-        console.log("gg");
-      });
-  };
-
-  // 랭킹정보에 따른 클레임양 선택 허용
-  const approvedSome = async () => {
-    console.log("checkedItems", checkedItems);
-    console.log("selectedDataList", selectedDataList);
-
-    //선택한 계정에 한해 클레임 허용
-    console.log("claim", claim20_Contract);
-    await claim20_Contract.methods
-      .approveClaim(selectedDataList)
-      .send({ from: account })
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => console.error(err));
-
-    setNextStep(false);
-    setLastStep(true);
-    // // 클레임 허용한 계정 랭킹db에서삭제
-    // await axios.post("/api/ranks/deleteRank",{rank:selectedRankData}).then(result=>{
-    //     console.log(result.data);
-    // }).catch(console.error());
-  };
-
-  // 보상자 클레임 요청
-  const exportToContract = async () => {
-    await gameTokenContract.methods
-      .allowance("0xBE005997Cc214577c575cAb11d0430777145a7dd", account)
-      .call({ from: account })
-      .then((result) => {
-        console.log("허용량", result);
-      });
-    await claim20_Contract.methods.rankClaim(account).send({ from: account });
-
-    await gameTokenContract.methods
-      .balanceOf(account)
-      .call({ from: account })
-      .then((result) => {
-        console.log("내 토큰 수 : ", result);
-      });
-    await gameTokenContract.methods
-      .allowance("0xBE005997Cc214577c575cAb11d0430777145a7dd", account)
-      .call({ from: account })
-      .then((result) => {
-        console.log("허용량", result);
-      });
   };
 
   const previousStep = () => {
@@ -287,16 +222,18 @@ const MissionReword = () => {
           <Table border="1px solid gray" mt="5" w="80%" variant="striped" colorScheme="#2C264C">
             <TableCaption>
               <Box mt="50" mb="5" fontSize="20">
-                <span> Total Allowance : {totalAllowance * 10} DGT </span>
+                <span> Total Allowance : {totalAllowance} DGT </span>
               </Box>
               <Button bg="#414fa28f" onClick={previousStep} mr="2">
                 뒤로 가기
               </Button>
-              <Button bg="#414fa28f" onClick={approveMissionClaim}>
+              <Button
+                isLoading={loading ? 1 : null}
+                loadingText="approving..."
+                bg="#414fa28f"
+                onClick={approveMissionClaim}
+              >
                 클레임 허용
-              </Button>
-              <Button bg="#414fa28f" onClick={test}>
-                allowance양 확인
               </Button>
             </TableCaption>
             <Thead bg="whiteAlpha.200">
@@ -313,7 +250,7 @@ const MissionReword = () => {
                     <Tr key={index}>
                       <Td>{list[0]}</Td>
                       <Td>{list[1]}</Td>
-                      <Td>{list[1] * 10}</Td>
+                      <Td>{list[1]}</Td>
                     </Tr>
                   );
                 })}
@@ -334,9 +271,6 @@ const MissionReword = () => {
           <Box mt="5">
             <Button bg="#414fa28f" onClick={importMissionAchiever} mr="2">
               보상자 목록 불러오기
-            </Button>
-            <Button bg="#414fa28f" onClick={exportToContract}>
-              클레임하기 - 마이페이지에다 넣을꺼
             </Button>
           </Box>
         </Box>

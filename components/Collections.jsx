@@ -4,7 +4,18 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import MyNftsCard from "../components/MyNftsCard";
 import Link from "next/link";
+import { wrapper } from "../redux/store";
 const _ = require("lodash");
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req }) => {
+      console.log(store);
+      console.log("서버");
+
+      // store.dispatch(myInfoRequestAction());
+    }
+);
 
 const Collections = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -28,7 +39,6 @@ const Collections = () => {
             const response = await axios.get(
               `${baseUri}${info.uri.slice(6)}/${info.id}.json`
             );
-            console.log(_.cloneDeep(response.data.attributes));
             mynfts.push({
               id: info.id,
               grade: response.data.grade,
@@ -107,7 +117,7 @@ const Collections = () => {
                         query: {
                           id: mynft.id,
                           grade: mynft.grade,
-                          attributes: mynft.attributes,
+                          attributes: JSON.stringify(mynft.attributes),
                           name: mynft.name,
                           image: mynft.image,
                           description: mynft.description,

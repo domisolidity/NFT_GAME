@@ -55,6 +55,7 @@ router.post("/approved", async (req, res) => {
       }
     );
   }
+  res.send("안녕");
 });
 
 module.exports = router;
