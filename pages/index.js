@@ -19,10 +19,7 @@ export default function Main() {
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.400", "white");
   return (
-    <Flex position='relative'
-
-    //  mb='40px'
-    >
+    <Flex position='relative' mb='40px'>
       <Flex
         h={{ sm: "initial", md: "75vh", lg: "85vh" }}
         w='100%'
