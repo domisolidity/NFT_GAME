@@ -111,24 +111,6 @@ const ChoiceNft = (props) => {
       mainNft: selectNft,
     };
 
-    await fetch(`/api/users/profile/${id}`, {
-      body: JSON.stringify(variables),
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      method: "PATCH",
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        setcurrentMainNft(result.user.mainNft);
-        alert("한 주간 유지됩니다.");
-        onClose();
-      })
-      .catch((err) => {
-        alert("다시 선택해주세요.");
-      });
-
     const isApprovedForAll = await nftContract.methods
       .isApprovedForAll(account, stakingContract._address)
       .call();
@@ -142,10 +124,18 @@ const ChoiceNft = (props) => {
           }
         });
     }
-    await stakingContract.methods.nftStake(selectNft).send({ from: account });
-
-    const asdf = await nftContract.methods.ownerOf(91).call();
+    const asdf = await nftContract.methods.ownerOf(selectNft).call();
     console.log(asdf);
+    const staking = await stakingContract.methods
+      .nftStake(selectNft)
+      .send({ from: account });
+
+    console.log(staking);
+    if (staking.status) {
+      setcurrentMainNft(selectNft);
+      alert("한 주간 유지됩니다.");
+      onClose();
+    }
   };
 
   return (

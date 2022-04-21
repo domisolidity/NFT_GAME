@@ -24,7 +24,8 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   console.log(getCurrentMainNft);
   console.log(currentMainNftImg);
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, nftContract } = blockchain;
+  const { account, nftContract, gameTokenContract, stakingContract } =
+    blockchain;
   const [accessToken, setAccessToken] = useState("");
   const [currentMainNft, setcurrentMainNft] = useState("");
   const [currentImage, setCurrentImage] = useState("");
@@ -61,32 +62,74 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   const getMyNfts = async () => {
     try {
       getCurrentMainNft(currentMainNft);
-      await nftContract.methods
-        .getMyToken(account)
-        .call({ from: account })
-        .then(async (result) => {
-          if (!result) return true;
-          for (const info of result) {
-            if (info.id == currentMainNftImg) {
-              const response = await axios.get(
-                `${baseUri}${info.uri.slice(6)}/${info.id}.json`
-              );
-              setCurrentImage(`${baseUri}${response.data.image.slice(6)}`);
-              setNftGrade(info.grade);
-              return;
-            }
-          }
-        });
+      const stakingData = await stakingContract.methods
+        .getStakingData()
+        .call({ from: account });
+      const directoryUri = await nftContract.methods
+        .tokenURI(stakingData.tokenId)
+        .call();
+      const response = await axios.get(
+        `${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`
+      );
+      console.log(response.data);
+      setCurrentImage(`${baseUri}${response.data.image.slice(6)}`);
+      setNftGrade(response.data.grade);
     } catch (error) {
       console.error();
     }
   };
 
+  const unStaking = async () => {
+    console.log(stakingContract.methods);
+    const qqq = await stakingContract.methods
+      .getStakingData()
+      .call({ from: account });
+    console.log(qqq.tokenId);
+
+    if (!(qqq.tokenId > 0 && qqq.tokenId <= 100)) return;
+
+    await stakingContract.methods
+      .exit(qqq.tokenId)
+      .send({ from: account })
+      .catch((err) => console.log(err));
+    setCurrentImage("");
+    setNftGrade("");
+  };
+
+  const charge = async () => {
+    console.log("돈돈");
+    console.log(gameTokenContract.methods);
+    await gameTokenContract.methods
+      .transfer(stakingContract._address, 100)
+      .send({ from: account });
+
+    const abcd = await gameTokenContract.methods.balanceOf(account).call();
+    const qwer = await gameTokenContract.methods
+      .balanceOf(stakingContract._address)
+      .call();
+    console.log(abcd);
+    console.log(qwer);
+  };
+  const myData = async () => {
+    console.log("생생정보");
+
+    const abcd = await gameTokenContract.methods.balanceOf(account).call();
+    const qwer = await gameTokenContract.methods
+      .balanceOf(stakingContract._address)
+      .call();
+    console.log(abcd);
+    console.log(qwer);
+    const ppp = await stakingContract.methods
+      .getStakingData()
+      .call({ from: account });
+    console.log(ppp);
+  };
+
   return (
     <div className={`nft-block ${nftGrade}`}>
       {/* <Modal toggle={toggle} visible={visible}>
-        <ChoiceNft toggle={toggle} getCurrentMainNft={getCurrentMainNft} />
-      </Modal> */}
+      <ChoiceNft toggle={toggle} getCurrentMainNft={getCurrentMainNft} />
+    </Modal> */}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
@@ -119,7 +162,9 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
           />
         </div>
       )}
-
+      <button onClick={unStaking}>안녕</button>
+      <button onClick={charge}>돈 충전</button>
+      <button onClick={myData}>결과는?</button>
       <style jsx>{`
         .nft-block {
           display: flex;
