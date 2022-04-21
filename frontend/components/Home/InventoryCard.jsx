@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Grid, GridItem, Image } from "@chakra-ui/react";
+// import { Box, Flex, Grid, GridItem, Image } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import ItemImage from "../ItemImage";
 import Link from "next/link";
+
+import {
+  chakra,
+  Box,
+  Image,
+  Flex,
+  useColorModeValue,
+  // Link,
+} from "@chakra-ui/react";
 
 const InventoryCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -27,49 +36,39 @@ const InventoryCard = (props) => {
     getMyItemQuantity();
   }, [account]);
 
+  const txtColor = useColorModeValue("gray.600", "gray.300");
+
   return (
     <>
       {myItemQuantity != 0 ? (
-        <div className="item">
-          <div className="item_image">
-            <ItemImage itemId={props.img} />
-            <div className="itme_amount">{myItemQuantity}</div>
-          </div>
-          <div className="itme_name">{props.itemName}</div>
-          <style jsx>{`
-            .item {
-              display: flex;
-              flex-direction: column;
-              background-color: #0f263e;
-              border-radius: 5%;
-              margin: 1rem;
-              align-items: center;
-              position: relative;
-              border: solid 3px #2c3a43;
-            }
-            .item_image {
-              border-bottom: solid 1px #2c3a43;
-              border-radius: 5% 5% 0 0;
-              width: 10rem;
-              height: 10rem;
-            }
-            .itme_amount {
-              width: 2rem;
-              height: 2rem;
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              background-color: var(--chakra-colors-purple-700);
-              position: absolute;
-              top: 2%;
-              left: 78%;
-            }
-            .itme_name {
-              font-size: 1.5rem;
-            }
-          `}</style>
-        </div>
+        <Flex p={5} alignItems="center" justifyContent="center">
+          <Box
+            bg={useColorModeValue("white", "gray.800")}
+            shadow="lg"
+            rounded="lg"
+            overflow="hidden"
+            mx="auto"
+            w={"200px"}
+          >
+            <Box w={"200px"} h={"200px"} m={"0 auto"}>
+              <ItemImage itemId={props.img} />
+            </Box>
+            <Box textAlign="center">
+              <chakra.span fontSize="sm" color={txtColor}>
+                {myItemQuantity}개 보유 중
+              </chakra.span>
+              <Box
+                display="block"
+                fontSize="2xl"
+                color={txtColor}
+                fontWeight="bold"
+                mb={2}
+              >
+                {props.itemName}
+              </Box>
+            </Box>
+          </Box>
+        </Flex>
       ) : null}
     </>
   );

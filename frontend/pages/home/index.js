@@ -20,6 +20,8 @@ import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import SubMenuList from "../../components/Menu/SubMenuList";
+import ProfileCard from "../../components/Home/Profile/ProfileCard";
+import Inventory from "../../components/Home/Inventory";
 
 export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");
@@ -29,9 +31,7 @@ export default function Home() {
 
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
-  const [selectedSubMenu, setSelectedSubMenu] = useState("ITEM");
-
-  console.log(gameTokenContract);
+  const [selectedSubMenu, setSelectedSubMenu] = useState("PROFILE");
 
   //잔액
   const getEthBalance = async () => {
@@ -71,13 +71,13 @@ export default function Home() {
   const returnMenu = (display) => {
     switch (display) {
       case "INVENTORY":
-        return <div>INVENTORY</div>;
+        return <Inventory />
       case "CLAIM":
         return <div>CLAIM</div>;
       case "STAKING":
         return <div>STAKING</div>;
       case "PROFILE":
-        return <div>PROFILE</div>;
+        return <ProfileCard />
       default:
         break;
     }
