@@ -1,4 +1,4 @@
-import { Grid } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import ItemCard from "../components/ItemCard";
@@ -15,21 +15,12 @@ const Market_item = () => {
     getGameItems();
   }, []);
   return (
-    <>
-      <div>
-        <Grid
-          templateRows={`auto`}
-          templateColumns={`repeat(3, 1fr)`}
-          gap={5}
-          justifyItems="center"
-        >
-          {gameItems &&
-            gameItems.map((item) => {
-              return <ItemCard key={item.itemId} item={item} />;
-            })}
-        </Grid>
-      </div>
-    </>
+    <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} spacing="24px">
+      {gameItems &&
+        gameItems.map((item) => {
+          return <ItemCard key={item.itemId} item={item} />;
+        })}
+    </SimpleGrid>
   );
 };
 

@@ -210,13 +210,13 @@ const SidebarContent = ({ logoText, routes }) => {
             alignItems="center"
             fontSize="11px"
           >
-            <TimLogo w="32px" h="32px" me="10px" />
+            <TimLogo w="20px" h="20px" me="10px" />
             <Text fontSize="sm" mt="3px">
               {logoText}
             </Text>
           </Link>
         </NextLink>
-        <Separator></Separator>
+        <Separator />
       </Box>
       <Stack direction="column" mb="40px">
         <Box>{links}</Box>

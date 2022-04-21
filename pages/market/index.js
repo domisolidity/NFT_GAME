@@ -1,66 +1,67 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Button, Flex } from "@chakra-ui/react";
+import { Grid, Button, Flex, Box, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react";
 
 import Market_nft from "../../components/Market_nft";
 import Market_item from "../../components/Market_item";
 import Market_nft_auction from "../../components/market/Market_nft_auction";
 import { useSelector } from "react-redux";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
+import SubMenuList from "../../components/Menu/SubMenuList";
 
 const Market = () => {
-  const [menu, setMenu] = useState("items");
+  const [selectedSubMenu, setSelectedSubMenu] = useState("ITEM");
+
+  const txtColor = useColorModeValue("gray.600", "white")
+
+  const getSelectedSubMenu = (e) => {
+    setSelectedSubMenu(e.target.value);
+  };
 
   useEffect(() => {
-    returnMenu(menu);
-  }, [menu]);
+    returnMenu(selectedSubMenu);
+  }, [selectedSubMenu]);
+
+
   const returnMenu = (display) => {
     switch (display) {
-      case "items":
+      case "ITEM":
         return <Market_item />;
-      case "nfts":
+      case "NFT":
         return <Market_nft />;
-      case "auction":
+      case "AUCTION":
         return <Market_nft_auction />;
       default:
         break;
     }
   };
-  const renderItems = (e) => {
-    e.preventDefault();
-    setMenu("items");
-  };
-  const renderNfts = (e) => {
-    e.preventDefault();
-    setMenu("nfts");
-  };
-  const renderAuction = (e) => {
-    e.preventDefault();
-    setMenu("auction");
-  };
+
+  const menuList = ["ITEM", "NFT", "AUCTION"]
 
   return (
-    <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>
-      <Button onClick={renderItems} m={4}>
-        ITEM
-      </Button>
-      <Button onClick={renderNfts} m={4}>
-        NFT
-      </Button>
-      <Button onClick={renderAuction} m={4}>
-        AUCTION
-      </Button>
-      <Grid
-        mt="2%"
-        h="85%"
-        padding="0"
-        templateRows="repeat(6, 1fr)" //세로
-        templateColumns="repeat(6, 1fr)" //가로
-        align="center"
-        gap={1}
-      >
-        {returnMenu(menu)}
-      </Grid>
-    </Flex>
+    <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }} align="center">
+      <Box>
+        <Text
+          fontSize={"5rem"}
+          as={'span'}
+          position={'relative'}
+          color={txtColor}
+          _after={{
+            content: "''",
+            width: 'full',
+            height: useBreakpointValue({ base: '20%', md: '30%' }),
+            position: 'absolute',
+            bottom: 1,
+            left: 0,
+            bg: 'teal.400',
+            zIndex: -1,
+          }}
+        >
+          Explore Market
+        </Text>
+      </Box>
+      <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
+      {returnMenu(selectedSubMenu)}
+    </Flex >
   );
 };
 

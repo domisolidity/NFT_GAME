@@ -9,6 +9,9 @@ import {
   Image,
   Button,
   Text,
+  useColorModeValue,
+  SimpleGrid,
+  Center,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -84,19 +87,30 @@ const Market_nft = () => {
     } catch (error) {}
   }, [account]);
 
+  const txtColor = useColorModeValue("gray.600", "white");
+  const txt2ndColor = useColorModeValue("white", "white");
+  const redColor = useColorModeValue("red.600", "red.700");
+  const greenColor = useColorModeValue("green.600", "green.700");
+  const purpleColor = useColorModeValue("purple.600", "purple.700");
+
   return (
     <>
-      <GridItem bg="whiteAlpha.100" colSpan={1} rowSpan={5}>
-        <>
-          <Text align="left" p="2" fontSize="20" fontWeight="extrabold">
-            Filters
-          </Text>
-          <Box m="0 auto">
-            <Text align="left" p="5">
-              grade
-            </Text>
-            <Flex ml="2.5vw" direction="column">
+      <Center py={6}>
+        <Flex align="center">
+          <SimpleGrid columns={{ md: 1, xl: 2 }}>
+            <Flex ml="1.5vw" direction="row">
+              <Text
+                fontSize="20"
+                align="left"
+                p="5"
+                fontWeight="extrabold"
+                color={txtColor}
+                m={"0 20px"}
+              >
+                grade
+              </Text>
               <Checkbox
+                colorScheme="teal"
                 defaultChecked
                 value="red"
                 onChange={() => {
@@ -107,11 +121,18 @@ const Market_nft = () => {
                   });
                 }}
               >
-                <Text p="1" bg="red.700" borderRadius="10">
+                <Text
+                  p="5px 15px"
+                  bg={redColor}
+                  borderRadius="10"
+                  mr={6}
+                  color={txt2ndColor}
+                >
                   red
                 </Text>
               </Checkbox>
               <Checkbox
+                colorScheme="teal"
                 mt="1"
                 defaultChecked
                 onChange={() => {
@@ -122,11 +143,18 @@ const Market_nft = () => {
                   });
                 }}
               >
-                <Text p="1" bg="green.700" borderRadius="10">
+                <Text
+                  p="5px 15px"
+                  bg={greenColor}
+                  borderRadius="10"
+                  mr={6}
+                  color={txt2ndColor}
+                >
                   green
                 </Text>
               </Checkbox>
               <Checkbox
+                colorScheme="teal"
                 mt="1"
                 defaultChecked
                 onChange={() => {
@@ -137,18 +165,33 @@ const Market_nft = () => {
                   });
                 }}
               >
-                <Text p="0.5" bg="purple.700" borderRadius="10">
+                <Text
+                  p="5px 15px"
+                  bg={purpleColor}
+                  borderRadius="10"
+                  mr={6}
+                  color={txt2ndColor}
+                >
                   purple
                 </Text>
               </Checkbox>
             </Flex>
-          </Box>
-          <Box m="0 auto" mt="2">
-            <Text align="left" p="5">
-              price (eth)
-            </Text>
-            <Flex ml="2.5vw" direction="column">
+            <Flex ml="1.5vw" direction="row" w={"700px"}>
+              <Text
+                fontSize="20"
+                align="left"
+                p="5"
+                fontWeight="extrabold"
+                color={txtColor}
+                m={"0 20px"}
+              >
+                price(eth)
+              </Text>
               <Checkbox
+                colorScheme="teal"
+                fontWeight="bold"
+                color={txtColor}
+                mr={5}
                 defaultChecked
                 onChange={() => {
                   setCheckedTrigger_price({
@@ -160,10 +203,13 @@ const Market_nft = () => {
                   });
                 }}
               >
-                {" "}
                 ~ 0.5
               </Checkbox>
               <Checkbox
+                colorScheme="teal"
+                fontWeight="bold"
+                color={txtColor}
+                mr={5}
                 defaultChecked
                 onChange={() => {
                   setCheckedTrigger_price({
@@ -175,10 +221,13 @@ const Market_nft = () => {
                   });
                 }}
               >
-                {" "}
                 0.5 ~ 1.0
               </Checkbox>
               <Checkbox
+                colorScheme="teal"
+                fontWeight="bold"
+                color={txtColor}
+                mr={5}
                 defaultChecked
                 onChange={() => {
                   setCheckedTrigger_price({
@@ -190,10 +239,13 @@ const Market_nft = () => {
                   });
                 }}
               >
-                {" "}
                 1.0 ~ 2.0
               </Checkbox>
               <Checkbox
+                colorScheme="teal"
+                fontWeight="bold"
+                color={txtColor}
+                mr={5}
                 defaultChecked
                 onChange={() => {
                   setCheckedTrigger_price({
@@ -205,10 +257,13 @@ const Market_nft = () => {
                   });
                 }}
               >
-                {" "}
                 2.0 ~ 4.0
               </Checkbox>
               <Checkbox
+                colorScheme="teal"
+                fontWeight="bold"
+                color={txtColor}
+                mr={5}
                 defaultChecked
                 onChange={() => {
                   setCheckedTrigger_price({
@@ -220,108 +275,100 @@ const Market_nft = () => {
                   });
                 }}
               >
-                {" "}
-                4.0 ~{" "}
+                4.0 ~
               </Checkbox>
             </Flex>
-          </Box>
-        </>
-      </GridItem>
-      <GridItem bg="whiteAlpha.100" colSpan={5} rowSpan={5}>
-        <Text align="left">{saleLength} Nfts</Text>
-        <Grid templateColumns="repeat(4, 1fr)" ml="5" gap={10} padding="5">
-          {saleNft[0] &&
-            saleNft
-              .filter((nft) => {
-                if (
-                  (checkedTrigger.red === true ? nft.grade == "red" : false) ||
-                  (checkedTrigger.green === true
-                    ? nft.grade == "green"
-                    : false) ||
-                  (checkedTrigger.purple === true
-                    ? nft.grade == "purple"
-                    : false)
-                )
-                  return true;
+          </SimpleGrid>
+        </Flex>
+      </Center>
 
-                // return nft.grade == "red" || nft.grade == "green";
-              })
-              .filter((nft) => {
-                if (
-                  (checkedTrigger_price.one === true
-                    ? nft.price < 0.5
-                    : false) ||
-                  (checkedTrigger_price.two === true
-                    ? nft.price >= 0.5 && nft.price < 1.0
-                    : false) ||
-                  (checkedTrigger_price.three === true
-                    ? nft.price >= 1.0 && nft.price < 2.0
-                    : false) ||
-                  (checkedTrigger_price.four === true
-                    ? nft.price >= 2.0 && nft.price < 4.0
-                    : false) ||
-                  (checkedTrigger_price.five === true
-                    ? nft.price >= 4.0
-                    : false)
-                )
-                  return true;
-              })
-              .map((nft, i) => {
-                return (
-                  <Box
-                    w="300px"
-                    h="460"
-                    bg="blackAlpha.300"
-                    key={i}
-                    border="2px solid #2E8F8B"
-                    _hover={{ boxShadow: "dark-lg" }}
-                  >
-                    <Image src={nft.image} w="320" h="290" padding="5" />
-                    <Flex p="0px 20px 0px 20px" mb="8%" justify="space-between">
-                      <Box>{nft.name}</Box>
-                      <Box
-                        w="26%"
-                        borderRadius={20}
-                        bg={
-                          nft.grade == "red"
-                            ? "red.700"
-                            : nft.grade == "green"
-                            ? "green.700"
-                            : "purple.700"
-                        }
-                        padding={1}
-                        align="center"
-                      >
-                        {nft.grade}
-                      </Box>
-                    </Flex>
-                    <Text fontSize="20px">{nft.price} ETH</Text>
-                    <Box h="10%" mt="25">
-                      <Link
-                        href={{
-                          pathname: `market/${nft.tokenId}`,
-                          query: {
-                            id: nft.tokenId,
-                            grade: nft.grade,
-                            attr: JSON.stringify(nft.attributes),
-                            name: nft.name,
-                            image: nft.image,
-                            description: nft.description,
-                            price: nft.price,
-                          },
-                        }}
-                        as={`market/${nft.tokenId}`}
-                      >
-                        <a>
-                          <Button bg="#247471">Buy now</Button>
-                        </a>
-                      </Link>
+      <SimpleGrid columns={{ sm: 1, md: 4, xl: 4 }} spacing="24px">
+        <Text align="left">{saleLength} Nfts</Text>
+        {saleNft[0] &&
+          saleNft
+            .filter((nft) => {
+              if (
+                (checkedTrigger.red === true ? nft.grade == "red" : false) ||
+                (checkedTrigger.green === true
+                  ? nft.grade == "green"
+                  : false) ||
+                (checkedTrigger.purple === true ? nft.grade == "purple" : false)
+              )
+                return true;
+
+              // return nft.grade == "red" || nft.grade == "green";
+            })
+            .filter((nft) => {
+              if (
+                (checkedTrigger_price.one === true ? nft.price < 0.5 : false) ||
+                (checkedTrigger_price.two === true
+                  ? nft.price >= 0.5 && nft.price < 1.0
+                  : false) ||
+                (checkedTrigger_price.three === true
+                  ? nft.price >= 1.0 && nft.price < 2.0
+                  : false) ||
+                (checkedTrigger_price.four === true
+                  ? nft.price >= 2.0 && nft.price < 4.0
+                  : false) ||
+                (checkedTrigger_price.five === true ? nft.price >= 4.0 : false)
+              )
+                return true;
+            })
+            .map((nft, i) => {
+              return (
+                <Box
+                  w="300px"
+                  h="460"
+                  bg="blackAlpha.300"
+                  key={i}
+                  border="2px solid #2E8F8B"
+                  _hover={{ boxShadow: "dark-lg" }}
+                >
+                  <Image src={nft.image} w="320" h="290" padding="5" />
+                  <Flex p="0px 20px 0px 20px" mb="8%" justify="space-between">
+                    <Box>{nft.name}</Box>
+                    <Box
+                      w="26%"
+                      borderRadius={20}
+                      bg={
+                        nft.grade == "red"
+                          ? "red.700"
+                          : nft.grade == "green"
+                          ? "green.700"
+                          : "purple.700"
+                      }
+                      padding={1}
+                      align="center"
+                    >
+                      {nft.grade}
                     </Box>
+                  </Flex>
+                  <Text fontSize="20px">{nft.price} ETH</Text>
+                  <Box h="10%" mt="25">
+                    <Link
+                      href={{
+                        pathname: `market/${nft.tokenId}`,
+                        query: {
+                          id: nft.tokenId,
+                          grade: nft.grade,
+                          attr: JSON.stringify(nft.attributes),
+                          name: nft.name,
+                          image: nft.image,
+                          description: nft.description,
+                          price: nft.price,
+                        },
+                      }}
+                      as={`market/${nft.tokenId}`}
+                    >
+                      <a>
+                        <Button bg="#247471">Buy now</Button>
+                      </a>
+                    </Link>
                   </Box>
-                );
-              })}
-        </Grid>
-      </GridItem>
+                </Box>
+              );
+            })}
+      </SimpleGrid>
     </>
   );
 };
