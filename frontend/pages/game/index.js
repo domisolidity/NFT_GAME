@@ -46,7 +46,6 @@ const Game = () => {
       await GameInterface.missionReg(account, mainNFT);
       receivedMissions = await GameInterface.getMission(account);
     }
-    setDailyMission(receivedMissions);
   }, [mainNFT]);
 
   const selectGame = async (game) => {

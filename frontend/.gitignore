@@ -1,4 +1,5 @@
 .secret
+build
 # Logs
 logs
 *.log
