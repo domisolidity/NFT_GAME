@@ -9,6 +9,10 @@ import Staking from "../../contracts/artifacts/Staking.json";
 import jwtDecode from "jwt-decode";
 import { fetchData } from "../data/dataActions";
 import Cookies from "js-cookie";
+<<<<<<< Updated upstream:redux/blockchain/blockchainActions.js
+=======
+import axios from "axios";
+>>>>>>> Stashed changes:client/src/redux/blockchain/blockchainActions.js
 
 // ================================================================
 // import
@@ -17,6 +21,7 @@ import Cookies from "js-cookie";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const LS_KEY = "login-with-metamask:auth";
+const baseUri = "http://127.0.0.1:8080/ipfs";
 
 const connectRequest = () => {
   return {
@@ -42,6 +47,18 @@ const updateAccountRequest = (payload) => {
   return {
     type: "UPDATE_ACCOUNT",
     payload: payload,
+  };
+};
+const updateMainNft = (payload) => {
+  return {
+    type: "UPDATE_MAIN_NFT",
+    payload: payload,
+  };
+};
+export const regMainNft = (mainNftData) => {
+  console.log(mainNftData);
+  return (dispatch) => {
+    dispatch(updateMainNft(mainNftData));
   };
 };
 
@@ -117,7 +134,15 @@ export const reconnect = () => {
       const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
       const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
       const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
-
+      const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
+      let mainNftData;
+      if (stakingData.tokenId == 0) {
+        mainNftData = null;
+      } else {
+        const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+        const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+        mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+      }
       dispatch(
         connectSuccess({
           account: accounts.toString(),
@@ -128,6 +153,7 @@ export const reconnect = () => {
           auctionCreatorContract: auctionCreatorContract,
           claim20_Contract: claim20_Contract,
           stakingContract: stakingContract,
+          mainNftData: mainNftData,
           web3: web3,
         })
       );
@@ -153,7 +179,33 @@ export const reconnect = () => {
 
 export const updateAccount = (account) => {
   return async (dispatch) => {
-    dispatch(updateAccountRequest({ account: account }));
+    let web3 = new Web3(window.ethereum);
+
+    const accounts = await window.ethereum.request({
+      method: "eth_accounts",
+    });
+    console.log(" 🛠 accounts 🛠", accounts);
+    const networkId = await window.ethereum.request({
+      method: "net_version",
+    });
+    console.log(" 🛠 networkId 🛠 ", networkId);
+
+    const nft_Network = await NftContract.networks[networkId];
+    const stakingNetworkData = await Staking.networks[networkId];
+
+    const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
+
+    const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
+    const stakingData = await stakingContract.methods.getStakingData().call({ from: account });
+    let mainNftData;
+    if (stakingData.tokenId == 0) {
+      mainNftData = null;
+    } else {
+      const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+      const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+      mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+    }
+    dispatch(updateAccountRequest({ account: account, mainNftData: mainNftData }));
     dispatch(fetchData(account));
     console.log("같은 네트워크에서 계정만 교체");
 
@@ -205,7 +257,15 @@ export const connectWallet = () => {
           const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameTokenNetworkData.address);
           const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
           const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
-
+          const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
+          let mainNftData;
+          if (stakingData.tokenId == 0) {
+            mainNftData = null;
+          } else {
+            const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+            const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+            mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+          }
           console.log("gameTokenNetworkData.address", gameTokenNetworkData.address);
           console.log("claim20_NetworkData.address", claim20_NetworkData.address);
 
@@ -283,6 +343,7 @@ export const connectWallet = () => {
               auctionCreatorContract: auctionCreatorContract,
               claim20_Contract: claim20_Contract,
               stakingContract: stakingContract,
+              mainNftData: mainNftData,
               web3: web3,
             })
           );

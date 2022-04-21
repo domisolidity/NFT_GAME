@@ -7,11 +7,11 @@ import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
 import InGameProfile from "../../components/game/InGameProfile";
 
-import FullScreen from '../../components/Layout/Frame/FullScreen'
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const StackingBlocks = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, auth } = blockchain;
+  const { account, auth, mainNftData } = blockchain;
   const { gameTitle } = GameInterface.gameList[0];
 
   const [score, setScore] = useState(0);
@@ -22,20 +22,12 @@ const StackingBlocks = () => {
   const [resultBonus, setResultBonus] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasMission, setHasMission] = useState("");
-  const [mainNFT, setMainNFT] = useState("");
-
-  // 페이지 진입 시 대표 NFT 받아오기
-  useEffect(async () => {
-    if (!(account && auth)) return;
-    const mainNFT = await GameInterface.getMyNFT(account);
-    setMainNFT(mainNFT);
-  }, [account, auth]);
 
   // 로그인, 대표NFT까지 확인 됐으면
   useEffect(async () => {
-    if (!(account && auth && gameTitle && mainNFT)) return;
+    if (!(account && auth && gameTitle && mainNftData)) return;
     await GameInterface.setParticipant(account, gameTitle); // 참여자 초기화
-    await GameInterface.initChance(account, gameTitle, mainNFT); // 게임횟수 초기화
+    await GameInterface.initChance(account, gameTitle, mainNftData.stakingData.tokenId); // 게임횟수 초기화
     setChance(await GameInterface.getMyChance(account, gameTitle)); // 횟수 불러오기
     setGameItems(await GameInterface.getGameItems()); // 게임아이템 불러오기
     setBestScore(await GameInterface.getMyBestScore(account, gameTitle)); // 최고점수 불러오기
@@ -44,7 +36,7 @@ const StackingBlocks = () => {
     if (recivedMission) {
       setHasMission(recivedMission);
     }
-  }, [mainNFT]);
+  }, [mainNftData]);
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -110,7 +102,7 @@ const StackingBlocks = () => {
 
   // 블록쌓기 게임 불러오기
   useEffect(() => {
-    if (!(account && auth && mainNFT)) return;
+    if (!(account && auth && mainNftData)) return;
     // <script> 태그를 만들고
     const script = document.createElement("script");
     // 그 태그의 src 정보를 넣어
@@ -122,12 +114,12 @@ const StackingBlocks = () => {
       // 다른곳으로 이동할 때 스크립트 없애주는 녀석
       document.body.removeChild(script);
     };
-  }, [mainNFT]);
+  }, [mainNftData]);
 
   return (
     <Flex mt={"120px"}>
       <InGameProfile filledValue={score} hasMission={hasMission} />
-      {account && auth && mainNFT ? (
+      {account && auth && mainNftData ? (
         <Box w={"100%"}>
           <GameSelectbar />
           <div id="blockGameContainer">
@@ -379,8 +371,13 @@ export default StackingBlocks;
 
 // getLayout property
 StackingBlocks.getLayout = function getLayout(page) {
+<<<<<<< Updated upstream
   return (
     <FullScreen>{page}</FullScreen>
   );
 };
 
+=======
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+>>>>>>> Stashed changes
