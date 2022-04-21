@@ -1,66 +1,38 @@
-import { Box, Flex, Img, Text } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GameCard from "../../components/game/GameCard";
 import GameInterface from "../../components/game/GameInterface";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import jwtDecode from "jwt-decode";
 import axios from "axios";
-import Cookies from "js-cookie";
 import BlankComponent from "../../components/BlankComponent";
-import FullScreen from '../../components/Layout/Frame/FullScreen'
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Game = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, auth, nftContract } = blockchain;
+  const { account, auth, nftContract, stakingContract } = blockchain;
   const router = useRouter();
   const [mainNFT, setMainNFT] = useState("");
-  const [dailyMission, setDailyMission] = useState([]);
-  const LS_KEY = "login-with-metamask:auth";
   const baseUri = "http://127.0.0.1:8080/ipfs";
-  const [currentImage, setCurrentImage] = useState("");
-  const [accessToken, setAccessToken] = useState("");
+  const [nftGrade, setNftGrade] = useState("");
 
   useEffect(async () => {
-    const getToken = Cookies.get(LS_KEY);
-    const parsedToken = getToken && JSON.parse(getToken).accessToken;
-    setAccessToken(parsedToken);
-
-    if (!accessToken) return;
-
-    const {
-      payload: { id },
-    } = jwtDecode(accessToken);
-
-    await nftContract.methods
-      .getMyToken(account)
-      .call({ from: account })
-      .then(async (tokenData) => {
-        console.log("getMyToken", tokenData);
-
-        if (!tokenData) return;
-        for (const info of tokenData) {
-          console.log(info);
-          console.log(info.id);
-          if (info.id == mainNFT) {
-            const response = await axios.get(`${baseUri}${info.uri.slice(6)}/${info.id}.json`);
-            console.log(`${baseUri}${response.data.image.slice(6)}`);
-            setCurrentImage(`${baseUri}${response.data.image.slice(6)}`);
-            return;
-          }
-        }
-      });
+    if (!(account && auth)) return;
+    const stakingData = await stakingContract.methods.getStakingData().call({ from: account });
+    const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+    const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+    console.log(response.data);
+    setCurrentImage(`${baseUri}${response.data.image.slice(6)}`);
+    setNftGrade(response.data.grade);
   }, [mainNFT]);
 
   // 페이지 진입 시 대표 NFT 받아오기
   useEffect(async () => {
     if (!(account && auth)) return;
-    console.log(123);
-    const mainNFT = await GameInterface.getMyNFT(account);
-    setMainNFT(mainNFT);
-    console.log(mainNFT);
+    // const mainNFT = await GameInterface.getMyNFT(account);
+    const mainNftData = await stakingContract.methods.getStakingData().call({ from: account });
+    setMainNFT(mainNftData.tokenId);
   }, [account, auth]);
 
   useEffect(async () => {
@@ -108,36 +80,16 @@ const Game = () => {
 
   return (
     <Flex direction={"column"} pt={{ base: "120px", md: "75px" }}>
-      <Flex w={"100%"} mb={"10px"} textAlign="center" height={"160px"} justifyContent={"center"} alignItems="center">
-        {mainNFT ? (
-          <>
-            <Img w="160px" src={currentImage} />
-            <Box>
-              <Text>오늘의 미션</Text>
-              <Flex justifyContent={"center"}>
-                {dailyMission.map((mission, index) => {
-                  return (
-                    <Flex
-                      key={index}
-                      direction="column"
-                      m="10px"
-                      p="10px"
-                      backgroundColor={mission.attainment ? "#ffff00a1" : "yellow"}
-                      color={mission.attainment ? "#c3c3c3" : "#000428"}
-                      fontWeight="bold"
-                      borderRadius={"10px"}
-                    >
-                      <Box>{mission.DailyMission.game_title}</Box>
-                      <Box>{mission.attainment ? "완료!" : "안완료!"}</Box>
-                    </Flex>
-                  );
-                })}
-              </Flex>
-            </Box>
-          </>
-        ) : (
-          <BlankComponent receivedText={"대표 NFT가 지정되지 않았습니다"} />
-        )}
+      <Flex
+        backgroundColor={`var(--chakra-colors-${nftGrade}-700)`}
+        w={"100%"}
+        mb={"10px"}
+        textAlign="center"
+        height={"160px"}
+        justifyContent={"center"}
+        alignItems="center"
+      >
+        {mainNFT ? null : <BlankComponent receivedText={"대표 NFT가 지정되지 않았습니다"} />}
       </Flex>
       <Box w={"100%"} minHeight={"400px"} position={`relative`}>
         <Flex justifyContent={"space-evenly"}>
@@ -150,14 +102,12 @@ const Game = () => {
           ))}
         </Flex>
       </Box>
-    </Flex >
+    </Flex>
   );
 };
 export default Game;
 
 // getLayout property
 Game.getLayout = function getLayout(page) {
-  return (
-    <SideBarScreen>{page}</SideBarScreen>
-  );
+  return <SideBarScreen>{page}</SideBarScreen>;
 };

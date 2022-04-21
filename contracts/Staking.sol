@@ -13,14 +13,23 @@ contract Staking is ERC721Holder {
   GameToken public gametoken;
   NftContract public nfttoken;
 
-  mapping(uint => address) stakingAddress;
-  mapping(address => uint) startTime;
-  mapping(address => uint) endTime;
+  // mapping(uint => address) stakingAddress;
+  // mapping(address => uint) stakingTokenId;
+  // mapping(address => uint) startTime;
+  // mapping(address => uint) endTime;
 
   constructor(GameToken _gametoken, NftContract _nfttoken) {
     gametoken = _gametoken;
     nfttoken = _nfttoken;
   }
+
+  struct StakingData {
+    address ownerAddress;
+    uint tokenId;
+    uint startTime;
+    uint endTime;
+  }
+  mapping(address => StakingData) public stakingData;
 
   // uint ReferenceTimestamp = 1649808000; // 기준날짜 2022.04.13. 09:00
   // uint endTime = block.timestamp / ReferenceTimestamp;
@@ -51,15 +60,17 @@ contract Staking is ERC721Holder {
     // 스테이킹 할 nft의 주인이 본인인지 확인하기
     require(nfttoken.ownerOf(_tokenId) == msg.sender, "you are not token owner");
 
-    // nfttoken.setApprovalForAll(address(this), true); 
+    // nfttoken.setApprovalForAll(address(this), true);
     // 스테이킹을 위해 본인의 nft를 컨트랙트에게 소유권 넘기기
     nfttoken.safeTransferFrom(msg.sender, address(this), _tokenId);
 
     // 스테이킹한 토큰의 원래 주인 표기해놓기
-    stakingAddress[_tokenId] = msg.sender;
-    // 스테이킹 시작시간, 끝나는 시간 저장
-    startTime[msg.sender] = block.timestamp;
-    endTime[msg.sender] = setEndTime();
+    stakingData[msg.sender] = StakingData(msg.sender, _tokenId, block.timestamp, setEndTime());
+    // stakingAddress[_tokenId] = msg.sender;
+    // stakingTokenId[msg.sender] = _tokenId;
+    // // 스테이킹 시작시간, 끝나는 시간 저장
+    // startTime[msg.sender] = block.timestamp;
+    // endTime[msg.sender] = setEndTime();
 
     // 스테이킹 이벤트 기록
     emit nftStakeEvent(msg.sender, _tokenId, block.timestamp);
@@ -68,9 +79,9 @@ contract Staking is ERC721Holder {
   // 대표NFT 스테이킹 끝내기
   function exit(uint _tokenId) external {
     // 토큰 스테이킹 한 주인인지 확인
-    require(stakingAddress[_tokenId] == msg.sender, "you are not token owner");
+    require(stakingData[msg.sender].ownerAddress == msg.sender, "you are not token owner");
     // 스테이킹 끝날 시간 이후인지 확인
-    require(endTime[msg.sender] < block.timestamp, "Time");
+    // require(stakingData[msg.sender].endTime < block.timestamp, "Time");
 
     // 컨트랙트에게서 nft 소유권 돌려받기
     nfttoken.safeTransferFrom(address(this), msg.sender, _tokenId);
@@ -80,9 +91,11 @@ contract Staking is ERC721Holder {
     gametoken.transfer(msg.sender, reward);
 
     // 매핑들 초기화시켜주기
-    delete stakingAddress[_tokenId];
-    delete startTime[msg.sender];
-    delete endTime[msg.sender];
+    delete stakingData[msg.sender];
+    // delete stakingAddress[_tokenId];
+    // delete stakingTokenId[msg.sender];
+    // delete startTime[msg.sender];
+    // delete endTime[msg.sender];
 
     emit nftStakeEvent(msg.sender, _tokenId, block.timestamp);
   }
@@ -100,18 +113,13 @@ contract Staking is ERC721Holder {
     }
     // 스테이킹 시작시간부터 종료되는 시간까지 1일당 리워드로 DGT 1개,
     // NFT 등급(red, green, purple)에 따라 1, 2, 3배
-    uint reward = ((endTime[msg.sender] - startTime[msg.sender]) / 1 days) * classReward;
+    // uint reward = ((endTime[msg.sender] - startTime[msg.sender]) / 1 days) * classReward;
+    uint reward = ((stakingData[msg.sender].endTime - stakingData[msg.sender].startTime) / 1 days) * classReward;
     return reward;
   }
 
-  /* 스테이킹 된 상태와 시간값 가지고 대표NFT기능 DB였던것 바꾸고 예외처리 해야함 */
-
-  function getStartTime() public view returns (uint) {
-    return startTime[msg.sender];
-  }
-
-  function getEndTime() public view returns (uint) {
-    return endTime[msg.sender];
+  function getStakingData() public view returns (StakingData memory) {
+    return stakingData[msg.sender];
   }
 
   // function getstakingAddress(uint _tokenId) public view returns (address) {
