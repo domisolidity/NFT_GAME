@@ -5,7 +5,7 @@ sudo: required
 branches:
   only:
     - kdw
-# @ Test 수행 준비 ----
+# @ Test 수행 준비 ---- 
 # 앱을 도커 환경에서 실행 중이니 travis ci에 도커 환경으로 만들 것임을 선언
 services:
     - docker
