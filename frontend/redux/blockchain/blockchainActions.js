@@ -184,11 +184,9 @@ export const updateAccount = (account) => {
     console.log(" 🛠 networkId 🛠 ", networkId);
 
     const nft_Network = await NftContract.networks[networkId];
-    const gameToken_NetworkData = await GameTokenContract.networks[networkId];
     const stakingNetworkData = await Staking.networks[networkId];
 
     const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
-    const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
     const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
     const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
     let mainNftData;
@@ -199,7 +197,7 @@ export const updateAccount = (account) => {
       const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
       mainNftData = { stakingData: stakingData, mainNftJson: response.data };
     }
-    dispatch(updateAccountRequest({ account: account, mainNftData: mainNftData }));
+    dispatch(updateAccountRequest({ account: accounts.toString(), mainNftData: mainNftData }));
     dispatch(fetchData(account));
     console.log("같은 네트워크에서 계정만 교체");
 

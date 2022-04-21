@@ -45,7 +45,7 @@ const blockchainReducer = (state = initialState, action) => {
     case "UPDATE_ACCOUNT":
       return {
         ...state,
-        account: action.payload.account.toString(),
+        account: action.payload.account,
         mainNftData: action.payload.mainNftData,
       };
     case "UPDATE_MAIN_NFT":
