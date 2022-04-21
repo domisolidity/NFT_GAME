@@ -9,15 +9,8 @@ import Staking from "../../contracts/artifacts/Staking.json";
 import jwtDecode from "jwt-decode";
 import { fetchData } from "../data/dataActions";
 import Cookies from "js-cookie";
-<<<<<<< Updated upstream:redux/blockchain/blockchainActions.js
-=======
 import axios from "axios";
->>>>>>> Stashed changes:client/src/redux/blockchain/blockchainActions.js
 
-// ================================================================
-// import
-
-// ================================================================
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const LS_KEY = "login-with-metamask:auth";
@@ -191,12 +184,13 @@ export const updateAccount = (account) => {
     console.log(" 🛠 networkId 🛠 ", networkId);
 
     const nft_Network = await NftContract.networks[networkId];
+    const gameToken_NetworkData = await GameTokenContract.networks[networkId];
     const stakingNetworkData = await Staking.networks[networkId];
 
     const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
-
+    const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
     const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
-    const stakingData = await stakingContract.methods.getStakingData().call({ from: account });
+    const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
     let mainNftData;
     if (stakingData.tokenId == 0) {
       mainNftData = null;

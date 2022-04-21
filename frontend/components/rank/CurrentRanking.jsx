@@ -37,6 +37,7 @@ const CurrentRanking = ({ currentRankData, captions, title }) => {
                       color="gray.400"
                       key={idx}
                       ps={idx === 0 ? "0px" : null}
+                      textAlign="center"
                     >
                       {caption}
                     </Th>
