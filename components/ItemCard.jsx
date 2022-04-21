@@ -65,11 +65,12 @@ const itemCard = (props) => {
         boxShadow={"2xl"}
         padding={4}
       >
-        <Flex flex={1} bg="blue.200">
+        <Flex flex={1} bg="whiteAlpha.200">
           <Image
             objectFit="cover"
             boxSize="100%"
-            src={`../images/item_${item.itemId}.png`}
+            src={`/images/itemIcons/itemIcon${item.itemId}.png`}
+            // src={`../images/item_${item.itemId}.png`}
           />
         </Flex>
         <Stack

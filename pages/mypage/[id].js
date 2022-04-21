@@ -34,17 +34,18 @@ const NftDetail_my = () => {
       console.log("startingBid", startingBid);
       console.log("expirationDate", expirationDate);
 
-      const expirationTime = new Date(expirationDate).getTime();
-      const currentTime = Date.now();
-      // (종료시간 - 현재시간) / ms단위 / 블록생성주기
-      const _covertToBlockTime = Math.ceil((expirationTime - currentTime) / 1000 / 15);
-      console.log(_covertToBlockTime);
+      const startBid = web3.utils.toWei(startingBid, "ether");
+      const startTime = Math.ceil(Date.now() / 1000);
+      const endTime = Math.ceil(new Date(expirationDate).getTime() / 1000);
+      console.log(startTime);
+      console.log(endTime);
 
-      const _startingBid = web3.utils.toWei(startingBid, "ether");
+      // (종료시간 - 현재시간) / ms단위 / 블록생성주기
+      // const currentBlock = await web3.eth.getBlockNumber();
 
       setLoading(true);
       await auctionCreatorContract.methods
-        .createAuction(id, nftContract._address, _startingBid, _covertToBlockTime, expirationTime)
+        .createAuction(id, nftContract._address, startBid, startTime, endTime)
         .send({ from: account })
         .then((res) => {
           console.log("res", res);
@@ -322,7 +323,7 @@ const NftDetail_my = () => {
                     <Flex justify="center" mt="10">
                       <Button
                         isLoading={loading ? 1 : null}
-                        loadingText="Canceling.."
+                        loadingText="adding.."
                         ml="5"
                         onClick={createAuction}
                         colorScheme="linkedin"

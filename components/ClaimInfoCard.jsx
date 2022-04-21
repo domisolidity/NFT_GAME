@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import axios from "axios";
 import ClaimHistory from "./mypage/ClaimHistory";
 import MissionClaimCard from "./mypage/MissionClaimCard";
@@ -90,6 +90,14 @@ const ClaimInfoCard = (props) => {
 
   return (
     <>
+      {/* <Grid   templateRows='repeat(2, 1fr)'
+  templateColumns='repeat(5, 1fr)' gap={6}>
+  <GridItem w='100%' h='10' bg='blue.500' />
+  <GridItem w='100%' h='10' bg='blue.500' />
+  <GridItem w='100%' h='10' bg='blue.500' />
+  <GridItem w='100%' h='10' bg='blue.500' />
+  <GridItem w='100%' h='10' bg='blue.500' />
+</Grid> */}
       <Flex justify="center">
         <RankingClaimCard
           claimInfo={claimableRank}

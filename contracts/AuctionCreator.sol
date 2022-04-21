@@ -29,16 +29,14 @@ contract AuctionCreator {
     uint8 _tokenId,
     address _nftContractAddres,
     uint _startBid,
-    uint _remainedBlock,
-    uint _expirationTime
+    uint _startTime,
+    uint _endTime
   ) public {
     require(!nftDealContract.onSale(_tokenId), "this token is saling");
-    Auction newAuction = new Auction(msg.sender, _nftContractAddres, _startBid, _remainedBlock, _tokenId);
+    Auction newAuction = new Auction(msg.sender, _nftContractAddres, _startBid, _startTime, _endTime, _tokenId);
     auctionToId[_tokenId] = newAuction;
 
-    endBlock = block.number + _remainedBlock;
-
-    auctionNfts.push(AuctionNft(msg.sender, _tokenId, endBlock, _expirationTime, newAuction));
+    auctionNfts.push(AuctionNft(msg.sender, _tokenId, endBlock, _endTime, newAuction));
   }
 
   //     // 경매

@@ -64,8 +64,9 @@ contract NftDealContract {
     // require(nftPrices[_tokenId]; > 0, " token not sale.");
     // require(nftPrices[_tokenId]; <= msg.value, "not enought price");
     // require(seller != msg.sender, "you are not token owner.");
-
-    payable(seller).transfer(msg.value);
+    uint fee = (msg.value / 100) * 5;
+    payable(0xBE005997Cc214577c575cAb11d0430777145a7dd).transfer(fee);
+    payable(seller).transfer(msg.value - fee);
 
     nftContractAddress.safeTransferFrom(seller, msg.sender, _tokenId); //토큰 구매자에게 이동
 

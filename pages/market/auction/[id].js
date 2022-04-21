@@ -52,6 +52,15 @@ const MarketDetail = () => {
   const [qqqq, setqqqq] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const test = async () => {
+    await auctionContract.methods
+      .getTimestamp()
+      .call({ from: account })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+
   // @ 입찰하기 함수
   const placeBidNft = async () => {
     try {
@@ -246,6 +255,7 @@ const MarketDetail = () => {
                 <Button isLoading={loading ? 1 : null} loadingText="Claiming.." bg="green.600" onClick={claimAuction}>
                   클레임
                 </Button>
+                <Button onClick={test}>test</Button>
               </Flex>
               <Flex justify="center">
                 {/* <WarningIcon w={6} h={6} color="orange.200" /> */}
@@ -311,10 +321,10 @@ const MarketDetail = () => {
           <Table>
             <Thead>
               <Tr>
+                <Th>입찰 시간</Th>
                 <Th>입찰자</Th>
                 <Th>입찰가 현재 시세</Th>
                 <Th>입찰한 가격 합산</Th>
-                <Th>입찰 시간</Th>
               </Tr>
             </Thead>
             {bidHistory[0] ? (
@@ -322,10 +332,10 @@ const MarketDetail = () => {
                 return (
                   <Tbody key={i}>
                     <Tr>
+                      <Td>{todayTimeFormal(Number(history.timestamp))}</Td>
                       <Td>{`${history.account.substr(0, 7)} ...... ${history.account.substr(38, 41)}`}</Td>
                       <Td>{web3.utils.fromWei(history.highestBindingBid, "ether")} eth</Td>
                       <Td>{web3.utils.fromWei(history.currentBid, "ether")} eth</Td>
-                      <Td>{todayTimeFormal(Number(history.timestamp))}</Td>
                     </Tr>
                   </Tbody>
                 );

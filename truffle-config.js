@@ -21,11 +21,6 @@ module.exports = {
     etherscan: ETHERSCAN_API_KEY,
   },
   networks: {
-    development: {
-      host: "127.0.0.1",
-      port: 9545,
-      network_id: "1337",
-    },
     ropsten: {
       provider: () =>
         new HDWalletProvider(mnemonic, `https://speedy-nodes-nyc.moralis.io/${MORALIS_API_KEY}/eth/ropsten`),
@@ -41,9 +36,8 @@ module.exports = {
       network_id: 4,
       gas: 5500000,
       confirmations: 2,
-      networkCheckTimeout: 1000000,
-      disableConfirmationListner: true,
-      timeoutBlocks: 200,
+      networkCheckTimeout: 2000000,
+      timeoutBlocks: 1000,
       skipDryRun: true,
     },
     // bsc_testnet: {

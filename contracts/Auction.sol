@@ -10,8 +10,8 @@ contract Auction {
 
   NftContract public nftContractAddres;
   address payable public owner;
-  uint public startBlock; // 배포당시 블록으로 설정 (block.number)
-  uint public endBlock; // 시간값 입력받아 초단위 변환후  15(15sec)로 나눠 블록개수로 변환.
+  uint public startTime; // 배포당시 블록으로 설정 (block.number)
+  uint public endTime; // 시간값 입력받아 초단위 변환후  15(15sec)로 나눠 블록개수로 변환.
   uint public startBid; // 입찰 시작가
 
   enum State {
@@ -46,7 +46,8 @@ contract Auction {
     address _eoa,
     address _nftContractAddres,
     uint _startBid,
-    uint _remainedBlock,
+    uint _startTime,
+    uint _endTime,
     uint _tokenId
   ) {
     nftContractAddres = NftContract(_nftContractAddres);
@@ -57,8 +58,8 @@ contract Auction {
     auctionState = State.Running;
     id = _tokenId;
     startBid = _startBid;
-    startBlock = block.number;
-    endBlock = startBlock + _remainedBlock;
+    startTime = _startTime;
+    endTime = _endTime;
 
     bidIncrement = 1 * 10**17; // 1*10**17 = 0.1 eth
 
@@ -76,12 +77,12 @@ contract Auction {
   }
 
   modifier afterStart() {
-    require(block.number >= startBlock, "afterStart Error");
+    require(block.timestamp >= startTime, "afterStart Error");
     _;
   }
 
   modifier beforeEnd() {
-    require(block.number <= endBlock, "beforeEnd Error");
+    require(block.timestamp <= endTime, "beforeEnd Error");
     _;
   }
 
@@ -134,7 +135,7 @@ contract Auction {
 
   // 경매 종료 후 정산 함수
   function finalizeAuction(uint _tokenId, uint _timestamp) public {
-    require(auctionState == State.Canceled || block.number > endBlock);
+    require(auctionState == State.Canceled || block.timestamp > endTime);
     require(msg.sender == owner || bids[msg.sender] > 0);
 
     address payable recipient;
@@ -149,7 +150,8 @@ contract Auction {
       if (msg.sender == owner && ownerFinalized == false) {
         //소유자가 경매 정산.
         recipient = owner;
-        value = highestBindingBid;
+        uint fee = (highestBindingBid / 100) * 5; //수수료 5%
+        value = highestBindingBid - fee;
         ownerFinalized = true;
       } else {
         // 최종 입찰자가 경매 정산.
@@ -188,11 +190,15 @@ contract Auction {
       uint
     )
   {
-    return (auctionState, startBid, bidIncrement, startBlock, block.number, endBlock);
+    return (auctionState, startBid, bidIncrement, startTime, block.number, endTime);
   }
 
   function getEoa() external view returns (address) {
     return owner;
+  }
+
+  function getTimestamp() external view returns (uint) {
+    return block.timestamp;
   }
 
   function getStartBid() external view returns (uint) {

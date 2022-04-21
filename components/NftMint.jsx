@@ -60,7 +60,7 @@ const NftMint = () => {
       console.log(process.env.NEXT_PUBLIC_METADATA);
       console.log(grade);
       console.log(amount);
-      const request = await nftContract.methods
+      await nftContract.methods
         .create(
           account,
           process.env.NEXT_PUBLIC_METADATA,
@@ -71,19 +71,18 @@ const NftMint = () => {
         .send({
           from: account,
           value: web3.utils.toWei(price, "ether") * amount,
+        })
+        .then((res) => {
+          console.log(res);
+          Swal.fire({
+            icon: "success",
+            title: "Minting Success",
+            text: "정상 적으로 민팅 되었습니다.",
+            footer: `<a href="/mypage">마이페이지에서 확인</a>`,
+          });
+          setLoading(false);
+          setSuccess(!success); // 남은 nft 업데이트하는 트리거 역할
         });
-      setLoading(true);
-      if (request.status) {
-        console.log(res);
-        Swal.fire({
-          icon: "success",
-          title: "Minting Success",
-          text: "정상 적으로 민팅 되었습니다.",
-          footer: `<a href="/mypage">마이페이지에서 확인</a>`,
-        });
-        setLoading(false);
-        setSuccess(!success); // 남은 nft 업데이트하는 트리거 역할
-      }
     } catch (error) {
       console.log("-에러 내용- \n", error);
       setLoading(false);
