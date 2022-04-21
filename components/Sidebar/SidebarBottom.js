@@ -64,7 +64,7 @@ export function SidebarBottom(props) {
               </Flex>
             ))}
         </>
-      ) : null}
+      ) : <div>선택바람</div>}
     </Flex>
   );
 }

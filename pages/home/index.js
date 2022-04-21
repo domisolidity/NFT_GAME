@@ -1,5 +1,6 @@
 // Chakra imports
 import {
+  Box,
   Flex,
   Grid,
   Image,
@@ -69,22 +70,20 @@ export default function Home() {
 
   const returnMenu = (display) => {
     switch (display) {
-      case "ITEM":
-        return <div>ITEM</div>;
-      case "NFT":
-        return <div>NFT</div>;
+      case "INVENTORY":
+        return <div>INVENTORY</div>;
       case "CLAIM":
         return <div>CLAIM</div>;
       case "STAKING":
         return <div>STAKING</div>;
+      case "PROFILE":
+        return <div>PROFILE</div>;
       default:
         break;
     }
   };
 
-
-  const menuList = ["ITEM", "NFT", "CLAIM", "STAKING"]
-
+  const menuList = ["INVENTORY", "CLAIM", "STAKING", "PROFILE"]
 
   return (
     <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>
@@ -114,21 +113,10 @@ export default function Home() {
           icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
       </SimpleGrid>
-      <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
-      {returnMenu(selectedSubMenu)}
-      <Grid
-        templateColumns={{
-          md: "1fr", lg: "auto"
-        }}
-        templateRows={{ md: "1fr auto", lg: "1fr" }}
-        my='26px'
-        gap='24px'>
-        {/* <OrdersOverview
-          title={"Overview"}
-          amount={30}
-          data={timelineData}
-        /> */}
-      </Grid>
+      <Box mt={10}>
+        <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
+        {returnMenu(selectedSubMenu)}
+      </Box>
     </Flex >
 
   );
