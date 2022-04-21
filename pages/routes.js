@@ -25,32 +25,6 @@ var dashRoutes = [
     icon: <StatsIcon color="inherit" />,
     component: Home,
     layout: "/SideBarScreen",
-    // subName: [
-    //   {
-    //     path: "/rank",
-    //     name: "블록쌓기",
-    //     icon: <StatsIcon color="inherit" />,
-    //     secondaryNavbar: true,
-    //     component: Mypage,
-    //     layout: "/Home",
-    //   },
-    //   {
-    //     path: "/rank",
-    //     name: "테트리스",
-    //     icon: <StatsIcon color="inherit" />,
-    //     secondaryNavbar: true,
-    //     component: Mypage,
-    //     layout: "/Home",
-    //   },
-    //   {
-    //     path: "/rank",
-    //     name: "보물찾기",
-    //     icon: <StatsIcon color="inherit" />,
-    //     secondaryNavbar: true,
-    //     component: Mypage,
-    //     layout: "/Home",
-    //   },
-    // ],
   },
   {
     path: "/game",
@@ -75,22 +49,6 @@ var dashRoutes = [
     component: Home,
     layout: "/SideBarScreen",
     subName: false,
-  },
-
-  {
-    name: "ACCOUNT PAGES",
-    category: "account",
-    state: "pageCollapse",
-    views: [
-      {
-        path: "/mypage",
-        name: "My Page",
-        icon: <PersonIcon color="inherit" />,
-        secondaryNavbar: true,
-        component: Home,
-        layout: "/Home",
-      },
-    ],
   },
 ];
 export default dashRoutes;

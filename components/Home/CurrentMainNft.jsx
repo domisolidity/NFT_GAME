@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 
 import StakingCard from "./StakingCard";
-import { Separator } from "./Separator/Separator";
+import { Separator } from "../Separator/Separator";
 const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   console.log(getCurrentMainNft);

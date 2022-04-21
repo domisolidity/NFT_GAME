@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex, Grid, GridItem, Image } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import ItemImage from "./ItemImage";
+import ItemImage from "../ItemImage";
 import Link from "next/link";
 
 const InventoryCard = (props) => {

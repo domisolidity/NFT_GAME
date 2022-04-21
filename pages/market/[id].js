@@ -22,7 +22,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Swal from "sweetalert2";
-import NftHistory from "../../components/mypage/NftHistory";
+import NftHistory from "../../components/Home/NftHistory";
 
 const MarketDetail = () => {
   const blockchain = useSelector((state) => state.blockchain);

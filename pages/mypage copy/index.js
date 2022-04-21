@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Button, Flex, Icon, Grid, GridItem } from "@chakra-ui/react";
 import NetworkCard from "../../components/NetworkCard";
 import ProfileCard from "../../components/ProfileCard";
-import Inventory from "../../components/Inventory";
+import Inventory from "../../components/Home/Inventory";
 import Collections from "../../components/Collections";
 import TotalCard from "../../components/TotalCard";
 import Claim from "../../components/Claim";
 import Staking from "../../components/Staking";
 import { useSelector } from "react-redux";
-import CurrentMainNft from "../../components/CurrentMainNft";
-import NftAmount from "../../components/NftAmount";
+import CurrentMainNft from "../../components/Home/CurrentMainNft";
+import NftAmount from "../../components/Home/NftAmount";
 import TotalNftAmountCard from "../../components/TotalNftAmountCard";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
-import ClaimInfoCard from "../../components/ClaimInfoCard";
+import ClaimInfoCard from "../../components/Home/ClaimInfoCard";
 
 const Mypage = () => {
   const [menu, setMenu] = useState("items");

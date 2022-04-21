@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useModal from "../hooks/useModal";
+import useModal from "../../hooks/useModal";
 
 import ChoiceNft from "./ChoiceNft";
 

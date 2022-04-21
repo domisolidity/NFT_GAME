@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Flex, Box, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import MyNftsCard from "../components/MyNftsCard";
+import MyNftsCard from "./MyNftsCard";
 import Link from "next/link";
-import { wrapper } from "../redux/store";
+import { wrapper } from "../../redux/store";
 const _ = require("lodash");
 
 export const getServerSideProps = wrapper.getServerSideProps(

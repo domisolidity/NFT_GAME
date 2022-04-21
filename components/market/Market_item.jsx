@@ -1,7 +1,7 @@
 import { SimpleGrid } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import ItemCard from "../components/ItemCard";
+import ItemCard from "./ItemCard";
 const Market_item = () => {
   // 아이템 목록
   const [gameItems, setGameItems] = useState([]);

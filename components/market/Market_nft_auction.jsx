@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Grid, GridItem, Text, Box, Flex, Checkbox } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import Countdown from "../Countdown.jsx";
 import _ from "lodash";
 import Market_nft_auction_card from "./Market_nft_auction_card.jsx";
 

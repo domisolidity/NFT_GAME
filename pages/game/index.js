@@ -6,7 +6,7 @@ import GameInterface from "../../components/game/GameInterface";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
-import BlankComponent from "../../components/BlankComponent";
+import BlankComponent from "../../components/utils/BlankComponent";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Game = () => {

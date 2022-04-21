@@ -5,7 +5,6 @@ import GameInterface from "../../components/game/GameInterface";
 import RankSelectbar from "../../components/rank/RankSelectbar";
 import CurrentRanking from "../../components/rank/CurrentRanking";
 import PastRanking from "../../components/rank/PastRanking";
-import BlankComponent from "../../components/BlankComponent";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Rank = ({ gameList }) => {

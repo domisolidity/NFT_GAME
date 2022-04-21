@@ -2,17 +2,10 @@ import FullScreen from '../components/Layout/Frame/FullScreen'
 import {
   Box,
   Flex,
-  Button,
   Heading,
-  Input,
-  Link,
-  Switch,
   Text,
   useColorModeValue,
-  Image,
 } from "@chakra-ui/react";
-import NeonCard from '../components/NeonCard';
-
 
 export default function Main() {
   // Chakra color mode

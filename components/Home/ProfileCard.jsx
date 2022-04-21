@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
 import ImageUpload from "./ImageUpload";
-import useModal from "../hooks/useModal";
+import useModal from "../../hooks/useModal";
 
 const ProfileCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
