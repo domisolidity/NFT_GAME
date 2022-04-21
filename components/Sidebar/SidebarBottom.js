@@ -21,6 +21,7 @@ export function SidebarBottom(props) {
   useEffect(async () => {
     if (!(account && auth)) return;
     const stakingData = await stakingContract.methods.getStakingData().call({ from: account });
+    if (stakingData.tokenId == 0) return;
     const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
     const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
     setMainNFT(response.data);

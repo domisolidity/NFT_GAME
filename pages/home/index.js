@@ -18,6 +18,7 @@ import MiniStatus from "../../components/Home/MiniStatus"
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import SubMenuList from "../../components/Menu/SubMenuList";
 
 export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");
@@ -27,6 +28,8 @@ export default function Home() {
 
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
+  const [selectedSubMenu, setSelectedSubMenu] = useState("ITEM");
+
   console.log(gameTokenContract);
 
   //잔액
@@ -50,12 +53,37 @@ export default function Home() {
       .catch(console.error());
   };
 
+  const getSelectedSubMenu = (e) => {
+    setSelectedSubMenu(e.target.value);
+  };
+
   useEffect(async () => {
     if (!account) return false;
     await getEthBalance();
     await getTokenBalance();
   }, [account]);
 
+  useEffect(() => {
+    returnMenu(selectedSubMenu);
+  }, [selectedSubMenu]);
+
+  const returnMenu = (display) => {
+    switch (display) {
+      case "ITEM":
+        return <div>ITEM</div>;
+      case "NFT":
+        return <div>NFT</div>;
+      case "CLAIM":
+        return <div>CLAIM</div>;
+      case "STAKING":
+        return <div>STAKING</div>;
+      default:
+        break;
+    }
+  };
+
+
+  const menuList = ["ITEM", "NFT", "CLAIM", "STAKING"]
 
 
   return (
@@ -86,6 +114,8 @@ export default function Home() {
           icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
       </SimpleGrid>
+      <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
+      {returnMenu(selectedSubMenu)}
       <Grid
         templateColumns={{
           md: "1fr", lg: "auto"

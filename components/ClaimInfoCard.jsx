@@ -90,27 +90,39 @@ const ClaimInfoCard = (props) => {
 
   return (
     <>
-      {/* <Grid   templateRows='repeat(2, 1fr)'
-  templateColumns='repeat(5, 1fr)' gap={6}>
-  <GridItem w='100%' h='10' bg='blue.500' />
-  <GridItem w='100%' h='10' bg='blue.500' />
-  <GridItem w='100%' h='10' bg='blue.500' />
-  <GridItem w='100%' h='10' bg='blue.500' />
-  <GridItem w='100%' h='10' bg='blue.500' />
-</Grid> */}
-      <Flex justify="center">
-        <RankingClaimCard
+      <Grid templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)">
+        <GridItem rowSpan={1} colSpan={2}>
+          <RankingClaimCard
+            claimInfo={claimableRank}
+            reward={rewardAmount_rank}
+            updateReward={getRewardAmount}
+          />
+          <MissionClaimCard
+            claimInfo={claimableMission}
+            reward={rewardAmount_mission}
+            updateReward={getRewardAmount}
+          />
+        </GridItem>
+        <GridItem bg="whiteAlpha.200" colSpan={3}>
+          <ClaimHistory
+            history={claimHistory}
+            updateHistory={getClaimHistory}
+          />
+        </GridItem>
+      </Grid>
+      {/* <Flex justify="center"> */}
+      {/* <RankingClaimCard
           claimInfo={claimableRank}
           reward={rewardAmount_rank}
           updateReward={getRewardAmount}
-        />
-        <MissionClaimCard
+        /> */}
+      {/* <MissionClaimCard
           claimInfo={claimableMission}
           reward={rewardAmount_mission}
           updateReward={getRewardAmount}
-        />
-      </Flex>
-      <ClaimHistory history={claimHistory} updateHistory={getClaimHistory} />
+        /> */}
+      {/* </Flex> */}
+      {/* <ClaimHistory history={claimHistory} updateHistory={getClaimHistory} /> */}
     </>
   );
 };
