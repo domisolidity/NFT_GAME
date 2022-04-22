@@ -2,10 +2,6 @@ language: generic
 
 sudo: required
 
-branches:
-  only:
-    - gh-pages
-    - /.*/
 # @ Test 수행 준비 ---- 
 # 앱을 도커 환경에서 실행 중이니 travis ci에 도커 환경으로 만들 것임을 선언
 services:
@@ -41,15 +37,19 @@ script:
 #     bucket_path: "docker-fullstack-app"
 #     on:
 #         branch: main
+branches:
+  only:
+    - master
+    - kdw
 
-# deploy:
-#     provider: elasticbeanstalk
-#     region: "ap-northeast-2"
-#     app: "doremifa-p2e-dapp"
-#     env: "Doremifap2edapp-env"
-#     bucket_name: elasticbeanstalk-ap-northeast-2-720487358469
-#     bucket_path: "doremifa-p2e-dapp"
-#     on:
-#         branch: kdw
-#     access_key_id: $AWS_ACCESS_KEY
-#     secret_access_key: $AWS_SECRET_ACCESS_KEY
+deploy:
+    provider: elasticbeanstalk
+    region: "ap-northeast-2"
+    app: "doremifa-p2e-dapp"
+    env: "Doremifap2edapp-env"
+    bucket_name: elasticbeanstalk-ap-northeast-2-720487358469
+    bucket_path: "doremifa-p2e-dapp"
+    on:
+        branch: kdw
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
