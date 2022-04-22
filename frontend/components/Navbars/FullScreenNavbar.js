@@ -18,7 +18,8 @@ import {
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 
-import routes from "../../pages/routes";
+import routes from "../routes";
+
 import { useState } from "react";
 import NextLink from "next/link"
 

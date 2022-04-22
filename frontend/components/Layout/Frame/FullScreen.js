@@ -4,7 +4,7 @@ import Footer from "../../Footer/Footer.js";
 // core components
 import FullScreenNavbar from "../../Navbars/FullScreenNavbar.js";
 import { createRef, useEffect, useRef } from "react";
-import routes from "../../../pages/routes";
+import routes from "../../routes";
 import theme from "../../../theme/theme.js";
 
 

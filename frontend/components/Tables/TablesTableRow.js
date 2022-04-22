@@ -41,8 +41,8 @@ function TablesTableRow(props) {
           {date}
         </Text>
       </Td>
-      <Td>
-        {/* <Button p="0px" bg="transparent" variant="no-hover">
+      {/* <Td>
+        <Button p="0px" bg="transparent" variant="no-hover">
           <Text
             fontSize="md"
             color="gray.400"
@@ -51,8 +51,8 @@ function TablesTableRow(props) {
           >
             claim
           </Text>
-        </Button> */}
-      </Td>
+        </Button>
+      </Td> */}
     </Tr>
   );
 }

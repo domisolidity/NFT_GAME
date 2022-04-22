@@ -16,18 +16,23 @@ import CardHeader from "../Card/CardHeader.js";
 import TablesTableRow from "../Tables/TablesTableRow";
 import { useSelector } from "react-redux";
 import RankingTable from "./RankingTable";
+import { Separator } from "../Separator/Separator";
 
 const CurrentRanking = ({ currentRankData, captions, title }) => {
   const textColor = useColorModeValue("gray.700", "white");
   return (
     <>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }} mt={10}>
-        <CardHeader p="6px 0px 22px 0px">
+      <Card
+        overflowX={{ sm: "scroll", xl: "hidden" }}
+        mt={10}
+        borderRadius={"15px 15px 0 0"}
+      >
+        <CardHeader p="6px 0px 20px 6px">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             {title}
           </Text>
         </CardHeader>
-        <CardBody>
+        <CardBody p="6px 0px 20px 6px">
           <Table variant="simple" color={textColor}>
             <Thead>
               <Tr my=".9rem" pl="0px" color="gray.400">
@@ -45,6 +50,7 @@ const CurrentRanking = ({ currentRankData, captions, title }) => {
                 })}
               </Tr>
             </Thead>
+
             <Tbody>
               {currentRankData.map((user, i) => {
                 const tempUpdatedAt = new Date(user.updatedAt);
