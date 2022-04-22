@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 
-import MyNftsCard from "../components/MyNftsCard";
+import { regMainNft } from "../../redux/blockchain/blockchainActions";
+import GameInterface from "../game/GameInterface";
 const ChoiceNft = (props) => {
+  const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract, stakingContract } = blockchain;
 
@@ -132,8 +134,26 @@ const ChoiceNft = (props) => {
 
     console.log(staking);
     if (staking.status) {
+      const stakingData = await stakingContract.methods
+        .getStakingData()
+        .call({ from: account });
+
+      let mainNftData;
+      if (stakingData.tokenId == 0) {
+        mainNftData = null;
+      } else {
+        const directoryUri = await nftContract.methods
+          .tokenURI(stakingData.tokenId)
+          .call();
+        const response = await axios.get(
+          `${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`
+        );
+        mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+      }
+      dispatch(regMainNft({ mainNftData }));
       setcurrentMainNft(selectNft);
       alert("한 주간 유지됩니다.");
+      await GameInterface.missionReg(account, selectNft);
       onClose();
     }
   };

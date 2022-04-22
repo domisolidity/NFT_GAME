@@ -9,7 +9,6 @@ import {
   DrawerHeader,
   Flex,
   Icon,
-  Link,
   Switch,
   Text,
   useColorMode,
@@ -18,6 +17,7 @@ import {
 import { Separator } from "../../components/Separator/Separator";
 import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
+import Link from "next/link";
 // import { FaTwitter, FaFacebook } from "react-icons/fa";``
 
 export default function Configurator(props) {
@@ -120,6 +120,7 @@ export default function Configurator(props) {
                 <Switch colorScheme="teal" onChange={toggleColorMode} />
               </Flex>
               <Separator />
+              <Link href={`/admin`}>관리자페이지</Link>
             </Flex>
           </DrawerBody>
         </DrawerContent>
