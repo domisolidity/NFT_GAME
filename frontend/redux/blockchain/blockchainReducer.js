@@ -8,6 +8,7 @@ const initialState = {
   auctionCreatorContract: null,
   claim20_Contract: null,
   web3: null,
+  mainNftData: null,
   errorMsg: "",
   auth: false,
 };
@@ -32,6 +33,7 @@ const blockchainReducer = (state = initialState, action) => {
         claim20_Contract: action.payload.claim20_Contract,
         stakingContract: action.payload.stakingContract,
         web3: action.payload.web3,
+        mainNftData: action.payload.mainNftData,
         errorMsg: "",
       };
     case "CONNECTION_FAILED":
@@ -43,7 +45,13 @@ const blockchainReducer = (state = initialState, action) => {
     case "UPDATE_ACCOUNT":
       return {
         ...state,
-        account: action.payload.account.toString(),
+        account: action.payload.account,
+        mainNftData: action.payload.mainNftData,
+      };
+    case "UPDATE_MAIN_NFT":
+      return {
+        ...state,
+        mainNftData: action.payload.mainNftData,
       };
     case "AUTH":
       return {

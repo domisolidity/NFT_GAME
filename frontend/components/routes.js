@@ -1,5 +1,5 @@
 // import
-import Home from "./home";
+import Home from "../pages/home";
 // import Mypage from "./mypage/index";
 import {
   HomeIcon,
@@ -8,7 +8,7 @@ import {
   PersonIcon,
   RocketIcon,
   WalletIcon
-} from "../components/Icons/Icons";
+} from "./Icons/Icons";
 
 var dashRoutes = [
   {

@@ -1,5 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Flex } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Heading,
+  Text,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Button,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import axios from "axios";
 import GameInterface from "../../components/game/GameInterface";
 import RankSelectbar from "../../components/rank/RankSelectbar";
@@ -9,10 +21,13 @@ import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import SubMenuList from "../../components/Menu/SubMenuList";
 
 const Rank = ({ gameList }) => {
+  const accordian = useRef();
   const [selectedGameTitle, setSelectedGameTitle] = useState("블록쌓기");
   const [currentRankData, setCurrentRankData] = useState([]);
   const [pastRankData, setPastRankData] = useState([]);
+  const [pastWeeks, setPastWeeks] = useState([]);
   const [selectedSubMenu, setSelectedSubMenu] = useState("블록쌓기");
+  const [processedRankData, setProcessedRankData] = useState([]);
 
   // 선택한 게임 useState에 담기
   const getSelectedGameTitle = async (selectedGame) => {
@@ -48,6 +63,35 @@ const Rank = ({ gameList }) => {
     setSelectedSubMenu(e.target.value);
   };
 
+  // 역대 순위들 주별로 나누는 작업
+  useEffect(() => {
+    if (pastRankData.length == 0) return;
+    const tempRankData = [];
+    let week = 1;
+    const latestWeek = pastRankData[pastRankData.length - 1].weeks;
+
+    setPastWeeks(latestWeek);
+
+    for (let i = 0; i < latestWeek; i++) {
+      const tempArray = [];
+      // 특정 게임의 역대 순위 개수만큼 반복
+      pastRankData.forEach((data) => {
+        if (data.weeks == week) {
+          tempArray.push(data);
+        }
+      });
+      // 순위별 오름차순 정렬
+      tempArray.sort((a, b) => a.ranking - b.ranking);
+      tempRankData.push(tempArray);
+      week++;
+
+      setPastWeeks(tempRankData);
+    }
+    // 최신 주를 위로 출력하기 위해 배열 뒤집기
+    tempRankData.reverse();
+    setProcessedRankData(tempRankData);
+  }, [pastRankData]);
+
   const menuList = ["블록쌓기", "테트리스", "보물찾기"];
 
   return (
@@ -74,7 +118,51 @@ const Rank = ({ gameList }) => {
           currentRankData={currentRankData}
           captions={["Rnaking", "profile", "player", "score", "updated at", ""]}
         />
-        <PastRanking pastRankData={pastRankData} />
+        {/* <PastRanking pastRankData={pastRankData} /> */}
+        <Box
+          minWidth="300px"
+          maxHeight={"70vh"}
+          overflow="auto"
+          borderLeft="3px solid"
+          color={"white"}
+        >
+          <Accordion allowMultiple ref={accordian}>
+            {pastWeeks.map((data, i) => {
+              return (
+                <AccordionItem key={i} ref={accordian}>
+                  {({ isExpanded }) => (
+                    <>
+                      {console.log(accordian)}
+                      {console.log(`${i}번`, isExpanded)}
+                      <h2>
+                        <AccordionButton>
+                          <Box flex="1" textAlign="left">
+                            {data[i].weeks} 주차
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        <CurrentRanking
+                          title={`${data[i].game_title} ${data[i].weeks} 주`}
+                          currentRankData={data}
+                          captions={[
+                            "Rnaking",
+                            "profile",
+                            "player",
+                            "score",
+                            `${data[i].updatedAt ? "updated at" : ""}`,
+                            "",
+                          ]}
+                        />
+                      </AccordionPanel>
+                    </>
+                  )}
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        </Box>
       </Flex>
     </>
   );

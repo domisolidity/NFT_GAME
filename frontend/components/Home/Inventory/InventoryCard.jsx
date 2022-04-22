@@ -13,18 +13,19 @@ import {
   useColorModeValue,
   // Link,
 } from "@chakra-ui/react";
+import NotFound from "../../utils/NotFound";
 
 const InventoryCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account } = blockchain;
+  const { account, auth } = blockchain;
 
   const txtColor = useColorModeValue("gray.600", "gray.300");
 
   // 내 소유 아이템 개수
-  const [myItemQuantity, setMyItemQuantity] = useState(0);
+  const [myItemQuantity, setMyItemQuantity] = useState("");
 
   // 내 아이템 개수 불러오기
-  const getMyItemQuantity = async () =>
+  const getMyItemQuantity = async () => {
     await axios
       .post(`/api/items/game-items/my-items-quantity`, {
         account: account,
@@ -33,10 +34,17 @@ const InventoryCard = (props) => {
       .then((res) => {
         setMyItemQuantity(res.data.count);
       });
+  };
+
+  useEffect(async () => {
+    if (!(account && auth)) return;
+    await getMyItemQuantity();
+  }, [account, auth]);
 
   useEffect(() => {
-    getMyItemQuantity();
-  }, [account]);
+    if (myItemQuantity) return;
+    props.getQuantity(myItemQuantity);
+  }, [myItemQuantity]);
 
   return (
     <>

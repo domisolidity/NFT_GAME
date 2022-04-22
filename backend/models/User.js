@@ -25,10 +25,6 @@ module.exports = class User extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: true,
         },
-        mainNft: {
-          type: Sequelize.INTEGER,
-          allowNull: true,
-        },
         nonce: {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false,

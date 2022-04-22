@@ -1,5 +1,51 @@
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from "@chakra-ui/react";
+
 const Tier = () => {
   return (
+    //   <TableContainer>
+    //   <Table size="sm">
+    //     <Thead>
+    //       <Tr>
+    //         <Th>To convert</Th>
+    //         <Th>into</Th>
+    //         <Th isNumeric>multiply by</Th>
+    //       </Tr>
+    //     </Thead>
+    //     <Tbody>
+    //       <Tr>
+    //         <Td>inches</Td>
+    //         <Td>millimetres (mm)</Td>
+    //         <Td isNumeric>25.4</Td>
+    //       </Tr>
+    //       <Tr>
+    //         <Td>feet</Td>
+    //         <Td>centimetres (cm)</Td>
+    //         <Td isNumeric>30.48</Td>
+    //       </Tr>
+    //       <Tr>
+    //         <Td>yards</Td>
+    //         <Td>metres (m)</Td>
+    //         <Td isNumeric>0.91444</Td>
+    //       </Tr>
+    //     </Tbody>
+    //     <Tfoot>
+    //       <Tr>
+    //         <Th>To convert</Th>
+    //         <Th>into</Th>
+    //         <Th isNumeric>multiply by</Th>
+    //       </Tr>
+    //     </Tfoot>
+    //   </Table>
+    // </TableContainer>
     <box>
       <h6 className="title">Tier</h6>
       <table className="tier_table">
@@ -14,10 +60,10 @@ const Tier = () => {
         </thead>
         <tbody>
           <tr>
-            <td className="subject">Daily 게임 참여 횟수</td>
-            <td>30</td>
-            <td>40</td>
-            <td>50</td>
+            <td className="subject">Daily 게임별 참여 횟수</td>
+            <td>5</td>
+            <td>10</td>
+            <td>15</td>
           </tr>
           <tr>
             <td className="subject">Daily 미션 할당량</td>
@@ -26,10 +72,10 @@ const Tier = () => {
             <td>3 </td>
           </tr>
           <tr>
-            <td className="subject">스테이킹 보상</td>
-            <td>1% </td>
-            <td>2% </td>
-            <td>3% </td>
+            <td className="subject">스테이킹 기간별 보상(1일)</td>
+            <td>1 </td>
+            <td>2 </td>
+            <td>3 </td>
           </tr>
           <tr>
             <td className="subject">Nft Number Start</td>

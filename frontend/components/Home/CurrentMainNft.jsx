@@ -17,15 +17,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import StakingCard from "./StakingCard";
 import { Separator } from "../Separator/Separator";
+
 const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log(getCurrentMainNft);
-  console.log(currentMainNftImg);
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, nftContract, gameTokenContract, stakingContract } =
-    blockchain;
+  const { account, nftContract, stakingContract, mainNftData } = blockchain;
   const [accessToken, setAccessToken] = useState("");
   const [currentMainNft, setcurrentMainNft] = useState("");
   const [currentImage, setCurrentImage] = useState("");
@@ -51,9 +48,7 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
     })
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         setcurrentMainNft(result.mainNft);
-        console.log(currentMainNft);
       })
       .catch(window.alert);
     getMyNfts();
@@ -71,7 +66,6 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
       const response = await axios.get(
         `${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`
       );
-      console.log(response.data);
       setCurrentImage(`${baseUri}${response.data.image.slice(6)}`);
       setNftGrade(response.data.grade);
     } catch (error) {
@@ -80,11 +74,9 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   };
 
   const unStaking = async () => {
-    console.log(stakingContract.methods);
     const qqq = await stakingContract.methods
       .getStakingData()
       .call({ from: account });
-    console.log(qqq.tokenId);
 
     if (!(qqq.tokenId > 0 && qqq.tokenId <= 100)) return;
 
@@ -94,35 +86,6 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
       .catch((err) => console.log(err));
     setCurrentImage("");
     setNftGrade("");
-  };
-
-  const charge = async () => {
-    console.log("돈돈");
-    console.log(gameTokenContract.methods);
-    await gameTokenContract.methods
-      .transfer(stakingContract._address, 100)
-      .send({ from: account });
-
-    const abcd = await gameTokenContract.methods.balanceOf(account).call();
-    const qwer = await gameTokenContract.methods
-      .balanceOf(stakingContract._address)
-      .call();
-    console.log(abcd);
-    console.log(qwer);
-  };
-  const myData = async () => {
-    console.log("생생정보");
-
-    const abcd = await gameTokenContract.methods.balanceOf(account).call();
-    const qwer = await gameTokenContract.methods
-      .balanceOf(stakingContract._address)
-      .call();
-    console.log(abcd);
-    console.log(qwer);
-    const ppp = await stakingContract.methods
-      .getStakingData()
-      .call({ from: account });
-    console.log(ppp);
   };
 
   return (
@@ -150,21 +113,18 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
           <i className="bx bx-help-circle"></i>
         </Tooltip>
       </div>
-      {currentImage ? (
-        <img src={currentImage} className="nft-img" onClick={onClose} />
+      {mainNftData ? (
+        <img
+          src={`${baseUri}${mainNftData.mainNftJson.image.slice(6)}`}
+          className="nft-img"
+          onClick={onClose}
+        />
       ) : (
         <div className="nft-img plus">
-          <img
-            src={"plus.svg"}
-            className="add-nft"
-            // onClick={onClose}
-            onClick={onOpen}
-          />
+          <img src={"plus.svg"} className="add-nft" onClick={onOpen} />
         </div>
       )}
       <button onClick={unStaking}>안녕</button>
-      <button onClick={charge}>돈 충전</button>
-      <button onClick={myData}>결과는?</button>
       <style jsx>{`
         .nft-block {
           display: flex;
