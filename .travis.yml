@@ -39,8 +39,8 @@ script:
 #         branch: main
 branches:
   only:
-    - master
-    - kdw
+  - master
+  - kdw
 
 deploy:
     provider: elasticbeanstalk
