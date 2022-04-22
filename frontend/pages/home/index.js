@@ -21,7 +21,9 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import SubMenuList from "../../components/Menu/SubMenuList";
 import ProfileCard from "../../components/Home/Profile/ProfileCard";
-import Inventory from "../../components/Home/Inventory";
+import Inventory from "../../components/Home/Inventory/Inventory";
+import Tier from "../../components/Home/Notice/Tier";
+import Notice from "../../components/Home/Notice/Notice";
 
 export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");
@@ -31,7 +33,7 @@ export default function Home() {
 
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
-  const [selectedSubMenu, setSelectedSubMenu] = useState("PROFILE");
+  const [selectedSubMenu, setSelectedSubMenu] = useState("NOTICE");
 
   //잔액
   const getEthBalance = async () => {
@@ -70,6 +72,8 @@ export default function Home() {
 
   const returnMenu = (display) => {
     switch (display) {
+      case "NOTICE":
+        return <Notice />
       case "INVENTORY":
         return <Inventory />
       case "CLAIM":
@@ -83,7 +87,7 @@ export default function Home() {
     }
   };
 
-  const menuList = ["INVENTORY", "CLAIM", "STAKING", "PROFILE"]
+  const menuList = ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"]
 
   return (
     <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>

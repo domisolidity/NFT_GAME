@@ -5,6 +5,7 @@ import axios from "axios";
 import MyNftsCard from "./MyNftsCard";
 import Link from "next/link";
 import { wrapper } from "../../redux/store";
+import NotFound from "../utils/NotFound";
 const _ = require("lodash");
 
 export const getServerSideProps = wrapper.getServerSideProps(
@@ -104,45 +105,42 @@ const Collections = () => {
           ))}
         </div>
       ) : null}
-      <Flex flexDir={"row"}>
-        {
-          dataShow[0] && (
-            <>
-              {dataShow.map((mynft, index) => {
-                return (
-                  <Box key={index}>
-                    <Link
-                      href={{
-                        pathname: `mypage/${mynft.id}`,
-                        query: {
-                          id: mynft.id,
-                          grade: mynft.grade,
-                          attributes: JSON.stringify(mynft.attributes),
-                          name: mynft.name,
-                          image: mynft.image,
-                          description: mynft.description,
-                        },
-                      }}
-                      as={`mypage/${mynft.id}`}
-                    >
-                      {/* id, grade, attributes, name, image, description */}
-                      <a>
-                        <MyNftsCard
-                          img={mynft.image}
-                          name={mynft.name}
-                          grade={mynft.grade}
-                        />
-                      </a>
-                    </Link>
-                  </Box>
-                );
-              })}
-            </>
-          )
-          // : (
-          //   <Text>보유 nft가 없습니다.</Text>
-          // )
-        }
+      <Flex flexDir={"row"} justify="center" align="center">
+        {dataShow[0] ? (
+          <>
+            {dataShow.map((mynft, index) => {
+              return (
+                <Box key={index}>
+                  <Link
+                    href={{
+                      pathname: `mypage/${mynft.id}`,
+                      query: {
+                        id: mynft.id,
+                        grade: mynft.grade,
+                        attributes: JSON.stringify(mynft.attributes),
+                        name: mynft.name,
+                        image: mynft.image,
+                        description: mynft.description,
+                      },
+                    }}
+                    as={`mypage/${mynft.id}`}
+                  >
+                    {/* id, grade, attributes, name, image, description */}
+                    <a>
+                      <MyNftsCard
+                        img={mynft.image}
+                        name={mynft.name}
+                        grade={mynft.grade}
+                      />
+                    </a>
+                  </Link>
+                </Box>
+              );
+            })}
+          </>
+        ) : (
+          <NotFound items={"NFT"} />
+        )}
       </Flex>
       <style jsx>{`
         .table__pagination {

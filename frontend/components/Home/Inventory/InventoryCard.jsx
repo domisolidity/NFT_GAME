@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // import { Box, Flex, Grid, GridItem, Image } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import ItemImage from "../ItemImage";
+import ItemImage from "../../ItemImage";
 import Link from "next/link";
 
 import {
@@ -17,6 +17,8 @@ import {
 const InventoryCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
+
+  const txtColor = useColorModeValue("gray.600", "gray.300");
 
   // 내 소유 아이템 개수
   const [myItemQuantity, setMyItemQuantity] = useState(0);
@@ -35,8 +37,6 @@ const InventoryCard = (props) => {
   useEffect(() => {
     getMyItemQuantity();
   }, [account]);
-
-  const txtColor = useColorModeValue("gray.600", "gray.300");
 
   return (
     <>

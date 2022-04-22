@@ -13,8 +13,8 @@ import {
 import { useSelector } from "react-redux";
 import axios from "axios";
 import InventoryCard from "./InventoryCard";
-import Collections from "./Collections";
-import { Separator } from "../Separator/Separator";
+import Collections from "../Collections";
+import { Separator } from "../../Separator/Separator";
 
 const Inventory = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -38,7 +38,7 @@ const Inventory = () => {
 
   return (
     <>
-      <SimpleGrid>
+      <SimpleGrid gap="10px">
         <Text
           fontSize={"1.5rem"}
           fontWeight="bold"
@@ -48,7 +48,7 @@ const Inventory = () => {
         >
           Items
         </Text>
-        <Separator />
+        <Separator h="2px" />
         <Flex flexDir={"row"}>
           {gameItems[0] &&
             gameItems.map((item, index) => {
@@ -62,19 +62,18 @@ const Inventory = () => {
               );
             })}
         </Flex>
+        <Text
+          fontSize={"1.5rem"}
+          fontWeight="bold"
+          textAlign="center"
+          color={txtColor}
+          m={5}
+        >
+          Nfts
+        </Text>
+        <Separator />
+        <Collections />
       </SimpleGrid>
-      <Text
-        fontSize={"1.5rem"}
-        fontWeight="bold"
-        textAlign="center"
-        color={txtColor}
-        m={5}
-      >
-        Nfts
-      </Text>
-      <Separator />
-
-      <Collections />
     </>
   );
 };
