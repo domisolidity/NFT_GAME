@@ -4,7 +4,7 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import ChoiceNft from "./ChoiceNft";
+import ChoiceNft from "../Home/Staking/ChoiceNft";
 import {
   Modal,
   ModalOverlay,
@@ -93,9 +93,9 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
       {/* <Modal toggle={toggle} visible={visible}>
       <ChoiceNft toggle={toggle} getCurrentMainNft={getCurrentMainNft} />
     </Modal> */}
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={"lg"}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent borderRadius={"15px"}>
           <ModalHeader>Account</ModalHeader>
           <Separator />
           <ModalCloseButton />
