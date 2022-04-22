@@ -4,19 +4,18 @@ import Footer from "../../Footer/Footer.js";
 // core components
 import FullScreenNavbar from "../../Navbars/FullScreenNavbar.js";
 import { createRef, useEffect, useRef } from "react";
-import routes from "../../../pages/routes";
+import routes from "../../../components/routes";
 import theme from "../../../theme/theme.js";
 
-
 export default function Pages({ children }) {
-  console.log("FullScreen")
+  console.log("FullScreen");
   // const { ...rest } = props;
   // ref for the wrapper div
   const wrapper = createRef();
   useEffect(() => {
     document.body.style.overflow = "unset";
     // Specify how to clean up after this effect:
-    return function cleanup() { };
+    return function cleanup() {};
   });
   const getActiveRoute = (routes) => {
     let activeRoute = "Default Brand Text";
@@ -72,8 +71,6 @@ export default function Pages({ children }) {
   //     if (prop.layout === "/FullScreen") {
   //       console.log(prop)
 
-
-
   //       // return (
   //       //   <NextLink href={`${prop.path}`} key={key} passHref>
   //       //     <Link>
@@ -108,10 +105,7 @@ export default function Pages({ children }) {
     <ChakraProvider theme={theme} resetCss={false} w="100%">
       <Box ref={navRef} w="100%">
         <Portal containerRef={navRef}>
-          <FullScreenNavbar
-            secondary={getActiveNavbar(routes)}
-            logoText="DOREMI GAMES"
-          />
+          <FullScreenNavbar secondary={getActiveNavbar(routes)} logoText="DOREMI GAMES" />
         </Portal>
         <Box w="100%">
           <Box ref={wrapper} w="100%">
