@@ -1,16 +1,9 @@
 import { Flex, Tabs, TabList, Tab } from "@chakra-ui/react";
-import { useState } from "react";
 
 const SubMenuList = ({ subMenu, getSelectedSubMenu }) => {
-  // const [selectedSubMenu, setSelectedSubMenu] = useState("ITEM");
-
-  // const getSelectedSubMenu = (e) => {
-  //   setSelectedSubMenu(e.target.value);
-  // };
-
   return (
     <Flex
-      shadow="md"
+      // shadow="md"
       w={"100%"}
       alignItems="center"
       justifyContent="center"

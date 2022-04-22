@@ -371,13 +371,5 @@ export default StackingBlocks;
 
 // getLayout property
 StackingBlocks.getLayout = function getLayout(page) {
-<<<<<<< Updated upstream
-  return (
-    <FullScreen>{page}</FullScreen>
-  );
-};
-
-=======
   return <SideBarScreen>{page}</SideBarScreen>;
 };
->>>>>>> Stashed changes

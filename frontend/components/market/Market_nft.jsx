@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { Separator } from "../Separator/Separator";
 // import FilterNft from "./market/nft/FilterNft";
 
 const Market_nft = () => {
@@ -281,9 +282,10 @@ const Market_nft = () => {
           </SimpleGrid>
         </Flex>
       </Center>
+      <Text align="left">{saleLength} Nfts</Text>
+      <Separator />
 
       <SimpleGrid columns={{ sm: 1, md: 4, xl: 4 }} spacing="24px">
-        <Text align="left">{saleLength} Nfts</Text>
         {saleNft[0] &&
           saleNft
             .filter((nft) => {

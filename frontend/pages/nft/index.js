@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import Tier from "../../components/nft/Tier";
+import Tier from "../../components/Home/Notice/Tier";
 import NftMint from "../../components/nft/NftMint";
 import { useSelector, useDispatch } from "react-redux";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";

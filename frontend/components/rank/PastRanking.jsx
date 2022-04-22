@@ -2,12 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Accordion,
   AccordionButton,
+  AccordionIcon,
   AccordionItem,
+  AccordionPanel,
   Box,
   Flex,
   Text,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import CurrentRanking from "./CurrentRanking";
 
 const PastRanking = ({ pastRankData }) => {
   console.log(pastRankData);
@@ -40,7 +43,7 @@ const PastRanking = ({ pastRankData }) => {
     // 최신 주를 위로 출력하기 위해 배열 뒤집기
     tempRankData.reverse();
     setProcessedRankData(tempRankData);
-  }, [pastRankData]);
+  }, [pastWeeks]);
 
   // 한 주에 대한 컴포넌트
   const PastWeek = ({ weeks }) => {
@@ -50,37 +53,40 @@ const PastRanking = ({ pastRankData }) => {
     return (
       <>
         <Accordion allowMultiple ref={accordian}>
-          {pastWeeks.map((data, i) => {
+          {console.log(weeks)}
+          {weeks.map((data, i) => {
+            console.log(data);
             return (
               <AccordionItem key={i} ref={accordian}>
-                {({ isExpanded }) => (
-                  <>
-                    {console.log(accordian)}
-                    {console.log(`${i}번`, isExpanded)}
-                    <h2>
-                      <AccordionButton>
-                        <Box flex="1" textAlign="left">
-                          {data[i].weeks} 주차
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                      <CurrentRanking
-                        title={`${data[i].game_title} ${data[i].weeks} 주`}
-                        currentRankData={data}
-                        captions={[
-                          "Rnaking",
-                          "profile",
-                          "player",
-                          "score",
-                          `${data[i].updatedAt ? "updated at" : ""}`,
-                          "",
-                        ]}
-                      />
-                    </AccordionPanel>
-                  </>
-                )}
+                {/* {({ isExpanded }) => ( */}
+                <>
+                  {console.log(accordian)}
+                  {/* {console.log(`${i}번`, isExpanded)} */}
+                  <h2>
+                    <AccordionButton>
+                      <Box flex="1" textAlign="left">
+                        {/* {data[i].weeks} */}
+                        a주차
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4}>
+                    <CurrentRanking
+                      title={`${data[i].game_title} ${data[i].weeks} 주`}
+                      currentRankData={data}
+                      captions={[
+                        "Rnaking",
+                        "profile",
+                        "player",
+                        "score",
+                        `${data[i].updatedAt ? "updated at" : ""}`,
+                        "",
+                      ]}
+                    />
+                  </AccordionPanel>
+                </>
+                {/* )} */}
               </AccordionItem>
             );
           })}
@@ -148,6 +154,7 @@ const PastRanking = ({ pastRankData }) => {
 
   return (
     <Flex flexDirection={"column"}>
+      {console.log(processedRankData)}
       <Accordion allowMultiple ref={accordian}>
         {processedRankData.length > 0 &&
           processedRankData.map((weeks, index) => {
