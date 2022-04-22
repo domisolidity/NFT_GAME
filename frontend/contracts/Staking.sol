@@ -28,7 +28,7 @@ contract Staking is ERC721Holder {
   // 스테이킹 정보 담을 매핑
   mapping(address => StakingData) public stakingData;
 
-  // 스테이킹 끝나는 날 반환기
+  /* 스테이킹 끝나는 날 반환기 */
   function setEndTime() public view returns (uint) {
     uint ReferenceTimestamp = 1649462400; // 기준날짜 2022.04.07. 09:00
     // 기준날짜에서 현재시간의 차이를 1주일로 나눈 몫
@@ -37,7 +37,7 @@ contract Staking is ERC721Holder {
     return ReferenceTimestamp + temp * 1 weeks + 1 weeks;
   }
 
-  // 대표NFT 스테이킹 하기
+  /* 대표NFT 스테이킹 하기 */
   function nftStake(uint _tokenId) external {
     // 스테이킹 할 nft의 주인이 본인인지 확인하기
     require(nfttoken.ownerOf(_tokenId) == msg.sender, "you are not token owner");
@@ -53,7 +53,7 @@ contract Staking is ERC721Holder {
     stakingData[msg.sender] = StakingData(msg.sender, _tokenId, startTime, endTime, reward);
   }
 
-  // 대표NFT 스테이킹 끝내기
+  /* 대표NFT 스테이킹 끝내기 */
   function exit(uint _tokenId) external {
     // 토큰 스테이킹 한 주인인지 확인
     require(stakingData[msg.sender].ownerAddress == msg.sender, "you are not token owner");
@@ -78,7 +78,7 @@ contract Staking is ERC721Holder {
     delete stakingData[msg.sender];
   }
 
-  // 스테이킹 된 토큰의 보상 계산
+  /* 스테이킹 된 토큰의 보상 계산 */
   function calcReward(
     uint _tokenId,
     uint _startTime,
@@ -99,7 +99,7 @@ contract Staking is ERC721Holder {
     return reward;
   }
 
-  // 스테이킹 정보 조회
+  /* 스테이킹 정보 조회 */
   function getStakingData() public view returns (StakingData memory) {
     return stakingData[msg.sender];
   }
