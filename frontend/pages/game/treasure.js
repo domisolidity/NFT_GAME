@@ -13,8 +13,8 @@ import GameSelectbar from "../../components/game/GameSelectbar";
 import BlankComponent from "../../components/BlankComponent";
 import { Box, Flex } from "@chakra-ui/react";
 import InGameProfile from "../../components/game/InGameProfile";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
-import FullScreen from "../../components/Layout/Frame/FullScreen";
 const TreasureHunt = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, mainNftData } = blockchain;
@@ -229,5 +229,5 @@ export default TreasureHunt;
 
 // getLayout property
 TreasureHunt.getLayout = function getLayout(page) {
-  return <FullScreen>{page}</FullScreen>;
+  return <SideBarScreen>{page}</SideBarScreen>;
 };

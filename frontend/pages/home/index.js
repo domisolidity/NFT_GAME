@@ -11,6 +11,7 @@ import SubMenuList from "../../components/Menu/SubMenuList";
 import ProfileCard from "../../components/Home/Profile/ProfileCard";
 import Inventory from "../../components/Home/Inventory/Inventory";
 import Notice from "../../components/Home/Notice/Notice";
+import CurrentMainNft from "../../components/Home/CurrentMainNft";
 
 export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");

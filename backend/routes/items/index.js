@@ -56,7 +56,6 @@ const findItemEffect = async (account, itemName, gameTitle) => {
 
 // 아이템 목록 가져오기
 router.get("/game-items", async (req, res) => {
-  console.log(req.body.data);
   console.log("아템목록");
   const response = await Item.findAll().catch((err) => console.log(err));
   res.send(response);

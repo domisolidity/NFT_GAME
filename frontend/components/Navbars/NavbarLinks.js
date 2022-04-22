@@ -22,7 +22,7 @@ import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import React from "react";
 // import { NavLink } from "react-router-dom";
-import routes from "../../pages/routes";
+import routes from "../routes";
 
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;

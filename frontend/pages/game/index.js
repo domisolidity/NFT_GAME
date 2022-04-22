@@ -28,7 +28,6 @@ const Game = () => {
     // 대표 NFT 설정 확인(설정 안되있으면 mypage로 보내기)
     if (!mainNftData) {
       alert("대표 NFT를 설정해주세요");
-      router.push(`mypage`);
       return false;
     }
     const selectedGame = game.gameUrl;
