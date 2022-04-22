@@ -26,7 +26,7 @@ const Admin = () => {
   };
 
   const tokenCharge = async () => {
-    if (inputAmount > ownerAmount) {
+    if (parseInt(inputAmount) > parseInt(ownerAmount)) {
       alert("소유하신 토큰이 모자랍니다");
       return;
     }

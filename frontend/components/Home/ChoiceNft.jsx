@@ -4,9 +4,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 
-import MyNftsCard from "../components/MyNftsCard";
-import GameInterface from "./game/GameInterface";
-import { regMainNft } from "../redux/blockchain/blockchainActions";
+import { regMainNft } from "../../redux/blockchain/blockchainActions";
+import GameInterface from "../game/GameInterface";
 const ChoiceNft = (props) => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);

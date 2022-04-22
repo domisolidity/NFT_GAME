@@ -1,20 +1,8 @@
 // Chakra imports
-import {
-  Box,
-  Flex,
-  Grid,
-  Image,
-  SimpleGrid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 // Custom icons
-import {
-  CartIcon,
-  DocumentIcon,
-  GlobeIcon,
-  WalletIcon,
-} from "../../components/Icons/Icons";
-import MiniStatus from "../../components/Home/MiniStatus"
+import { CartIcon, DocumentIcon, GlobeIcon, WalletIcon } from "../../components/Icons/Icons";
+import MiniStatus from "../../components/Home/MiniStatus";
 
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import { useSelector } from "react-redux";
@@ -22,6 +10,7 @@ import { useEffect, useState } from "react";
 import SubMenuList from "../../components/Menu/SubMenuList";
 import ProfileCard from "../../components/Home/Profile/ProfileCard";
 import Inventory from "../../components/Home/Inventory";
+import CurrentMainNft from "../../components/Home/CurrentMainNft";
 
 export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");
@@ -71,23 +60,23 @@ export default function Home() {
   const returnMenu = (display) => {
     switch (display) {
       case "INVENTORY":
-        return <Inventory />
+        return <Inventory />;
       case "CLAIM":
         return <div>CLAIM</div>;
       case "STAKING":
-        return <div>STAKING</div>;
+        return <CurrentMainNft />;
       case "PROFILE":
-        return <ProfileCard />
+        return <ProfileCard />;
       default:
         break;
     }
   };
 
-  const menuList = ["INVENTORY", "CLAIM", "STAKING", "PROFILE"]
+  const menuList = ["INVENTORY", "CLAIM", "STAKING", "PROFILE"];
 
   return (
-    <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px'>
+    <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
+      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
         <MiniStatus
           title={"Etherium"}
           amount={ethBalance ? ethBalance : "---"}
@@ -117,8 +106,7 @@ export default function Home() {
         <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
         {returnMenu(selectedSubMenu)}
       </Box>
-    </Flex >
-
+    </Flex>
   );
 }
 

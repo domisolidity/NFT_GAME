@@ -17,19 +17,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import StakingCard from "./StakingCard";
-import { Separator } from "./Separator/Separator";
-import Link from "next/link";
+import { Separator } from "../Separator/Separator";
+
 const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const blockchain = useSelector((state) => state.blockchain);
-  const {
-    account,
-    nftContract,
-    gameTokenContract,
-    stakingContract,
-    mainNftData,
-  } = blockchain;
+  const { account, nftContract, stakingContract, mainNftData } = blockchain;
   const [accessToken, setAccessToken] = useState("");
   const [currentMainNft, setcurrentMainNft] = useState("");
   const [currentImage, setCurrentImage] = useState("");
@@ -95,35 +88,6 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
     setNftGrade("");
   };
 
-  const charge = async () => {
-    console.log("돈돈");
-    console.log(gameTokenContract.methods);
-    await gameTokenContract.methods
-      .transfer(stakingContract._address, 100)
-      .send({ from: account });
-
-    const abcd = await gameTokenContract.methods.balanceOf(account).call();
-    const qwer = await gameTokenContract.methods
-      .balanceOf(stakingContract._address)
-      .call();
-    console.log(abcd);
-    console.log(qwer);
-  };
-  const myData = async () => {
-    console.log("생생정보");
-
-    const abcd = await gameTokenContract.methods.balanceOf(account).call();
-    const qwer = await gameTokenContract.methods
-      .balanceOf(stakingContract._address)
-      .call();
-    console.log(abcd);
-    console.log(qwer);
-    const ppp = await stakingContract.methods
-      .getStakingData()
-      .call({ from: account });
-    console.log(ppp);
-  };
-
   return (
     <div className={`nft-block ${nftGrade}`}>
       {/* <Modal toggle={toggle} visible={visible}>
@@ -150,7 +114,6 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
         </Tooltip>
       </div>
       {mainNftData ? (
-        // <img src={currentImage} className="nft-img" onClick={onClose} />
         <img
           src={`${baseUri}${mainNftData.mainNftJson.image.slice(6)}`}
           className="nft-img"
@@ -158,18 +121,10 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
         />
       ) : (
         <div className="nft-img plus">
-          <img
-            src={"plus.svg"}
-            className="add-nft"
-            // onClick={onClose}
-            onClick={onOpen}
-          />
+          <img src={"plus.svg"} className="add-nft" onClick={onOpen} />
         </div>
       )}
       <button onClick={unStaking}>안녕</button>
-      <button onClick={charge}>돈 충전</button>
-      <button onClick={myData}>결과는?</button>
-      <Link href={`/admin`}>관리자페이지</Link>
       <style jsx>{`
         .nft-block {
           display: flex;
