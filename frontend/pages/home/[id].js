@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { addAuctionList } from "../../redux/data/dataActions";
 import { Box, Grid, GridItem, Flex, Image, Button, Heading, Text, Input, useColorModeValue } from "@chakra-ui/react";
-import NftHistory from "../../components/mypage/NftHistory";
+import NftHistory from "../../components/Home/NftHistory";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const NftDetail_my = () => {
@@ -23,7 +23,7 @@ const NftDetail_my = () => {
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
 
-  const txtColor = useColorModeValue("gray.600", "white")
+  const txtColor = useColorModeValue("gray.600", "white");
 
   // 경매 생성 함수
   const createAuction = async () => {
@@ -187,7 +187,14 @@ const NftDetail_my = () => {
 
   return (
     <>
-      <Grid w="70vw" margin="0 auto" templateColumns="repeat(5,1fr)" templateRows="repeat(1,1fr)" gap={2} pt={{ base: "120px", md: "75px" }}>
+      <Grid
+        w="70vw"
+        margin="0 auto"
+        templateColumns="repeat(5,1fr)"
+        templateRows="repeat(1,1fr)"
+        gap={2}
+        pt={{ base: "120px", md: "75px" }}
+      >
         <GridItem colSpan={2} bg="whiteAlpha.100">
           <Flex direction="column">
             <Image src={image} borderRadius={10} />
@@ -371,4 +378,3 @@ export default NftDetail_my;
 NftDetail_my.getLayout = function getLayout(page) {
   return <SideBarScreen>{page}</SideBarScreen>;
 };
-

@@ -4,7 +4,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
 import GameSelectbar from "../../components/game/GameSelectbar";
-import BlankComponent from "../../components/BlankComponent";
+import BlankComponent from "../../components/utils/BlankComponent";
 import InGameProfile from "../../components/game/InGameProfile";
 
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
