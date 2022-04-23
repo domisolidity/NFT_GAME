@@ -16,7 +16,6 @@ var dashRoutes = [
     name: "Home",
     icon: <HomeIcon color="inherit" />,
     component: Home,
-    layout: "/Home",
     subName: false,
   },
   {
@@ -24,14 +23,12 @@ var dashRoutes = [
     name: "Rank",
     icon: <StatsIcon color="inherit" />,
     component: Home,
-    layout: "/SideBarScreen",
   },
   {
     path: "/game",
     name: "Game",
     icon: <RocketIcon color="inherit" />,
     component: Home,
-    layout: "/SideBarScreen",
     subName: false,
   },
   {
@@ -39,7 +36,6 @@ var dashRoutes = [
     name: "Market",
     icon: <CartIcon color="inherit" />,
     component: Home,
-    layout: "/SideBarScreen",
     subName: false,
   },
   {
@@ -47,7 +43,13 @@ var dashRoutes = [
     name: "NFT",
     icon: <WalletIcon color="inherit" />,
     component: Home,
-    layout: "/SideBarScreen",
+    subName: false,
+  },
+  {
+    path: "/admin",
+    name: "Admin",
+    icon: <WalletIcon color="inherit" />,
+    component: Home,
     subName: false,
   },
 ];

@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Box, Text } from "@chakra-ui/react";
+import { Flex, Box, Text, SimpleGrid } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import MyNftsCard from "./MyNftsCard";
 import Link from "next/link";
-import wrapper from "../../redux/store";
-import NotFound from "../utils/NotFound";
+import wrapper from "../../../redux/store";
+import NotFound from "../../utils/NotFound";
 const _ = require("lodash");
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) =>
-    async ({ req }) => {
-      console.log(store);
-      console.log("서버");
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   (store) =>
+//     async ({ req }) => {
+//       console.log(store);
+//       console.log("서버");
 
-      // store.dispatch(myInfoRequestAction());
-    }
-);
+//       // store.dispatch(myInfoRequestAction());
+//     }
+// );
 
 const Collections = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -90,57 +90,61 @@ const Collections = () => {
 
   return (
     <>
-      {pages >= 1 ? (
-        <div className="table__pagination">
-          {range.map((item, index) => (
-            <div
-              key={index}
-              className={`table__pagination-item ${
-                currPage === index ? "active" : ""
-              }`}
-              onClick={() => selectPage(index)}
-            >
-              {item + 1}
-            </div>
-          ))}
-        </div>
-      ) : null}
       <Flex flexDir={"row"} justify="center" align="center">
-        {dataShow[0] ? (
-          <>
-            {dataShow.map((mynft, index) => {
-              return (
-                <Box key={index}>
-                  <Link
-                    href={{
-                      pathname: `mypage/${mynft.id}`,
-                      query: {
-                        id: mynft.id,
-                        grade: mynft.grade,
-                        attributes: JSON.stringify(mynft.attributes),
-                        name: mynft.name,
-                        image: mynft.image,
-                        description: mynft.description,
-                      },
-                    }}
-                    as={`mypage/${mynft.id}`}
-                  >
-                    {/* id, grade, attributes, name, image, description */}
-                    <a>
-                      <MyNftsCard
-                        img={mynft.image}
-                        name={mynft.name}
-                        grade={mynft.grade}
-                      />
-                    </a>
-                  </Link>
-                </Box>
-              );
-            })}
-          </>
-        ) : (
-          <NotFound items={"NFT"} />
-        )}
+        {pages >= 1 ? (
+          <div className="table__pagination">
+            {range.map((item, index) => (
+              <div
+                key={index}
+                className={`table__pagination-item ${
+                  currPage === index ? "active" : ""
+                }`}
+                onClick={() => selectPage(index)}
+              >
+                {item + 1}
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </Flex>
+
+      <Flex flexDir={"row"} justify="center" align="center">
+        <SimpleGrid columns={{ sm: 2, md: 3, lg: 4, xl: 5 }}>
+          {dataShow[0] ? (
+            <>
+              {dataShow.map((mynft, index) => {
+                return (
+                  <Box key={index}>
+                    <Link
+                      href={{
+                        pathname: `home/${mynft.id}`,
+                        query: {
+                          id: mynft.id,
+                          grade: mynft.grade,
+                          attributes: JSON.stringify(mynft.attributes),
+                          name: mynft.name,
+                          image: mynft.image,
+                          description: mynft.description,
+                        },
+                      }}
+                      as={`home/${mynft.id}`}
+                    >
+                      <a>
+                        <MyNftsCard
+                          img={mynft.image}
+                          name={mynft.name}
+                          grade={mynft.grade}
+                        />
+                      </a>
+                    </Link>
+                  </Box>
+                );
+              })}
+            </>
+          ) : (
+            <NotFound items={"NFT"} />
+          )}
+        </SimpleGrid>
       </Flex>
       <style jsx>{`
         .table__pagination {
@@ -149,6 +153,7 @@ const Collections = () => {
           justify-content: center;
           align-items: center;
           margin: 1rem;
+          color: var(--chakra-colors-white);
         }
 
         .table__pagination-item {
@@ -164,13 +169,12 @@ const Collections = () => {
 
         .table__pagination-item.active,
         .table__pagination-item.active:hover {
-          background-color: var(--chakra-colors-purple-700);
+          background-color: var(--chakra-colors-teal-300);
           font-weight: 600;
         }
 
         .table__pagination-item:hover {
-          /* color: var(--chakra-colors-white-700); */
-          background-color: var(--chakra-colors-purple-700);
+          background-color: var(--chakra-colors-teal-300);
         }
       `}</style>
     </>

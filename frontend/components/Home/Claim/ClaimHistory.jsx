@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { RepeatIcon } from "@chakra-ui/icons";
-import { todayTimeFormal } from "../../hooks/currentTime";
+import { todayTimeFormal } from "../../../hooks/currentTime";
 
 const ClaimHistory = (props) => {
   const blockchain = useSelector((data) => data.blockchain);

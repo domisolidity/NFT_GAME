@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Separator } from "../Separator/Separator";
+import { Separator } from "../../Separator/Separator";
 // import FilterNft from "./market/nft/FilterNft";
 
 const Market_nft = () => {

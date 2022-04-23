@@ -6,7 +6,7 @@ import Footer from "../../Footer/Footer.js";
 import Navbar from "../../Navbars/Navbar.js";
 import Sidebar from "../../Sidebar";
 import { useState } from "react";
-// import { Redirect, Route, Switch } from "react-router-dom";
+
 import routes from "../../routes";
 
 // Custom Chakra theme
@@ -18,11 +18,8 @@ import PanelContainer from "../PanelContainer";
 import PanelContent from "../PanelContent";
 import { useRouter } from "next/router";
 export default function SideBarScreen({ children }) {
-  console.log(children)
-  console.log(222)
-  const router = useRouter()
 
-  console.log(router)
+  const router = useRouter()
 
   // const { ...rest } = props;
 

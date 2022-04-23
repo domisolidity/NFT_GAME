@@ -6,7 +6,7 @@ import ClaimHistory from "./ClaimHistory";
 import MissionClaimCard from "./MissionClaimCard";
 import RankingClaimCard from "./RankingClaimCard";
 
-const ClaimInfoCard = (props) => {
+const Claim = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, claim20_Contract } = blockchain;
 
@@ -132,4 +132,4 @@ const ClaimInfoCard = (props) => {
   );
 };
 
-export default ClaimInfoCard;
+export default Claim;

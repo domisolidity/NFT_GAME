@@ -13,7 +13,6 @@ import {
 import Card from "../Card/Card.js";
 import CardBody from "../Card/CardBody.js";
 import IconBox from "../Icons/IconBox";
-import { Separator } from "../Separator/Separator.js";
 
 const MiniStatus = ({ title, amount, unit, icon }) => {
   const iconTeal = useColorModeValue("teal.300", "teal.300");
