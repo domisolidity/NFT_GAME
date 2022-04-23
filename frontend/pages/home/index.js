@@ -11,7 +11,7 @@ import SubMenuList from "../../components/Menu/SubMenuList";
 import ProfileCard from "../../components/Home/Profile/ProfileCard";
 import Inventory from "../../components/Home/Inventory/Inventory";
 import Notice from "../../components/Home/Notice/Notice";
-import CurrentMainNft from "../../components/Home/CurrentMainNft";
+import Staking from "../../components/Home/Staking/Staking";
 
 export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");
@@ -67,7 +67,7 @@ export default function Home() {
       case "CLAIM":
         return <div>CLAIM</div>;
       case "STAKING":
-        return <CurrentMainNft />;
+        return <Staking />;
       case "PROFILE":
         return <ProfileCard />;
       default:

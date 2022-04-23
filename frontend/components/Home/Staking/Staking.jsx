@@ -4,7 +4,7 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import ChoiceNft from "../Home/Staking/ChoiceNft";
+import ChoiceNft from "./ChoiceNft";
 import {
   Modal,
   ModalOverlay,
@@ -21,13 +21,13 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import { Separator } from "../Separator/Separator";
+import { Separator } from "../../Separator/Separator";
 import { useDispatch } from "react-redux";
-import { regMainNft } from "../../redux/blockchain/blockchainActions";
-import BlankComponent from "../utils/BlankComponent";
+import { regMainNft } from "../../../redux/blockchain/blockchainActions";
+import BlankComponent from "../../utils/BlankComponent";
 import RewardHistory from "./RewardHistory";
 
-const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
+const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const blockchain = useSelector((state) => state.blockchain);
@@ -275,4 +275,4 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   );
 };
 
-export default CurrentMainNft;
+export default Staking;
