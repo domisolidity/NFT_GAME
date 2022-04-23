@@ -1,17 +1,44 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Heading, Flex, Button, Image, Text, Box } from "@chakra-ui/react";
+import { Heading, Flex, Button, Image, Text, Box, Input } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import MissionReword from "./missionReword";
-import RankingReword from "./rankingReword";
 
 const Admin = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, gameTokenContract, claim20_Contract } = blockchain;
+  const { account, gameTokenContract, stakingContract } = blockchain;
 
-  useEffect(() => {
-    if (!account) return;
-  }, [account]);
+  const [inputAmount, setInputAmount] = useState("");
+  const [stakingContractAmount, setStakingContractAmount] = useState("");
+  const [ownerAmount, setOwnerAmount] = useState("");
+
+  useEffect(async () => {
+    if (!gameTokenContract) return;
+    await getStakingContractAmount();
+    await getOwnerAmount();
+  }, [gameTokenContract]);
+
+  const getStakingContractAmount = async () => {
+    const receivedAmount = await gameTokenContract.methods.balanceOf(stakingContract._address).call();
+    setStakingContractAmount(receivedAmount);
+  };
+  const getOwnerAmount = async () => {
+    const receivedAmount = await gameTokenContract.methods.balanceOf(account).call();
+    setOwnerAmount(receivedAmount);
+  };
+
+  const tokenCharge = async () => {
+    if (parseInt(inputAmount) > parseInt(ownerAmount)) {
+      alert("소유하신 토큰이 모자랍니다");
+      return;
+    }
+    const response = await gameTokenContract.methods
+      .transfer(stakingContract._address, inputAmount)
+      .send({ from: account });
+    if (!response.status) return;
+    await getStakingContractAmount();
+    await getOwnerAmount();
+    alert(`컨트랙트에 토큰 ${inputAmount}개를 전달하였습니다`);
+  };
 
   return (
     <Box mt="5%">
@@ -20,8 +47,8 @@ const Admin = () => {
       </Heading>
       <Flex justify="center" mt="5%">
         <Link href={`/admin/missionReword`}>
-          <a style={{ marginRight: 20 }}>
-            <Button minWidth={300} h="200" p="10">
+          <a>
+            <Button minWidth={300} h="200" p="5" marginRight={"20px"}>
               <Flex direction="column">
                 <Image margin="0 auto" src={"images/icons/noteIcon.png"} boxSize="100px" />
                 <Text mt="5">
@@ -35,7 +62,7 @@ const Admin = () => {
 
         <Link href={`/admin/rankingReword`}>
           <a>
-            <Button minWidth={300} h="200" p="10">
+            <Button minWidth={300} h="200" p="5" marginRight={"20px"}>
               <Flex direction="column">
                 <Image margin="0 auto" src={"images/icons/trophyIcon.png"} boxSize="100px" />
                 <Text mt="5">
@@ -46,6 +73,20 @@ const Admin = () => {
             </Button>
           </a>
         </Link>
+
+        <Button cursor={"default"} minWidth={300} h="200" p="5" marginRight={"20px"}>
+          <Flex direction="column">
+            <Text>스테이킹 컨트랙트에 토큰 보내기</Text>
+            <Text>Owner Amount : {ownerAmount}</Text>
+            <Text>Staking Contract Amount : {stakingContractAmount}</Text>
+            <Input
+              onChange={(e) => {
+                setInputAmount(e.target.value);
+              }}
+            />
+            <Button onClick={tokenCharge}>Send</Button>
+          </Flex>
+        </Button>
       </Flex>
       <style jsx>{`
         span {

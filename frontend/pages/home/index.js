@@ -1,5 +1,5 @@
 // Chakra imports
-import { Box, Flex, Grid, Image, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 // Custom icons
 import { CartIcon, DocumentIcon, GlobeIcon, WalletIcon } from "../../components/Icons/Icons";
 import MiniStatus from "../../components/Home/MiniStatus";
@@ -8,6 +8,10 @@ import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import SubMenuList from "../../components/Menu/SubMenuList";
+import ProfileCard from "../../components/Home/Profile/ProfileCard";
+import Inventory from "../../components/Home/Inventory/Inventory";
+import Notice from "../../components/Home/Notice/Notice";
+import Staking from "../../components/Home/Staking/Staking";
 import ClaimInfoCard from "../../components/Home/ClaimInfoCard";
 
 export default function Home() {
@@ -18,7 +22,7 @@ export default function Home() {
 
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
-  const [selectedSubMenu, setSelectedSubMenu] = useState("ITEM");
+  const [selectedSubMenu, setSelectedSubMenu] = useState("NOTICE");
   const [updateTrigger, setUpdateTrigger] = useState();
   console.log(gameTokenContract);
 
@@ -62,20 +66,22 @@ export default function Home() {
 
   const returnMenu = (display) => {
     switch (display) {
+      case "NOTICE":
+        return <Notice />
       case "INVENTORY":
-        return <div>INVENTORY</div>;
+        return <Inventory />;
       case "CLAIM":
         return <ClaimInfoCard onUpdate={updateToken} />;
       case "STAKING":
-        return <div>STAKING</div>;
+        return <Staking />;
       case "PROFILE":
-        return <div>PROFILE</div>;
+        return <ProfileCard />;
       default:
         break;
     }
   };
 
-  const menuList = ["INVENTORY", "CLAIM", "STAKING", "PROFILE"];
+  const menuList = ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"]
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>

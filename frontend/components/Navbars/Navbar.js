@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavbarLinks from "./NavbarLinks";
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
 import WalletList from "./ConnectWallet/WalletList";
@@ -30,12 +30,25 @@ import { Separator } from "../Separator/Separator";
 import Accountbar from "./Accountbar/Accountbar";
 import { useDispatch, useSelector } from "react-redux";
 import AccountModal from "./Accountbar/AccountModal";
+import { authenticate, connectWallet, reconnect, tttt } from "../../redux/blockchain/blockchainActions";
 
 export default function Navbar(props) {
   const blockchain = useSelector((state) => state.blockchain);
-  const { auth } = blockchain;
+  const dispatch = useDispatch();
+
+  const { auth, account } = blockchain;
 
   const [scrolled, setScrolled] = useState(false);
+
+  // useEffect(() => {
+  //   dispatch(authenticate())
+  //   console.log('???')
+  //   console.log(auth)
+  //   if (auth) {
+  //     dispatch(tttt(auth))
+  //   }
+  // }, []);
+
   const {
     variant,
     children,

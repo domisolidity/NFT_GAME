@@ -1,52 +1,17 @@
 import { Box, Flex } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import GameCard from "../../components/game/GameCard";
 import GameInterface from "../../components/game/GameInterface";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import axios from "axios";
 import BlankComponent from "../../components/utils/BlankComponent";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Game = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, auth, nftContract, stakingContract } = blockchain;
+  const { account, auth, nftContract, mainNftData } = blockchain;
   const router = useRouter();
-  const [mainNFT, setMainNFT] = useState("");
-  const baseUri = "http://127.0.0.1:8080/ipfs";
-  const [nftGrade, setNftGrade] = useState("");
-
-  useEffect(async () => {
-    if (!(account && auth)) return;
-    const stakingData = await stakingContract.methods.getStakingData().call({ from: account });
-    const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
-    const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
-    console.log(response.data);
-    setCurrentImage(`${baseUri}${response.data.image.slice(6)}`);
-    setNftGrade(response.data.grade);
-  }, [mainNFT]);
-
-  // 페이지 진입 시 대표 NFT 받아오기
-  useEffect(async () => {
-    if (!(account && auth)) return;
-    // const mainNFT = await GameInterface.getMyNFT(account);
-    const mainNftData = await stakingContract.methods.getStakingData().call({ from: account });
-    setMainNFT(mainNftData.tokenId);
-  }, [account, auth]);
-
-  useEffect(async () => {
-    if (!(account && auth && mainNFT)) return;
-    //
-
-    // 대표 NFT가 있으면 일일미션정보 받아오기
-    let receivedMissions = await GameInterface.getMission(account);
-    // 일일미션이 없으면 새로 받기
-    if (receivedMissions.length == 0) {
-      await GameInterface.missionReg(account, mainNFT);
-      receivedMissions = await GameInterface.getMission(account);
-    }
-  }, [mainNFT]);
 
   const selectGame = async (game) => {
     // 메타마스크, 홈페이지 로그인 확인
@@ -61,9 +26,8 @@ const Game = () => {
       return false;
     }
     // 대표 NFT 설정 확인(설정 안되있으면 mypage로 보내기)
-    if (!mainNFT) {
+    if (!mainNftData) {
       alert("대표 NFT를 설정해주세요");
-      router.push(`mypage`);
       return false;
     }
     const selectedGame = game.gameUrl;
@@ -79,16 +43,14 @@ const Game = () => {
 
   return (
     <Flex direction={"column"} pt={{ base: "120px", md: "75px" }}>
-      <Flex
-        backgroundColor={`var(--chakra-colors-${nftGrade}-700)`}
-        w={"100%"}
-        mb={"10px"}
-        textAlign="center"
-        height={"160px"}
-        justifyContent={"center"}
-        alignItems="center"
-      >
-        {mainNFT ? null : <BlankComponent receivedText={"대표 NFT가 지정되지 않았습니다"} />}
+      <Flex w={"100%"} mb={"10px"} textAlign="center" height={"160px"} justifyContent={"center"} alignItems="center">
+        {auth ? (
+          mainNftData ? null : (
+            <BlankComponent receivedText={"대표 NFT가 지정되지 않았습니다"} />
+          )
+        ) : (
+          <BlankComponent receivedText={"로그인 해 주세요"} />
+        )}
       </Flex>
       <Box w={"100%"} minHeight={"400px"} position={`relative`}>
         <Flex justifyContent={"space-evenly"}>

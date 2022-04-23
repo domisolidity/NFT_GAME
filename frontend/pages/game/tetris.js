@@ -24,11 +24,11 @@ import BlankComponent from "../../components/utils/BlankComponent";
 import { Box, Flex } from "@chakra-ui/react";
 import InGameProfile from "../../components/game/InGameProfile";
 
-import FullScreen from "../../components/Layout/Frame/FullScreen";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Tetris = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, auth } = blockchain;
+  const { account, auth, mainNftData } = blockchain;
   const { gameTitle } = GameInterface.gameList[1];
 
   const [dropTime, setDropTime] = useState(null);
@@ -71,18 +71,11 @@ const Tetris = () => {
     }
   }, [score]);
 
-  // 페이지 진입 시 대표 NFT 받아오기
-  useEffect(async () => {
-    if (!(account && auth)) return;
-    const mainNFT = await GameInterface.getMyNFT(account);
-    setMainNFT(mainNFT);
-  }, [account, auth]);
-
   // 로그인, 대표NFT까지 확인 됐으면
   useEffect(async () => {
-    if (!(account && auth && gameTitle && mainNFT)) return;
+    if (!(account && auth && gameTitle && mainNftData)) return;
     await GameInterface.setParticipant(account, gameTitle); // 참여자 초기화
-    await GameInterface.initChance(account, gameTitle, mainNFT); // 게임횟수 초기화
+    await GameInterface.initChance(account, gameTitle, mainNftData.stakingData.tokenId); // 게임횟수 초기화
     setChance(await GameInterface.getMyChance(account, gameTitle)); // 횟수 불러오기
     setGameItems(await GameInterface.getGameItems()); // 게임아이템 불러오기
     setBestScore(await GameInterface.getMyBestScore(account, gameTitle)); // 최고점수 불러오기
@@ -92,7 +85,7 @@ const Tetris = () => {
       setHasMission(recivedMission);
     } // 테트리스 게임에 방해가 되는 키보드 스크롤 기능 막기
     window.addEventListener("keydown", stopScroll);
-  }, [mainNFT]);
+  }, [mainNftData]);
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -297,5 +290,5 @@ export default Tetris;
 
 // getLayout property
 Tetris.getLayout = function getLayout(page) {
-  return <FullScreen>{page}</FullScreen>;
+  return <SideBarScreen>{page}</SideBarScreen>;
 };

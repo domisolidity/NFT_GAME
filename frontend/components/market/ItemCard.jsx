@@ -70,7 +70,6 @@ const itemCard = (props) => {
             objectFit="cover"
             boxSize="100%"
             src={`/images/itemIcons/itemIcon${item.itemId}.png`}
-            // src={`../images/item_${item.itemId}.png`}
           />
         </Flex>
         <Stack
