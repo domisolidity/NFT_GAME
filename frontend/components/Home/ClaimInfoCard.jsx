@@ -90,11 +90,16 @@ const ClaimInfoCard = (props) => {
 
   return (
     <>
-      <Grid templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)">
-        <GridItem rowSpan={1} colSpan={2}>
+      <Grid templateColumns="repeat(4, 1fr)" mt="10" gap={5}>
+        <GridItem colSpan={1}>
           <RankingClaimCard
             claimInfo={claimableRank}
             reward={rewardAmount_rank}
+            updateReward={getRewardAmount}
+          />
+          <MissionClaimCard
+            claimInfo={claimableMission}
+            reward={rewardAmount_mission}
             updateReward={getRewardAmount}
           />
           <MissionClaimCard

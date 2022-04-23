@@ -4,9 +4,17 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 
-import { regMainNft } from "../../redux/blockchain/blockchainActions";
-import GameInterface from "../game/GameInterface";
-import { Box } from "@chakra-ui/react";
+import { regMainNft } from "../../../redux/blockchain/blockchainActions";
+import GameInterface from "../../game/GameInterface";
+import {
+  Box,
+  Button,
+  Flex,
+  Image,
+  Menu,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
 
 import {
   Table,
@@ -24,7 +32,7 @@ const ChoiceNft = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract, stakingContract } = blockchain;
 
-  const { onClose, getCurrentMainNft } = props;
+  const { onClose } = props;
 
   const [myNfts, setMyNfts] = useState([]);
   const [currentMainNft, setcurrentMainNft] = useState("");
@@ -39,11 +47,6 @@ const ChoiceNft = (props) => {
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
   }, [accessToken]);
-
-  useEffect(() => {
-    if (!currentMainNft) return;
-    getCurrentMainNft(currentMainNft);
-  }, [currentMainNft]);
 
   const getMyNfts = async () => {
     try {
@@ -91,22 +94,23 @@ const ChoiceNft = (props) => {
     await getMyNfts();
   }, [account]);
 
-  const clickdeFocus = document.getElementsByClassName("nft-row nft-body");
+  const clickedFocus = document.getElementsByClassName("forActive");
 
   function handleClick(event) {
+    console.log(clickedFocus);
     // console.log(event.target);
     // console.log(this);
     // 콘솔창을 보면 둘다 동일한 값이 나온다
 
-    // console.log(event.target.classList);
+    console.log(event.target.classList);
 
-    if (event.target.classList[1] === "clicked") {
-      event.target.classList.remove("clicked");
+    if (event.target.classList[1] === "active") {
+      event.target.classList.remove("active");
     } else {
-      for (var i = 0; i < clickdeFocus.length; i++) {
-        clickdeFocus[i].classList.remove("clicked");
+      for (var i = 0; i < clickedFocus.length; i++) {
+        clickedFocus[i].classList.remove("active");
       }
-      event.target.classList.add("clicked");
+      event.target.classList.add("active");
     }
   }
 
@@ -172,51 +176,79 @@ const ChoiceNft = (props) => {
   };
 
   return (
-    <TableContainer>
-      <Table variant="simple" textAlign={"center"}>
-        <Thead>
-          <Tr>
-            <Th w={"10%"}>ID</Th>
-            <Th w={"40%"}>NFT Name</Th>
-            <Th w={"20%"}>Grade</Th>
-            <Th w={"20%"}>Image</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {myNfts.length !== 0 ? (
-            myNfts.map((info, index) => {
-              return (
-                <Tr
-                  key={index}
-                  className={"nft-row nft-body"}
-                  onClick={getNftDetail}
-                  tokenId={info.id}
-                >
-                  <Th w={"10%"}>{info.id}</Th>
-                  <Th w={"40%"}>{info.name}</Th>
-                  <Th w={"20%"}>{info.grade}</Th>
-                  <Th w={"20%"}>
-                    <img src={info.image} />
-                  </Th>
-                </Tr>
-              );
-            })
-          ) : (
-            <Tr className="blank-state">
-              <Box>{/* <img src="/no-search.svg" /> */}</Box>
-              {/* <Box className="not-found mt-4 "> Not Found </Box> */}
+    <>
+      <TableContainer>
+        <Table size="small">
+          <Thead>
+            <Tr>
+              <Th textAlign="center">ID</Th>
+              <Th textAlign="center">NFT Name</Th>
+              <Th textAlign="center">Grade</Th>
+              <Th textAlign="center">Image</Th>
             </Tr>
-          )}
-        </Tbody>
-        <Tfoot>
+          </Thead>
+          <Tbody>
+            {myNfts.length !== 0 ? (
+              myNfts.map((info, index) => {
+                return (
+                  <Tr
+                    className="forActive"
+                    key={index}
+                    onClick={getNftDetail}
+                    tokenId={info.id}
+                    _hover={{
+                      bg: "teal.600",
+                    }}
+                    _focus={{
+                      bg: "teal.600",
+                    }}
+                    _active={{
+                      bg: "teal.600",
+                    }}
+                  >
+                    <Th textAlign="center">{info.id}</Th>
+                    <Th textAlign="center">{info.name}</Th>
+                    <Th textAlign="center">{info.grade}</Th>
+                    <Th textAlign="center">
+                      <Image
+                        margin="0 auto"
+                        src={info.image}
+                        borderRadius="full"
+                        boxSize="60px"
+                      />
+                    </Th>
+                  </Tr>
+                );
+              })
+            ) : (
+              <Tr>
+                <Box>{/* <img src="/no-search.svg" /> */}</Box>
+                {/* <Box className="not-found mt-4 "> Not Found </Box> */}
+              </Tr>
+            )}
+          </Tbody>
+          {/* <Tfoot>
           <Tr>
-            <Th>To </Th>
-            <Th>into</Th>
-            <Th isNumeric> by</Th>
+            <Th></Th>
+            <Th>
+              <Button>Confirm</Button>
+            </Th>
+            <Th></Th>
+            <Th>
+              <Button>Cancel</Button>
+            </Th>
           </Tr>
-        </Tfoot>
-      </Table>
-    </TableContainer>
+        </Tfoot> */}
+        </Table>
+      </TableContainer>
+      <Flex justify="center">
+        <Button m={5} onClick={getSubmit}>
+          Confirm
+        </Button>
+        <Button m={5}>Cancel</Button>
+      </Flex>
+    </>
+
     // <Box className="shell overflow-hidden anim-scale-in position-relative ">
     //   <Box className="content">
     //     <Box className="nft-row nft-header-label">

@@ -1,10 +1,9 @@
-import Clock from "../../utils/Clock";
-import Tier from "./Tier";
+import NoticeNft from "./NoticeNft";
+
 const Notice = () => {
   return (
     <>
-      <Clock />
-      <Tier />
+      <NoticeNft />
     </>
   );
 };

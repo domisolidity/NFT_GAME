@@ -108,23 +108,22 @@ const Rank = ({ gameList }) => {
           subMenu={menuList}
           getSelectedSubMenu={getSelectedSubMenu}
         />
-        {/* 
-        <RankSelectbar
-          gameList={gameList}
-          getSelectedGameTitle={getSelectedGameTitle}
-        /> */}
+        <Text fontSize={"30px"} mt={"40px"}>
+          This Week's winners 🏆
+        </Text>
         <CurrentRanking
-          title={selectedGameTitle}
+          title={selectedSubMenu}
           currentRankData={currentRankData}
-          captions={["Rnaking", "profile", "player", "score", "updated at", ""]}
+          captions={["Rnaking", "profile", "player", "score", "updated at"]}
         />
-        {/* <PastRanking pastRankData={pastRankData} /> */}
+
         <Box
-          minWidth="300px"
-          maxHeight={"70vh"}
-          overflow="auto"
-          borderLeft="3px solid"
-          color={"white"}
+          w={"100%"}
+          // minWidth="300px"
+          // maxHeight={"70vh"}
+          // overflow="auto"
+          // borderLeft="3px solid"
+          // color={"white"}
         >
           <Accordion allowMultiple ref={accordian}>
             {pastWeeks.map((data, i) => {
@@ -132,16 +131,16 @@ const Rank = ({ gameList }) => {
                 <AccordionItem key={i} ref={accordian}>
                   {({ isExpanded }) => (
                     <>
-                      {console.log(accordian)}
-                      {console.log(`${i}번`, isExpanded)}
-                      <h2>
-                        <AccordionButton>
-                          <Box flex="1" textAlign="left">
-                            {data[i].weeks} 주차
-                          </Box>
-                          <AccordionIcon />
-                        </AccordionButton>
-                      </h2>
+                      {/* {console.log(accordian)}
+                      {console.log(`${i}번`, isExpanded)} */}
+
+                      <AccordionButton>
+                        <Box flex="1" textAlign="left">
+                          {data[i].weeks} 주차 🏆
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+
                       <AccordionPanel pb={4}>
                         <CurrentRanking
                           title={`${data[i].game_title} ${data[i].weeks} 주`}

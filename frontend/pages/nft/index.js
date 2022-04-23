@@ -1,13 +1,10 @@
 import { Box } from "@chakra-ui/react";
-import Tier from "../../components/Home/Notice/Tier";
 import NftMint from "../../components/nft/NftMint";
-import { useSelector, useDispatch } from "react-redux";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 const Nft = () => {
   return (
 
     <Box align="center" pb={20} pt={{ base: "120px", md: "75px" }}>
-      <Tier />
       <NftMint />
       <style jsx>{`
         span {

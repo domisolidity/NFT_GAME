@@ -21,13 +21,13 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import { Separator } from "../Separator/Separator";
+import { Separator } from "../../Separator/Separator";
 import { useDispatch } from "react-redux";
-import { regMainNft } from "../../redux/blockchain/blockchainActions";
-import BlankComponent from "../utils/BlankComponent";
+import { regMainNft } from "../../../redux/blockchain/blockchainActions";
+import BlankComponent from "../../utils/BlankComponent";
 import RewardHistory from "./RewardHistory";
 
-const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
+const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const blockchain = useSelector((state) => state.blockchain);
@@ -191,7 +191,7 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
     >
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent borderRadius={"15px"}>
           <ModalHeader>Account</ModalHeader>
           <Separator />
           <ModalCloseButton />
@@ -275,4 +275,4 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
   );
 };
 
-export default CurrentMainNft;
+export default Staking;
