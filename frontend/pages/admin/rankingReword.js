@@ -19,6 +19,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const RankingReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -305,3 +306,9 @@ const RankingReword = () => {
 };
 
 export default RankingReword;
+
+// getLayout property
+RankingReword.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+

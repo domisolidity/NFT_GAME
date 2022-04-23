@@ -19,6 +19,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const MissionReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -289,3 +290,10 @@ const MissionReword = () => {
 };
 
 export default MissionReword;
+
+// getLayout property
+MissionReword.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+
+

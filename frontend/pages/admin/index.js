@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Heading, Flex, Button, Image, Text, Box, Input } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Admin = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -102,3 +103,11 @@ const Admin = () => {
 };
 
 export default Admin;
+
+
+// getLayout property
+Admin.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+
+

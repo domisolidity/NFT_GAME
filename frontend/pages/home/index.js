@@ -1,30 +1,46 @@
 // Chakra imports
 import { Box, Flex, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 // Custom icons
-import { CartIcon, DocumentIcon, GlobeIcon, WalletIcon } from "../../components/Icons/Icons";
+import { CartIcon, DocumentIcon, TimLogo, WalletIcon } from "../../components/Icons/Icons";
 import MiniStatus from "../../components/Home/MiniStatus";
 
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import SubMenuList from "../../components/Menu/SubMenuList";
 import ProfileCard from "../../components/Home/Profile/ProfileCard";
 import Inventory from "../../components/Home/Inventory/Inventory";
 import Notice from "../../components/Home/Notice/Notice";
 import Staking from "../../components/Home/Staking/Staking";
-import ClaimInfoCard from "../../components/Home/ClaimInfoCard";
+import ClaimInfoCard from "../../components/Home/Claim/Claim";
+import { getWeb3 } from "../../_redux/actions/metamaskActions";
+import { ConnectContract } from "../../_redux/actions/contractActions";
 
 export default function Home() {
+  const dispatch = useDispatch();
+
   const iconBoxInside = useColorModeValue("white", "white");
 
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, gameTokenContract } = blockchain;
 
+  // const metamask = useSelector((state) => state.metamask);
+  // const contract = useSelector((state) => state.contract);
+  // const { web3, account } = metamask;
+  // const { GameTokenContract } = contract;
+
+  // useEffect(() => {
+  //   dispatch(getWeb3())
+  //   dispatch(ConnectContract())
+  // }, [])
+
+
+
+
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
   const [selectedSubMenu, setSelectedSubMenu] = useState("NOTICE");
   const [updateTrigger, setUpdateTrigger] = useState();
-  console.log(gameTokenContract);
 
   //잔액
   const getEthBalance = async () => {
@@ -50,6 +66,7 @@ export default function Home() {
   const getSelectedSubMenu = (e) => {
     setSelectedSubMenu(e.target.value);
   };
+
   const updateToken = () => {
     setUpdateTrigger(!updateTrigger);
   };
@@ -96,7 +113,7 @@ export default function Home() {
           title={"Doremi Token"}
           amount={tokenBalance ? tokenBalance : "---"}
           unit={"DGT"}
-          icon={<GlobeIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
+          icon={<TimLogo h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
         <MiniStatus
           title={"Total NFT"}
