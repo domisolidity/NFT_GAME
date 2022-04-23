@@ -32,7 +32,7 @@ const ChoiceNft = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract, stakingContract } = blockchain;
 
-  const { onClose, getCurrentMainNft } = props;
+  const { onClose } = props;
 
   const [myNfts, setMyNfts] = useState([]);
   const [currentMainNft, setcurrentMainNft] = useState("");
@@ -47,11 +47,6 @@ const ChoiceNft = (props) => {
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
   }, [accessToken]);
-
-  useEffect(() => {
-    if (!currentMainNft) return;
-    getCurrentMainNft(currentMainNft);
-  }, [currentMainNft]);
 
   const getMyNfts = async () => {
     try {
@@ -247,7 +242,9 @@ const ChoiceNft = (props) => {
         </Table>
       </TableContainer>
       <Flex justify="center">
-        <Button m={5}>Confirm</Button>
+        <Button m={5} onClick={getSubmit}>
+          Confirm
+        </Button>
         <Button m={5}>Cancel</Button>
       </Flex>
     </>

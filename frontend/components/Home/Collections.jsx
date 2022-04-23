@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import MyNftsCard from "./MyNftsCard";
 import Link from "next/link";
-import { wrapper } from "../../redux/store";
+import wrapper from "../../redux/store";
 import NotFound from "../utils/NotFound";
 const _ = require("lodash");
 

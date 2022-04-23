@@ -12,9 +12,10 @@ const Admin = () => {
   const [ownerAmount, setOwnerAmount] = useState("");
 
   useEffect(async () => {
+    if (!gameTokenContract) return;
     await getStakingContractAmount();
     await getOwnerAmount();
-  }, []);
+  }, [gameTokenContract]);
 
   const getStakingContractAmount = async () => {
     const receivedAmount = await gameTokenContract.methods.balanceOf(stakingContract._address).call();

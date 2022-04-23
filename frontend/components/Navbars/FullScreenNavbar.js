@@ -25,7 +25,7 @@ import {
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 
-import routes from "../routes";
+import routes from "../../components/routes";
 
 import { useState } from "react";
 import NextLink from "next/link"
@@ -33,7 +33,7 @@ import { Separator } from "../Separator/Separator";
 import WalletList from '../Navbars/ConnectWallet/WalletList'
 
 export default function FullScreenNavbar(props) {
-  const contractAddress = '컨트랙트주소'
+  const contractAddress = "컨트랙트주소";
 
   const [open, setOpen] = useState(false);
   const handleDrawerToggle = () => {
@@ -48,23 +48,11 @@ export default function FullScreenNavbar(props) {
     "linear-gradient(112.83deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.8) 110.84%)",
     "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
   );
-  let navbarBorder = useColorModeValue(
-    "1.5px solid #FFFFFF",
-    "1.5px solid rgba(255, 255, 255, 0.31)"
-  );
-  let navbarShadow = useColorModeValue(
-    "0px 7px 23px rgba(0, 0, 0, 0.05)",
-    "none"
-  );
-  let navbarFilter = useColorModeValue(
-    "none",
-    "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))"
-  );
+  let navbarBorder = useColorModeValue("1.5px solid #FFFFFF", "1.5px solid rgba(255, 255, 255, 0.31)");
+  let navbarShadow = useColorModeValue("0px 7px 23px rgba(0, 0, 0, 0.05)", "none");
+  let navbarFilter = useColorModeValue("none", "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))");
   let navbarBackdrop = "blur(21px)";
-  let bgButton = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.800"
-  );
+  let bgButton = useColorModeValue("linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)", "gray.800");
   let navbarPosition = "fixed";
   let colorButton = "white";
   // if (props.secondary === true) {
@@ -154,10 +142,7 @@ export default function FullScreenNavbar(props) {
     >
       <Flex w="100%" justifyContent={{ sm: "start", lg: "space-between" }}>
         {brand}
-        <Box
-          ms={{ base: "auto", lg: "0px" }}
-          display={{ base: "flex", lg: "none" }}
-        >
+        <Box ms={{ base: "auto", lg: "0px" }} display={{ base: "flex", lg: "none" }}>
           <SidebarResponsive
             logoText={props.logoText}
             // secondary={props.secondary}
