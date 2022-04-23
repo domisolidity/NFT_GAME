@@ -34,8 +34,8 @@ const ClaimHistory = (props) => {
   }, [account, claimHistory]);
 
   return (
-    <Box m="0 auto" w="80%">
-      <Box bg="#190929" p="3" mb="5">
+    <Box m="0 auto">
+      <Box bg="#10495F" p="3" mb="5">
         <Text fontSize="20">
           Claim History{" "}
           <span style={{ marginLeft: 10 }}>

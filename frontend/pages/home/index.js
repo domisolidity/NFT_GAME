@@ -12,6 +12,7 @@ import ProfileCard from "../../components/Home/Profile/ProfileCard";
 import Inventory from "../../components/Home/Inventory/Inventory";
 import Notice from "../../components/Home/Notice/Notice";
 import Staking from "../../components/Home/Staking/Staking";
+import ClaimInfoCard from "../../components/Home/ClaimInfoCard";
 
 export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");
@@ -22,6 +23,8 @@ export default function Home() {
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
   const [selectedSubMenu, setSelectedSubMenu] = useState("NOTICE");
+  const [updateTrigger, setUpdateTrigger] = useState();
+  console.log(gameTokenContract);
 
   //잔액
   const getEthBalance = async () => {
@@ -47,12 +50,15 @@ export default function Home() {
   const getSelectedSubMenu = (e) => {
     setSelectedSubMenu(e.target.value);
   };
+  const updateToken = () => {
+    setUpdateTrigger(!updateTrigger);
+  };
 
   useEffect(async () => {
     if (!account) return false;
     await getEthBalance();
     await getTokenBalance();
-  }, [account]);
+  }, [account, updateTrigger]);
 
   useEffect(() => {
     returnMenu(selectedSubMenu);
@@ -65,7 +71,7 @@ export default function Home() {
       case "INVENTORY":
         return <Inventory />;
       case "CLAIM":
-        return <div>CLAIM</div>;
+        return <ClaimInfoCard onUpdate={updateToken} />;
       case "STAKING":
         return <Staking />;
       case "PROFILE":

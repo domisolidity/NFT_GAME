@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { WarningIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import {
