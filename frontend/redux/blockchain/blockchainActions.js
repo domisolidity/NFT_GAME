@@ -114,50 +114,50 @@ export const reconnect = () => {
       /*
         option 1 : 로컬 환경
       */
-      // const nft_Network = await NftContract.networks[networkId];
-      // const nftDeal_NetworkData = await NftDealContract.networks[networkId];
-      // const auctionCreator_NetworkData = await AuctionCreatorContract.networks[networkId];
-      // const gameToken_NetworkData = await GameTokenContract.networks[networkId];
-      // const claim20_NetworkData = await Claim20_Contract.networks[networkId];
-      // const stakingNetworkData = await Staking.networks[networkId];
+      const nft_Network = await NftContract.networks[networkId];
+      const nftDeal_NetworkData = await NftDealContract.networks[networkId];
+      const auctionCreator_NetworkData = await AuctionCreatorContract.networks[networkId];
+      const gameToken_NetworkData = await GameTokenContract.networks[networkId];
+      const claim20_NetworkData = await Claim20_Contract.networks[networkId];
+      const stakingNetworkData = await Staking.networks[networkId];
 
-      // const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
-      // const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDeal_NetworkData.address);
-      // const auctionCreatorContract = new web3.eth.Contract(
-      //   AuctionCreatorContract.abi,
-      //   auctionCreator_NetworkData.address
-      // );
-      // const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
-      // const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
-      // const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
-      // const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
-      // let mainNftData;
-      // if (stakingData.tokenId == 0) {
-      //   mainNftData = null;
-      // } else {
-      //   const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
-      //   const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
-      //   mainNftData = { stakingData: stakingData, mainNftJson: response.data };
-      // }
+      const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
+      const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDeal_NetworkData.address);
+      const auctionCreatorContract = new web3.eth.Contract(
+        AuctionCreatorContract.abi,
+        auctionCreator_NetworkData.address
+      );
+      const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
+      const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
+      const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
+      const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
+      let mainNftData;
+      if (stakingData.tokenId == 0) {
+        mainNftData = null;
+      } else {
+        const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+        const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+        mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+      }
 
       /*
         option 2: 배포 환경
       */
-      const nftContract = new web3.eth.Contract(NftContract.abi, "0xDA0709De3fc175A799ECFb1EebB5A6Ba2Ee2f7F7");
-      const nftDealContract = new web3.eth.Contract(NftDealContract.abi, "0x7A54B673d90814039aaDA3bE48e86Ff74298aB62");
-      const auctionCreatorContract = new web3.eth.Contract(
-        AuctionCreatorContract.abi,
-        "0x8C9011A92264884175E04Be45583fF4cD6CB5513"
-      );
-      const gameTokenContract = new web3.eth.Contract(
-        GameTokenContract.abi,
-        "0xf31E19f22547C6dFC7C344B9cBB0236F7d05EEB9"
-      );
-      const claim20_Contract = new web3.eth.Contract(
-        Claim20_Contract.abi,
-        "0x5a61Ea9e4ba77C26483Cea8Ca73979BC10b5307f"
-      );
-      const stakingContract = new web3.eth.Contract(Staking.abi, "0x357d60591Acf907Ba49D348459E37ada86e6cf23");
+      // const nftContract = new web3.eth.Contract(NftContract.abi, "0xDA0709De3fc175A799ECFb1EebB5A6Ba2Ee2f7F7");
+      // const nftDealContract = new web3.eth.Contract(NftDealContract.abi, "0x7A54B673d90814039aaDA3bE48e86Ff74298aB62");
+      // const auctionCreatorContract = new web3.eth.Contract(
+      //   AuctionCreatorContract.abi,
+      //   "0x8C9011A92264884175E04Be45583fF4cD6CB5513"
+      // );
+      // const gameTokenContract = new web3.eth.Contract(
+      //   GameTokenContract.abi,
+      //   "0xf31E19f22547C6dFC7C344B9cBB0236F7d05EEB9"
+      // );
+      // const claim20_Contract = new web3.eth.Contract(
+      //   Claim20_Contract.abi,
+      //   "0x5a61Ea9e4ba77C26483Cea8Ca73979BC10b5307f"
+      // );
+      // const stakingContract = new web3.eth.Contract(Staking.abi, "0x357d60591Acf907Ba49D348459E37ada86e6cf23");
 
       dispatch(
         connectSuccess({
@@ -259,55 +259,56 @@ export const connectWallet = () => {
           /*
         option 1 : 로컬 환경
       */
-          // const nft_Network = await NftContract.networks[networkId];
-          // const nftDeal_NetworkData = await NftDealContract.networks[networkId];
-          // const auctionCreator_NetworkData = await AuctionCreatorContract.networks[networkId];
-          // const gameToken_NetworkData = await GameTokenContract.networks[networkId];
-          // const claim20_NetworkData = await Claim20_Contract.networks[networkId];
-          // const stakingNetworkData = await Staking.networks[networkId];
+          const nft_Network = await NftContract.networks[networkId];
+          const nftDeal_NetworkData = await NftDealContract.networks[networkId];
+          const auctionCreator_NetworkData = await AuctionCreatorContract.networks[networkId];
+          const gameToken_NetworkData = await GameTokenContract.networks[networkId];
+          const claim20_NetworkData = await Claim20_Contract.networks[networkId];
+          const stakingNetworkData = await Staking.networks[networkId];
 
-          // const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
-          // const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDeal_NetworkData.address);
-          // const auctionCreatorContract = new web3.eth.Contract(
-          //   AuctionCreatorContract.abi,
-          //   auctionCreator_NetworkData.address
-          // );
-          // const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
-          // const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
-          // const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
-          // const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
-          // let mainNftData;
-          // if (stakingData.tokenId == 0) {
-          //   mainNftData = null;
-          // } else {
-          //   const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
-          //   const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
-          //   mainNftData = { stakingData: stakingData, mainNftJson: response.data };
-          // }
-          // console.log("gameTokenNetworkData.address", gameTokenNetworkData.address);
-          // console.log("claim20_NetworkData.address", claim20_NetworkData.address);
+          const nftContract = new web3.eth.Contract(NftContract.abi, nft_Network.address);
+          const nftDealContract = new web3.eth.Contract(NftDealContract.abi, nftDeal_NetworkData.address);
+          const auctionCreatorContract = new web3.eth.Contract(
+            AuctionCreatorContract.abi,
+            auctionCreator_NetworkData.address
+          );
+          const gameTokenContract = new web3.eth.Contract(GameTokenContract.abi, gameToken_NetworkData.address);
+          const claim20_Contract = new web3.eth.Contract(Claim20_Contract.abi, claim20_NetworkData.address);
+          const stakingContract = new web3.eth.Contract(Staking.abi, stakingNetworkData.address);
+          const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
+          let mainNftData;
+          if (stakingData.tokenId == 0) {
+            mainNftData = null;
+          } else {
+            const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+            const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+            mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+          }
 
           /*
         option 2: 배포 환경
       */
-          const nftContract = new web3.eth.Contract(NftContract.abi, "0xDA0709De3fc175A799ECFb1EebB5A6Ba2Ee2f7F7");
-          const nftDealContract = new web3.eth.Contract(
-            NftDealContract.abi,
-            "0x7A54B673d90814039aaDA3bE48e86Ff74298aB62"
-          );
-          const auctionCreatorContract = new web3.eth.Contract(
-            AuctionCreatorContract.abi,
-            "0x8C9011A92264884175E04Be45583fF4cD6CB5513"
-          );
-          const gameTokenContract = new web3.eth.Contract(
-            GameTokenContract.abi,
-            "0xf31E19f22547C6dFC7C344B9cBB0236F7d05EEB9"
-          );
-          const claim20_Contract = new web3.eth.Contract(
-            Claim20_Contract.abi,
-            "0x5a61Ea9e4ba77C26483Cea8Ca73979BC10b5307f"
-          );
-          const stakingContract = new web3.eth.Contract(Staking.abi, "0x357d60591Acf907Ba49D348459E37ada86e6cf23");
+          // const nftContract = new web3.eth.Contract(NftContract.abi, "0xDA0709De3fc175A799ECFb1EebB5A6Ba2Ee2f7F7");
+          // const nftDealContract = new web3.eth.Contract(
+          //   NftDealContract.abi,
+          //   "0x7A54B673d90814039aaDA3bE48e86Ff74298aB62"
+          // );
+          // const auctionCreatorContract = new web3.eth.Contract(
+          //   AuctionCreatorContract.abi,
+          //   "0x8C9011A92264884175E04Be45583fF4cD6CB5513"
+          // );
+          // const gameTokenContract = new web3.eth.Contract(
+          //   GameTokenContract.abi,
+          //   "0xf31E19f22547C6dFC7C344B9cBB0236F7d05EEB9"
+          // );
+          // const claim20_Contract = new web3.eth.Contract(
+          //   Claim20_Contract.abi,
+          //   "0x5a61Ea9e4ba77C26483Cea8Ca73979BC10b5307f"
+          // );
+          // const stakingContract = new web3.eth.Contract(Staking.abi, "0x357d60591Acf907Ba49D348459E37ada86e6cf23");
+
+
+          /////
 
           const coinbase = await web3.eth.getCoinbase(); //계정
 
