@@ -18,13 +18,13 @@ export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");
 
   const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, gameTokenContract } = blockchain;
+  const { web3, account, nftContract, gameTokenContract } = blockchain;
 
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
   const [selectedSubMenu, setSelectedSubMenu] = useState("NOTICE");
   const [updateTrigger, setUpdateTrigger] = useState();
-  console.log(gameTokenContract);
+  const [remainNfts, setRemainNfts] = useState([]);
 
   //잔액
   const getEthBalance = async () => {
@@ -35,14 +35,12 @@ export default function Home() {
     });
   };
   const getTokenBalance = async () => {
-    let balance;
     await gameTokenContract.methods
       .balanceOf(account)
       .call({ from: account })
       .then((tokenBalance) => {
         console.log(tokenBalance);
-        balance = web3.utils.fromWei(tokenBalance);
-        setTokenBalance(balance.slice(0, 5));
+        setTokenBalance(tokenBalance);
       })
       .catch(console.error());
   };
@@ -58,7 +56,14 @@ export default function Home() {
     if (!account) return false;
     await getEthBalance();
     await getTokenBalance();
+    await getNftBalance();
   }, [account, updateTrigger]);
+
+  const getNftBalance = async () => {
+    const recievedRemainNfts = await nftContract.methods.remainNfts().call();
+    if (!recievedRemainNfts) return;
+    setRemainNfts(parseInt(recievedRemainNfts[0]) + parseInt(recievedRemainNfts[1]) + parseInt(recievedRemainNfts[2]));
+  };
 
   useEffect(() => {
     returnMenu(selectedSubMenu);
@@ -67,7 +72,7 @@ export default function Home() {
   const returnMenu = (display) => {
     switch (display) {
       case "NOTICE":
-        return <Notice />
+        return <Notice />;
       case "INVENTORY":
         return <Inventory />;
       case "CLAIM":
@@ -81,7 +86,7 @@ export default function Home() {
     }
   };
 
-  const menuList = ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"]
+  const menuList = ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"];
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -100,7 +105,7 @@ export default function Home() {
         />
         <MiniStatus
           title={"Total NFT"}
-          amount={"1,000,000"}
+          amount={remainNfts ? remainNfts : "---"}
           unit={"NFTs"}
           icon={<DocumentIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
