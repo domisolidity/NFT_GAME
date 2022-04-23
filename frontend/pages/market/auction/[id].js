@@ -31,7 +31,7 @@ import {
 } from "@chakra-ui/react";
 import { todayTimeFormal } from "../../../hooks/currentTime";
 import AuctionInfo from "../../../components/market/auction/AuctionInfo.jsx";
-import Countdown from "../../../components/Countdown.jsx";
+import Countdown from "../../../components/utils/Countdown";
 import AuctionContract from "../../../contracts/artifacts/Auction.json";
 
 const MarketDetail = () => {

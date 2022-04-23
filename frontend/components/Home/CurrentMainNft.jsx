@@ -15,18 +15,40 @@ import {
   ModalCloseButton,
   Tooltip,
   useDisclosure,
+  Box,
+  Flex,
+  Text,
+  Button,
 } from "@chakra-ui/react";
 
 import { Separator } from "../Separator/Separator";
+import { useDispatch } from "react-redux";
+import { regMainNft } from "../../redux/blockchain/blockchainActions";
+import BlankComponent from "../utils/BlankComponent";
+import RewardHistory from "./RewardHistory";
 
 const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const blockchain = useSelector((state) => state.blockchain);
-  const { account, nftContract, stakingContract, mainNftData } = blockchain;
+  const {
+    account,
+    auth,
+    nftContract,
+    stakingContract,
+    mainNftData,
+    gameTokenContract,
+  } = blockchain;
   const [accessToken, setAccessToken] = useState("");
   const [currentMainNft, setcurrentMainNft] = useState("");
   const [currentImage, setCurrentImage] = useState("");
   const [nftGrade, setNftGrade] = useState("");
+  const [stakingContractAmount, setStakingContractAmount] = useState(0);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [grade, setGrade] = useState("");
+  const [reward, setReward] = useState("");
+  const [stakingEvents, setStakingEvents] = useState([]);
 
   const LS_KEY = "login-with-metamask:auth";
   const baseUri = "http://127.0.0.1:8080/ipfs";
@@ -53,6 +75,11 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
       .catch(window.alert);
     getMyNfts();
   }, [account, accessToken, currentMainNft, currentImage, currentMainNftImg]);
+  useEffect(async () => {
+    if (!(account && auth && gameTokenContract && stakingContract)) return;
+
+    await getRemainingTokens();
+  }, [gameTokenContract]);
 
   const getMyNfts = async () => {
     try {
@@ -73,27 +100,96 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
     }
   };
 
+  /* 스테이킹 컨트랙트에 남은 토큰 수량 불러오기 */
+  const getRemainingTokens = async () => {
+    const tokenAmount = await gameTokenContract.methods
+      .balanceOf(stakingContract._address)
+      .call();
+    setStakingContractAmount(tokenAmount);
+  };
+
+  /* 스테이킹 끝내기 */
   const unStaking = async () => {
-    const qqq = await stakingContract.methods
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const endTimestamp = parseInt(mainNftData.stakingData.endTime);
+
+    if (endTimestamp > currentTimestamp) {
+      alert(
+        `아직 스테이킹 기간이 종료되지 않았습니다\n테스트용으로 무시하고 계속 진행합니다`
+      );
+      // return;
+    }
+    const currentStakingNftData = await stakingContract.methods
       .getStakingData()
       .call({ from: account });
 
-    if (!(qqq.tokenId > 0 && qqq.tokenId <= 100)) return;
-
-    await stakingContract.methods
-      .exit(qqq.tokenId)
+    if (
+      !(
+        currentStakingNftData.tokenId > 0 &&
+        currentStakingNftData.tokenId <= 100
+      )
+    ) {
+      alert("스테이킹 된 NFT가 없습니다");
+      return;
+    }
+    const unStaking = await stakingContract.methods
+      .exit(currentStakingNftData.tokenId)
       .send({ from: account })
       .catch((err) => console.log(err));
-    setCurrentImage("");
-    setNftGrade("");
+
+    // 스테이킹 정상적으로 해지 됐으면 대표 NFT의 상태와
+    // 이벤트 상태 업데이트 해주기
+    if (unStaking) {
+      dispatch(regMainNft({ mainNftData: null }));
+      getStakingEvents();
+    }
   };
 
+  useEffect(async () => {
+    if (!(account && auth && gameTokenContract && stakingContract)) return;
+    getStakingEvents();
+  }, []);
+
+  const getStakingEvents = async () => {
+    const stakingData = await stakingContract.getPastEvents("RewardEvent", {
+      fromBlock: 0,
+      toBlock: "latest",
+      filter: { account: account },
+    });
+    if (stakingData.length == 0) return;
+    setStakingEvents(stakingData);
+  };
+
+  /* 타임스탬프 => 날짜 변환기 */
+  const dateConverter = (date) => {
+    const temp = new Date(parseInt(date) * 1000);
+    const tempMonth = temp.getMonth() + 1;
+    const tempDate = temp.getDate();
+    const tempHours = temp.getHours();
+    const tempMinutes = temp.getMinutes();
+    const tempSeconds = temp.getSeconds();
+    const resultDate = `${tempMonth}/${tempDate} ${tempHours}:${tempMinutes}:${tempSeconds}`;
+    return resultDate;
+  };
+
+  useEffect(async () => {
+    if (!mainNftData) return;
+    const tempStartTime = dateConverter(mainNftData.stakingData.startTime);
+    const tempEndTime = dateConverter(mainNftData.stakingData.endTime);
+    setStartTime(tempStartTime);
+    setEndTime(tempEndTime);
+    setGrade(mainNftData.mainNftJson.grade.toUpperCase());
+    setReward(mainNftData.stakingData.reward);
+  }, [mainNftData]);
+
   return (
-    <div className={`nft-block ${nftGrade}`}>
-      {/* <Modal toggle={toggle} visible={visible}>
-      <ChoiceNft toggle={toggle} getCurrentMainNft={getCurrentMainNft} />
-    </Modal> */}
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size={"lg"}>
+    <Box
+      minH={"300px"}
+      backgoundColor={`var(--chakra-colors-${
+        mainNftData && mainNftData.mainNftJson.grade
+      }-700)`}
+    >
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent borderRadius={"15px"}>
           <ModalHeader>Account</ModalHeader>
@@ -107,76 +203,75 @@ const CurrentMainNft = ({ getCurrentMainNft, currentMainNftImg }) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <div className="nft-block-title">
+      {/* <div className="nft-block-title">
         MAIN NFT
         <Tooltip hasArrow label="대표 NFT를 설정하시면, 1 주일간 유지됩니다.">
           <i className="bx bx-help-circle"></i>
         </Tooltip>
-      </div>
-      {mainNftData ? (
-        <img
-          src={`${baseUri}${mainNftData.mainNftJson.image.slice(6)}`}
-          className="nft-img"
-          onClick={onClose}
-        />
-      ) : (
-        <div className="nft-img plus">
-          <img src={"plus.svg"} className="add-nft" onClick={onOpen} />
-        </div>
-      )}
-      <button onClick={unStaking}>안녕</button>
-      <style jsx>{`
-        .nft-block {
-          display: flex;
-          background-color: #0f263e;
-          box-shadow: 1px 9px 15px rgb(0 0 0 / 10%);
-          border-radius: 10px;
-          padding: 20px;
-          width: 250px;
-          height: 160px;
-          align-items: center;
-        }
-
-        .nft-block.purple {
-          background-color: var(--chakra-colors-purple-700);
-        }
-        .nft-block.green {
-          background-color: var(--chakra-colors-green-700);
-        }
-        .nft-block.red {
-          background-color: var(--chakra-colors-red-700);
-        }
-
-        .nft-block-title {
-          font-size: 1rem;
-          margin: 0 1rem 0 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-
-        .nft-img.plus {
-          cursor: pointer;
-        }
-
-        .nft-img {
-          width: 130px;
-          height: 130px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #f1f3f6;
-        }
-
-        img.add-nft {
-          width: 64px;
-          height: 64px;
-          -o-object-fit: contain;
-          object-fit: contain;
-        }
-      `}</style>
-    </div>
+      </div> */}
+      <Flex flexDirection="column" textAlign={"center"}>
+        <Box m={"20px 0"}>
+          <Text fontSize={"1.5rem"} color={"gray.400"} fontWeight="bold">
+            Remaining Reward Tokens : {stakingContractAmount}
+          </Text>
+          <Text>
+            스테이킹 기간과 NFT의 등급에 따라 보상토큰을 받으실 수 있습니다
+          </Text>
+        </Box>
+        <Separator />
+        <Flex m={"20px 0"}>
+          {mainNftData ? (
+            <Button h={"auto"} onClick={unStaking}>
+              스테이킹
+              <br />
+              보상받기
+            </Button>
+          ) : (
+            <div className="nft-img plus">
+              <img src={"plus.svg"} className="add-nft" onClick={onOpen} />
+            </div>
+          )}
+          {mainNftData ? (
+            <Flex
+              p={"10px"}
+              w="100%"
+              color={"gray.400"}
+              fontWeight="bold"
+              justifyContent={"space-around"}
+            >
+              <Flex flexDirection={"column"}>
+                <Box>GRADE</Box>
+                <Box>{grade}</Box>
+              </Flex>
+              <Flex flexDirection={"column"}>
+                <Box>Staking Start Time</Box>
+                <Box>{startTime}</Box>
+              </Flex>
+              <Flex flexDirection={"column"}>
+                <Box>Staking End Time</Box>
+                <Box>{endTime}</Box>
+              </Flex>
+              <Flex flexDirection={"column"}>
+                <Box>Expected Reward</Box>
+                <Box>{reward}</Box>
+              </Flex>
+            </Flex>
+          ) : (
+            <BlankComponent receivedText={`대표 NFT를 지정해 주세요!`} />
+          )}
+        </Flex>
+        <Separator />
+        <Box m={"20px 0"}>
+          <Text fontSize={"1.5rem"} color={"gray.400"} fontWeight="bold">
+            Rewarded History
+          </Text>
+          <RewardHistory
+            stakingEvents={stakingEvents}
+            dateConverter={dateConverter}
+          />
+        </Box>
+      </Flex>
+    </Box>
   );
 };
 

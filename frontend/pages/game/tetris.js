@@ -20,7 +20,7 @@ import GameInterface from "../../components/game/GameInterface";
 import { useSelector } from "react-redux";
 import GameItem from "../../components/game/GameItem";
 import GameSelectbar from "../../components/game/GameSelectbar";
-import BlankComponent from "../../components/BlankComponent";
+import BlankComponent from "../../components/utils/BlankComponent";
 import { Box, Flex } from "@chakra-ui/react";
 import InGameProfile from "../../components/game/InGameProfile";
 

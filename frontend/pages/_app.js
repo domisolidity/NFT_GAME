@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { wrapper } from "../redux/store";
+import wrapper from "../redux/store";
 import theme from "../theme/theme.js";
 import Seo from "../components/Layout/Seo";
 import { useRouter } from "next/router";

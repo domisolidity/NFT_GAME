@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import axios from "axios";
-import ClaimHistory from "./mypage/ClaimHistory";
-import MissionClaimCard from "./mypage/MissionClaimCard";
-import RankingClaimCard from "./mypage/RankingClaimCard";
+import ClaimHistory from "./ClaimHistory";
+import MissionClaimCard from "./MissionClaimCard";
+import RankingClaimCard from "./RankingClaimCard";
 
 const ClaimInfoCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
