@@ -19,6 +19,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const RankingReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -141,7 +142,7 @@ const RankingReword = () => {
   }, [account]);
 
   return (
-    <Box w="70vw" bg="blackAlpha.400" margin="0 auto" padding="10" border="2px solid gray" borderRadius="10">
+    <Box pt={{ base: "120px", md: "75px" }}>
       <Flex justify="space-between">
         <Box>
           <Heading display="inline">
@@ -175,7 +176,7 @@ const RankingReword = () => {
               <Tr>
                 <Th>
                   <Checkbox
-                    colorScheme="green"
+                    // colorScheme="green"
                     isChecked={allChecked}
                     isIndeterminate={isIndeterminate}
                     onChange={(e) => {
@@ -200,7 +201,7 @@ const RankingReword = () => {
                     <Tr key={index} bg={rank[2] == "블록쌓기" && "whiteAlpha.200"}>
                       <Td>
                         <Checkbox
-                          colorScheme="green"
+                          // colorScheme="green"
                           isChecked={checkedItems[index]}
                           onChange={(e) => {
                             let checkedTarget2 = [];
@@ -305,3 +306,9 @@ const RankingReword = () => {
 };
 
 export default RankingReword;
+
+// getLayout property
+RankingReword.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+

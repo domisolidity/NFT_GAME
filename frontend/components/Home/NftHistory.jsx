@@ -11,6 +11,7 @@ import {
   Th,
   Td,
   TableContainer,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { RepeatIcon } from "@chakra-ui/icons";
@@ -59,11 +60,13 @@ const NftHistory = (props) => {
     await getNftHistory();
   }, [account]);
 
+  const bgColor = useColorModeValue("gray.200", "whiteAlpha.100");
+
   return (
-    <Box m="0 auto" w="80%">
-      <Box p="3" mb="5" bg="#182749">
+    <>
+      <Box p="3" bg={bgColor} borderRadius={"15px 15px 0 0"}>
         <Text fontSize="20">
-          Nft History{" "}
+          Nft History
           <span style={{ marginLeft: 10 }}>
             <Button variant="ghost" onClick={updateHistory}>
               <RepeatIcon />
@@ -72,14 +75,17 @@ const NftHistory = (props) => {
         </Text>
       </Box>
       <TableContainer>
-        <Table>
-          <Thead>
-            <Tr bg="#1827493e">
-              <Th>Type</Th>
-              <Th>from</Th>
-              <Th>to</Th>
-              <Th>time</Th>
-              <Th>detail</Th>
+        <Table
+          bgColor={useColorModeValue("gray.200", "whiteAlpha.100")}
+          borderRadius={"0 0 15px 15px "}
+        >
+          <Thead bgColor={useColorModeValue("gray.300", "whiteAlpha.100")}>
+            <Tr>
+              <Th textAlign={"center"}>Type</Th>
+              <Th textAlign={"center"}>from</Th>
+              <Th textAlign={"center"}>to</Th>
+              <Th textAlign={"center"}>time</Th>
+              <Th textAlign={"center"}>detail</Th>
             </Tr>
           </Thead>
           {nftHistory
@@ -88,22 +94,24 @@ const NftHistory = (props) => {
                   <Tbody key={i}>
                     <Tr>
                       {/* <Td>{`${history.account.substr(0,7)} ...... ${history.account.substr(38,41)}`}</Td> */}
-                      <Td>{history.value.historyType}</Td>
-                      <Td>
+                      <Td textAlign={"center"}>{history.value.historyType}</Td>
+                      <Td textAlign={"center"}>
                         {`${history.value.from.substr(
                           0,
                           5
                         )} ... ${history.value.from.substr(38, 41)}`}
                       </Td>
-                      <Td>
+                      <Td textAlign={"center"}>
                         {`${history.value.to.substr(
                           0,
                           5
                         )} ... ${history.value.to.substr(38, 41)}`}
                       </Td>
 
-                      <Td>{todayTimeFormal(Number(history.value.time))}</Td>
-                      <Td>
+                      <Td textAlign={"center"}>
+                        {todayTimeFormal(Number(history.value.time))}
+                      </Td>
+                      <Td textAlign={"center"}>
                         <Link
                           href={`https://rinkeby.etherscan.io/tx/${history.tx}`}
                         >
@@ -117,7 +125,7 @@ const NftHistory = (props) => {
             : null}
         </Table>
       </TableContainer>
-    </Box>
+    </>
   );
 };
 

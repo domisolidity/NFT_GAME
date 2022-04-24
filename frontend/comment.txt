@@ -38,7 +38,6 @@ npm install @truffle/hdwallet-provider
 
 @ npm i 시 설치 오류 해결방법
 npm i react-scroll-horizontal --legacy-peer-deps 
-npm i react-progress-steps --legacy-peer-deps
 
 
 

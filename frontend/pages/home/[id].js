@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { addAuctionList } from "../../redux/data/dataActions";
 import { Box, Grid, GridItem, Flex, Image, Button, Heading, Text, Input, useColorModeValue } from "@chakra-ui/react";
-import NftHistory from "../../components/mypage/NftHistory";
+import NftHistory from "../../components/Home/NftHistory";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
+import Link from "next/link";
 
 const NftDetail_my = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const NftDetail_my = () => {
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
 
-  const txtColor = useColorModeValue("gray.600", "white")
+
 
   // 경매 생성 함수
   const createAuction = async () => {
@@ -185,22 +186,29 @@ const NftDetail_my = () => {
     await onSaleCheck();
   }, [account]);
 
+  const bgColor = useColorModeValue("gray.200", "whiteAlpha.100");
+
   return (
     <>
-      <Grid w="70vw" margin="0 auto" templateColumns="repeat(5,1fr)" templateRows="repeat(1,1fr)" gap={2} pt={{ base: "120px", md: "75px" }}>
-        <GridItem colSpan={2} bg="whiteAlpha.100">
+      <Grid
+        w="70vw"
+        margin="0 auto"
+        templateColumns="repeat(5,1fr)"
+        templateRows="repeat(1,1fr)"
+        gap={2}
+        pt={{ base: "120px", md: "75px" }}
+      >
+        <GridItem colSpan={2} bg={"whiteAlpha.100"} borderRadius={"15px"}>
           <Flex direction="column">
-            <Image src={image} borderRadius={10} />
-            <Box borderRadius={10} border="1px solid #302f2f" mt="2">
-              <Heading size="sm" bg="#182749" padding="3">
+            <Box border="1px solid #302f2f" borderRadius={"15px"}>
+              <Image src={image} borderRadius={"15px 15px 0 0"} />
+              <Heading size="sm" bg={bgColor} padding="3">
                 Description
               </Heading>
               <Text fontSize="15" padding="3">
                 {description}
               </Text>
-            </Box>
-            <Box borderRadius={10} bg="##1E315F" border="1px solid #302f2f">
-              <Heading size="sm" bg="#182749" padding="3">
+              <Heading size="sm" bg={bgColor} padding="3">
                 Properties
               </Heading>
               <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}>
@@ -217,7 +225,7 @@ const NftDetail_my = () => {
             </Box>
           </Flex>
         </GridItem>
-        <GridItem colSpan={3} bg="whiteAlpha.100" padding="5">
+        <GridItem colSpan={3} bg="whiteAlpha.100" padding="5" borderRadius={"15px"} border="1px solid #302f2f">
           <Text
             borderRadius={20}
             bg={grade == "red" ? "red.700" : grade == "green" ? "green.700" : "purple.700"}
@@ -286,7 +294,7 @@ const NftDetail_my = () => {
                         isLoading={loading2 ? 1 : null}
                         loadingText="approving.."
                         onClick={() => approveSell(isApproved)}
-                        colorScheme="linkedin"
+                        // colorScheme="linkedin"
                         disabled={onAuction || loading ? 1 : 0}
                       >
                         {isApproved ? <span>판매 권한 철회</span> : <span>판매 권한 승인</span>}
@@ -296,7 +304,7 @@ const NftDetail_my = () => {
                         loadingText="add marketPlace.."
                         ml="5"
                         onClick={submitSell}
-                        colorScheme="linkedin"
+                        // colorScheme="linkedin"
                         disabled={onAuction || loading2 ? 1 : 0}
                       >
                         판매 등록
@@ -308,9 +316,23 @@ const NftDetail_my = () => {
             ) : (
               <>
                 {onAuction ? (
-                  <Text mt="10" align="center">
-                    경매가 진행중입니다. 경매 관리는 마켓에 등록된 경매건에서 가능합니다.
-                  </Text>
+
+                  <Box align="center">
+                    <Text mt="10" align="center">
+                      경매가 진행중입니다. 경매 관리는 마켓에 등록된 경매건에서 가능합니다.
+                    </Text>
+                    <Link
+                      href={{
+                        pathname: `market`,
+
+                      }}
+                      as={`market`}
+                    >
+                      <Button >마켓으로 이동</Button>
+                    </Link>
+                  </Box>
+
+
                 ) : (
                   <Box mt="10">
                     <Flex justify="space-between">
@@ -329,10 +351,10 @@ const NftDetail_my = () => {
                         loadingText="adding.."
                         ml="5"
                         onClick={createAuction}
-                        colorScheme="linkedin"
+                        // colorScheme="linkedin"
                         disabled={onsale ? 1 : 0}
                       >
-                        {" "}
+
                         경매 등록
                       </Button>
                     </Flex>
@@ -346,18 +368,19 @@ const NftDetail_my = () => {
             <Heading size="lg">Present</Heading>
             <Flex justify="center">
               <Text lineHeight={10} mr="10">
-                {" "}
                 to Address
-              </Text>{" "}
+              </Text>
               <Input w="200" />
-              <Button ml="2" colorScheme="linkedin" disabled={onAuction || onsale || loading || loading2 ? 1 : 0}>
+              <Button ml="2"
+                // colorScheme="linkedin"
+                disabled={onAuction || onsale || loading || loading2 ? 1 : 0}>
                 Present
               </Button>
             </Flex>
           </Box>
         </GridItem>
 
-        <GridItem colSpan={5} bg="whiteAlpha.100" padding={5}>
+        <GridItem colSpan={5} borderRadius={"15px"}>
           <NftHistory tokenId={id} />
         </GridItem>
       </Grid>
@@ -371,4 +394,3 @@ export default NftDetail_my;
 NftDetail_my.getLayout = function getLayout(page) {
   return <SideBarScreen>{page}</SideBarScreen>;
 };
-

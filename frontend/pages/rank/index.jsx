@@ -11,6 +11,7 @@ import {
   AccordionIcon,
   Button,
   useColorModeValue,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import GameInterface from "../../components/game/GameInterface";
@@ -29,6 +30,11 @@ const Rank = ({ gameList }) => {
   const [selectedSubMenu, setSelectedSubMenu] = useState("블록쌓기");
   const [processedRankData, setProcessedRankData] = useState([]);
 
+  useEffect(() => {
+    if (!currentRankData) return;
+    console.log(currentRankData);
+    console.log(currentRankData);
+  }, [currentRankData]);
   // 선택한 게임 useState에 담기
   const getSelectedGameTitle = async (selectedGame) => {
     setSelectedGameTitle(selectedGame);
@@ -93,6 +99,7 @@ const Rank = ({ gameList }) => {
   }, [pastRankData]);
 
   const menuList = ["블록쌓기", "테트리스", "보물찾기"];
+  const txtColor = useColorModeValue("gray.600", "white");
 
   return (
     <>
@@ -104,27 +111,48 @@ const Rank = ({ gameList }) => {
         justifyContent={"center"}
         pt={{ base: "120px", md: "75px" }}
       >
-        <SubMenuList
-          subMenu={menuList}
-          getSelectedSubMenu={getSelectedSubMenu}
-        />
-        {/* 
-        <RankSelectbar
-          gameList={gameList}
-          getSelectedGameTitle={getSelectedGameTitle}
-        /> */}
+        <Box>
+          <Text
+            fontSize={"5rem"}
+            as={"span"}
+            position={"relative"}
+            color={txtColor}
+            _after={{
+              content: "''",
+              width: "full",
+              height: useBreakpointValue({ base: "20%", md: "30%" }),
+              position: "absolute",
+              bottom: 1,
+              left: 0,
+              bg: "teal.400",
+              zIndex: -1,
+            }}
+          >
+            This week's winners 🏆
+          </Text>
+        </Box>
+        {/* <Text fontSize={"30px"} mt={"40px"}>
+        </Text> */}
+        <Box mt={10}>
+          <SubMenuList
+            subMenu={menuList}
+            getSelectedSubMenu={getSelectedSubMenu}
+          />
+        </Box>
+
         <CurrentRanking
-          title={selectedGameTitle}
+          title={selectedSubMenu}
           currentRankData={currentRankData}
-          captions={["Rnaking", "profile", "player", "score", "updated at", ""]}
+          captions={["Rnaking", "profile", "player", "score", "updated at"]}
         />
-        {/* <PastRanking pastRankData={pastRankData} /> */}
+
         <Box
-          minWidth="300px"
-          maxHeight={"70vh"}
-          overflow="auto"
-          borderLeft="3px solid"
-          color={"white"}
+          w={"100%"}
+          // minWidth="300px"
+          // maxHeight={"70vh"}
+          // overflow="auto"
+          // borderLeft="3px solid"
+          // color={"white"}
         >
           <Accordion allowMultiple ref={accordian}>
             {pastWeeks.map((data, i) => {
@@ -132,16 +160,16 @@ const Rank = ({ gameList }) => {
                 <AccordionItem key={i} ref={accordian}>
                   {({ isExpanded }) => (
                     <>
-                      {console.log(accordian)}
-                      {console.log(`${i}번`, isExpanded)}
-                      <h2>
-                        <AccordionButton>
-                          <Box flex="1" textAlign="left">
-                            {data[i].weeks} 주차
-                          </Box>
-                          <AccordionIcon />
-                        </AccordionButton>
-                      </h2>
+                      {/* {console.log(accordian)}
+                      {console.log(`${i}번`, isExpanded)} */}
+
+                      <AccordionButton>
+                        <Box flex="1" textAlign="left">
+                          {data[i].weeks} 주차 🏆
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+
                       <AccordionPanel pb={4}>
                         <CurrentRanking
                           title={`${data[i].game_title} ${data[i].weeks} 주`}

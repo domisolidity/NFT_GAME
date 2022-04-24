@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavbarLinks from "./NavbarLinks";
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
 import WalletList from "./ConnectWallet/WalletList";
@@ -30,17 +30,29 @@ import { Separator } from "../Separator/Separator";
 import Accountbar from "./Accountbar/Accountbar";
 import { useDispatch, useSelector } from "react-redux";
 import AccountModal from "./Accountbar/AccountModal";
+import { authenticate, connectWallet, reconnect, tttt } from "../../redux/blockchain/blockchainActions";
 
 export default function Navbar(props) {
   const blockchain = useSelector((state) => state.blockchain);
-  const { auth } = blockchain;
+  const dispatch = useDispatch();
+
+  const { auth, account } = blockchain;
 
   const [scrolled, setScrolled] = useState(false);
+
+  // useEffect(() => {
+  //   dispatch(authenticate())
+  //   console.log('???')
+  //   console.log(auth)
+  //   if (auth) {
+  //     dispatch(tttt(auth))
+  //   }
+  // }, []);
+
   const {
     variant,
     children,
     fixed,
-    secondary,
     brandText,
     ...rest
   } = props;
@@ -73,14 +85,7 @@ export default function Navbar(props) {
         "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))"
       );
     }
-  if (props.secondary) {
-    navbarBackdrop = "none";
-    navbarPosition = "absolute";
-    mainText = "white";
-    secondaryText = "white";
-    secondaryMargin = "22px";
-    paddingX = "30px";
-  }
+
   const changeNavbar = () => {
     if (window.scrollY > 1) {
       setScrolled(true);
@@ -176,7 +181,6 @@ export default function Navbar(props) {
           <NavbarLinks
             onOpen={props.onOpen}
             logoText={props.logoText}
-            secondary={props.secondary}
             fixed={props.fixed}
           />
         </Box>
@@ -190,7 +194,6 @@ export default function Navbar(props) {
 Navbar.propTypes = {
   brandText: PropTypes.string,
   variant: PropTypes.string,
-  secondary: PropTypes.bool,
   fixed: PropTypes.bool,
   onOpen: PropTypes.func,
 };

@@ -56,7 +56,7 @@ const InventoryCard = (props) => {
             rounded="lg"
             overflow="hidden"
             mx="auto"
-            w={"200px"}
+            minW={"220px"}
           >
             <Box w={"200px"} h={"200px"} m={"0 auto"}>
               <ItemImage itemId={props.img} />

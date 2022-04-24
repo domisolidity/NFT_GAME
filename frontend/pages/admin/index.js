@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Heading, Flex, Button, Image, Text, Box, Input } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const Admin = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -12,9 +13,10 @@ const Admin = () => {
   const [ownerAmount, setOwnerAmount] = useState("");
 
   useEffect(async () => {
+    if (!gameTokenContract) return;
     await getStakingContractAmount();
     await getOwnerAmount();
-  }, []);
+  }, [gameTokenContract]);
 
   const getStakingContractAmount = async () => {
     const receivedAmount = await gameTokenContract.methods.balanceOf(stakingContract._address).call();
@@ -40,7 +42,7 @@ const Admin = () => {
   };
 
   return (
-    <Box mt="5%">
+    <Box pt={{ base: "120px", md: "75px" }}>
       <Heading align="center">
         <span> Managing Reward System </span>
       </Heading>
@@ -101,3 +103,11 @@ const Admin = () => {
 };
 
 export default Admin;
+
+
+// getLayout property
+Admin.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+
+

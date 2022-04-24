@@ -10,7 +10,7 @@ import GameItem from "../../components/game/GameItem";
 import ChestContainer from "../../components/game/FindTheRing/components/ChestContainer/ChestContainer";
 import ControlPanel from "../../components/game/FindTheRing/components/ControlPanel/ControlPanel";
 import GameSelectbar from "../../components/game/GameSelectbar";
-import BlankComponent from "../../components/BlankComponent";
+import BlankComponent from "../../components/utils/BlankComponent";
 import { Box, Flex } from "@chakra-ui/react";
 import InGameProfile from "../../components/game/InGameProfile";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
