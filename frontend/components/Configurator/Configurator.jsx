@@ -74,7 +74,7 @@ export default function Configurator(props) {
                     w="50%"
                     p="8px 32px"
                     me="8px"
-                    colorScheme="teal"
+                    // colorScheme="teal"
                     borderColor="teal.300"
                     color="teal.300"
                     variant="outline"
@@ -107,7 +107,7 @@ export default function Configurator(props) {
                   Top Navbar Fixed
                 </Text>
                 <Switch
-                  colorScheme="teal"
+                  // colorScheme="teal"
                   isChecked={switched}
                   onChange={(event) => {
                     if (switched === true) {
@@ -128,7 +128,10 @@ export default function Configurator(props) {
                 <Text fontSize="md" fontWeight="600" mb="4px">
                   Dark Mode
                 </Text>
-                <Switch colorScheme="teal" onChange={toggleColorMode} />
+                <Switch
+                  // colorScheme="teal"
+                  onChange={toggleColorMode}
+                />
               </Flex>
               <Separator />
               <Link href={`/admin`}>관리자페이지</Link>

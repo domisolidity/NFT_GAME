@@ -13,7 +13,7 @@ const SubMenuList = ({ subMenu, getSelectedSubMenu }) => {
       <Tabs
         defaultIndex={0}
         borderBottomColor="transparent"
-        colorScheme={"teal"}
+        // colorScheme={"teal"}
       >
         <TabList>
           {subMenu &&

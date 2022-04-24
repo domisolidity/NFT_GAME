@@ -111,7 +111,7 @@ const Market_nft = () => {
                 grade
               </Text>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 defaultChecked
                 value="red"
                 onChange={() => {
@@ -133,7 +133,7 @@ const Market_nft = () => {
                 </Text>
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 mt="1"
                 defaultChecked
                 onChange={() => {
@@ -155,7 +155,7 @@ const Market_nft = () => {
                 </Text>
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 mt="1"
                 defaultChecked
                 onChange={() => {
@@ -189,7 +189,7 @@ const Market_nft = () => {
                 price(eth)
               </Text>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}
@@ -207,7 +207,7 @@ const Market_nft = () => {
                 ~ 0.5
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}
@@ -225,7 +225,7 @@ const Market_nft = () => {
                 0.5 ~ 1.0
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}
@@ -243,7 +243,7 @@ const Market_nft = () => {
                 1.0 ~ 2.0
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}
@@ -261,7 +261,7 @@ const Market_nft = () => {
                 2.0 ~ 4.0
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}

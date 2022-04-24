@@ -13,16 +13,14 @@ import Inventory from "../../components/Home/Inventory/Inventory";
 import Notice from "../../components/Home/Notice/Notice";
 import Staking from "../../components/Home/Staking/Staking";
 import ClaimInfoCard from "../../components/Home/Claim/Claim";
-import { getWeb3 } from "../../_redux/actions/metamaskActions";
-import { ConnectContract } from "../../_redux/actions/contractActions";
 
 export default function Home() {
   const dispatch = useDispatch();
 
   const iconBoxInside = useColorModeValue("white", "white");
 
-  const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, gameTokenContract } = blockchain;
+  // const blockchain = useSelector((state) => state.blockchain);
+  // const { web3, account, gameTokenContract } = blockchain;
 
   // const metamask = useSelector((state) => state.metamask);
   // const contract = useSelector((state) => state.contract);
@@ -71,15 +69,15 @@ export default function Home() {
     setUpdateTrigger(!updateTrigger);
   };
 
-  useEffect(async () => {
-    if (!account) return false;
-    await getEthBalance();
-    await getTokenBalance();
-  }, [account, updateTrigger]);
+  // useEffect(async () => {
+  //   if (!account) return false;
+  //   await getEthBalance();
+  //   await getTokenBalance();
+  // }, [account, updateTrigger]);
 
-  useEffect(() => {
-    returnMenu(selectedSubMenu);
-  }, [selectedSubMenu]);
+  // useEffect(() => {
+  //   returnMenu(selectedSubMenu);
+  // }, [selectedSubMenu]);
 
   const returnMenu = (display) => {
     switch (display) {

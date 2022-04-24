@@ -171,7 +171,7 @@ const MissionReword = () => {
                 <Tr>
                   <Th>
                     <Checkbox
-                      colorScheme="green"
+                      // colorScheme="green"
                       isChecked={allChecked}
                       isIndeterminate={isIndeterminate}
                       onChange={(e) => {
@@ -194,7 +194,7 @@ const MissionReword = () => {
                       <Tr key={index}>
                         <Td>
                           <Checkbox
-                            colorScheme="green"
+                            // colorScheme="green"
                             isChecked={checkedItems[index]}
                             onChange={(e) => {
                               let checkedTarget2 = [];
@@ -221,7 +221,9 @@ const MissionReword = () => {
         ) : nextStep ? (
           <TableContainer align="center" mt="10">
             <Text fontSize="30">step 3</Text> 클레임 허용
-            <Table border="1px solid gray" mt="5" w="80%" variant="striped" colorScheme="#2C264C">
+            <Table border="1px solid gray" mt="5" w="80%" variant="striped"
+            // colorScheme="#2C264C"
+            >
               <TableCaption>
                 <Box mt="50" mb="5" fontSize="20">
                   <span> Total Allowance : {totalAllowance} DGT </span>

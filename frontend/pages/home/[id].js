@@ -294,7 +294,7 @@ const NftDetail_my = () => {
                         isLoading={loading2 ? 1 : null}
                         loadingText="approving.."
                         onClick={() => approveSell(isApproved)}
-                        colorScheme="linkedin"
+                        // colorScheme="linkedin"
                         disabled={onAuction || loading ? 1 : 0}
                       >
                         {isApproved ? <span>판매 권한 철회</span> : <span>판매 권한 승인</span>}
@@ -304,7 +304,7 @@ const NftDetail_my = () => {
                         loadingText="add marketPlace.."
                         ml="5"
                         onClick={submitSell}
-                        colorScheme="linkedin"
+                        // colorScheme="linkedin"
                         disabled={onAuction || loading2 ? 1 : 0}
                       >
                         판매 등록
@@ -351,7 +351,7 @@ const NftDetail_my = () => {
                         loadingText="adding.."
                         ml="5"
                         onClick={createAuction}
-                        colorScheme="linkedin"
+                        // colorScheme="linkedin"
                         disabled={onsale ? 1 : 0}
                       >
 
@@ -371,7 +371,9 @@ const NftDetail_my = () => {
                 to Address
               </Text>
               <Input w="200" />
-              <Button ml="2" colorScheme="linkedin" disabled={onAuction || onsale || loading || loading2 ? 1 : 0}>
+              <Button ml="2"
+                // colorScheme="linkedin"
+                disabled={onAuction || onsale || loading || loading2 ? 1 : 0}>
                 Present
               </Button>
             </Flex>

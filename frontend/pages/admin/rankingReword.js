@@ -176,7 +176,7 @@ const RankingReword = () => {
               <Tr>
                 <Th>
                   <Checkbox
-                    colorScheme="green"
+                    // colorScheme="green"
                     isChecked={allChecked}
                     isIndeterminate={isIndeterminate}
                     onChange={(e) => {
@@ -201,7 +201,7 @@ const RankingReword = () => {
                     <Tr key={index} bg={rank[2] == "블록쌓기" && "whiteAlpha.200"}>
                       <Td>
                         <Checkbox
-                          colorScheme="green"
+                          // colorScheme="green"
                           isChecked={checkedItems[index]}
                           onChange={(e) => {
                             let checkedTarget2 = [];

@@ -297,7 +297,7 @@ const MarketDetail = () => {
                 <ModalFooter>
                   <Button onClick={placeBidNft}>Confirm</Button>
                   <Button
-                    colorScheme="blue"
+                    // colorScheme="blue"
                     mr={3}
                     onClick={() => {
                       setCheck(false);
