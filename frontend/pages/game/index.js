@@ -19,14 +19,14 @@ const Game = () => {
       alert("로그인 안하시면 게임 안 시켜줄겁니다");
       return false;
     }
-    // NFT 홀더 확인
+    // NFT 홀더 확인용
     const haveToken = await nftContract.methods.haveTokenBool(account).call({ from: account });
-    if (!haveToken) {
-      alert("NFT를 가지고 있지 않습니다. \n 민팅하고 대표NFT를 설정해주세요.");
-      return false;
-    }
-    // 대표 NFT 설정 확인(설정 안되있으면 mypage로 보내기)
+    // 대표 NFT 설정 확인
     if (!mainNftData) {
+      if (!haveToken) {
+        alert("NFT를 가지고 있지 않습니다. \n 민팅하고 대표NFT를 설정해주세요.");
+        return false;
+      }
       alert("대표 NFT를 설정해주세요");
       return false;
     }
@@ -35,7 +35,7 @@ const Game = () => {
     if (window.confirm(`${game.description}\n게임을 플레이 하시겠습니까?`)) {
       // 선택한 게임을 useState에 담아 실행중임을 표시
       console.log("selectedGameselectedGame", selectedGame);
-
+      // 선택한 게임 페이지로 보내기
       router.push(`game/${selectedGame}`);
       return true;
     }
@@ -46,18 +46,18 @@ const Game = () => {
       <Flex w={"100%"} mb={"10px"} textAlign="center" height={"160px"} justifyContent={"center"} alignItems="center">
         {auth ? (
           mainNftData ? null : (
-            <BlankComponent receivedText={"대표 NFT가 지정되지 않았습니다"} />
+            <BlankComponent receivedText={`대표 NFT가 지정되지 않았습니다\nNFT를 스테이킹 해주세요`} />
           )
         ) : (
           <BlankComponent receivedText={"로그인 해 주세요"} />
         )}
       </Flex>
-      <Box w={"100%"} minHeight={"400px"} position={`relative`}>
-        <Flex justifyContent={"space-evenly"}>
+      <Box w={"100%"} position={`relative`}>
+        <Flex justifyContent={"space-evenly"} gap="20px">
           {GameInterface.gameList.map((game, index) => (
             <Link key={index} href={(() => selectGame(game)) == true ? `/game/${game.gameUrl}` : `/game`}>
-              <a onClick={() => selectGame(game)} style={{ width: "30%", height: "100%" }}>
-                <GameCard game={game} />
+              <a onClick={() => selectGame(game)} style={{ width: "30%", maxWidth: "300px" }}>
+                <GameCard game={game} animationDelay={index * 0.2} />
               </a>
             </Link>
           ))}

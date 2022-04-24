@@ -1,10 +1,10 @@
 import React from "react";
 
-const GameCard = ({ game }) => {
+const GameCard = ({ game, animationDelay }) => {
   return (
     <>
       <div className="game-card">
-        <div className="effect-box"></div>
+        {/* <div className="effect-box"></div> */}
         <img
           className="game-card-img"
           src={`./images/game_${game.gameId}.png`}
@@ -40,18 +40,64 @@ const GameCard = ({ game }) => {
             background-position: 0% 0%;
           }
         }
+        @keyframes slideIn {
+          0% {
+            opacity: 0;
+            transform: translateY(-100px);
+          }
+          33% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          50% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000001, #00000004);
+          }
+          55% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000002, #00000008);
+          }
+          60% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000003, #00000012);
+          }
+          65% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000004, #00000016);
+          }
+          70% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000005, #00000020);
+          }
+          75% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000006, #00000024);
+          }
+          80% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000007, #00000028);
+          }
+          85% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000008, #00000032);
+          }
+          90% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000009, #00000036);
+          }
+          95% {
+            -webkit-box-reflect: below 0px linear-gradient(#00000010, #00000040);
+          }
+          100% {
+            opacity: 1;
+            -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044);
+          }
+        }
         .game-card {
           display: flex;
           overflow: hidden;
-          width: 100%;
+          min-height: 200px;
           height: 100%;
+          max-height: 300px;
           position: relative;
           color: #1e315f;
           font-size: 50px;
           font-weight: bold;
-          -webkit-box-reflect: below 0px linear-gradient(#0001, #0004);
+          opacity: 0;
+          animation: slideIn 1s linear ${animationDelay}s forwards;
         }
-        .game-card:hover .effect-box {
+        /* .game-card:hover .effect-box {
           animation: animate 4s linear infinite;
           content: "";
           position: absolute;
@@ -74,10 +120,7 @@ const GameCard = ({ game }) => {
             0 0 20px lawngreen, 0 0 20px yellow, 0 0 20px orange, 0 0 20px red,
             0 0 30px purple, 0 0 30px navy, 0 0 30px blue, 0 0 30px lawngreen,
             0 0 30px yellow, 0 0 30px orange, 0 0 30px red;
-        }
-        .game-card-img {
-          width: 100%;
-        }
+        } */
         .game-card-box {
           display: flex;
           width: 100%;
