@@ -20,11 +20,15 @@ const BlankComponent = ({ receivedText }) => {
   return (
     <>
       <div className="blank-box">
-        <span className="blank-text">{receivedText}</span>
+        {receivedText &&
+          receivedText.map((text) => (
+            <span className="blank-text">{text}</span>
+          ))}
       </div>
       <style jsx>{`
         .blank-box {
           display: flex;
+          flex-direction: column;
           justify-content: center;
           align-items: center;
           text-align: center;

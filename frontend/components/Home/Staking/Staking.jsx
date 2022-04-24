@@ -262,7 +262,7 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
               </Flex>
             </Flex>
           ) : (
-            <BlankComponent receivedText={`대표 NFT를 지정해 주세요!`} />
+            <BlankComponent receivedText={[`대표 NFT를 지정해 주세요!`]} />
           )}
         </Flex>
         <Separator />

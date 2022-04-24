@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GameCard from "../../components/game/GameCard";
 import GameInterface from "../../components/game/GameInterface";
@@ -12,6 +12,13 @@ const Game = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, nftContract, mainNftData } = blockchain;
   const router = useRouter();
+  const [hasToken, setHasToken] = useState(false);
+
+  useEffect(async () => {
+    // NFT 홀더 확인용
+    const haveToken = await nftContract.methods.haveTokenBool(account).call({ from: account });
+    setHasToken(haveToken);
+  }, [account, auth, nftContract]);
 
   const selectGame = async (game) => {
     // 메타마스크, 홈페이지 로그인 확인
@@ -19,12 +26,10 @@ const Game = () => {
       alert("로그인 안하시면 게임 안 시켜줄겁니다");
       return false;
     }
-    // NFT 홀더 확인용
-    const haveToken = await nftContract.methods.haveTokenBool(account).call({ from: account });
     // 대표 NFT 설정 확인
     if (!mainNftData) {
-      if (!haveToken) {
-        alert("NFT를 가지고 있지 않습니다. \n 민팅하고 대표NFT를 설정해주세요.");
+      if (!hasToken) {
+        alert("NFT를 가지고 있지 않습니다.\n민팅하고 대표NFT를 설정해주세요.");
         return false;
       }
       alert("대표 NFT를 설정해주세요");
@@ -45,11 +50,15 @@ const Game = () => {
     <Flex direction={"column"} pt={{ base: "120px", md: "75px" }}>
       <Flex w={"100%"} mb={"10px"} textAlign="center" height={"160px"} justifyContent={"center"} alignItems="center">
         {auth ? (
-          mainNftData ? null : (
-            <BlankComponent receivedText={`대표 NFT가 지정되지 않았습니다\nNFT를 스테이킹 해주세요`} />
-          )
+          !mainNftData ? (
+            hasToken ? (
+              <BlankComponent receivedText={[`대표 NFT가 지정되지 않았습니다`, `NFT를 스테이킹 해주세요`]} />
+            ) : (
+              <BlankComponent receivedText={[`NFT를 가지고 있지 않습니다`, `NFT를 민팅하고 대표NFT를 지정해주세요`]} />
+            )
+          ) : null
         ) : (
-          <BlankComponent receivedText={"로그인 해 주세요"} />
+          <BlankComponent receivedText={["로그인을 해 주세요"]} />
         )}
       </Flex>
       <Box w={"100%"} position={`relative`}>

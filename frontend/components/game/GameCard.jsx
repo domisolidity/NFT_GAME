@@ -42,7 +42,6 @@ const GameCard = ({ game, animationDelay }) => {
         }
         @keyframes slideIn {
           0% {
-            opacity: 0;
             transform: translateY(-100px);
           }
           33% {
@@ -80,8 +79,8 @@ const GameCard = ({ game, animationDelay }) => {
             -webkit-box-reflect: below 0px linear-gradient(#00000010, #00000040);
           }
           100% {
-            opacity: 1;
             -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044);
+            opacity: 1;
           }
         }
         .game-card {

@@ -280,7 +280,7 @@ const Tetris = () => {
           </StyledTetrisWrapper>
         </Box>
       ) : (
-        <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
+        <BlankComponent receivedText={["로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있습니다"]} />
       )}
     </Flex>
   );
