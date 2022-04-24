@@ -52,7 +52,7 @@ const WalletList = ({ onClose }) => {
   //   }
   // };
 
-  const txtColor = useColorModeValue("#f47820 ", "orange.500");
+  const txtColor = useColorModeValue("teal.600", "teal.600");
 
   return (
     <Flex flexDirection={"column"}>

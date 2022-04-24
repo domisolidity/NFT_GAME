@@ -18,16 +18,10 @@ import {
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import routes from "../../assets/routes";
-import { useState } from "react";
 import NextLink from "next/link"
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
 
 export default function FullScreenNavbar(props) {
-
-  const [open, setOpen] = useState(false);
-  const handleDrawerToggle = () => {
-    setOpen(!open);
-  };
   const { logo, logoText, ...rest } = props;
 
   // Chakra color mode
@@ -124,7 +118,8 @@ export default function FullScreenNavbar(props) {
           />
         </Box>
         {links}
-        <ConnectWallet />
+        {true ? <ConnectWallet /> : <div>test</div>}
+
       </Flex>
     </Flex>
   );
