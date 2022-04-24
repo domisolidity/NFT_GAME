@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 const MissionReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, gameTokenContract, claim20_Contract } = blockchain;
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
 
   const [dataList, setDataList] = useState();
   const [selectedMissionData, setSelectedMissionData] = useState();
@@ -39,7 +40,7 @@ const MissionReword = () => {
 
   const importMissionAchiever = async () => {
     await axios
-      .get("/api/games/mission-achiever")
+      .get(`${NEXT_PUBLIC_SERVER_URL}/games/mission-achiever`)
       .then(async (db) => {
         console.log(db.data);
         let result = [];
@@ -99,12 +100,14 @@ const MissionReword = () => {
         .then(async (res) => {
           console.log(res);
           if (res.status) {
-            await axios.post("/api/games/mission/approved", { mission: selectedMissionData }).then(() => {
-              setLoading(false);
-              alert("승인 작업 완료");
-              setNextStep(false);
-              setLastStep(true);
-            });
+            await axios
+              .post(`${NEXT_PUBLIC_SERVER_URL}/games/mission/approved`, { mission: selectedMissionData })
+              .then(() => {
+                setLoading(false);
+                alert("승인 작업 완료");
+                setNextStep(false);
+                setLastStep(true);
+              });
           }
         });
     } catch (error) {

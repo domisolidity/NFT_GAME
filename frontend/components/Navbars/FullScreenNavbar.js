@@ -15,22 +15,16 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  TimLogo,
-  DocumentIcon,
-  HomeIcon,
-  PersonIcon,
-  RocketIcon,
-} from "../Icons/Icons";
+import { TimLogo, DocumentIcon, HomeIcon, PersonIcon, RocketIcon } from "../Icons/Icons";
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 
 import routes from "../../components/routes";
 
 import { useState } from "react";
-import NextLink from "next/link"
+import NextLink from "next/link";
 import { Separator } from "../Separator/Separator";
-import WalletList from '../Navbars/ConnectWallet/WalletList'
+import WalletList from "../Navbars/ConnectWallet/WalletList";
 
 export default function FullScreenNavbar(props) {
   const contractAddress = "컨트랙트주소";
@@ -109,9 +103,7 @@ export default function FullScreenNavbar(props) {
           me={{ sm: "2px", md: "16px" }}
           color={navbarIcon}
           variant="transparent-with-icon"
-          leftIcon={
-            <RocketIcon color={navbarIcon} w="12px" h="12px" me="0px" />
-          }
+          leftIcon={<RocketIcon color={navbarIcon} w="12px" h="12px" me="0px" />}
         >
           <Text>Game</Text>
         </Button>
@@ -119,8 +111,7 @@ export default function FullScreenNavbar(props) {
     </HStack>
   );
 
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Flex
       position={navbarPosition}

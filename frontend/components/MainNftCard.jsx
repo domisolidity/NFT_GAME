@@ -10,7 +10,8 @@ const MainNftCard = (props) => {
   const { account, auth, nftContract } = blockchain;
   const [mainNFT, setMainNFT] = useState("");
   const LS_KEY = "login-with-metamask:auth";
-  const baseUri = "http://127.0.0.1:8080/ipfs";
+  const baseUri = "https://gateway.pinata.cloud/ipfs";
+
   const [currentImage, setCurrentImage] = useState("");
   const [accessToken, setAccessToken] = useState("");
 

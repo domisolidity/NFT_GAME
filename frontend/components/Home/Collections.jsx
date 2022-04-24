@@ -24,7 +24,7 @@ const Collections = () => {
 
   const [myNfts, setMyNfts] = useState([]);
 
-  const baseUri = "http://127.0.0.1:8080/ipfs";
+  const baseUri = "https://gateway.pinata.cloud/ipfs";
 
   const getMyNfts = async () => {
     try {
@@ -113,7 +113,7 @@ const Collections = () => {
                 <Box key={index}>
                   <Link
                     href={{
-                      pathname: `mypage/${mynft.id}`,
+                      pathname: `home/${mynft.id}`,
                       query: {
                         id: mynft.id,
                         grade: mynft.grade,
@@ -123,7 +123,7 @@ const Collections = () => {
                         description: mynft.description,
                       },
                     }}
-                    as={`mypage/${mynft.id}`}
+                    as={`home/${mynft.id}`}
                   >
                     {/* id, grade, attributes, name, image, description */}
                     <a>

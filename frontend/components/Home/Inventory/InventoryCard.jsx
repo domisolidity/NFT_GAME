@@ -18,6 +18,7 @@ import NotFound from "../../utils/NotFound";
 const InventoryCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
 
   const txtColor = useColorModeValue("gray.600", "gray.300");
 
@@ -27,7 +28,7 @@ const InventoryCard = (props) => {
   // 내 아이템 개수 불러오기
   const getMyItemQuantity = async () => {
     await axios
-      .post(`/api/items/game-items/my-items-quantity`, {
+      .post(`${NEXT_PUBLIC_SERVER_URL}/items/game-items/my-items-quantity`, {
         account: account,
         itemName: props.itemName,
       })

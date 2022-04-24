@@ -1,5 +1,10 @@
 .secret
 build
+
+contracts/artifacts
+# # 배포용
+# /*
+# !/build/
 # Logs
 logs
 *.log
@@ -62,6 +67,5 @@ typings/
 # next.js build output
 .next
 
-frontend/contracts/artifacts
 
 package-lock.json

@@ -2,7 +2,6 @@
 const Dotenv = require("dotenv-webpack");
 
 module.exports = {
-  distDir: "build",
   reactStrictMode: true,
   webpack: (config) => {
     // 기존의 웹팩 플러그인에 새로운 Dotenv플러그인을 연결시켜준다.
@@ -11,12 +10,12 @@ module.exports = {
 
     return config;
   },
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: "http://localhost:5000/:path*",
-      },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/api/:path*",
+  //       destination: "http://localhost:5000/:path*",
+  //     },
+  //   ];
+  // },
 };

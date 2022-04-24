@@ -21,7 +21,7 @@ const Market_nft_auction = () => {
   });
   const [qqqq, setqqqq] = useState(false);
 
-  const baseUrl = "http://127.0.0.1:8080/ipfs/";
+  const baseUrl = "https://gateway.pinata.cloud/ipfs/";
 
   const getAuctionNft = async () => {
     const currentBlockNum = await auctionCreatorContract.methods

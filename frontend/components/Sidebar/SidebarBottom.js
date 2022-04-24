@@ -10,7 +10,7 @@ export function SidebarBottom(props) {
 
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, mainNftData } = blockchain;
-  const baseUri = "http://127.0.0.1:8080/ipfs";
+  const baseUri = "https://gateway.pinata.cloud/ipfs";
 
   const [dailyMission, setDailyMission] = useState([]);
 

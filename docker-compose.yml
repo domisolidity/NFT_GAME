@@ -1,40 +1,43 @@
 version: "3"
 services:
-    frontend:
-        build:
-            dockerfile: Dockerfile.dev
-            context: ./frontend
-        volumes:
-            - /app/node_modules
-            - ./frontend:/app
-        stdin_open: true
-
     nginx:
         restart: always
-        build:
-            dockerfile: Dockerfile
-            context: ./nginx
+        image: achievedw/doremi-games-nginx
         ports:
-            - "3000:80"
+            - "80:80"
 
-    backend:
-        build:
-            dockerfile: Dockerfile.dev
-            context: ./backend
-        container_name: app_backend
+    node:
+        image: achievedw/doremi-games-node
         volumes:
-            - /app/node_modules
-            - ./backend:/app
-
-    mysql:
-        build: ./mysql
-        restart: unless-stopped
-        container_name: app_mysql
+            - "./backend:/usr/src/node"
+            - "/usr/src/node/node_modules"
         ports:
-            - "3306:3306"
-        volumes:
-            - ./mysql/mysql_data:/var/lib/mysql
-            - ./mysql/sqls/:/docker-entrypoint-initdb.d/
+            - "5000:5000"
         environment:
-            MYSQL_ROOT_PASSWORD: 12345678
-            MYSQL_DATABASE: doremifa
+            ENV MYSQL_USERNAME: admin
+            ENV MYSQL_PASSWORD: 12345678
+            ENV MYSQL_DATABASE: doremifa
+            ENV MYSQL_HOST: nft-game.cirtolity6b8.ap-northeast-2.rds.amazonaws.com
+            ENV MYSQL_PORT: 3306
+            ENV COOKIE_SECRET: cookie
+            ENV S3_ACCESS_KEY_ID: AKIAYUVDTOFOENDWM4N4
+            ENV S3_SECRET_ACCESS_KEY: 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
+
+    next:
+        restart: "on-failure"
+        image: achievedw/doremi-games-next
+        volumes:
+            - "./frontend:/usr/src/next"
+            - "/usr/src/next/node_modules"
+            - "/usr/src/next/.next"
+        ports:
+            - "3000:3000"
+        environment:
+            NEXT_PUBLIC_PUBLIC_URL: http://localhost:3000
+            NEXT_PUBLIC_SERVER_URL: http://localhost:5000
+            NEXT_PUBLIC_METADATA: ipfs://QmaGTbhBGBfdH6gXLoC4V5GScY1mtxac4Ye6ynA1Djw6mZ
+            NEXT_PUBLIC_METADATA_HASH: QmaGTbhBGBfdH6gXLoC4V5GScY1mtxac4Ye6ynA1Djw6mZ
+            NEXT_PUBLIC_OWNER: 0xbe005997cc214577c575cab11d0430777145a7dd
+            INFURA_API_KEY: cba254c660424d54b6b389e670b0b83f
+            MORALIS_API_KEY: 6d07be67282f3a49b070f6c1
+            ETHERSCAN_API_KEY: 96XSXDDAVT2IJEH1JICMPS5G1V2SZE39JI

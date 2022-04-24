@@ -40,12 +40,7 @@ export default function HeaderLinks(props) {
   }
   const settingsRef = React.useRef();
   return (
-    <Flex
-      pe={{ sm: "0px", md: "16px" }}
-      w={{ sm: "100%", md: "auto" }}
-      alignItems="center"
-      flexDirection="row"
-    >
+    <Flex pe={{ sm: "0px", md: "16px" }} w={{ sm: "100%", md: "auto" }} alignItems="center" flexDirection="row">
       <InputGroup
         cursor="pointer"
         bg={inputBg}
@@ -80,13 +75,7 @@ export default function HeaderLinks(props) {
             ></IconButton>
           }
         />
-        <Input
-          fontSize="xs"
-          py="11px"
-          color={mainText}
-          placeholder="Type here..."
-          borderRadius="inherit"
-        />
+        <Input fontSize="xs" py="11px" color={mainText} placeholder="Type here..." borderRadius="inherit" />
       </InputGroup>
       {/* <Link href="/home" passHref>
         <Button
@@ -133,7 +122,6 @@ export default function HeaderLinks(props) {
                 aSrc={Profile}
               />
     </MenuItem>*/}
-
           </Flex>
         </MenuList>
       </Menu>

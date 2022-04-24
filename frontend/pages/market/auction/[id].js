@@ -33,7 +33,7 @@ import AuctionInfo from "../../../components/market/auction/AuctionInfo.jsx";
 import Countdown from "../../../components/utils/Countdown";
 import AuctionContract from "../../../contracts/artifacts/Auction.json";
 
-const MarketDetail = () => {
+const MarketDetail_auction = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, auctionCreatorContract } = blockchain;
   const router = useRouter();
@@ -349,4 +349,4 @@ const MarketDetail = () => {
   );
 };
 
-export default MarketDetail;
+export default MarketDetail_auction;

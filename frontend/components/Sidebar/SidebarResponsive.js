@@ -14,7 +14,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import IconBox from "../../components/Icons/IconBox";
 import { TimLogo } from "../../components/Icons/Icons";
@@ -108,13 +108,7 @@ function SidebarResponsive(props) {
                 {typeof prop.icon === "string" ? (
                   <Icon>{prop.icon}</Icon>
                 ) : (
-                  <IconBox
-                    bg="teal.300"
-                    color="white"
-                    h="30px"
-                    w="30px"
-                    me="12px"
-                  >
+                  <IconBox bg="teal.300" color="white" h="30px" w="30px" me="12px">
                     {prop.icon}
                   </IconBox>
                 )}
@@ -156,13 +150,7 @@ function SidebarResponsive(props) {
                 {typeof prop.icon === "string" ? (
                   <Icon>{prop.icon}</Icon>
                 ) : (
-                  <IconBox
-                    bg={inactiveBg}
-                    color="teal.300"
-                    h="30px"
-                    w="30px"
-                    me="12px"
-                  >
+                  <IconBox bg={inactiveBg} color="teal.300" h="30px" w="30px" me="12px">
                     {prop.icon}
                   </IconBox>
                 )}
@@ -213,25 +201,9 @@ function SidebarResponsive(props) {
   const btnRef = React.useRef();
   // Color variables
   return (
-    <Flex
-      display={{ sm: "flex", xl: "none" }}
-      ref={mainPanel}
-      alignItems="center"
-    >
-      <HamburgerIcon
-        color={hamburgerColor}
-        w="18px"
-        h="18px"
-        ref={btnRef}
-        colorScheme="teal"
-        onClick={onOpen}
-      />
-      <Drawer
-        isOpen={isOpen}
-        onClose={onClose}
-        placement={"left"}
-        finalFocusRef={btnRef}
-      >
+    <Flex display={{ sm: "flex", xl: "none" }} ref={mainPanel} alignItems="center">
+      <HamburgerIcon color={hamburgerColor} w="18px" h="18px" ref={btnRef} colorScheme="teal" onClick={onOpen} />
+      <Drawer isOpen={isOpen} onClose={onClose} placement={"left"} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent
           w="250px"
@@ -244,10 +216,7 @@ function SidebarResponsive(props) {
           }}
           borderRadius="16px"
         >
-          <DrawerCloseButton
-            _focus={{ boxShadow: "none" }}
-            _hover={{ boxShadow: "none" }}
-          />
+          <DrawerCloseButton _focus={{ boxShadow: "none" }} _hover={{ boxShadow: "none" }} />
           <DrawerBody maxW="250px" px="1rem">
             <Box maxW="100%" h="100vh">
               <Box>{brand}</Box>
@@ -263,4 +232,4 @@ function SidebarResponsive(props) {
   );
 }
 
-export default SidebarResponsive
+export default SidebarResponsive;
