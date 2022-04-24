@@ -60,7 +60,8 @@ const GameCard = ({ game, animationDelay }) => {
           font-size: 50px;
           font-weight: bold;
           opacity: 0;
-          animation: slideIn 0.8s ease ${animationDelay}s forwards;
+          animation: slideIn 2s cubic-bezier(0, 1, 0, 1) ${animationDelay}s
+            forwards;
         }
         /* .game-card:hover .effect-box {
           animation: animate 4s linear infinite;
