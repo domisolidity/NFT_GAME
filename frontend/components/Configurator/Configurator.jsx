@@ -14,7 +14,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Separator } from "../../components/Separator/Separator";
+import { Separator } from "../Separator/Separator";
 import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
 import Link from "next/link";
@@ -31,7 +31,10 @@ export default function Configurator(props) {
     fixedDisplay = "none";
   }
 
-  let bgButton = useColorModeValue("linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)", "white");
+  let bgButton = useColorModeValue(
+    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
+    "white"
+  );
   let colorButton = useColorModeValue("white", "gray.700");
   const secondaryButtonBg = useColorModeValue("white", "transparent");
   const secondaryButtonBorder = useColorModeValue("gray.700", "white");
@@ -95,7 +98,11 @@ export default function Configurator(props) {
                   </Button>
                 </Flex>
               </Box>
-              <Box display={fixedDisplay} justifyContent="space-between" mb="16px">
+              <Box
+                display={fixedDisplay}
+                justifyContent="space-between"
+                mb="16px"
+              >
                 <Text fontSize="md" fontWeight="600" mb="4px">
                   Top Navbar Fixed
                 </Text>
@@ -113,7 +120,11 @@ export default function Configurator(props) {
                   }}
                 />
               </Box>
-              <Flex justifyContent="space-between" alignItems="center" mb="24px">
+              <Flex
+                justifyContent="space-between"
+                alignItems="center"
+                mb="24px"
+              >
                 <Text fontSize="md" fontWeight="600" mb="4px">
                   Dark Mode
                 </Text>

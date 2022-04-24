@@ -53,7 +53,6 @@ export default function Navbar(props) {
     variant,
     children,
     fixed,
-    secondary,
     brandText,
     ...rest
   } = props;
@@ -86,14 +85,7 @@ export default function Navbar(props) {
         "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))"
       );
     }
-  if (props.secondary) {
-    navbarBackdrop = "none";
-    navbarPosition = "absolute";
-    mainText = "white";
-    secondaryText = "white";
-    secondaryMargin = "22px";
-    paddingX = "30px";
-  }
+
   const changeNavbar = () => {
     if (window.scrollY > 1) {
       setScrolled(true);
@@ -189,7 +181,6 @@ export default function Navbar(props) {
           <NavbarLinks
             onOpen={props.onOpen}
             logoText={props.logoText}
-            secondary={props.secondary}
             fixed={props.fixed}
           />
         </Box>
@@ -203,7 +194,6 @@ export default function Navbar(props) {
 Navbar.propTypes = {
   brandText: PropTypes.string,
   variant: PropTypes.string,
-  secondary: PropTypes.bool,
   fixed: PropTypes.bool,
   onOpen: PropTypes.func,
 };

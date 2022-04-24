@@ -142,7 +142,7 @@ const RankingReword = () => {
   }, [account]);
 
   return (
-    <Box w="70vw" bg="blackAlpha.400" margin="0 auto" padding="10" border="2px solid gray" borderRadius="10">
+    <Box pt={{ base: "120px", md: "75px" }}>
       <Flex justify="space-between">
         <Box>
           <Heading display="inline">

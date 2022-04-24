@@ -36,8 +36,8 @@ function Sidebar(props) {
         <Box
           bg={sidebarBg}
           transition={variantChange}
-          w="260px"
-          maxW="260px"
+          w="200px"
+          maxW="200px"
           ms={{
             sm: "16px",
           }}

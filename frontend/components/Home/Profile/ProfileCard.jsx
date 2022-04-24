@@ -20,6 +20,8 @@ import {
   useColorModeValue,
   useEditableControls,
 } from "@chakra-ui/react";
+import { FaCube, FaPenFancy } from "react-icons/fa";
+import { IoDocumentsSharp } from "react-icons/io5";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -27,6 +29,7 @@ import Cookies from "js-cookie";
 
 import ImageUpload from "./ImageUpload";
 import UpdateProfile from "./UpdateProfile";
+import Header from "./Header";
 
 const ProfileCard = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -132,6 +135,23 @@ const ProfileCard = () => {
 
   return (
     <>
+      <Header
+        backgroundHeader={Images}
+        backgroundProfile={Images}
+        avatarImage={Images ? Images : "/circle.png"}
+        name={userName ? userName : "Player"}
+        account={account ? account : null}
+        tabs={[
+          {
+            name: "TEAMS",
+            icon: <IoDocumentsSharp w="100%" h="100%" />,
+          },
+          {
+            name: "PROJECTS",
+            icon: <FaPenFancy w="100%" h="100%" />,
+          },
+        ]}
+      />
       <SimpleGrid
         columns={{ sm: 1, md: 2 }}
         pt={{ base: "120px", md: "75px" }}

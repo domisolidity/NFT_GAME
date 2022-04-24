@@ -10,8 +10,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Custom components
-import Card from "../Card/Card.js";
-import CardBody from "../Card/CardBody.js";
+import Card from "../Card/Card";
+import CardBody from "../Card/CardBody";
 import IconBox from "../Icons/IconBox";
 
 const MiniStatus = ({ title, amount, unit, icon }) => {

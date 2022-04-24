@@ -42,7 +42,7 @@ const Admin = () => {
   };
 
   return (
-    <Box mt="5%">
+    <Box pt={{ base: "120px", md: "75px" }}>
       <Heading align="center">
         <span> Managing Reward System </span>
       </Heading>

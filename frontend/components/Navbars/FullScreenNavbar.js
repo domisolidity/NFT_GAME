@@ -17,7 +17,7 @@ import {
 } from "../Icons/Icons";
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
-import routes from "../../components/routes";
+import routes from "../../assets/routes";
 import { useState } from "react";
 import NextLink from "next/link"
 import ConnectWallet from "./ConnectWallet/ConnectWallet";

@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 // Custom components
 import Card from "../Card/Card";
-import CardBody from "../Card/CardBody.js";
-import CardHeader from "../Card/CardHeader.js";
+import CardBody from "../Card/CardBody";
+import CardHeader from "../Card/CardHeader";
 import TablesTableRow from "../Tables/TablesTableRow";
 import { useSelector } from "react-redux";
 import RankingTable from "./RankingTable";

@@ -3,7 +3,6 @@ import { Flex, Tabs, TabList, Tab } from "@chakra-ui/react";
 const SubMenuList = ({ subMenu, getSelectedSubMenu }) => {
   return (
     <Flex
-      // shadow="md"
       w={"100%"}
       alignItems="center"
       justifyContent="center"

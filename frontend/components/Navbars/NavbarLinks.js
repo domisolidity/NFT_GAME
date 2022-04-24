@@ -22,10 +22,10 @@ import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import React from "react";
 // import { NavLink } from "react-router-dom";
-import routes from "../routes";
+import routes from "../../assets/routes";
 
 export default function HeaderLinks(props) {
-  const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+  const { variant, children, fixed, onOpen, ...rest } = props;
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -34,10 +34,6 @@ export default function HeaderLinks(props) {
   let navbarIcon = useColorModeValue("gray.500", "gray.200");
   let searchIcon = useColorModeValue("gray.700", "gray.200");
 
-  if (secondary) {
-    navbarIcon = "white";
-    mainText = "white";
-  }
   const settingsRef = React.useRef();
   return (
     <Flex
@@ -103,7 +99,6 @@ export default function HeaderLinks(props) {
       </Link> */}
       <SidebarResponsive
         logoText={props.logoText}
-        secondary={props.secondary}
         routes={routes}
         // logo={logo}
         {...rest}
@@ -144,6 +139,6 @@ export default function HeaderLinks(props) {
 HeaderLinks.propTypes = {
   variant: PropTypes.string,
   fixed: PropTypes.bool,
-  secondary: PropTypes.bool,
+
   onOpen: PropTypes.func,
 };

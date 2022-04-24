@@ -199,13 +199,15 @@ function SidebarResponsive(props) {
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
-        placement={"left"}
+        placement={"right"}
         finalFocusRef={btnRef}
+        allowPinchZoom
+        preserveScrollBarGap
       >
         <DrawerOverlay />
         <DrawerContent
-          w="250px"
-          maxW="250px"
+          w="180px"
+          maxW="180px"
           ms={{
             sm: "16px",
           }}
@@ -224,7 +226,7 @@ function SidebarResponsive(props) {
               <Stack direction="column" mb="40px">
                 <Box>{links}</Box>
               </Stack>
-              <SidebarBottom></SidebarBottom>
+              <SidebarBottom />
             </Box>
           </DrawerBody>
         </DrawerContent>
