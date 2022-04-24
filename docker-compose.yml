@@ -13,15 +13,8 @@ services:
             - "/usr/src/node/node_modules"
         ports:
             - "5000:5000"
-        environment:
-            ENV MYSQL_USERNAME: admin
-            ENV MYSQL_PASSWORD: 12345678
-            ENV MYSQL_DATABASE: doremifa
-            ENV MYSQL_HOST: nft-game.cirtolity6b8.ap-northeast-2.rds.amazonaws.com
-            ENV MYSQL_PORT: 3306
-            ENV COOKIE_SECRET: cookie
-            ENV S3_ACCESS_KEY_ID: AKIAYUVDTOFOENDWM4N4
-            ENV S3_SECRET_ACCESS_KEY: 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
+        env_file:
+            - ./backend/.env
 
     next:
         restart: "on-failure"
@@ -32,12 +25,5 @@ services:
             - "/usr/src/next/.next"
         ports:
             - "3000:3000"
-        environment:
-            NEXT_PUBLIC_PUBLIC_URL: http://localhost:3000
-            NEXT_PUBLIC_SERVER_URL: http://localhost:5000
-            NEXT_PUBLIC_METADATA: ipfs://QmaGTbhBGBfdH6gXLoC4V5GScY1mtxac4Ye6ynA1Djw6mZ
-            NEXT_PUBLIC_METADATA_HASH: QmaGTbhBGBfdH6gXLoC4V5GScY1mtxac4Ye6ynA1Djw6mZ
-            NEXT_PUBLIC_OWNER: 0xbe005997cc214577c575cab11d0430777145a7dd
-            INFURA_API_KEY: cba254c660424d54b6b389e670b0b83f
-            MORALIS_API_KEY: 6d07be67282f3a49b070f6c1
-            ETHERSCAN_API_KEY: 96XSXDDAVT2IJEH1JICMPS5G1V2SZE39JI
+        env_file:
+            - ./frontend/.env
