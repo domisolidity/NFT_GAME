@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, keyframes } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GameCard from "../../components/game/GameCard";
@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import BlankComponent from "../../components/utils/BlankComponent";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
+import { motion } from "framer-motion";
 
 const Game = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -15,6 +16,7 @@ const Game = () => {
   const [hasToken, setHasToken] = useState(false);
 
   useEffect(async () => {
+    if (!(account && auth && nftContract)) return;
     // NFT 홀더 확인용
     const haveToken = await nftContract.methods.haveTokenBool(account).call({ from: account });
     setHasToken(haveToken);
@@ -45,6 +47,11 @@ const Game = () => {
       return true;
     }
   };
+  const reflectKeyframes = keyframes`
+    from { -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044) }
+    to { -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044) }
+  `;
+  const reflect = `${reflectKeyframes} 0s linear 0s forwards`;
 
   return (
     <Flex direction={"column"} pt={{ base: "120px", md: "75px" }}>
@@ -61,7 +68,7 @@ const Game = () => {
           <BlankComponent receivedText={["로그인을 해 주세요"]} />
         )}
       </Flex>
-      <Box w={"100%"} position={`relative`}>
+      <Box w={"100%"} position={`relative`} as={motion.div} animation={reflect}>
         <Flex justifyContent={"space-evenly"} gap="20px">
           {GameInterface.gameList.map((game, index) => (
             <Link key={index} href={(() => selectGame(game)) == true ? `/game/${game.gameUrl}` : `/game`}>

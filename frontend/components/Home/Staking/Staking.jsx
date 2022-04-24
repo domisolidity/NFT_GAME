@@ -232,8 +232,9 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
               w="100px"
               h="100px"
               borderRadius={"15px"}
+              onClick={onOpen}
             >
-              <Img src={"plus.svg"} onClick={onOpen} />
+              <Img src={"plus.svg"} />
             </Button>
           )}
           {mainNftData ? (

@@ -44,43 +44,9 @@ const GameCard = ({ game, animationDelay }) => {
           0% {
             transform: translateY(-100px);
           }
-          33% {
+          100% {
             opacity: 1;
             transform: translateY(0);
-          }
-          50% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000001, #00000004);
-          }
-          55% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000002, #00000008);
-          }
-          60% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000003, #00000012);
-          }
-          65% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000004, #00000016);
-          }
-          70% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000005, #00000020);
-          }
-          75% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000006, #00000024);
-          }
-          80% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000007, #00000028);
-          }
-          85% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000008, #00000032);
-          }
-          90% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000009, #00000036);
-          }
-          95% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000010, #00000040);
-          }
-          100% {
-            -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044);
-            opacity: 1;
           }
         }
         .game-card {
@@ -94,7 +60,7 @@ const GameCard = ({ game, animationDelay }) => {
           font-size: 50px;
           font-weight: bold;
           opacity: 0;
-          animation: slideIn 1s linear ${animationDelay}s forwards;
+          animation: slideIn 0.8s ease ${animationDelay}s forwards;
         }
         /* .game-card:hover .effect-box {
           animation: animate 4s linear infinite;
