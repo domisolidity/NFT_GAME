@@ -49,6 +49,14 @@ const GameCard = ({ game, animationDelay }) => {
             transform: translateY(0);
           }
         }
+        @keyframes textIn {
+          0% {
+            transform: translateY(100%);
+          }
+          100% {
+            transform: translateY(50%);
+          }
+        }
         .game-card {
           display: flex;
           overflow: hidden;
@@ -105,6 +113,16 @@ const GameCard = ({ game, animationDelay }) => {
         .game-card-box:hover {
           opacity: 1;
           cursor: pointer;
+        }
+        .game-card-box .game-card-text {
+          position: absolute;
+          transform: translateY(50%);
+          bottom: -10%;
+          transition-duration: 0.3s;
+          transition-timing-function: linear;
+        }
+        .game-card-box:hover .game-card-text {
+          bottom: 50%;
         }
       `}</style>
     </>
