@@ -1,31 +1,30 @@
 version: "3"
 services:
     nginx:
-        restart: always
-        image: achievedw/doremi-games-nginx
+        container_name: "nginx"
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
         ports:
             - "80:80"
         depends_on:
             - node
-
     node:
-        image: achievedw/doremi-games-node
-        volumes:
-            - "./backend:/usr/src/node"
-            - "/usr/src/node/node_modules"
+        container_name: "node"
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
         ports:
             - "5000:5000"
-        env_file:
-            - ./backend/.env
-
     next:
+        container_name: "next"
         restart: "on-failure"
-        image: achievedw/doremi-games-next
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
         volumes:
             - "./frontend:/usr/src/next"
             - "/usr/src/next/node_modules"
             - "/usr/src/next/.next"
         ports:
             - "3000:3000"
-        env_file:
-            - ./frontend/.env

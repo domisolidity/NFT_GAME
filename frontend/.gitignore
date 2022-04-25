@@ -1,5 +1,4 @@
 .secret
-build
 
 contracts/artifacts
 # # 배포용
@@ -11,7 +10,7 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
+.env
 # Runtime data
 pids
 *.pid
