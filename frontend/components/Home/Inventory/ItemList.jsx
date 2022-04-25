@@ -19,8 +19,11 @@ const ItemList = ({ gameItems }) => {
 
   return (
     <>
-      <Box m={"0 auto"}>
-        <SimpleGrid columns={{ sm: 2, md: 3, lg: 4, xl: 5 }}>
+      <Box m={"0 auto"} w="100%">
+        <SimpleGrid
+          justifyContent="center"
+          gridTemplateColumns="repeat(auto-fill, minmax(260px, auto))"
+        >
           {hasQuantity.length <= gameItems.length ? (
             gameItems.map((item, index) => {
               return (

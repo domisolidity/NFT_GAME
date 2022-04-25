@@ -6,7 +6,7 @@ import ClaimHistory from "./ClaimHistory";
 import MissionClaimCard from "./MissionClaimCard";
 import RankingClaimCard from "./RankingClaimCard";
 
-const Claim = (props) => {
+const Claim = ({ onUpdate, as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, claim20_Contract } = blockchain;
 
@@ -50,7 +50,7 @@ const Claim = (props) => {
 
         setRewardAmount_mission(mission.data.length);
         setClaimableMission(missionRewardData);
-        props.onUpdate();
+        onUpdate();
       });
   };
 
@@ -90,7 +90,13 @@ const Claim = (props) => {
 
   return (
     <>
-      <Grid templateColumns="repeat(4, 1fr)" mt="10" gap={5}>
+      <Grid
+        as={as}
+        animation={slideIn}
+        templateColumns="repeat(4, 1fr)"
+        mt="10"
+        gap={5}
+      >
         <GridItem colSpan={1}>
           <RankingClaimCard
             claimInfo={claimableRank}

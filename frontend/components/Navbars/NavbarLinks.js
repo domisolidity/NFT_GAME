@@ -2,6 +2,7 @@
 import { BellIcon, SearchIcon } from "@chakra-ui/icons";
 // Chakra Imports
 import {
+  Box,
   Button,
   Flex,
   IconButton,
@@ -36,12 +37,7 @@ export default function HeaderLinks(props) {
 
   const settingsRef = React.useRef();
   return (
-    <Flex
-      pe={{ sm: "0px", md: "16px" }}
-      w={{ sm: "100%", md: "auto" }}
-      alignItems="center"
-      flexDirection="row"
-    >
+    <Flex pe={{ sm: "0px", md: "16px" }} w={{ sm: "100%", md: "auto" }} alignItems="center" flexDirection="row">
       <InputGroup
         cursor="pointer"
         bg={inputBg}
@@ -76,13 +72,7 @@ export default function HeaderLinks(props) {
             ></IconButton>
           }
         />
-        <Input
-          fontSize="xs"
-          py="11px"
-          color={mainText}
-          placeholder="Type here..."
-          borderRadius="inherit"
-        />
+        <Input fontSize="xs" py="11px" color={mainText} placeholder="Type here..." borderRadius="inherit" />
       </InputGroup>
       {/* <Link href="/home" passHref>
         <Button
@@ -103,18 +93,31 @@ export default function HeaderLinks(props) {
         // logo={logo}
         {...rest}
       />
-      <SettingsIcon
+      <Box
+        ml="5px"
+        p="6px 9px 6px 10px"
+        borderRadius={"10px"}
+        transitionDuration="0.5s"
         cursor="pointer"
-        ms={{ base: "16px", xl: "0px" }}
-        me="16px"
-        ref={settingsRef}
+        _hover={{ bgColor: "whiteAlpha.200" }}
+        w="38px"
+        h="38px"
         onClick={props.onOpen}
-        color={navbarIcon}
-        w="18px"
-        h="18px"
-      />
+      >
+        <SettingsIcon ref={settingsRef} color={navbarIcon} w="18px" h="18px" />
+      </Box>
+
       <Menu>
-        <MenuButton>
+        <MenuButton
+          ml="5px"
+          p="4px 9px 6px 10px"
+          borderRadius={"10px"}
+          transitionDuration="0.5s"
+          cursor="pointer"
+          _hover={{ bgColor: "whiteAlpha.200" }}
+          w="38px"
+          h="38px"
+        >
           <BellIcon color={navbarIcon} w="18px" h="18px" />
         </MenuButton>
         <MenuList p="16px 8px">
@@ -128,7 +131,6 @@ export default function HeaderLinks(props) {
                 aSrc={Profile}
               />
     </MenuItem>*/}
-
           </Flex>
         </MenuList>
       </Menu>

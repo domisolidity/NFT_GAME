@@ -76,15 +76,15 @@ export default function Home() {
   const returnMenu = (display) => {
     switch (display) {
       case "NOTICE":
-        return <Notice />;
+        return <Notice as={motion.div} slideIn={slideIn[5]} />;
       case "INVENTORY":
-        return <Inventory />;
+        return <Inventory as={motion.div} slideIn={slideIn[5]} />;
       case "CLAIM":
-        return <ClaimInfoCard onUpdate={updateToken} />;
+        return <ClaimInfoCard as={motion.div} slideIn={slideIn[5]} onUpdate={updateToken} />;
       case "STAKING":
-        return <Staking />;
+        return <Staking as={motion.div} slideIn={slideIn[5]} />;
       case "PROFILE":
-        return <ProfileCard />;
+        return <ProfileCard as={motion.div} slideIn={slideIn[5]} />;
       default:
         break;
     }
@@ -106,6 +106,7 @@ export default function Home() {
     `${slideInKeyframes} 0.3s linear 0.4s forwards`,
     `${slideInKeyframes} 0.3s linear 0.6s forwards`,
     `${slideInSubKeyframes} 0.3s linear 0.8s forwards`,
+    `${slideInSubKeyframes} 0.3s linear 0s forwards`,
   ];
 
   return (

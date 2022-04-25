@@ -12,9 +12,16 @@ import {
 } from "@chakra-ui/react";
 import Clock from "../../utils/Clock";
 
-const Notice = () => {
+const Notice = ({ as, slideIn }) => {
   return (
-    <Flex w="full" alignItems="center" justifyContent="center" mt={5}>
+    <Flex
+      as={as}
+      animation={slideIn}
+      w="full"
+      alignItems="center"
+      justifyContent="center"
+      mt={5}
+    >
       <Box
         py="64px"
         px="10"

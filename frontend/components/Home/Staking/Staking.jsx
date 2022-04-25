@@ -27,7 +27,7 @@ import { regMainNft } from "../../../redux/blockchain/blockchainActions";
 import BlankComponent from "../../utils/BlankComponent";
 import RewardHistory from "./RewardHistory";
 
-const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
+const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const blockchain = useSelector((state) => state.blockchain);
@@ -184,6 +184,8 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
 
   return (
     <Box
+      as={as}
+      animation={slideIn}
       minH={"300px"}
       backgoundColor={`var(--chakra-colors-${
         mainNftData && mainNftData.mainNftJson.grade
