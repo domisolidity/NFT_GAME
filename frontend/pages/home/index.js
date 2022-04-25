@@ -2,20 +2,22 @@
 import { Box, Flex, SimpleGrid, useColorModeValue, keyframes } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 // Custom icons
-import { CartIcon, DocumentIcon, GlobeIcon, WalletIcon } from "../../components/Icons/Icons";
+import { CartIcon, DocumentIcon, TimLogo, WalletIcon } from "../../components/Icons/Icons";
 import MiniStatus from "../../components/Home/MiniStatus";
 
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import SubMenuList from "../../components/Menu/SubMenuList";
 import ProfileCard from "../../components/Home/Profile/ProfileCard";
 import Inventory from "../../components/Home/Inventory/Inventory";
 import Notice from "../../components/Home/Notice/Notice";
 import Staking from "../../components/Home/Staking/Staking";
-import ClaimInfoCard from "../../components/Home/ClaimInfoCard";
+import ClaimInfoCard from "../../components/Home/Claim/Claim";
 
 export default function Home() {
+  const dispatch = useDispatch();
+
   const iconBoxInside = useColorModeValue("white", "white");
 
   const blockchain = useSelector((state) => state.blockchain);
@@ -49,6 +51,7 @@ export default function Home() {
   const getSelectedSubMenu = (e) => {
     setSelectedSubMenu(e.target.value);
   };
+
   const updateToken = () => {
     setUpdateTrigger(!updateTrigger);
   };
@@ -122,7 +125,7 @@ export default function Home() {
           title={"Doremi Token"}
           amount={tokenBalance ? tokenBalance : "---"}
           unit={"DGT"}
-          icon={<GlobeIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
+          icon={<TimLogo h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
         <MiniStatus
           as={motion.div}

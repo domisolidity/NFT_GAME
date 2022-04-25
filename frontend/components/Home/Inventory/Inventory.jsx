@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Flex, Text, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import Collections from "../Collections";
+import InventoryCard from "./InventoryCard";
+import Collections from "./Collections";
 import { Separator } from "../../Separator/Separator";
 import ItemList from "./ItemList";
 
@@ -33,7 +34,7 @@ const Inventory = () => {
 
   return (
     <>
-      <SimpleGrid gap="10px">
+      <SimpleGrid>
         <Text
           fontSize={"1.5rem"}
           fontWeight="bold"
@@ -43,10 +44,10 @@ const Inventory = () => {
         >
           Items
         </Text>
-        <Separator h="2px" />
-        <Flex justifyContent="center">
-          <ItemList gameItems={gameItems} />
-        </Flex>
+        <Separator />
+
+        <ItemList gameItems={gameItems} />
+
         <Text
           fontSize={"1.5rem"}
           fontWeight="bold"

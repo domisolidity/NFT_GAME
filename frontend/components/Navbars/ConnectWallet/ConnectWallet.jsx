@@ -1,20 +1,55 @@
-import { Button, useColorModeValue } from "@chakra-ui/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { Separator } from "../../Separator/Separator";
+import WalletList from "./WalletList";
 
-const ConnectWallet = ({ onOpen }) => {
+const ConnectWallet = () => {
   const txtColor = useColorModeValue("#f47820 ", "orange.500");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  let bgButton = useColorModeValue(
+    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
+    "gray.800"
+  );
+  let colorButton = "white";
 
   return (
-    <Button
-      borderRadius={"22px"}
-      h={"44px"}
-      p={"0 22px"}
-      color={txtColor}
-      onClick={onOpen}
-      fontSize={"14px"}
-      boxShadow={"0 2px 10px rgb(0 0 0 / 15%)"}
-    >
-      Connect To A Wallet
-    </Button>
+    <>
+      <Button
+        bg={bgButton}
+        color={colorButton}
+        fontSize="xs"
+        onClick={onOpen}
+        // variant="no-hover"
+        borderRadius="35px"
+        px="30px"
+        display={{
+          sm: "none",
+          lg: "flex",
+        }}
+      >
+        Connect to a Wallet
+      </Button>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Connect To A Wallet</ModalHeader>
+          <Separator />
+          <ModalCloseButton />
+          <ModalBody>
+            <WalletList onClose={onClose} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

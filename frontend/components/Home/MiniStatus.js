@@ -1,10 +1,9 @@
 // Chakra imports
 import { Box, Flex, Stat, StatHelpText, StatLabel, StatNumber, Text, useColorModeValue } from "@chakra-ui/react";
 // Custom components
-import Card from "../Card/Card.js";
-import CardBody from "../Card/CardBody.js";
+import Card from "../Card/Card";
+import CardBody from "../Card/CardBody";
 import IconBox from "../Icons/IconBox";
-import { Separator } from "../Separator/Separator.js";
 
 const MiniStatus = ({ title, amount, unit, icon, as, slideIn }) => {
   const iconTeal = useColorModeValue("teal.300", "teal.300");
