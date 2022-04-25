@@ -43,7 +43,7 @@ export function SidebarBottom(props) {
 
   return (
     <>
-      <Flex flexDirection="column" textAlign={"center"} w="100%">
+      <Flex opacity="0" flexDirection="column" textAlign={"center"} w="100%" as={props.as} animation={props.slideIn}>
         {mainNftData && auth ? (
           <>
             <Flex
