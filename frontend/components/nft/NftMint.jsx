@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Image, Button } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 // import Loader from "./Loader";
 
 const NftMint = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, nftContract } = blockchain;
-  console.log("nftContract", nftContract);
   const [loading, setLoading] = useState(false);
   const [redNfts, setRedNft] = useState();
   const [greenNft, setGreenNft] = useState();
@@ -180,7 +180,7 @@ const NftMint = () => {
       </Box>
       <Box mt="5">
         <Flex justify="space-around" w="70vw">
-          <div className="card red">
+          <div className="card red" as={motion.div}>
             <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
               Nfts : {redNfts} / 60
             </Text>
@@ -404,6 +404,17 @@ const NftMint = () => {
           width: 360px;
           height: 500px;
           border-radius: 10px;
+          opacity: 0;
+        }
+        @keyframes slideIn {
+          0% {
+            opacity: 0;
+            transform: translateY(-100px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .red {
           border: 2px solid #917a7a;
@@ -422,6 +433,7 @@ const NftMint = () => {
             hsl(342deg 74% 37%) 92%,
             hsl(344deg 69% 43%) 100%
           );
+          animation: slideIn 0.3s linear 0s forwards;
         }
         .green {
           border: 2px solid #5c8665;
@@ -438,6 +450,7 @@ const NftMint = () => {
             hsl(117deg 92% 18%) 88%,
             hsl(114deg 100% 20%) 100%
           );
+          animation: slideIn 0.3s linear 0.2s forwards;
         }
 
         .purple {
@@ -457,6 +470,7 @@ const NftMint = () => {
             hsl(253deg 61% 34%) 93%,
             hsl(256deg 64% 39%) 100%
           );
+          animation: slideIn 0.3s linear 0.4s forwards;
         }
       `}</style>
     </>

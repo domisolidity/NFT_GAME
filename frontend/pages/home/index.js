@@ -1,5 +1,6 @@
 // Chakra imports
-import { Box, Flex, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, useColorModeValue, keyframes } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 // Custom icons
 import { CartIcon, DocumentIcon, TimLogo, WalletIcon } from "../../components/Icons/Icons";
 import MiniStatus from "../../components/Home/MiniStatus";
@@ -19,26 +20,14 @@ export default function Home() {
 
   const iconBoxInside = useColorModeValue("white", "white");
 
-  // const blockchain = useSelector((state) => state.blockchain);
-  // const { web3, account, gameTokenContract } = blockchain;
-
-  // const metamask = useSelector((state) => state.metamask);
-  // const contract = useSelector((state) => state.contract);
-  // const { web3, account } = metamask;
-  // const { GameTokenContract } = contract;
-
-  // useEffect(() => {
-  //   dispatch(getWeb3())
-  //   dispatch(ConnectContract())
-  // }, [])
-
-
-
+  const blockchain = useSelector((state) => state.blockchain);
+  const { web3, account, nftContract, gameTokenContract } = blockchain;
 
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
   const [selectedSubMenu, setSelectedSubMenu] = useState("NOTICE");
   const [updateTrigger, setUpdateTrigger] = useState();
+  const [remainNfts, setRemainNfts] = useState([]);
 
   //잔액
   const getEthBalance = async () => {
@@ -49,14 +38,12 @@ export default function Home() {
     });
   };
   const getTokenBalance = async () => {
-    let balance;
     await gameTokenContract.methods
       .balanceOf(account)
       .call({ from: account })
       .then((tokenBalance) => {
         console.log(tokenBalance);
-        balance = web3.utils.fromWei(tokenBalance);
-        setTokenBalance(balance.slice(0, 5));
+        setTokenBalance(tokenBalance);
       })
       .catch(console.error());
   };
@@ -69,20 +56,27 @@ export default function Home() {
     setUpdateTrigger(!updateTrigger);
   };
 
-  // useEffect(async () => {
-  //   if (!account) return false;
-  //   await getEthBalance();
-  //   await getTokenBalance();
-  // }, [account, updateTrigger]);
+  useEffect(async () => {
+    if (!account) return false;
+    await getEthBalance();
+    await getTokenBalance();
+    await getNftBalance();
+  }, [account, updateTrigger]);
 
-  // useEffect(() => {
-  //   returnMenu(selectedSubMenu);
-  // }, [selectedSubMenu]);
+  const getNftBalance = async () => {
+    const recievedRemainNfts = await nftContract.methods.remainNfts().call();
+    if (!recievedRemainNfts) return;
+    setRemainNfts(parseInt(recievedRemainNfts[0]) + parseInt(recievedRemainNfts[1]) + parseInt(recievedRemainNfts[2]));
+  };
+
+  useEffect(() => {
+    returnMenu(selectedSubMenu);
+  }, [selectedSubMenu]);
 
   const returnMenu = (display) => {
     switch (display) {
       case "NOTICE":
-        return <Notice />
+        return <Notice />;
       case "INVENTORY":
         return <Inventory />;
       case "CLAIM":
@@ -96,37 +90,61 @@ export default function Home() {
     }
   };
 
-  const menuList = ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"]
+  const menuList = ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"];
+
+  const slideInKeyframes = keyframes`
+  0% { opacity: 0; transform: translateX(-50px); }
+  100% { opacity: 1; transform: translateX(0); }
+  `;
+  const slideInSubKeyframes = keyframes`
+  0% { opacity: 0; transform: translateY(-50px); }
+  100% { opacity: 1; transform: translateY(0); }
+  `;
+  const slideIn = [
+    `${slideInKeyframes} 0.3s linear 0s forwards`,
+    `${slideInKeyframes} 0.3s linear 0.2s forwards`,
+    `${slideInKeyframes} 0.3s linear 0.4s forwards`,
+    `${slideInKeyframes} 0.3s linear 0.6s forwards`,
+    `${slideInSubKeyframes} 0.3s linear 0.8s forwards`,
+  ];
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
         <MiniStatus
+          as={motion.div}
+          slideIn={slideIn[0]}
           title={"Etherium"}
           amount={ethBalance ? ethBalance : "---"}
           unit={"ETH"}
           icon={<WalletIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
         <MiniStatus
+          as={motion.div}
+          slideIn={slideIn[1]}
           title={"Doremi Token"}
           amount={tokenBalance ? tokenBalance : "---"}
           unit={"DGT"}
           icon={<TimLogo h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
         <MiniStatus
+          as={motion.div}
+          slideIn={slideIn[2]}
           title={"Total NFT"}
-          amount={"1,000,000"}
+          amount={remainNfts ? remainNfts : "---"}
           unit={"NFTs"}
           icon={<DocumentIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
         <MiniStatus
+          as={motion.div}
+          slideIn={slideIn[3]}
           title={"Total Items"}
           amount={"13"}
           unit={"Items"}
           icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
       </SimpleGrid>
-      <Box mt={10}>
+      <Box mt={10} as={motion.div} animation={slideIn[4]} opacity="0">
         <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
         {returnMenu(selectedSubMenu)}
       </Box>

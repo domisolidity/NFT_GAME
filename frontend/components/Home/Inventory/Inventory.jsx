@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  Flex,
-  Grid,
-  GridItem,
-  Text,
-  Box,
-  Button,
-  SimpleGrid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, Text, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import InventoryCard from "./InventoryCard";
 import Collections from "./Collections";
 import { Separator } from "../../Separator/Separator";
-import NotFound from "../../utils/NotFound";
 import ItemList from "./ItemList";
 
 const Inventory = () => {

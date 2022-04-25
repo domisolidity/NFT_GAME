@@ -1,10 +1,10 @@
 import React from "react";
 
-const GameCard = ({ game }) => {
+const GameCard = ({ game, animationDelay }) => {
   return (
     <>
       <div className="game-card">
-        <div className="effect-box"></div>
+        {/* <div className="effect-box"></div> */}
         <img
           className="game-card-img"
           src={`./images/game_${game.gameId}.png`}
@@ -40,18 +40,38 @@ const GameCard = ({ game }) => {
             background-position: 0% 0%;
           }
         }
+        @keyframes slideIn {
+          0% {
+            transform: translateY(-100px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes textIn {
+          0% {
+            transform: translateY(100%);
+          }
+          100% {
+            transform: translateY(50%);
+          }
+        }
         .game-card {
           display: flex;
           overflow: hidden;
-          width: 100%;
+          min-height: 200px;
           height: 100%;
+          max-height: 300px;
           position: relative;
           color: #1e315f;
           font-size: 50px;
           font-weight: bold;
-          -webkit-box-reflect: below 0px linear-gradient(#0001, #0004);
+          opacity: 0;
+          animation: slideIn 2s cubic-bezier(0, 1, 0, 1) ${animationDelay}s
+            forwards;
         }
-        .game-card:hover .effect-box {
+        /* .game-card:hover .effect-box {
           animation: animate 4s linear infinite;
           content: "";
           position: absolute;
@@ -74,10 +94,7 @@ const GameCard = ({ game }) => {
             0 0 20px lawngreen, 0 0 20px yellow, 0 0 20px orange, 0 0 20px red,
             0 0 30px purple, 0 0 30px navy, 0 0 30px blue, 0 0 30px lawngreen,
             0 0 30px yellow, 0 0 30px orange, 0 0 30px red;
-        }
-        .game-card-img {
-          width: 100%;
-        }
+        } */
         .game-card-box {
           display: flex;
           width: 100%;
@@ -96,6 +113,16 @@ const GameCard = ({ game }) => {
         .game-card-box:hover {
           opacity: 1;
           cursor: pointer;
+        }
+        .game-card-box .game-card-text {
+          position: absolute;
+          transform: translateY(50%);
+          bottom: -10%;
+          transition-duration: 0.3s;
+          transition-timing-function: linear;
+        }
+        .game-card-box:hover .game-card-text {
+          bottom: 50%;
         }
       `}</style>
     </>
