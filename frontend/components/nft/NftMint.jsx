@@ -170,8 +170,8 @@ const NftMint = () => {
   return (
     <>
       <Box w="400px" mb={70}>
-        <Text mt="150" fontSize="25" w="200px">
-          <span>NFT 구매</span>
+        <Text fontSize="25" w="200px">
+          <span>NFT Minting</span>
         </Text>
         <Text>
           <span className="small">{myNftAmount} / 3</span> <br />

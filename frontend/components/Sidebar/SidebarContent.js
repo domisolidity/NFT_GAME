@@ -91,7 +91,7 @@ const SidebarContent = ({ logoText, routes }) => {
         // <NextLink href={`${prop.layout + prop.path}`} key={prop.name} passHref>
         <NextLink href={`${prop.path}`} key={prop.name} passHref>
           <Link>
-            {activeRoute(prop.layout + prop.path) === "active" ? (
+            {activeRoute(prop.path) === "active" ? (
               <Button
                 boxSize="initial"
                 justifyContent="flex-start"

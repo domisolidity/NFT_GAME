@@ -2,7 +2,7 @@ import { Avatar, Badge, Flex, Td, Text, Tr, useColorModeValue } from "@chakra-ui
 import React from "react";
 
 function TablesTableRow(props) {
-  const { logo, player, score, date, ranking } = props;
+  const { player, score, date, ranking, profile } = props;
   const textColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
@@ -14,8 +14,8 @@ function TablesTableRow(props) {
           {ranking}
         </Text>
       </Td>
-      <Td>
-        <Avatar src={logo} w="50px" borderRadius="12px" />
+      <Td textAlign="center">
+        <Avatar src={profile && profile} w="50px" borderRadius="50%" />
       </Td>
 
       <Td textAlign="center">

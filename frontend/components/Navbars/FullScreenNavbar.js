@@ -5,15 +5,8 @@ import {
   Flex,
   HStack,
   Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Text,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react";
 import {
   TimLogo,
@@ -24,21 +17,11 @@ import {
 } from "../Icons/Icons";
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
-
-import routes from "../../components/routes";
-
-import { useState } from "react";
+import routes from "../../assets/routes";
 import NextLink from "next/link"
-import { Separator } from "../Separator/Separator";
-import WalletList from '../Navbars/ConnectWallet/WalletList'
+import ConnectWallet from "./ConnectWallet/ConnectWallet";
 
 export default function FullScreenNavbar(props) {
-  const contractAddress = "컨트랙트주소";
-
-  const [open, setOpen] = useState(false);
-  const handleDrawerToggle = () => {
-    setOpen(!open);
-  };
   const { logo, logoText, ...rest } = props;
 
   // Chakra color mode
@@ -52,21 +35,8 @@ export default function FullScreenNavbar(props) {
   let navbarShadow = useColorModeValue("0px 7px 23px rgba(0, 0, 0, 0.05)", "none");
   let navbarFilter = useColorModeValue("none", "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))");
   let navbarBackdrop = "blur(21px)";
-  let bgButton = useColorModeValue("linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)", "gray.800");
   let navbarPosition = "fixed";
-  let colorButton = "white";
-  // if (props.secondary === true) {
-  //   navbarIcon = "white";
-  //   navbarBg = "none";
-  //   navbarBorder = "none";
-  //   navbarShadow = "initial";
-  //   navbarFilter = "initial";
-  //   navbarBackdrop = "none";
-  //   bgButton = "white";
-  //   colorButton = "gray.700";
-  //   mainText = "white";
-  //   navbarPosition = "absolute";
-  // }
+
   const brand = (
     <Link
       href={`${process.env.NEXT_PUBLIC_PUBLIC_URL}`}
@@ -84,13 +54,13 @@ export default function FullScreenNavbar(props) {
       </Text>
     </Link>
   );
+
   const links = (
     <HStack display={{ sm: "none", lg: "flex" }}>
       <NextLink href="/home">
         <Button
           fontSize="sm"
           ms="0px"
-          //me="0px"
           px="0px"
           me={{ sm: "2px", md: "16px" }}
           color={navbarIcon}
@@ -104,7 +74,6 @@ export default function FullScreenNavbar(props) {
         <Button
           fontSize="sm"
           ms="0px"
-          //me="0px"
           px="0px"
           me={{ sm: "2px", md: "16px" }}
           color={navbarIcon}
@@ -119,8 +88,6 @@ export default function FullScreenNavbar(props) {
     </HStack>
   );
 
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Flex
       position={navbarPosition}
@@ -145,41 +112,14 @@ export default function FullScreenNavbar(props) {
         <Box ms={{ base: "auto", lg: "0px" }} display={{ base: "flex", lg: "none" }}>
           <SidebarResponsive
             logoText={props.logoText}
-            // secondary={props.secondary}
             routes={routes}
-            // logo={logo}
+            logo={logo}
             {...rest}
           />
         </Box>
         {links}
-        {/* <Link href={`https://etherscan.io/address/${contractAddress}`}> */}
-        <Button
-          bg={bgButton}
-          color={colorButton}
-          fontSize="xs"
-          onClick={onOpen}
-          // variant="no-hover"
-          borderRadius="35px"
-          px="30px"
-          display={{
-            sm: "none",
-            lg: "flex",
-          }}
-        >
-          Connect to a Wallet
-        </Button>
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Connect To A Wallet</ModalHeader>
-            <Separator />
-            <ModalCloseButton />
-            <ModalBody>
-              <WalletList onClose={onClose} />
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-        {/* </Link> */}
+        {true ? <ConnectWallet /> : <div>test</div>}
+
       </Flex>
     </Flex>
   );

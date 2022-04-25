@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Button, Flex, Box, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react";
 
-import Market_nft from "../../components/market/Market_nft";
-import Market_item from "../../components/market/Market_item";
-import Market_nft_auction from "../../components/market/Market_nft_auction";
+import Market_nft from "../../components/market/nft/Market_nft";
+import Market_item from "../../components/market/item/Market_item";
+import Market_nft_auction from "../../components/market/auction/Market_nft_auction";
 import { useSelector } from "react-redux";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import SubMenuList from "../../components/Menu/SubMenuList";
@@ -59,8 +59,10 @@ const Market = () => {
           Explore Market
         </Text>
       </Box>
-      <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
-      {returnMenu(selectedSubMenu)}
+      <Box mt={10}>
+        <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
+        {returnMenu(selectedSubMenu)}
+      </Box>
     </Flex >
   );
 };
