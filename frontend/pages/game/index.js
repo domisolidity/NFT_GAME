@@ -48,10 +48,19 @@ const Game = () => {
     }
   };
   const reflectKeyframes = keyframes`
-    from { -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044) }
-    to { -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044) }
+      0% { -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044) }
+     10% { -webkit-box-reflect: below 0px linear-gradient(#00000010, #00000040) }
+     20% { -webkit-box-reflect: below 0px linear-gradient(#00000009, #00000036) }
+     30% { -webkit-box-reflect: below 0px linear-gradient(#00000008, #00000032) }
+     40% { -webkit-box-reflect: below 0px linear-gradient(#00000007, #00000028) }
+     50% { -webkit-box-reflect: below 0px linear-gradient(#00000006, #00000024) }
+     60% { -webkit-box-reflect: below 0px linear-gradient(#00000005, #00000020) }
+     70% { -webkit-box-reflect: below 0px linear-gradient(#00000004, #00000016) }
+     80% { -webkit-box-reflect: below 0px linear-gradient(#00000003, #00000012) }
+     90% { -webkit-box-reflect: below 0px linear-gradient(#00000002, #00000008) }
+    100% { -webkit-box-reflect: below 0px linear-gradient(#00000001, #00000004) }
   `;
-  const reflect = `${reflectKeyframes} 0s linear 0s forwards`;
+  const reflect = `${reflectKeyframes} 2s linear alternate 0s infinite`;
 
   return (
     <Flex direction={"column"} pt={{ base: "120px", md: "75px" }}>
