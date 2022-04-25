@@ -44,32 +44,42 @@ export function SidebarBottom(props) {
 
   return (
     <>
-      {mainNftData && auth ? (
-        <Flex
-          borderRadius="15px"
-          flexDirection="column"
-          justifyContent="flex-start"
-          alignItems="center"
-          boxSize="border-box"
-          p="16px"
-          w="100%"
-          backgroundColor={mainNftData && `var(--chakra-colors-${mainNftData.mainNftJson.grade}-700)`}
-        >
-          <Img src={`${baseUri}${mainNftData.mainNftJson.image.slice(6)}`} />
-          <Text fontSize="sm" color="white" fontWeight="bold">
-            오늘의 미션
-          </Text>
-          {dailyMission.length != 0 &&
-            dailyMission.map((mission, index) => (
-              <Flex gap="5px">
-                <Box>{mission.DailyMission.game_title}</Box>
-                <Box>{mission.attainment ? "완료!" : "안완료!"}</Box>
-              </Flex>
-            ))}
-        </Flex>
-      ) : (
-        <>선택바람</>
-      )}
+      <Flex flexDirection="column" textAlign={"center"} w="200px">
+        {mainNftData && auth ? (
+          <>
+            <Flex
+              borderRadius="15px"
+              justifyContent="flex-start"
+              alignItems="center"
+              boxSize="border-box"
+              p="16px"
+              backgroundColor={mainNftData && `var(--chakra-colors-${mainNftData.mainNftJson.grade}-700)`}
+            >
+              <Img borderRadius={"15px"} src={`${baseUri}${mainNftData.mainNftJson.image.slice(6)}`} />
+            </Flex>
+            <Flex flexDirection="column">
+              <Text fontSize="sm" color="white" fontWeight="bold">
+                오늘의 미션
+              </Text>
+              {dailyMission.length != 0 &&
+                dailyMission.map((mission, index) => (
+                  <Flex justifyContent={"center"} gap="20px">
+                    <Box w="80px" key={index}>
+                      {mission.DailyMission.game_title}
+                    </Box>
+                    <Box w="100px">{mission.attainment ? "Complete" : "Incomplete"}</Box>
+                  </Flex>
+                ))}
+            </Flex>
+          </>
+        ) : (
+          <>
+            Main NFT
+            <br />
+            space
+          </>
+        )}
+      </Flex>
     </>
   );
 }

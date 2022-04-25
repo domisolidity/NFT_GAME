@@ -10,7 +10,6 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   Tooltip,
@@ -19,6 +18,7 @@ import {
   Flex,
   Text,
   Button,
+  Img,
 } from "@chakra-ui/react";
 
 import { Separator } from "../../Separator/Separator";
@@ -227,9 +227,15 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
               보상받기
             </Button>
           ) : (
-            <div className="nft-img plus">
-              <img src={"plus.svg"} className="add-nft" onClick={onOpen} />
-            </div>
+            <Button
+              backgroundColor={"var(--chakra-colors-gray-200)"}
+              w="100px"
+              h="100px"
+              borderRadius={"15px"}
+              onClick={onOpen}
+            >
+              <Img src={"plus.svg"} />
+            </Button>
           )}
           {mainNftData ? (
             <Flex
@@ -257,19 +263,21 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
               </Flex>
             </Flex>
           ) : (
-            <BlankComponent receivedText={`대표 NFT를 지정해 주세요!`} />
+            <BlankComponent receivedText={[`대표 NFT를 지정해 주세요!`]} />
           )}
         </Flex>
         <Separator />
-        <Box m={"20px 0"}>
-          <Text fontSize={"1.5rem"} color={"gray.400"} fontWeight="bold">
-            Rewarded History
-          </Text>
-          <RewardHistory
-            stakingEvents={stakingEvents}
-            dateConverter={dateConverter}
-          />
-        </Box>
+        {stakingEvents.length != 0 && (
+          <Box m={"20px 0"}>
+            <Text fontSize={"1.5rem"} color={"gray.400"} fontWeight="bold">
+              Rewarded History
+            </Text>
+            <RewardHistory
+              stakingEvents={stakingEvents}
+              dateConverter={dateConverter}
+            />
+          </Box>
+        )}
       </Flex>
     </Box>
   );

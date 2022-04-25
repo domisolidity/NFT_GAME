@@ -83,7 +83,6 @@ const ChoiceNft = (props) => {
 
   const getNftDetail = async (e) => {
     const tokenId = e.currentTarget.getAttribute("tokenId");
-    console.log(tokenId);
     handleClick(e);
     setSelectNft(tokenId);
   };
@@ -95,22 +94,14 @@ const ChoiceNft = (props) => {
   }, [account]);
 
   const clickedFocus = document.getElementsByClassName("forActive");
-
-  function handleClick(event) {
-    console.log(clickedFocus);
-    // console.log(event.target);
-    // console.log(this);
-    // 콘솔창을 보면 둘다 동일한 값이 나온다
-
-    console.log(event.target.classList);
-
-    if (event.target.classList[1] === "active") {
-      event.target.classList.remove("active");
+  function handleClick(e) {
+    if (e.currentTarget.classList[1] === "active") {
+      e.currentTarget.classList.remove("active");
     } else {
       for (var i = 0; i < clickedFocus.length; i++) {
         clickedFocus[i].classList.remove("active");
       }
-      event.target.classList.add("active");
+      e.currentTarget.classList.add("active");
     }
   }
 
@@ -191,20 +182,11 @@ const ChoiceNft = (props) => {
             {myNfts.length !== 0 ? (
               myNfts.map((info, index) => {
                 return (
-                  <Tr
+                  <tr
                     className="forActive"
                     key={index}
                     onClick={getNftDetail}
                     tokenId={info.id}
-                    _hover={{
-                      bg: "teal.600",
-                    }}
-                    _focus={{
-                      bg: "teal.600",
-                    }}
-                    _active={{
-                      bg: "teal.600",
-                    }}
                   >
                     <Th textAlign="center">{info.id}</Th>
                     <Th textAlign="center">{info.name}</Th>
@@ -217,7 +199,7 @@ const ChoiceNft = (props) => {
                         boxSize="60px"
                       />
                     </Th>
-                  </Tr>
+                  </tr>
                 );
               })
             ) : (
@@ -227,18 +209,6 @@ const ChoiceNft = (props) => {
               </Tr>
             )}
           </Tbody>
-          {/* <Tfoot>
-          <Tr>
-            <Th></Th>
-            <Th>
-              <Button>Confirm</Button>
-            </Th>
-            <Th></Th>
-            <Th>
-              <Button>Cancel</Button>
-            </Th>
-          </Tr>
-        </Tfoot> */}
         </Table>
       </TableContainer>
       <Flex justify="center">
@@ -247,6 +217,14 @@ const ChoiceNft = (props) => {
         </Button>
         <Button m={5}>Cancel</Button>
       </Flex>
+      <style jsx>{`
+        .forActive:hover {
+          background-color: pink;
+        }
+        .forActive.active {
+          background-color: black;
+        }
+      `}</style>
     </>
 
     // <Box className="shell overflow-hidden anim-scale-in position-relative ">
