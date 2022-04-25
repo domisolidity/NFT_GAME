@@ -5,6 +5,8 @@ services:
         image: achievedw/doremi-games-nginx
         ports:
             - "80:80"
+        depends_on:
+            - node
 
     node:
         image: achievedw/doremi-games-node

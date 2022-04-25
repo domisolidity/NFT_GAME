@@ -23,7 +23,6 @@ services:
             context: ./frontend
             dockerfile: Dockerfile
         volumes:
-            # hot reload를 위해 mount
             - "./frontend:/usr/src/next"
             - "/usr/src/next/node_modules"
             - "/usr/src/next/.next"
