@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "next-build-id": "^3.0.0"
+  }
+}
