@@ -30,6 +30,8 @@ const Rank = ({ gameList }) => {
   const [selectedSubMenu, setSelectedSubMenu] = useState("블록쌓기");
   const [processedRankData, setProcessedRankData] = useState([]);
 
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
+
   useEffect(() => {
     if (!currentRankData) return;
     console.log(currentRankData);

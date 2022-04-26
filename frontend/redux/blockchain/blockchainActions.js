@@ -14,7 +14,7 @@ import axios from "axios";
 const { NEXT_PUBLIC_SERVER_URL } = process.env;
 
 const LS_KEY = "login-with-metamask:auth";
-const baseUri = "https://gateway.pinata.cloud/ipfs";
+const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
 const connectRequest = () => {
   return {
@@ -153,15 +153,15 @@ export const reconnect = () => {
       /*
         배포환경에서 에러
       */
-      // const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
-      // let mainNftData;
-      // if (stakingData.tokenId == 0) {
-      //   mainNftData = null;
-      // } else {
-      //   const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
-      //   const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
-      //   mainNftData = { stakingData: stakingData, mainNftJson: response.data };
-      // }
+      const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
+      let mainNftData;
+      if (stakingData.tokenId == 0) {
+        mainNftData = null;
+      } else {
+        const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+        const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+        mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+      }
       dispatch(
         connectSuccess({
           account: accounts.toString(),
@@ -172,7 +172,7 @@ export const reconnect = () => {
           auctionCreatorContract: auctionCreatorContract,
           claim20_Contract: claim20_Contract,
           stakingContract: stakingContract,
-          // mainNftData: mainNftData,
+          mainNftData: mainNftData,
           web3: web3,
         })
       );
@@ -308,15 +308,15 @@ export const connectWallet = () => {
           ///
 
           const coinbase = await web3.eth.getCoinbase(); //계정
-          // const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
-          // let mainNftData;
-          // if (stakingData.tokenId == 0) {
-          //   mainNftData = null;
-          // } else {
-          //   const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
-          //   const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
-          //   mainNftData = { stakingData: stakingData, mainNftJson: response.data };
-          // }
+          const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
+          let mainNftData;
+          if (stakingData.tokenId == 0) {
+            mainNftData = null;
+          } else {
+            const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+            const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+            mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+          }
 
           if (!coinbase) {
             dispatch(connectFailed("메타마스크 로그인이 필요합니다."));
@@ -390,7 +390,7 @@ export const connectWallet = () => {
               auctionCreatorContract: auctionCreatorContract,
               claim20_Contract: claim20_Contract,
               stakingContract: stakingContract,
-              // mainNftData: mainNftData,
+              mainNftData: mainNftData,
               web3: web3,
             })
           );

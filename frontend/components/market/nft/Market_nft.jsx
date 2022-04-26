@@ -13,13 +13,14 @@ import {
   SimpleGrid,
   Center,
   Stack,
+  keyframes,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { Separator } from "../../Separator/Separator";
 // import FilterNft from "./market/nft/FilterNft";
 
-const Market_nft = () => {
+const Market_nft = ({ as }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, nftDealContract } = blockchain;
 
@@ -42,7 +43,8 @@ const Market_nft = () => {
     five: true,
   });
 
-  const baseUrl = "http://127.0.0.1:8080/ipfs/";
+  // const baseUrl = "http://127.0.0.1:8080/ipfs/";
+  const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
   useEffect(() => {
     // if (checkedGrade == 1) return;
@@ -54,7 +56,7 @@ const Market_nft = () => {
     try {
       if (!account) return;
 
-      console.log("이벤트촐력할곳");
+      console.log("이벤트출력할곳");
 
       await nftDealContract.methods
         .getOnSaleNftArray()
@@ -70,7 +72,7 @@ const Market_nft = () => {
             console.log("가격", web3.utils.fromWei(price, "ether"));
             await axios
               .get(
-                `${baseUrl}${process.env.NEXT_PUBLIC_METADATA_HASH}/${result[i]}.json`
+                `${baseUri}${process.env.NEXT_PUBLIC_METADATA_HASH}/${result[i]}.json`
               )
               .then((metadata) => {
                 salenft.push({
@@ -78,7 +80,7 @@ const Market_nft = () => {
                   description: metadata.data.description,
                   grade: metadata.data.grade,
                   attributes: metadata.data.attributes,
-                  image: `${baseUrl}${metadata.data.image.slice(6)}`,
+                  image: `${baseUri}${metadata.data.image.slice(6)}`,
                   tokenId: result[i],
                   price: web3.utils.fromWei(price, "ether"),
                 });
@@ -94,6 +96,16 @@ const Market_nft = () => {
   const redColor = useColorModeValue("red.600", "red.700");
   const greenColor = useColorModeValue("green.600", "green.700");
   const purpleColor = useColorModeValue("purple.600", "purple.700");
+
+  const contentsKeyframes = keyframes`
+  0% { opacity: 0; transform: translateX(-50px); }
+  100% { opacity: 1; transform: translateX(0); }
+  `;
+  const slideIn = [];
+  for (let i = 0; i < saleNft.length; i++) {
+    let delay = 0.07;
+    slideIn.push(`${contentsKeyframes} 0.1s linear ${delay * i}s forwards`);
+  }
 
   return (
     <>
@@ -291,7 +303,7 @@ const Market_nft = () => {
         </Box>
         Nfts
       </Flex>
-      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} spacing="24px">
+      <SimpleGrid minChildWidth="330px" justifyItems="center">
         {saleNft[0] &&
           saleNft
             .filter((nft) => {
@@ -325,6 +337,9 @@ const Market_nft = () => {
             .map((nft, i) => {
               return (
                 <Box
+                  as={as}
+                  animation={slideIn[i]}
+                  opacity="0"
                   key={i}
                   role={"group"}
                   p={6}

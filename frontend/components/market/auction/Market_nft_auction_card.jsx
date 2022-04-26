@@ -11,13 +11,16 @@ import {
 } from "@chakra-ui/react";
 import Countdown from "../../utils/Countdown";
 
-const Market_nft_auction_card = ({ nft }) => {
+const Market_nft_auction_card = ({ nft, as, slideIn }) => {
   const txtColor = useColorModeValue("gray.600", "white");
   const txt2ndColor = useColorModeValue("white", "white");
 
   return (
     <Box
       // key={i}
+      opacity="0"
+      as={as}
+      animation={slideIn}
       role={"group"}
       p={6}
       maxW={"330px"}

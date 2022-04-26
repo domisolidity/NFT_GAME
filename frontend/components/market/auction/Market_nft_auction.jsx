@@ -10,6 +10,7 @@ import {
   Center,
   SimpleGrid,
   useColorModeValue,
+  keyframes,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -17,7 +18,7 @@ import _ from "lodash";
 import Market_nft_auction_card from "./Market_nft_auction_card.jsx";
 import { Separator } from "../../Separator/Separator.js";
 
-const Market_nft_auction = () => {
+const Market_nft_auction = ({ as }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, auctionCreatorContract } = blockchain;
 
@@ -78,6 +79,16 @@ const Market_nft_auction = () => {
 
   const txtColor = useColorModeValue("gray.600", "white");
   const txt2ndColor = useColorModeValue("white", "white");
+
+  const contentsKeyframes = keyframes`
+  0% { opacity: 0; transform: translateX(-50px); }
+  100% { opacity: 1; transform: translateX(0); }
+  `;
+  const slideIn = [];
+  for (let i = 0; i < auctionListLength.length; i++) {
+    let delay = 0.07;
+    slideIn.push(`${contentsKeyframes} 0.1s linear ${delay * i}s forwards`);
+  }
 
   return (
     <>
@@ -163,7 +174,14 @@ const Market_nft_auction = () => {
                   return true;
               })
               .map((nft, i) => {
-                return <Market_nft_auction_card nft={nft} key={i} />;
+                return (
+                  <Market_nft_auction_card
+                    nft={nft}
+                    key={i}
+                    as={as}
+                    slideIn={slideIn[i]}
+                  />
+                );
               })}
         </Grid>
       </GridItem>

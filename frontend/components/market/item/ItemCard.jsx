@@ -15,10 +15,9 @@ import {
 import { useSelector } from "react-redux";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 
-const itemCard = (props) => {
+const itemCard = ({ item, as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, gameTokenContract } = blockchain;
-  const item = props.item;
 
   // 내 소유 아이템 목록
   const [myItemQuantity, setMyItemQuantity] = useState(0);
@@ -56,7 +55,7 @@ const itemCard = (props) => {
     getMyItemQuantity();
   }, [account, auth]);
   return (
-    <Center py={6}>
+    <Center py={6} as={as} animation={slideIn} opacity="0">
       <Box
         role={"group"}
         p={6}
