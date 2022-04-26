@@ -19,16 +19,17 @@ import {
 } from "@chakra-ui/react";
 
 function ImageUpload(props) {
-  const LS_KEY = "login-with-metamask:auth";
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
+
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
   const [Images, setImages] = useState([]);
   const [accessToken, setAccessToken] = useState("");
   const [beforeUserName, setBeforeUserName] = useState("");
-  const [beforeImages, setBeforeImages] = useState([]);
+  // const [beforeImages, setBeforeImages] = useState([]);
   const [userName, setUserName] = useState("");
 
-  const getToken = Cookies.get(LS_KEY);
+  const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
   const parsedToken = getToken && JSON.parse(getToken).accessToken;
 
   useEffect(() => {
@@ -78,7 +79,7 @@ function ImageUpload(props) {
     <Flex w={"150px"} h={"150px"} rounded="50%" direction={"column"}>
       <Box {...getRootProps()}>
         <Input {...getInputProps()} />
-        {Images == 0 ? (
+        {props.beforeImages.length == 0 ? (
           <Button
             borderRadius={"50%"}
             w={"150px"}
@@ -104,14 +105,14 @@ function ImageUpload(props) {
           </Button>
         ) : (
           <Box w={"150px"} h={"150px"} borderRadius={"50%"}>
-            {Images &&
-              Images.map((image, index) => (
+            {props.beforeImages.length != 0 &&
+              props.beforeImages.map((image, index) => (
                 <Box>
                   <Image
                     w={"150px"}
                     h={"150px"}
                     key={index}
-                    src={Images[0]}
+                    src={props.beforeImages}
                     borderRadius="50%"
                     alt={"uploading profile"}
                   />

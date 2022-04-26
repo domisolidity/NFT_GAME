@@ -1,11 +1,13 @@
 FROM node:16-alpine
 
-WORKDIR /app
+WORKDIR /usr/src/node
 
-COPY ./package.json ./
+COPY package-lock.json /usr/src/node
+
+COPY package.json /usr/src/node
 
 RUN npm install
 
-COPY ./ ./
+COPY . /usr/src/node
 
 CMD ["npm", "run", "start"]

@@ -22,7 +22,7 @@ const adminsRouter = require("./routes/admins");
 sequelize
   .sync({ force: false })
   .then(async () => {
-    console.log(`디비 서버 포트 : ${process.env.MYSQL_PORT_DEVELOPMENT} 연결`);
+    console.log(`디비 서버 포트 : ${process.env.MYSQL_PORT} 연결`);
     databaseConfig.getDatabaseConfig(); // 기본 데이터베이스 세팅 (테스트용 포함)
     databaseConfig.weeklySchedule(); // 매주 주간 순위 집계를 위한 스케줄
     databaseConfig.dailylySchedule(); // 매일 일일미션 달성여부 체크를 위한 스케줄

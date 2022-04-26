@@ -1,40 +1,35 @@
 version: "3"
 services:
-    frontend:
-        build:
-            dockerfile: Dockerfile.dev
-            context: ./frontend
-        volumes:
-            - /app/node_modules
-            - ./frontend:/app
-        stdin_open: true
-
     nginx:
-        restart: always
+        container_name: "nginx"
         build:
-            dockerfile: Dockerfile
             context: ./nginx
+            dockerfile: Dockerfile
         ports:
-            - "3000:80"
-
-    backend:
+            - "80:80"
+        depends_on:
+            - node
+            - next
+    node:
+        container_name: "node"
         build:
-            dockerfile: Dockerfile.dev
             context: ./backend
-        container_name: app_backend
-        volumes:
-            - /app/node_modules
-            - ./backend:/app
-
-    mysql:
-        build: ./mysql
-        restart: unless-stopped
-        container_name: app_mysql
+            dockerfile: Dockerfile
+        env_file:
+            - ./backend/.env
         ports:
-            - "3306:3306"
+            - "5000:5000"
+    next:
+        container_name: "next"
+        restart: "on-failure"
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        env_file:
+            - ./frontend/.env
         volumes:
-            - ./mysql/mysql_data:/var/lib/mysql
-            - ./mysql/sqls/:/docker-entrypoint-initdb.d/
-        environment:
-            MYSQL_ROOT_PASSWORD: 12345678
-            MYSQL_DATABASE: doremifa
+            - "./frontend:/usr/src/next"
+            - "/usr/src/next/node_modules"
+            - "/usr/src/next/.next"
+        ports:
+            - "3000:3000"

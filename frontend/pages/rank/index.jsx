@@ -30,6 +30,8 @@ const Rank = ({ gameList }) => {
   const [selectedSubMenu, setSelectedSubMenu] = useState("블록쌓기");
   const [processedRankData, setProcessedRankData] = useState([]);
 
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
+
   useEffect(() => {
     if (!currentRankData) return;
     console.log(currentRankData);
@@ -43,7 +45,9 @@ const Rank = ({ gameList }) => {
   // 이번 주 순위정보 받아오기
   const getCurrentRankData = async () => {
     await axios
-      .post(`/api/ranks/current-ranking`, { gameTitle: selectedSubMenu })
+      .post(`${NEXT_PUBLIC_SERVER_URL}/ranks/current-ranking`, {
+        gameTitle: selectedSubMenu,
+      })
       .then((res) => {
         setCurrentRankData(res.data);
       });
@@ -52,7 +56,9 @@ const Rank = ({ gameList }) => {
   // 역대 순위정보 받아오기
   const getPastRankData = async () => {
     await axios
-      .post(`/api/ranks/past-ranking`, { gameTitle: selectedSubMenu })
+      .post(`${NEXT_PUBLIC_SERVER_URL}/ranks/past-ranking`, {
+        gameTitle: selectedSubMenu,
+      })
       .then((res) => {
         setPastRankData(res.data);
       });
