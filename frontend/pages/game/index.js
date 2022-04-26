@@ -14,12 +14,14 @@ const Game = () => {
   const { account, auth, nftContract, mainNftData } = blockchain;
   const router = useRouter();
   const [hasToken, setHasToken] = useState(false);
+  const [mainNFT, setMainNFT] = useState("");
 
   useEffect(async () => {
     if (!(account && auth && nftContract)) return;
     // NFT 홀더 확인용
     const haveToken = await nftContract.methods.haveTokenBool(account).call({ from: account });
     setHasToken(haveToken);
+    setMainNFT(await GameInterface.getMyNFT(account));
   }, [account, auth, nftContract]);
 
   const selectGame = async (game) => {
@@ -29,6 +31,10 @@ const Game = () => {
       return false;
     }
     // 대표 NFT 설정 확인
+    if (mainNftData && !mainNFT) {
+      alert("스테이킹 기간이 만료되었습니다.\n보상을 수령하시고 새로 스테이킹 해주세요");
+      return false;
+    }
     if (!mainNftData) {
       if (!hasToken) {
         alert("NFT를 가지고 있지 않습니다.\n민팅하고 대표NFT를 설정해주세요.");

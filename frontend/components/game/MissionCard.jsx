@@ -6,13 +6,9 @@ const MissionCard = ({ hasMission, filledValue }) => {
     <>
       {hasMission && (
         <Flex direction={"column"} textAlign="center">
-          <Box>밋숀</Box>
+          <Box>미션</Box>
           <Box>{hasMission.DailyMission.missionDetails}</Box>
-          <Box>
-            {hasMission.attainment
-              ? "완료하셨읍니다"
-              : `${filledValue}/${hasMission.DailyMission.targetValue}`}
-          </Box>
+          <Box>{`${filledValue}/${hasMission.DailyMission.targetValue}`}</Box>
         </Flex>
       )}
     </>

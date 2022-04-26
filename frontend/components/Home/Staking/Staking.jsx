@@ -199,6 +199,7 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
           <ModalCloseButton />
           <ModalBody>
             <ChoiceNft
+              dateConverter={dateConverter}
               onClose={onClose}
               getCurrentMainNft={getCurrentMainNft}
             />
@@ -224,15 +225,13 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
         <Flex m={"20px 0"}>
           {mainNftData ? (
             <Button h={"auto"} onClick={unStaking}>
-              스테이킹
-              <br />
-              보상받기
+              Unstaking
             </Button>
           ) : (
             <Button
               backgroundColor={"var(--chakra-colors-gray-200)"}
-              w="100px"
-              h="100px"
+              minW="150px"
+              minH="150px"
               borderRadius={"15px"}
               onClick={onOpen}
             >
