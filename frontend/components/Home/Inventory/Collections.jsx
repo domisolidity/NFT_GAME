@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Box, Text, SimpleGrid } from "@chakra-ui/react";
+import { Flex, Box, Text, SimpleGrid, Grid } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import MyNftsCard from "./MyNftsCard";
@@ -107,9 +107,8 @@ const Collections = () => {
           </div>
         ) : null}
       </Flex>
-
-      <Flex flexDir={"row"} justify="center" align="center">
-        <SimpleGrid columns={{ sm: 2, md: 3, lg: 4, xl: 5 }}>
+      <Box w="100%">
+        <Flex justifyContent="center" flexWrap={"wrap"}>
           {dataShow[0] ? (
             <>
               {dataShow.map((mynft, index) => {
@@ -144,8 +143,8 @@ const Collections = () => {
           ) : (
             <NotFound items={"NFT"} />
           )}
-        </SimpleGrid>
-      </Flex>
+        </Flex>
+      </Box>
       <style jsx>{`
         .table__pagination {
           display: flex;

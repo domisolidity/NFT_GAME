@@ -8,6 +8,7 @@ import BlankComponent from "../../components/utils/BlankComponent";
 import InGameProfile from "../../components/game/InGameProfile";
 
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
+import MissionCard from "../../components/game/MissionCard";
 
 const StackingBlocks = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -22,21 +23,29 @@ const StackingBlocks = () => {
   const [resultBonus, setResultBonus] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasMission, setHasMission] = useState("");
+  const [mainNFT, setMainNFT] = useState("");
+
+  // 페이지 진입 시 대표 NFT 받아오기
+  useEffect(async () => {
+    if (!(account && auth)) return;
+    setMainNFT(await GameInterface.getMyNFT(account));
+  }, [account, auth]);
 
   // 로그인, 대표NFT까지 확인 됐으면
   useEffect(async () => {
-    if (!(account && auth && gameTitle && mainNftData)) return;
+    if (!(account && auth && gameTitle && mainNFT)) return;
     await GameInterface.setParticipant(account, gameTitle); // 참여자 초기화
-    await GameInterface.initChance(account, gameTitle, mainNftData.stakingData.tokenId); // 게임횟수 초기화
+    await GameInterface.initChance(account, gameTitle, mainNFT); // 게임횟수 초기화
     setChance(await GameInterface.getMyChance(account, gameTitle)); // 횟수 불러오기
     setGameItems(await GameInterface.getGameItems()); // 게임아이템 불러오기
     setBestScore(await GameInterface.getMyBestScore(account, gameTitle)); // 최고점수 불러오기
+    setMainNFT(await GameInterface.getMyNFT(account, gameTitle));
     // 사용자 일일미션 불러오기
     const recivedMission = await GameInterface.getMission(account, gameTitle);
     if (recivedMission) {
       setHasMission(recivedMission);
     }
-  }, [mainNftData]);
+  }, [account, auth, gameTitle, mainNFT]);
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -102,7 +111,7 @@ const StackingBlocks = () => {
 
   // 블록쌓기 게임 불러오기
   useEffect(() => {
-    if (!(account && auth && mainNftData)) return;
+    if (!(account && auth && mainNFT)) return;
     // <script> 태그를 만들고
     const script = document.createElement("script");
     // 그 태그의 src 정보를 넣어
@@ -114,42 +123,44 @@ const StackingBlocks = () => {
       // 다른곳으로 이동할 때 스크립트 없애주는 녀석
       document.body.removeChild(script);
     };
-  }, [mainNftData]);
+  }, [mainNFT]);
 
   return (
     <Flex mt={"120px"}>
-      <InGameProfile filledValue={score} hasMission={hasMission} />
+      <div className="mission-box">
+        <MissionCard filledValue={score} hasMission={hasMission} />
+      </div>
       {account && auth && mainNftData ? (
         <Box w={"100%"}>
-          <GameSelectbar />
+          {/* <GameSelectbar /> */}
           <div id="blockGameContainer">
             <div id="game"></div>
             <div id="score">0</div>
             <div id="instructions">블록을 높이 쌓으세요</div>
             <div className="game-over">
               <button id="restart-button" onClick={playGame}>
-                다시시작
+                Restart
               </button>
-              <h2>게임 종료</h2>
+              <h2>Game Over</h2>
               <p>대~단합니다</p>
             </div>
             <div className="game-ready">
               <button id="start-button" onClick={playGame} disabled={!gameEnded}>
-                시작
+                Start
               </button>
               <div></div>
             </div>
             <div className="my-score-box">
-              최고점수
+              Best score
               <p>{bestScore}</p>
             </div>
             <div className="chance-box">
-              남은기회
+              Chance
               <p>{chance}</p>
             </div>
             {resultBonus ? <div className="item-effect-box">x {resultBonus}!</div> : null}
             <button onClick={stackingBlock} disabled={gameEnded} className="placeBlock-button">
-              멈춰 !
+              Stop!
             </button>
           </div>
           <Flex justifyContent={"center"}>

@@ -7,7 +7,7 @@ import Collections from "./Collections";
 import { Separator } from "../../Separator/Separator";
 import ItemList from "./ItemList";
 
-const Inventory = () => {
+const Inventory = ({ as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
   const { NEXT_PUBLIC_SERVER_URL } = process.env;
@@ -37,7 +37,7 @@ const Inventory = () => {
 
   return (
     <>
-      <SimpleGrid>
+      <SimpleGrid as={as} animation={slideIn}>
         <Text
           fontSize={"1.5rem"}
           fontWeight="bold"

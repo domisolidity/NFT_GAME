@@ -1,11 +1,12 @@
 /*eslint-disable*/
 // chakra imports
-import { Box, Button, Flex, Link, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Stack, Text, useColorModeValue, keyframes } from "@chakra-ui/react";
 import IconBox from "../Icons/IconBox";
 import { TimLogo } from "../Icons/Icons";
 import { Separator } from "../Separator/Separator";
 import { SidebarBottom } from "./SidebarBottom";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 // import {
 //   NavLink,
 //   useLocation
@@ -23,6 +24,15 @@ const SidebarContent = ({ logoText, routes }) => {
 
   // this is for the rest of the collapses
   const [state, setState] = useState({});
+
+  const slideInKeyframes = keyframes`
+  0% { opacity: 0; transform: translateY(-50px); }
+  100% { opacity: 1; transform: translateY(0); }
+  `;
+  const slideIn = [];
+  for (let i = 0; i < 9; i++) {
+    slideIn.push(`${slideInKeyframes} 0.3s linear ${i * 0.2}s forwards`);
+  }
 
   const router = useRouter();
   console.log(router);
@@ -82,6 +92,9 @@ const SidebarContent = ({ logoText, routes }) => {
           <Link>
             {activeRoute(prop.path) === "active" ? (
               <Button
+                opacity="0"
+                as={motion.div}
+                animation={slideIn[key + 2]}
                 boxSize="initial"
                 justifyContent="flex-start"
                 alignItems="center"
@@ -124,6 +137,9 @@ const SidebarContent = ({ logoText, routes }) => {
               </Button>
             ) : (
               <Button
+                opacity="0"
+                as={motion.div}
+                animation={slideIn[key + 2]}
                 boxSize="initial"
                 justifyContent="flex-start"
                 alignItems="center"
@@ -140,7 +156,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   xl: "16px",
                 }}
                 borderRadius="15px"
-                _hover="none"
+                _hover={{ background: activeBg }}
                 w="100%"
                 _active={{
                   bg: "inherit",
@@ -178,6 +194,8 @@ const SidebarContent = ({ logoText, routes }) => {
       <Box pt={"25px"} mb="12px">
         <NextLink href={`${process.env.NEXT_PUBLIC_PUBLIC_URL}/`} passHref>
           <Link
+            as={motion.div}
+            animation={slideIn[0]}
             target="_blank"
             display="flex"
             lineHeight="100%"
@@ -193,12 +211,12 @@ const SidebarContent = ({ logoText, routes }) => {
             </Text>
           </Link>
         </NextLink>
-        <Separator />
+        <Separator opacity="0" as={motion.div} animation={slideIn[1]} />
       </Box>
       <Stack direction="column" mb="40px">
         <Box>{links}</Box>
       </Stack>
-      <SidebarBottom />
+      <SidebarBottom as={motion.div} slideIn={slideIn[8]} />
     </>
   );
 };

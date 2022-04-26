@@ -8,8 +8,10 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
+  keyframes
 } from "@chakra-ui/react";
 import { TimLogo, DocumentIcon, HomeIcon, PersonIcon, RocketIcon } from "../Icons/Icons";
+import { motion } from "framer-motion";
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 
@@ -84,12 +86,20 @@ export default function FullScreenNavbar(props) {
     </HStack>
   );
 
+  const slideInTopKeyframes = keyframes`
+  0% { transform: translate(-50%, -50px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+  `;
+  const slideIn = `${slideInTopKeyframes} 0.5s linear 0.7s forwards`;
 
   return (
     <Flex
+      as={motion.div}
+      animation={slideIn}
       position={navbarPosition}
       top="16px"
       left="50%"
+      opacity="0"
       transform="translate(-50%, 0px)"
       background={navbarBg}
       border={navbarBorder}
@@ -107,16 +117,10 @@ export default function FullScreenNavbar(props) {
       <Flex w="100%" justifyContent={{ sm: "start", lg: "space-between" }}>
         {brand}
         <Box ms={{ base: "auto", lg: "0px" }} display={{ base: "flex", lg: "none" }}>
-          <SidebarResponsive
-            logoText={props.logoText}
-            routes={routes}
-            logo={logo}
-            {...rest}
-          />
+          <SidebarResponsive logoText={props.logoText} routes={routes} logo={logo} {...rest} />
         </Box>
         {links}
         <ConnectWallet />
-
       </Flex>
     </Flex>
   );

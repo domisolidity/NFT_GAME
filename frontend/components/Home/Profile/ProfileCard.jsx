@@ -31,7 +31,7 @@ import ImageUpload from "./ImageUpload";
 import UpdateProfile from "./UpdateProfile";
 import Header from "./Header";
 
-const ProfileCard = () => {
+const ProfileCard = ({ as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
   const [beforeUserName, setBeforeUserName] = useState("");
@@ -126,6 +126,8 @@ const ProfileCard = () => {
   return (
     <>
       <SimpleGrid
+        as={as}
+        animation={slideIn}
         columns={{ sm: 1, md: 2 }}
         pt={{ base: "120px", md: "75px" }}
         align="center"

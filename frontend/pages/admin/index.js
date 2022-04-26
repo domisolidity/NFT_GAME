@@ -9,8 +9,8 @@ const Admin = () => {
   const { account, gameTokenContract, stakingContract } = blockchain;
 
   const [inputAmount, setInputAmount] = useState("");
-  const [stakingContractAmount, setStakingContractAmount] = useState("");
-  const [ownerAmount, setOwnerAmount] = useState("");
+  const [stakingContractAmount, setStakingContractAmount] = useState("-");
+  const [ownerAmount, setOwnerAmount] = useState("-");
 
   useEffect(async () => {
     if (!gameTokenContract) return;
@@ -42,14 +42,14 @@ const Admin = () => {
   };
 
   return (
-    <Box pt={{ base: "120px", md: "75px" }}>
+    <Flex flexDirection={"column"} alignItems="center" pt={{ base: "120px", md: "75px" }}>
       <Heading align="center">
         <span> Managing Reward System </span>
       </Heading>
-      <Flex justify="center" mt="5%">
+      <Flex justify="center" mt="5%" gap={"20px"}>
         <Link href={`/admin/missionReword`}>
           <a>
-            <Button minWidth={300} h="200" p="5" marginRight={"20px"}>
+            <Button minWidth={300} h="200" p="5">
               <Flex direction="column">
                 <Image margin="0 auto" src={"images/icons/noteIcon.png"} boxSize="100px" />
                 <Text mt="5">
@@ -63,7 +63,7 @@ const Admin = () => {
 
         <Link href={`/admin/rankingReword`}>
           <a>
-            <Button minWidth={300} h="200" p="5" marginRight={"20px"}>
+            <Button minWidth={300} h="200" p="5">
               <Flex direction="column">
                 <Image margin="0 auto" src={"images/icons/trophyIcon.png"} boxSize="100px" />
                 <Text mt="5">
@@ -74,21 +74,58 @@ const Admin = () => {
             </Button>
           </a>
         </Link>
-
-        <Button cursor={"default"} minWidth={300} h="200" p="5" marginRight={"20px"}>
-          <Flex direction="column">
-            <Text>스테이킹 컨트랙트에 토큰 보내기</Text>
-            <Text>Owner Amount : {ownerAmount}</Text>
-            <Text>Staking Contract Amount : {stakingContractAmount}</Text>
-            <Input
-              onChange={(e) => {
-                setInputAmount(e.target.value);
-              }}
-            />
-            <Button onClick={tokenCharge}>Send</Button>
-          </Flex>
-        </Button>
       </Flex>
+
+      <Button
+        display={"flex"}
+        gap="10px"
+        flexDirection="column"
+        cursor={"default"}
+        minWidth={300}
+        h="200"
+        p="20px 50px"
+        mt="20px"
+        w="620px"
+        justifyContent="space-between"
+      >
+        <Text>스테이킹 컨트랙트에 토큰 보내기</Text>
+        <Flex w="100%" gap="20px" justifyContent="space-between">
+          <Flex
+            flexDirection="column"
+            w="100%"
+            p="10px"
+            gap="10px"
+            borderRadius={"15px"}
+            background="var(--chakra-colors-whiteAlpha-300)"
+          >
+            <Box>Owner Amount</Box>
+            <Box>{ownerAmount}</Box>
+          </Flex>
+          <Flex
+            flexDirection="column"
+            w="100%"
+            p="10px"
+            gap="10px"
+            borderRadius={"15px"}
+            background="var(--chakra-colors-whiteAlpha-300)"
+          >
+            <Box>Staking Contract Amount</Box>
+            <Box>{stakingContractAmount}</Box>
+          </Flex>
+        </Flex>
+        <Flex w="100%" gap="20px">
+          <Input
+            w="70%"
+            borderRadius={"15px"}
+            onChange={(e) => {
+              setInputAmount(e.target.value);
+            }}
+          />
+          <Button w="30%" onClick={tokenCharge}>
+            Send
+          </Button>
+        </Flex>
+      </Button>
       <style jsx>{`
         span {
           background: linear-gradient(#f1f1f1 23%, #818181 100%);
@@ -98,16 +135,13 @@ const Admin = () => {
           font-weight: 900;
         }
       `}</style>
-    </Box>
+    </Flex>
   );
 };
 
 export default Admin;
 
-
 // getLayout property
 Admin.getLayout = function getLayout(page) {
   return <SideBarScreen>{page}</SideBarScreen>;
 };
-
-

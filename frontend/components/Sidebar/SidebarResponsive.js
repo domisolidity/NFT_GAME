@@ -21,7 +21,7 @@ import { TimLogo } from "../../components/Icons/Icons";
 import { Separator } from "../../components/Separator/Separator";
 import { SidebarBottom } from "./SidebarBottom";
 import React, { useRef, useState } from "react";
-import NextLink from "next/link"
+import NextLink from "next/link";
 
 function SidebarResponsive(props) {
   // to check for active links and opened collapses
@@ -43,7 +43,6 @@ function SidebarResponsive(props) {
     const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
-
       return (
         <NextLink href={`${prop.path}`} key={prop.name} passHref>
           {activeRoute(prop.path) === "active" ? (
@@ -175,19 +174,24 @@ function SidebarResponsive(props) {
       display={{ sm: "flex", xl: "none" }}
       ref={mainPanel}
       alignItems="center"
+      p="10px"
+      borderRadius={"10px"}
+      transitionDuration="0.5s"
+      cursor="pointer"
+      onClick={onOpen}
+      _hover={{ bgColor: "whiteAlpha.200" }}
     >
       <HamburgerIcon
         color={hamburgerColor}
         w="18px"
         h="18px"
         ref={btnRef}
-        // colorScheme="teal"
-        onClick={onOpen}
+      // colorScheme="teal"
       />
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
-        placement={"right"}
+        placement={"left"}
         finalFocusRef={btnRef}
         allowPinchZoom
         preserveScrollBarGap
@@ -205,7 +209,7 @@ function SidebarResponsive(props) {
           borderRadius="16px"
         >
           <DrawerCloseButton _focus={{ boxShadow: "none" }} _hover={{ boxShadow: "none" }} />
-          <DrawerBody maxW="250px" px="1rem">
+          <DrawerBody maxW="250px" px="1rem" overflow={"hidden"}>
             <Box maxW="100%" h="100vh">
               <Box>{brand}</Box>
               <Stack direction="column" mb="40px">

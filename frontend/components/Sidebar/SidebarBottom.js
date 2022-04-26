@@ -28,7 +28,6 @@ export function SidebarBottom(props) {
     setDailyMission(receivedMissions);
   }, [account, auth, mainNftData]);
 
-
   // useEffect(async () => {
   //   dispatch(metamaskLogin())
   // }, []);
@@ -51,7 +50,7 @@ export function SidebarBottom(props) {
 
   return (
     <>
-      <Flex flexDirection="column" textAlign={"center"} w="130px" m={"0 auto"}>
+      <Flex opacity="0" flexDirection="column" textAlign={"center"} w="100%" as={props.as} animation={props.slideIn}>
         {mainNftData && auth ? (
           <>
             <Flex

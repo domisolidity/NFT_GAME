@@ -27,7 +27,7 @@ import { regMainNft } from "../../../redux/blockchain/blockchainActions";
 import BlankComponent from "../../utils/BlankComponent";
 import RewardHistory from "./RewardHistory";
 
-const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
+const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const blockchain = useSelector((state) => state.blockchain);
@@ -184,6 +184,8 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
 
   return (
     <Box
+      as={as}
+      animation={slideIn}
       minH={"300px"}
       backgoundColor={`var(--chakra-colors-${
         mainNftData && mainNftData.mainNftJson.grade
@@ -197,6 +199,7 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
           <ModalCloseButton />
           <ModalBody>
             <ChoiceNft
+              dateConverter={dateConverter}
               onClose={onClose}
               getCurrentMainNft={getCurrentMainNft}
             />
@@ -222,15 +225,13 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
         <Flex m={"20px 0"}>
           {mainNftData ? (
             <Button h={"auto"} onClick={unStaking}>
-              스테이킹
-              <br />
-              보상받기
+              Unstaking
             </Button>
           ) : (
             <Button
               backgroundColor={"var(--chakra-colors-gray-200)"}
-              w="100px"
-              h="100px"
+              minW="150px"
+              minH="150px"
               borderRadius={"15px"}
               onClick={onOpen}
             >

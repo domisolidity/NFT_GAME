@@ -7,7 +7,7 @@ import MissionClaimCard from "./MissionClaimCard";
 import RankingClaimCard from "./RankingClaimCard";
 import Notice from "../Notice/Notice";
 
-const Claim = (props) => {
+const Claim = ({ onUpdate, as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, claim20_Contract } = blockchain;
   const { NEXT_PUBLIC_SERVER_URL } = process.env;
@@ -53,7 +53,7 @@ const Claim = (props) => {
 
         setRewardAmount_mission(mission.data.length);
         setClaimableMission(missionRewardData);
-        props.onUpdate();
+        onUpdate();
       });
   };
 
