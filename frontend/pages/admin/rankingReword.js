@@ -85,7 +85,7 @@ const RankingReword = () => {
   // step 3) 선택한 데이터에 대한 보상량 승인 작업
   const approveRankClaim = async () => {
     try {
-      if (account != owner) {
+      if (account != owner.toLowerCase()) {
         alert("권한이 없습니다.");
         return;
       }
@@ -311,4 +311,3 @@ export default RankingReword;
 RankingReword.getLayout = function getLayout(page) {
   return <SideBarScreen>{page}</SideBarScreen>;
 };
-

@@ -196,7 +196,14 @@ const MarketDetail_auction = () => {
   }, [account, bidHistory]);
 
   return (
-    <Grid w="70vw" margin="0 auto" templateColumns="repeat(5,1fr)" templateRows="repeat(1,1fr)" gap={2} pt={{ base: "120px", md: "75px" }}>
+    <Grid
+      w="70vw"
+      margin="0 auto"
+      templateColumns="repeat(5,1fr)"
+      templateRows="repeat(1,1fr)"
+      gap={2}
+      pt={{ base: "120px", md: "75px" }}
+    >
       <GridItem colSpan={2} bg="whiteAlpha.100">
         <Flex direction="column">
           <Image src={image} borderRadius={10} />
@@ -350,9 +357,9 @@ const MarketDetail_auction = () => {
   );
 };
 
-export default MarketDetail;
+export default MarketDetail_auction;
 
 // getLayout property
-MarketDetail.getLayout = function getLayout(page) {
+MarketDetail_auction.getLayout = function getLayout(page) {
   return <SideBarScreen>{page}</SideBarScreen>;
 };
