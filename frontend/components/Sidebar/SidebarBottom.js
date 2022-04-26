@@ -92,9 +92,28 @@ export function SidebarBottom(props) {
           </>
         ) : (
           <>
-            Main NFT
-            <br />
-            space
+            <Flex
+              mb={3}
+              borderRadius="50%"
+              justifyContent="flex-start"
+              alignItems="center"
+              boxSize="border-box"
+            >
+              <Img borderRadius="50%" src={`/circle.png`} />
+            </Flex>
+            <Flex flexDirection="column" fontSize="md">
+              <Text fontSize="md" color={textColor} fontWeight="bold" >
+                Main NFT
+              </Text>
+
+              <Flex justifyContent={"center"} alignItems="center" bgColor="whiteAlpha.100" m={1} borderRadius="15px">
+                <Box color={`whiteAlpha.300`} fontSize="xl" fontWeight="bold" mr={2}>
+                  아이콘
+                </Box>
+                <Box color={textColor} fontSize="12px">선택하러가기</Box>
+              </Flex>
+
+            </Flex>
           </>
         )}
       </Flex>

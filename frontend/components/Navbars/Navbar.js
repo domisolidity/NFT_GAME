@@ -40,14 +40,13 @@ export default function Navbar(props) {
 
   const [scrolled, setScrolled] = useState(false);
 
-  // useEffect(() => {
-  //   dispatch(authenticate())
-  //   console.log('???')
-  //   console.log(auth)
-  //   if (auth) {
-  //     dispatch(tttt(auth))
-  //   }
-  // }, []);
+  useEffect(() => {
+
+    dispatch(reconnect())
+
+  }, []);
+
+
 
   const {
     variant,
