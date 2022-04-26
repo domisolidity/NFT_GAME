@@ -9,11 +9,14 @@ services:
             - "80:80"
         depends_on:
             - node
+            - next
     node:
         container_name: "node"
         build:
             context: ./backend
             dockerfile: Dockerfile
+        env_file:
+            - ./backend/.env
         ports:
             - "5000:5000"
     next:
@@ -22,6 +25,8 @@ services:
         build:
             context: ./frontend
             dockerfile: Dockerfile
+        env_file:
+            - ./frontend/.env
         volumes:
             - "./frontend:/usr/src/next"
             - "/usr/src/next/node_modules"
