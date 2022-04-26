@@ -110,7 +110,7 @@ export default function Home() {
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
+      <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} spacing="24px">
         <MiniStatus
           as={motion.div}
           slideIn={slideIn[0]}
@@ -130,18 +130,10 @@ export default function Home() {
         <MiniStatus
           as={motion.div}
           slideIn={slideIn[2]}
-          title={"Total NFT"}
+          title={"Remained NFT"}
           amount={remainNfts ? remainNfts : "---"}
           unit={"NFTs"}
           icon={<DocumentIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
-        />
-        <MiniStatus
-          as={motion.div}
-          slideIn={slideIn[3]}
-          title={"Total Items"}
-          amount={"13"}
-          unit={"Items"}
-          icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
       </SimpleGrid>
       <Box mt={10} as={motion.div} animation={slideIn[4]} opacity="0">

@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Button,
+  Box,
   Center,
-  Flex,
-  Heading,
-  Image,
-  Stack,
-  Text,
   useColorModeValue,
+  Heading,
+  Text,
+  Stack,
+  Image,
+  Button,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import { useSelector } from "react-redux";
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 
 const itemCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -55,75 +57,83 @@ const itemCard = (props) => {
   }, [account, auth]);
   return (
     <Center py={6}>
-      <Stack
-        borderWidth="1px"
-        borderRadius="lg"
-        w={{ sm: "100%", md: "540px" }}
-        height={{ sm: "476px", md: "20rem" }}
-        direction={{ base: "column", md: "row" }}
-        bg={useColorModeValue("white", "gray.900")}
+      <Box
+        role={"group"}
+        p={6}
+        maxW={"270px"}
+        w={"full"}
+        // bg={useColorModeValue("white", "gray.800")}
         boxShadow={"2xl"}
-        padding={4}
+        rounded={"lg"}
+        pos={"relative"}
+        zIndex={1}
       >
-        <Flex flex={1} bg="whiteAlpha.200">
+        <Box
+          rounded={"lg"}
+          pos={"relative"}
+          height={"230px"}
+          _after={{
+            transition: "all .3s ease",
+            content: '""',
+            w: "full",
+            h: "full",
+            pos: "absolute",
+            top: 5,
+            left: 0,
+            filter: "blur(15px)",
+            zIndex: -1,
+          }}
+          _groupHover={{
+            _after: {
+              filter: "blur(20px)",
+            },
+          }}
+        >
           <Image
-            objectFit="cover"
-            boxSize="100%"
+            rounded={"lg"}
+            height={230}
+            width={230}
+            objectFit={"cover"}
             src={`/images/itemIcons/itemIcon${item.itemId}.png`}
           />
-        </Flex>
-        <Stack
-          flex={1}
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          p={1}
-          pt={2}
-        >
-          <Heading fontSize={"2xl"} fontFamily={"body"} m={4}>
+        </Box>
+        <Stack align={"center"}>
+          <Heading fontSize={"xl"} fontFamily={"body"} fontWeight={500}>
             {item.itemName}
+            <Tooltip hasArrow label={item.itemDescription} bg="whiteAlpha.900">
+              <QuestionOutlineIcon ml={2} />
+            </Tooltip>
           </Heading>
-          <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
-            {myItemQuantity}개 보유 중
-          </Text>
-          <Text
-            textAlign={"center"}
-            color={useColorModeValue("gray.700", "gray.400")}
-            px={3}
-          >
-            {item.itemDescription}
-          </Text>
-
-          <Stack
-            width={"100%"}
-            mt={"2rem"}
-            direction={"row"}
-            padding={2}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Button
-              flex={1}
-              fontSize={"sm"}
-              rounded={"full"}
-              bg={"blue.400"}
-              color={"white"}
-              boxShadow={
-                "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-              }
-              _hover={{
-                bg: "blue.500",
-              }}
-              _focus={{
-                bg: "blue.500",
-              }}
-              onClick={buyItem}
-            >
-              구매
-            </Button>
+          <Stack direction={"row"} justify="center" align={"baseline"}>
+            <Text fontWeight={800} fontSize={"30px"}>
+              {item.itemPrice}
+            </Text>
+            <Text fontWeight={600} color={"teal.300"}>
+              DGT
+            </Text>
           </Stack>
+          {/* <Text color={"gray.500"} fontSize={"sm"}>
+            {item.description}개 보유 중
+          </Text> */}
+          <Button
+            fontSize={"md"}
+            bg={"teal.400"}
+            color={"white"}
+            boxShadow={
+              "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+            }
+            _hover={{
+              bg: "blue.500",
+            }}
+            _focus={{
+              bg: "blue.500",
+            }}
+            onClick={buyItem}
+          >
+            구매
+          </Button>
         </Stack>
-      </Stack>
+      </Box>
     </Center>
   );
 };

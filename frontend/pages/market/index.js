@@ -56,10 +56,10 @@ const Market = () => {
             zIndex: -1,
           }}
         >
-          Explore Market
+          Explore Market 🛒
         </Text>
       </Box>
-      <Box mt={10}>
+      <Box mt={10} w='100%'>
         <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
         {returnMenu(selectedSubMenu)}
       </Box>

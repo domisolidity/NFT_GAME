@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Flex, Text, Box } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { TimLogo } from "../../Icons/Icons";
 
 const RankingClaimCard = (props) => {
   const claimInfo = props.claimInfo;
@@ -62,21 +63,30 @@ const RankingClaimCard = (props) => {
         p={5}
         direction="column"
         align="center"
+        mb={4}
       >
-        <Flex>
-          (아이콘 + )<Text color="#87d57e"> Ranking reward</Text>
+        <Flex fontSize={"25px"} mb={"10px"}>
+          🏆
+          <Text ml={2} color="#87d57e">
+            Ranking reward
+          </Text>
         </Flex>
-        <Flex direction="column">
-          <Text>클레임 가능 수량</Text>
-          <Box>아이콘{rewardAmount}</Box>
+        <Text>클레임 가능 수량</Text>
+        <Flex direction="row" align="center" justify="center">
+          <Flex align="center" justify="center">
+            <TimLogo fontSize="20px" />
+            <Text fontSize="30px" m={"0 16px"} color="#87d57e">
+              {rewardAmount}
+            </Text>
+            <Text fontSize="16px">DGT</Text>
+          </Flex>
         </Flex>
         <Button
           bgGradient="linear(to-r, #007983, #87D57E)"
           isLoading={loading ? 1 : null}
           loadingText="claiming.."
           onClick={claimRank}
-          borderRadius={5}
-          mt="5"
+          borderRadius={"15px"}
         >
           Claim
         </Button>

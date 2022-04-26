@@ -34,10 +34,10 @@ const ClaimHistory = (props) => {
   }, [account, claimHistory]);
 
   return (
-    <Box m="0 auto">
-      <Box bg="#10495F" p="3" mb="5">
+    <Box m="0 auto" borderRadius={"15px"}>
+      <Box bg="#10495F" p="3" mb="5" borderRadius={"15px 15px 0 0"}>
         <Text fontSize="20">
-          Claim History{" "}
+          Claim History
           <span style={{ marginLeft: 10 }}>
             <Button variant="ghost" onClick={updateHistory}>
               <RepeatIcon />
@@ -45,14 +45,14 @@ const ClaimHistory = (props) => {
           </span>
         </Text>
       </Box>
-      <TableContainer>
+      <TableContainer textAlign={"center"}>
         <Table>
           <Thead>
             <Tr>
-              <Th>Reward Type</Th>
-              <Th>Reward Amount</Th>
-              <Th>Time</Th>
-              <Th>detail</Th>
+              <Th textAlign={"center"}>Reward Type</Th>
+              <Th textAlign={"center"}>Reward Amount</Th>
+              <Th textAlign={"center"}>Time</Th>
+              <Th textAlign={"center"}>detail</Th>
             </Tr>
           </Thead>
           {claimHistory
@@ -61,10 +61,10 @@ const ClaimHistory = (props) => {
                   <Tbody key={i}>
                     <Tr>
                       {/* <Td>{`${history.account.substr(0,7)} ...... ${history.account.substr(38,41)}`}</Td> */}
-                      <Td>{history.value.rewardType}</Td>
-                      <Td> + {history.value.amount}</Td>
+                      <Td textAlign={"center"}>{history.value.rewardType}</Td>
+                      <Td textAlign={"center"}> + {history.value.amount}</Td>
                       <Td>{todayTimeFormal(Number(history.value.time))}</Td>
-                      <Td>
+                      <Td textAlign={"center"}>
                         <Link
                           href={`https://rinkeby.etherscan.io/tx/${history.tx}`}
                         >

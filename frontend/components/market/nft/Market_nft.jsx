@@ -12,6 +12,7 @@ import {
   useColorModeValue,
   SimpleGrid,
   Center,
+  Stack,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -282,10 +283,15 @@ const Market_nft = () => {
           </SimpleGrid>
         </Flex>
       </Center>
-      <Text align="left">{saleLength} Nfts</Text>
       <Separator />
-
-      <SimpleGrid columns={{ sm: 1, md: 4, xl: 4 }} spacing="24px">
+      <Flex align="center" justify="right">
+        Total
+        <Box m={"0 10px"} color="teal.300" fontSize="20px">
+          {saleLength}
+        </Box>
+        Nfts
+      </Flex>
+      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} spacing="24px">
         {saleNft[0] &&
           saleNft
             .filter((nft) => {
@@ -319,19 +325,29 @@ const Market_nft = () => {
             .map((nft, i) => {
               return (
                 <Box
-                  w="300px"
-                  h="460"
-                  bg="blackAlpha.300"
                   key={i}
-                  border="2px solid #2E8F8B"
+                  role={"group"}
+                  p={6}
+                  maxW={"330px"}
+                  w={"full"}
+                  boxShadow={"2xl"}
+                  rounded={"lg"}
+                  pos={"relative"}
+                  zIndex={1}
                   _hover={{ boxShadow: "dark-lg" }}
                 >
-                  <Image src={nft.image} w="320" h="290" padding="5" />
-                  <Flex p="0px 20px 0px 20px" mb="8%" justify="space-between">
+                  <Image src={nft.image} min="320" h="290" padding="5" />
+                  <Flex
+                    p="0px 20px 0px 20px"
+                    mb="8%"
+                    align="center"
+                    justify="space-between"
+                  >
                     <Box>{nft.name}</Box>
                     <Box
+                      color={txt2ndColor}
                       w="26%"
-                      borderRadius={20}
+                      borderRadius={"10px"}
                       bg={
                         nft.grade == "red"
                           ? "red.700"
@@ -345,28 +361,57 @@ const Market_nft = () => {
                       {nft.grade}
                     </Box>
                   </Flex>
-                  <Text fontSize="20px">{nft.price} ETH</Text>
-                  <Box h="10%" mt="25">
-                    <Link
-                      href={{
-                        pathname: `market/${nft.tokenId}`,
-                        query: {
-                          id: nft.tokenId,
-                          grade: nft.grade,
-                          attr: JSON.stringify(nft.attributes),
-                          name: nft.name,
-                          image: nft.image,
-                          description: nft.description,
-                          price: nft.price,
-                        },
-                      }}
-                      as={`market/${nft.tokenId}`}
+                  <Stack align={"center"}>
+                    <Stack
+                      direction={"row"}
+                      align={"baseline"}
+                      justify="center"
                     >
-                      <a>
-                        <Button bg="#247471">Buy now</Button>
-                      </a>
-                    </Link>
-                  </Box>
+                      <Text fontWeight={800} fontSize={"30px"}>
+                        {nft.price}
+                      </Text>
+                      <Text fontWeight={600} color={"teal.300"}>
+                        DGT
+                      </Text>
+                    </Stack>
+                    <Box h="10%" mt="25">
+                      <Link
+                        href={{
+                          pathname: `market/${nft.tokenId}`,
+                          query: {
+                            id: nft.tokenId,
+                            grade: nft.grade,
+                            attr: JSON.stringify(nft.attributes),
+                            name: nft.name,
+                            image: nft.image,
+                            description: nft.description,
+                            price: nft.price,
+                          },
+                        }}
+                        as={`market/${nft.tokenId}`}
+                      >
+                        <a>
+                          <Button
+                            mt={5}
+                            fontSize={"md"}
+                            bg={"blue.400"}
+                            color={txt2ndColor}
+                            boxShadow={
+                              "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                            }
+                            _hover={{
+                              bg: "teal.500",
+                            }}
+                            _focus={{
+                              bg: "teal.500",
+                            }}
+                          >
+                            Details
+                          </Button>
+                        </a>
+                      </Link>
+                    </Box>
+                  </Stack>
                 </Box>
               );
             })}

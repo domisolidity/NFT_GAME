@@ -90,7 +90,7 @@ const Claim = (props) => {
 
   return (
     <>
-      <Grid templateColumns="repeat(4, 1fr)" mt="10" gap={5}>
+      <Grid templateColumns="repeat(4, 1fr)" gap={5} mt={5}>
         <GridItem colSpan={1}>
           <RankingClaimCard
             claimInfo={claimableRank}
@@ -102,32 +102,14 @@ const Claim = (props) => {
             reward={rewardAmount_mission}
             updateReward={getRewardAmount}
           />
-          <MissionClaimCard
-            claimInfo={claimableMission}
-            reward={rewardAmount_mission}
-            updateReward={getRewardAmount}
-          />
         </GridItem>
-        <GridItem bg="whiteAlpha.200" colSpan={3}>
+        <GridItem bg="whiteAlpha.200" borderRadius="15px" colSpan={3} mb={3}>
           <ClaimHistory
             history={claimHistory}
             updateHistory={getClaimHistory}
           />
         </GridItem>
       </Grid>
-      {/* <Flex justify="center"> */}
-      {/* <RankingClaimCard
-          claimInfo={claimableRank}
-          reward={rewardAmount_rank}
-          updateReward={getRewardAmount}
-        /> */}
-      {/* <MissionClaimCard
-          claimInfo={claimableMission}
-          reward={rewardAmount_mission}
-          updateReward={getRewardAmount}
-        /> */}
-      {/* </Flex> */}
-      {/* <ClaimHistory history={claimHistory} updateHistory={getClaimHistory} /> */}
     </>
   );
 };

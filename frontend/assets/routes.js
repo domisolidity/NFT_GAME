@@ -1,17 +1,22 @@
 import {
-  HomeIcon,
   StatsIcon,
   CartIcon,
   RocketIcon,
   SupportIcon,
-  DocumentIcon
+  DocumentIcon,
+  PersonIcon
 } from "../components/Icons/Icons";
 
 const routes = [
   {
     path: "/home",
-    name: "Home",
-    icon: <HomeIcon color="inherit" />,
+    name: "My Page",
+    icon: <PersonIcon color="inherit" />,
+  },
+  {
+    path: "/nft",
+    name: "NFT",
+    icon: <DocumentIcon color="inherit" />,
   },
   {
     path: "/rank",
@@ -27,11 +32,6 @@ const routes = [
     path: "/market",
     name: "Market",
     icon: <CartIcon color="inherit" />,
-  },
-  {
-    path: "/nft",
-    name: "NFT",
-    icon: <DocumentIcon color="inherit" />,
   },
   {
     path: "/admin",

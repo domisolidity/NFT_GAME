@@ -1,9 +1,10 @@
-import { Box, Flex, Img, Text } from "@chakra-ui/react";
+import { Box, Flex, Img, Text, useColorModeValue } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { metamaskAuth, metamaskLogin } from "../../_redux/actions/metamaskActions";
 import GameInterface from "../game/GameInterface";
+import { BlockIcon, DiamondIcon, TetrisIcon } from "../Icons/Icons";
 
 export function SidebarBottom(props) {
   // Pass the computed styles into the `__css` prop
@@ -35,39 +36,56 @@ export function SidebarBottom(props) {
       receivedMissions = await GameInterface.getMission(account);
     }
     setDailyMission(receivedMissions);
-  }, [mainNftData]);
+  }, [account, auth, mainNftData]);
 
 
   // useEffect(async () => {
   //   dispatch(metamaskLogin())
   // }, []);
 
+  const gameIcon = (title) => {
+    switch (title) {
+      case "블록쌓기":
+        return <BlockIcon />;
+      case "테트리스":
+        return <TetrisIcon />;
+      case "보물찾기":
+        return <DiamondIcon />
+      default:
+        break;
+    }
+  };
+
+  const textColor = useColorModeValue("gray.600", "gray.300");
+
+
   return (
     <>
-      <Flex flexDirection="column" textAlign={"center"} w="200px">
+      <Flex flexDirection="column" textAlign={"center"} w="130px" m={"0 auto"}>
         {mainNftData && auth ? (
           <>
             <Flex
-              borderRadius="15px"
+              mb={3}
+              borderRadius="50%"
               justifyContent="flex-start"
               alignItems="center"
               boxSize="border-box"
-              p="16px"
-              backgroundColor={mainNftData && `var(--chakra-colors-${mainNftData.mainNftJson.grade}-700)`}
+              // p="1.5px"
+              backgroundColor={mainNftData && `var(--chakra-colors-${mainNftData.mainNftJson.grade}-100)`}
             >
-              <Img borderRadius={"15px"} src={`${baseUri}${mainNftData.mainNftJson.image.slice(6)}`} />
+              <Img borderRadius="50%" src={`${baseUri}${mainNftData.mainNftJson.image.slice(6)}`} />
             </Flex>
-            <Flex flexDirection="column">
-              <Text fontSize="sm" color="white" fontWeight="bold">
-                오늘의 미션
+            <Flex flexDirection="column" fontSize="md">
+              <Text fontSize="md" color={textColor} fontWeight="bold" >
+                Daily Quest
               </Text>
               {dailyMission.length != 0 &&
                 dailyMission.map((mission, index) => (
-                  <Flex justifyContent={"center"} gap="20px">
-                    <Box w="80px" key={index}>
-                      {mission.DailyMission.game_title}
+                  <Flex justifyContent={"center"} alignItems="center" bgColor="whiteAlpha.100" m={1} borderRadius="15px">
+                    <Box key={index} color={`var(--chakra-colors-${mainNftData.mainNftJson.grade}-300)`} fontSize="xl" fontWeight="bold" mr={2}>
+                      {gameIcon(mission.DailyMission.game_title)}
                     </Box>
-                    <Box w="100px">{mission.attainment ? "Complete" : "Incomplete"}</Box>
+                    <Box color={textColor} fontSize="12px">{mission.attainment ? "Complete" : "Incomplete"}</Box>
                   </Flex>
                 ))}
             </Flex>
