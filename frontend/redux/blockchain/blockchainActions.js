@@ -1,4 +1,3 @@
-// constants
 import Web3 from "web3";
 import NftContract from "../../contracts/artifacts/NftContract.json";
 import NftDealContract from "../../contracts/artifacts/NftDealContract.json";
@@ -12,6 +11,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 const { NEXT_PUBLIC_SERVER_URL } = process.env;
+const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
 
 const LS_KEY = "login-with-metamask:auth";
 const baseUri = "https://gateway.pinata.cloud/ipfs/";

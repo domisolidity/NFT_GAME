@@ -2,7 +2,7 @@ import { Box, Flex, Img, Text, useColorModeValue } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { metamaskAuth, metamaskLogin } from "../../_redux/actions/metamaskActions";
+
 import GameInterface from "../game/GameInterface";
 import { BlockIcon, DiamondIcon, TetrisIcon } from "../Icons/Icons";
 
