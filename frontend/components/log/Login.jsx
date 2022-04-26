@@ -8,6 +8,7 @@ import {
   connectWallet,
   disconnectWallet,
   reconnect,
+  updateAccount,
 } from "../../redux/blockchain/blockchainActions";
 
 const Login = () => {
@@ -17,7 +18,12 @@ const Login = () => {
   const { hasCopied, onCopy } = useClipboard(account);
 
   useEffect(() => {
-    getReconnect();
+    console.log("로그인 !!!!");
+    if (auth) {
+      updateAccount();
+    }
+    // if (!account || !auth) return;
+    // reconnect();
     // getConnectWallet();
   }, []);
 

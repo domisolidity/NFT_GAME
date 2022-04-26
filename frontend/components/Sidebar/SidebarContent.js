@@ -1,31 +1,23 @@
 /*eslint-disable*/
 // chakra imports
-import {
-  Box,
-  Button, Flex,
-  Link,
-  Stack,
-  Text,
-  useColorModeValue
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Stack, Text, useColorModeValue, keyframes } from "@chakra-ui/react";
 import IconBox from "../Icons/IconBox";
 import { TimLogo } from "../Icons/Icons";
 import { Separator } from "../Separator/Separator";
 import { SidebarBottom } from "./SidebarBottom";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 // import {
 //   NavLink,
 //   useLocation
 // } from "react-router-dom";
-import { useRouter } from 'next/router'
-import NextLink from "next/link"
-
+import { useRouter } from "next/router";
+import NextLink from "next/link";
 
 // this function creates the links and collapses that appear in the sidebar (left menu)
 
-
 const SidebarContent = ({ logoText, routes }) => {
-  console.log({ logoText, routes })
+  console.log({ logoText, routes });
 
   // to check for active links and opened collapses
   // let location = useLocation();
@@ -33,9 +25,17 @@ const SidebarContent = ({ logoText, routes }) => {
   // this is for the rest of the collapses
   const [state, setState] = useState({});
 
+  const slideInKeyframes = keyframes`
+  0% { opacity: 0; transform: translateY(-50px); }
+  100% { opacity: 1; transform: translateY(0); }
+  `;
+  const slideIn = [];
+  for (let i = 0; i < 9; i++) {
+    slideIn.push(`${slideInKeyframes} 0.3s linear ${i * 0.2}s forwards`);
+  }
 
-  const router = useRouter()
-  console.log(router)
+  const router = useRouter();
+  console.log(router);
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -50,7 +50,6 @@ const SidebarContent = ({ logoText, routes }) => {
     const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
-
       if (prop.redirect) {
         return null;
       }
@@ -93,6 +92,9 @@ const SidebarContent = ({ logoText, routes }) => {
           <Link>
             {activeRoute(prop.path) === "active" ? (
               <Button
+                opacity="0"
+                as={motion.div}
+                animation={slideIn[key + 2]}
                 boxSize="initial"
                 justifyContent="flex-start"
                 alignItems="center"
@@ -124,13 +126,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   {typeof prop.icon === "string" ? (
                     <Icon>{prop.icon}</Icon>
                   ) : (
-                    <IconBox
-                      bg="teal.300"
-                      color="white"
-                      h="30px"
-                      w="30px"
-                      me="12px"
-                    >
+                    <IconBox bg="teal.300" color="white" h="30px" w="30px" me="12px">
                       {prop.icon}
                     </IconBox>
                   )}
@@ -141,6 +137,9 @@ const SidebarContent = ({ logoText, routes }) => {
               </Button>
             ) : (
               <Button
+                opacity="0"
+                as={motion.div}
+                animation={slideIn[key + 2]}
                 boxSize="initial"
                 justifyContent="flex-start"
                 alignItems="center"
@@ -157,7 +156,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   xl: "16px",
                 }}
                 borderRadius="15px"
-                _hover="none"
+                _hover={{ background: activeBg }}
                 w="100%"
                 _active={{
                   bg: "inherit",
@@ -172,13 +171,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   {typeof prop.icon === "string" ? (
                     <Icon>{prop.icon}</Icon>
                   ) : (
-                    <IconBox
-                      bg={inactiveBg}
-                      color="teal.300"
-                      h="30px"
-                      w="30px"
-                      me="12px"
-                    >
+                    <IconBox bg={inactiveBg} color="teal.300" h="30px" w="30px" me="12px">
                       {prop.icon}
                     </IconBox>
                   )}
@@ -188,7 +181,7 @@ const SidebarContent = ({ logoText, routes }) => {
                 </Flex>
               </Button>
             )}
-          </Link >
+          </Link>
         </NextLink>
       );
     });
@@ -201,6 +194,8 @@ const SidebarContent = ({ logoText, routes }) => {
       <Box pt={"25px"} mb="12px">
         <NextLink href={`${process.env.NEXT_PUBLIC_PUBLIC_URL}/`} passHref>
           <Link
+            as={motion.div}
+            animation={slideIn[0]}
             target="_blank"
             display="flex"
             lineHeight="100%"
@@ -216,14 +211,14 @@ const SidebarContent = ({ logoText, routes }) => {
             </Text>
           </Link>
         </NextLink>
-        <Separator />
+        <Separator opacity="0" as={motion.div} animation={slideIn[1]} />
       </Box>
       <Stack direction="column" mb="40px">
         <Box>{links}</Box>
       </Stack>
-      <SidebarBottom />
+      <SidebarBottom as={motion.div} slideIn={slideIn[8]} />
     </>
-  )
-}
+  );
+};
 
-export default SidebarContent
+export default SidebarContent;

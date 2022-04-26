@@ -16,7 +16,6 @@ import NavbarLinks from "./NavbarLinks";
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
 import WalletList from "./ConnectWallet/WalletList";
 
-
 import {
   Modal,
   ModalOverlay,
@@ -25,12 +24,12 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-} from '@chakra-ui/react'
+} from "@chakra-ui/react";
 import { Separator } from "../Separator/Separator";
 import Accountbar from "./Accountbar/Accountbar";
 import { useDispatch, useSelector } from "react-redux";
 import AccountModal from "./Accountbar/AccountModal";
-import { authenticate, connectWallet, reconnect, tttt } from "../../redux/blockchain/blockchainActions";
+import { authenticate, connectWallet, reconnect, tttt, updateAccount } from "../../redux/blockchain/blockchainActions";
 
 export default function Navbar(props) {
   const blockchain = useSelector((state) => state.blockchain);
@@ -41,9 +40,7 @@ export default function Navbar(props) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-
     dispatch(reconnect())
-
   }, []);
 
 
@@ -70,19 +67,13 @@ export default function Navbar(props) {
   if (props.fixed === true)
     if (scrolled === true) {
       navbarPosition = "fixed";
-      navbarShadow = useColorModeValue(
-        "0px 7px 23px rgba(0, 0, 0, 0.05)",
-        "none"
-      );
+      navbarShadow = useColorModeValue("0px 7px 23px rgba(0, 0, 0, 0.05)", "none");
       navbarBg = useColorModeValue(
         "linear-gradient(112.83deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.8) 110.84%)",
         "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
       );
       navbarBorder = useColorModeValue("#FFFFFF", "rgba(255, 255, 255, 0.31)");
-      navbarFilter = useColorModeValue(
-        "none",
-        "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))"
-      );
+      navbarFilter = useColorModeValue("none", "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))");
     }
 
   const changeNavbar = () => {
@@ -94,7 +85,7 @@ export default function Navbar(props) {
   };
   window.addEventListener("scroll", changeNavbar);
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const ConnectWalletBtn = () => {
     return (
@@ -112,8 +103,8 @@ export default function Navbar(props) {
           </ModalContent>
         </Modal>
       </>
-    )
-  }
+    );
+  };
   const AccountbarBtn = () => {
     return (
       <>
@@ -130,8 +121,8 @@ export default function Navbar(props) {
           </ModalContent>
         </Modal>
       </>
-    )
-  }
+    );
+  };
 
   return (
     <Flex

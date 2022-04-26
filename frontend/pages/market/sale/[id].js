@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import {
@@ -25,15 +25,12 @@ import Swal from "sweetalert2";
 import NftHistory from "../../components/Home/NftHistory";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
-const MarketDetail = () => {
+const MarketDetail_sale = () => {
   const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, nftDealContract } = blockchain;
-  console.log(nftDealContract);
   const router = useRouter();
-  const { id, grade, attr, name, image, description, price } = router.query;
-  console.log(router);
-  console.log(JSON.parse(attr));
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { web3, account, nftDealContract } = blockchain;
+  const { id, grade, attr, name, image, description, price } = router.query;
 
   const dealNft = async () => {
     try {
@@ -60,6 +57,7 @@ const MarketDetail = () => {
 
   useEffect(() => {
     if (!account) return;
+    console.log("g");
   }, [account]);
 
   return (

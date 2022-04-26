@@ -19,7 +19,8 @@ import {
 } from "@chakra-ui/react";
 
 function ImageUpload(props) {
-  const LS_KEY = "login-with-metamask:auth";
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
+
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
   const [Images, setImages] = useState([]);
@@ -28,7 +29,7 @@ function ImageUpload(props) {
   // const [beforeImages, setBeforeImages] = useState([]);
   const [userName, setUserName] = useState("");
 
-  const getToken = Cookies.get(LS_KEY);
+  const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
   const parsedToken = getToken && JSON.parse(getToken).accessToken;
 
   useEffect(() => {

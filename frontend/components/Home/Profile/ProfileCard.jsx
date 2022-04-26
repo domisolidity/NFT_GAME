@@ -31,7 +31,7 @@ import ImageUpload from "./ImageUpload";
 import UpdateProfile from "./UpdateProfile";
 import Header from "./Header";
 
-const ProfileCard = () => {
+const ProfileCard = ({ as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
   const [beforeUserName, setBeforeUserName] = useState("");
@@ -39,12 +39,12 @@ const ProfileCard = () => {
   const [userName, setUserName] = useState("");
   const [Images, setImages] = useState([]);
 
-  const LS_KEY = "login-with-metamask:auth";
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
 
   const [accessToken, setAccessToken] = useState("");
 
   useEffect(async () => {
-    const getToken = Cookies.get(LS_KEY);
+    const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
 
@@ -85,7 +85,7 @@ const ProfileCard = () => {
       return alert("빈칸을 채워주세요");
     }
 
-    const getToken = Cookies.get(LS_KEY);
+    const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
     const {
@@ -126,6 +126,8 @@ const ProfileCard = () => {
   return (
     <>
       <SimpleGrid
+        as={as}
+        animation={slideIn}
         columns={{ sm: 1, md: 2 }}
         pt={{ base: "120px", md: "75px" }}
         align="center"

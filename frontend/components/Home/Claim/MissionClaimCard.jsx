@@ -8,29 +8,17 @@ const MissionClaimCard = (props) => {
   const rewardAmount = props.reward;
   const updateReward = props.updateReward;
   const blockchain = useSelector((state) => state.blockchain);
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
   const { account, claim20_Contract } = blockchain;
 
   const [loading, setLoading] = useState(false);
 
-  // const test = async () => {
-  //   await gameTokenContract.methods
-  //     .allowance(claim20_Contract._address, account)
-  //     .call()
-  //     .then((res) => {
-  //       console.log(res);
-  //     });
-  // };
-  // const test1 = async () => {
-  //   await gameTokenContract.methods
-  //     .balanceOf(claim20_Contract._address)
-  //     .call()
-  //     .then((res) => {
-  //       console.log(res);
-  //     });
-  // };
-
   const claimReward = async () => {
     try {
+      if (rewardAmount == 0) {
+        alert("보상 받을 리워드가 없습니다.");
+        return;
+      }
       setLoading(true);
       await claim20_Contract.methods
         .claim_mission(account, rewardAmount, Date.now())
@@ -39,7 +27,9 @@ const MissionClaimCard = (props) => {
           console.log(res);
           if (res.status) {
             await axios
-              .post("/api/users/deleteMission", { account: account })
+              .post(`${NEXT_PUBLIC_SERVER_URL}/users/deleteMission`, {
+                account: account,
+              })
               .then((res) => {
                 console.log(res);
               });

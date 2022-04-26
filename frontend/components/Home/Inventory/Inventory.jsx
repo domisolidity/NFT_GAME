@@ -7,18 +7,21 @@ import Collections from "./Collections";
 import { Separator } from "../../Separator/Separator";
 import ItemList from "./ItemList";
 
-const Inventory = () => {
+const Inventory = ({ as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
 
   // 게임 아이템 목록
   const [gameItems, setGameItems] = useState([]);
 
   // 아이템 목록 가져오기
   const getGameItems = async () =>
-    await axios.get(`/api/items/game-items`).then((res) => {
-      setGameItems(res.data);
-    });
+    await axios
+      .get(`${NEXT_PUBLIC_SERVER_URL}/items/game-items`)
+      .then((res) => {
+        setGameItems(res.data);
+      });
 
   useEffect(async () => {
     if (!(account && auth)) return false;
@@ -34,7 +37,7 @@ const Inventory = () => {
 
   return (
     <>
-      <SimpleGrid>
+      <SimpleGrid as={as} animation={slideIn}>
         <Text
           fontSize={"1.5rem"}
           fontWeight="bold"

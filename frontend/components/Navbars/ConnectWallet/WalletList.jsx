@@ -1,14 +1,7 @@
 // import { useEffect } from "react";
 import { Button, Flex, Image, useColorModeValue } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  connectWallet,
-  reconnect,
-} from "../../../redux/blockchain/blockchainActions";
-import Web3 from "web3";
-import MetaMaskOnboarding from "@metamask/onboarding";
-import { useEffect } from "react";
-// import { metamaskLogin } from "../redux/actions/metamaskActions";
+import { connectWallet } from "../../../redux/blockchain/blockchainActions";
 
 const WalletList = ({ onClose }) => {
   const dispatch = useDispatch();

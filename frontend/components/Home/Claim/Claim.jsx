@@ -5,11 +5,12 @@ import axios from "axios";
 import ClaimHistory from "./ClaimHistory";
 import MissionClaimCard from "./MissionClaimCard";
 import RankingClaimCard from "./RankingClaimCard";
+import Notice from "../Notice/Notice";
 
-const Claim = (props) => {
+const Claim = ({ onUpdate, as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, claim20_Contract } = blockchain;
-
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
   const [rewardAmount_rank, setRewardAmount_rank] = useState(0);
   const [rewardAmount_mission, setRewardAmount_mission] = useState(0);
   const [claimableRank, setClaimableRank] = useState([]);
@@ -19,7 +20,7 @@ const Claim = (props) => {
   // 보상 수량 조회
   const getRewardAmount = async () => {
     await axios
-      .post("/api/users/claimable-rank", { data: account })
+      .post(`${NEXT_PUBLIC_SERVER_URL}/users/claimable-rank`, { data: account })
       .then((rank) => {
         console.log(rank);
         let rewardData = [];
@@ -40,7 +41,9 @@ const Claim = (props) => {
       });
 
     await axios
-      .post("/api/users/claimable-mission", { data: account })
+      .post(`${NEXT_PUBLIC_SERVER_URL}/users/claimable-mission`, {
+        data: account,
+      })
       .then((mission) => {
         console.log(mission);
         let missionRewardData = [];
@@ -50,7 +53,7 @@ const Claim = (props) => {
 
         setRewardAmount_mission(mission.data.length);
         setClaimableMission(missionRewardData);
-        props.onUpdate();
+        onUpdate();
       });
   };
 

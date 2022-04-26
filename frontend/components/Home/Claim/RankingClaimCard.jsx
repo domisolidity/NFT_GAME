@@ -10,7 +10,7 @@ const RankingClaimCard = (props) => {
   const updateReward = props.updateReward;
   const blockchain = useSelector((state) => state.blockchain);
   const { account, claim20_Contract } = blockchain;
-
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
   const [loading, setLoading] = useState(false);
 
   // 랭킹 클레임
@@ -40,7 +40,9 @@ const RankingClaimCard = (props) => {
           if (res.status) {
             alert("클레임 성공");
             await axios
-              .post("/api/users/rewarded", { rank: claimInfo })
+              .post(`${NEXT_PUBLIC_SERVER_URL}/users/rewarded`, {
+                rank: claimInfo,
+              })
               .then((res) => {
                 console.log(res);
               });

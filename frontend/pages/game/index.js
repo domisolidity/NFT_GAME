@@ -14,12 +14,14 @@ const Game = () => {
   const { account, auth, nftContract, mainNftData } = blockchain;
   const router = useRouter();
   const [hasToken, setHasToken] = useState(false);
+  const [mainNFT, setMainNFT] = useState("");
 
   useEffect(async () => {
     if (!(account && auth && nftContract)) return;
     // NFT 홀더 확인용
     const haveToken = await nftContract.methods.haveTokenBool(account).call({ from: account });
     setHasToken(haveToken);
+    setMainNFT(await GameInterface.getMyNFT(account));
   }, [account, auth, nftContract]);
 
   const selectGame = async (game) => {
@@ -29,6 +31,10 @@ const Game = () => {
       return false;
     }
     // 대표 NFT 설정 확인
+    if (mainNftData && !mainNFT) {
+      alert("스테이킹 기간이 만료되었습니다.\n보상을 수령하시고 새로 스테이킹 해주세요");
+      return false;
+    }
     if (!mainNftData) {
       if (!hasToken) {
         alert("NFT를 가지고 있지 않습니다.\n민팅하고 대표NFT를 설정해주세요.");
@@ -48,10 +54,19 @@ const Game = () => {
     }
   };
   const reflectKeyframes = keyframes`
-    from { -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044) }
-    to { -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044) }
+      0% { -webkit-box-reflect: below 0px linear-gradient(#00000011, #00000044) }
+     10% { -webkit-box-reflect: below 0px linear-gradient(#00000010, #00000040) }
+     20% { -webkit-box-reflect: below 0px linear-gradient(#00000009, #00000036) }
+     30% { -webkit-box-reflect: below 0px linear-gradient(#00000008, #00000032) }
+     40% { -webkit-box-reflect: below 0px linear-gradient(#00000007, #00000028) }
+     50% { -webkit-box-reflect: below 0px linear-gradient(#00000006, #00000024) }
+     60% { -webkit-box-reflect: below 0px linear-gradient(#00000005, #00000020) }
+     70% { -webkit-box-reflect: below 0px linear-gradient(#00000004, #00000016) }
+     80% { -webkit-box-reflect: below 0px linear-gradient(#00000003, #00000012) }
+     90% { -webkit-box-reflect: below 0px linear-gradient(#00000002, #00000008) }
+    100% { -webkit-box-reflect: below 0px linear-gradient(#00000001, #00000004) }
   `;
-  const reflect = `${reflectKeyframes} 0s linear 0s forwards`;
+  const reflect = `${reflectKeyframes} 2s linear alternate 0s infinite`;
 
   const txtColor = useColorModeValue("gray.600", "white")
 

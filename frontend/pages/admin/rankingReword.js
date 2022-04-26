@@ -24,7 +24,7 @@ import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 const RankingReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, gameTokenContract, claim20_Contract } = blockchain;
-
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
   const [rankData, setRankData] = useState();
   const [selectedRankData, setSelectedRankData] = useState();
   const [isRankData, setIsRankData] = useState(false);
@@ -42,7 +42,7 @@ const RankingReword = () => {
   // step 1) 랭킹 정보 불러오기
   const importRank = async () => {
     await axios
-      .get("/api/ranks")
+      .get(`${NEXT_PUBLIC_SERVER_URL}/ranks`)
       .then(async (rank) => {
         const rankResult = [];
         for (let i = 0; i < rank.data.length; i++) {
@@ -109,7 +109,7 @@ const RankingReword = () => {
         .then(async (res) => {
           console.log(res);
           // 3) db에 approve 된 상태로 업데이트
-          await axios.post("/api/ranks/approved", { rank: selectedRankData }).then(() => {
+          await axios.post(`${NEXT_PUBLIC_SERVER_URL}/ranks/approved`, { rank: selectedRankData }).then(() => {
             alert("승인 작업 완료");
             setNextStep(false);
             setLastStep(true);

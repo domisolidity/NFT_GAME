@@ -32,18 +32,18 @@ const ChoiceNft = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, nftContract, stakingContract } = blockchain;
 
-  const { onClose } = props;
+  const { onClose, dateConverter } = props;
 
   const [myNfts, setMyNfts] = useState([]);
-  const [currentMainNft, setcurrentMainNft] = useState("");
   const [selectNft, setSelectNft] = useState("");
 
-  const baseUri = "http://127.0.0.1:8080/ipfs";
-  const LS_KEY = "login-with-metamask:auth";
+  const baseUri = "https://gateway.pinata.cloud/ipfs/";
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
+
   const [accessToken, setAccessToken] = useState("");
 
   useEffect(() => {
-    const getToken = Cookies.get(LS_KEY);
+    const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
   }, [accessToken]);
@@ -121,10 +121,13 @@ const ChoiceNft = (props) => {
       mainNft: selectNft,
     };
 
+    // 스테이킹 컨트랙트에 NFT를 넘길 수 있는지
+    // NFT 컨트랙트에 승인여부 확인하기
     const isApprovedForAll = await nftContract.methods
       .isApprovedForAll(account, stakingContract._address)
       .call();
-    if (!isApprovedForAll) {
+    // 승인되지 않은 상태면 승인상태로 바꾸기
+    if (!isApprovedForAll && confirm(`스테이킹을 위한 권한을 부여합니다`)) {
       await nftContract.methods
         .setApprovalForAll(stakingContract._address, true)
         .send({ from: account })
@@ -134,14 +137,25 @@ const ChoiceNft = (props) => {
           }
         });
     }
-    const asdf = await nftContract.methods.ownerOf(selectNft).call();
-    console.log(asdf);
+    const startTimestamp = parseInt(Date.now() / 1000);
+    const endTimestamp = parseInt(
+      await stakingContract.methods.setEndTime().call()
+    );
+    const endTime = dateConverter(endTimestamp);
+    const reward = await stakingContract.methods
+      .calcReward(selectNft, startTimestamp, endTimestamp)
+      .call();
+    if (
+      !confirm(
+        `해당 NFT를 스테이킹 합니다.\n스테이킹이 끝나게 될 시점은 ${endTime} 입니다.\n스테이킹이 끝나면 받게 될 보상은 토큰 ${reward}개로 예상됩니다.`
+      )
+    )
+      return;
     const staking = await stakingContract.methods
       .nftStake(selectNft)
       .send({ from: account });
 
-    console.log(staking);
-    if (staking.status) {
+    if (staking) {
       const stakingData = await stakingContract.methods
         .getStakingData()
         .call({ from: account });
@@ -159,9 +173,14 @@ const ChoiceNft = (props) => {
         mainNftData = { stakingData: stakingData, mainNftJson: response.data };
       }
       dispatch(regMainNft({ mainNftData }));
-      setcurrentMainNft(selectNft);
-      alert("한 주간 유지됩니다.");
+      alert(`${endTime}까지 유지됩니다`);
       await GameInterface.missionReg(account, selectNft);
+      await axios
+        .post(`/api/users/profile/reg-token-id`, {
+          account: account,
+          tokenId: selectNft,
+        })
+        .catch((err) => console.log(err));
       onClose();
     }
   };
@@ -215,14 +234,16 @@ const ChoiceNft = (props) => {
         <Button m={5} onClick={getSubmit}>
           Confirm
         </Button>
-        <Button m={5}>Cancel</Button>
+        <Button m={5} onClick={onClose}>
+          Cancel
+        </Button>
       </Flex>
       <style jsx>{`
         .forActive:hover {
-          background-color: pink;
+          background-color: var(--chakra-colors-whiteAlpha-100);
         }
         .forActive.active {
-          background-color: black;
+          background-color: var(--chakra-colors-teal-300);
         }
       `}</style>
     </>
