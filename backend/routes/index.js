@@ -6,6 +6,7 @@ const auth = require("./auth");
 const game = require("./games");
 const item = require("./items");
 const rank = require("./ranks");
+const admin = require("./admins");
 
 /* 사용자 정보 */
 router.use("/auth", auth);
@@ -21,5 +22,8 @@ router.use("/items", item);
 
 /* 랭킹 */
 router.use("/ranks", rank);
+
+/* 관리자 */
+router.use("/admins", admin);
 
 module.exports = router;

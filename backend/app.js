@@ -16,8 +16,7 @@ const usersRouter = require("./routes/users");
 const gamesRouter = require("./routes/games");
 const itemsRouter = require("./routes/items");
 const ranksRouter = require("./routes/ranks");
-
-
+const adminsRouter = require("./routes/admins");
 
 /* 시퀄라이즈 연결 */
 sequelize
@@ -55,6 +54,7 @@ app.use("/users", usersRouter);
 app.use("/games", gamesRouter);
 app.use("/items", itemsRouter);
 app.use("/ranks", ranksRouter);
+app.use("/admins", adminsRouter);
 //////////////////
 
 //라우터 연결

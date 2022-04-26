@@ -4,7 +4,7 @@ import { createChests } from "../../components/game/FindTheRing/utils";
 import { CHEST_COUNT, GameStatus } from "../../components/game/FindTheRing/consts";
 import reducer from "../../components/game/FindTheRing/store/reducer";
 import Menu from "../../components/game/FindTheRing/components/Menu/Menu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
 import ChestContainer from "../../components/game/FindTheRing/components/ChestContainer/ChestContainer";
@@ -14,8 +14,11 @@ import BlankComponent from "../../components/utils/BlankComponent";
 import { Box, Flex } from "@chakra-ui/react";
 import InGameProfile from "../../components/game/InGameProfile";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
+import { missionComplete } from "../../redux/dailyMission/dailyMissionActions";
+import MissionCard from "../../components/game/MissionCard";
 
 const TreasureHunt = () => {
+  const dispatch2 = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, mainNftData } = blockchain;
   const { gameTitle } = GameInterface.gameList[2];
@@ -30,6 +33,13 @@ const TreasureHunt = () => {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [hasMission, setHasMission] = useState("");
+  const [mainNFT, setMainNFT] = useState("");
+
+  // 페이지 진입 시 대표 NFT 받아오기
+  useEffect(async () => {
+    if (!(account && auth)) return;
+    setMainNFT(await GameInterface.getMyNFT(account));
+  }, [account, auth]);
 
   // 잔여 기회 갱신
   const updateChance = (updatedChance) => {
@@ -81,6 +91,8 @@ const TreasureHunt = () => {
           await GameInterface.updateMission(account, hasMission.mission_id);
           const recivedMission = await GameInterface.getMission(account, gameTitle);
           setHasMission(recivedMission);
+          // 미션클리어 정보 사이드바에서 갱신하기 위한 리덕스
+          dispatch2(missionComplete());
         }
       }
     }
@@ -88,9 +100,9 @@ const TreasureHunt = () => {
 
   // 로그인, 대표NFT까지 확인 됐으면
   useEffect(async () => {
-    if (!(account && auth && gameTitle && mainNftData)) return;
+    if (!(account && auth && gameTitle && mainNFT)) return;
     await GameInterface.setParticipant(account, gameTitle); // 참여자 초기화
-    await GameInterface.initChance(account, gameTitle, mainNftData.stakingData.tokenId); // 게임횟수 초기화
+    await GameInterface.initChance(account, gameTitle, mainNFT); // 게임횟수 초기화
     setChance(await GameInterface.getMyChance(account, gameTitle)); // 횟수 불러오기
     setGameItems(await GameInterface.getGameItems()); // 게임아이템 불러오기
     setBestScore(await GameInterface.getMyBestScore(account, gameTitle)); // 최고점수 불러오기
@@ -99,14 +111,13 @@ const TreasureHunt = () => {
     if (recivedMission) {
       setHasMission(recivedMission);
     }
-  }, [mainNftData]);
+  }, [account, auth, gameTitle, mainNFT]);
 
   return (
     <Flex mt={"120px"}>
-      <InGameProfile filledValue={score} hasMission={hasMission} />
-      {account && auth && mainNftData ? (
+      {account && auth && mainNftData && mainNFT ? (
         <Box w={"100%"}>
-          <GameSelectbar />
+          {/* <GameSelectbar /> */}
           <ContextProvider state={state} dispatch={dispatch}>
             <div className="App">
               <div className="App__container">
@@ -146,7 +157,7 @@ const TreasureHunt = () => {
                   ))}
               </div>
               <div className="score__box">
-                점수
+                Score
                 <br />
                 {resultBonus ? Math.ceil(score * resultBonus) : score}
               </div>
@@ -158,14 +169,17 @@ const TreasureHunt = () => {
                 </div>
               ) : null}
               <div className="best_score__box">
-                최고기록
+                Best score
                 <br />
                 {bestScore}
               </div>
               <div className="chance__box">
-                남은 기회
+                Chance
                 <br />
                 {chance}
+              </div>
+              <div className="mission-box">
+                <MissionCard filledValue={score} hasMission={hasMission} />
               </div>
             </div>
           </ContextProvider>
@@ -207,7 +221,7 @@ const TreasureHunt = () => {
           text-align: center;
         }
         .best_score__box {
-          width: 70px;
+          width: 100px;
           position: absolute;
           top: 10px;
           left: 20px;
@@ -219,6 +233,16 @@ const TreasureHunt = () => {
           top: 10px;
           left: 220px;
           text-align: center;
+        }
+        .mission-box {
+          color: var(--chakra-colors-gray-800);
+          position: absolute;
+          font-size: 10px;
+          left: 60%;
+          top: 10px;
+          border-radius: 10px;
+          background-color: yellow;
+          padding: 5px;
         }
       `}</style>
     </Flex>

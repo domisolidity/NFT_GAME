@@ -2,7 +2,7 @@ import { Box, Flex, Img, Text } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { metamaskAuth, metamaskLogin } from "../../_redux/actions/metamaskActions";
+import { missionUpdate } from "../../redux/dailyMission/dailyMissionActions";
 import GameInterface from "../game/GameInterface";
 
 export function SidebarBottom(props) {
@@ -11,15 +11,10 @@ export function SidebarBottom(props) {
 
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, mainNftData } = blockchain;
+  const missionState = useSelector((state) => state.mission);
+  const { updated } = missionState;
 
-  // const metamask = useSelector((state) => state.metamask);
-  // const user = useSelector((state) => state.user);
-  // const contract = useSelector((state) => state.contract);
-
-  // const dispatch = useDispatch();
-  // const { account } = metamask;
-  // const { auth } = user;
-  // const { mainNftData } = contract;
+  const dispatch = useDispatch();
 
   const baseUri = "http://127.0.0.1:8080/ipfs";
 
@@ -35,11 +30,8 @@ export function SidebarBottom(props) {
       receivedMissions = await GameInterface.getMission(account);
     }
     setDailyMission(receivedMissions);
-  }, [mainNftData]);
-
-  // useEffect(async () => {
-  //   dispatch(metamaskLogin())
-  // }, []);
+    dispatch(missionUpdate());
+  }, [account, auth, mainNftData, updated]);
 
   return (
     <>

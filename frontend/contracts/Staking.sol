@@ -30,7 +30,7 @@ contract Staking is ERC721Holder {
 
   /* 스테이킹 끝나는 날 반환기 */
   function setEndTime() public view returns (uint) {
-    uint ReferenceTimestamp = 1649462400; // 기준날짜 2022.04.07. 09:00
+    uint ReferenceTimestamp = 1649462400; // 기준날짜 2022.04.09. 09:00
     // 기준날짜에서 현재시간의 차이를 1주일로 나눈 몫
     uint temp = (block.timestamp - ReferenceTimestamp) / 1 weeks;
     // 기준날짜에서 차이나는 주만큼 더해서 스테이킹 끝날 날짜를 반환
