@@ -1,4 +1,3 @@
-// constants
 import Web3 from "web3";
 import NftContract from "../../contracts/artifacts/NftContract.json";
 import NftDealContract from "../../contracts/artifacts/NftDealContract.json";
@@ -12,9 +11,9 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 const { NEXT_PUBLIC_SERVER_URL } = process.env;
+const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
 
-const LS_KEY = "login-with-metamask:auth";
-const baseUri = "https://gateway.pinata.cloud/ipfs";
+const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
 const connectRequest = () => {
   return {
@@ -56,7 +55,7 @@ export const regMainNft = (mainNftData) => {
 };
 
 export const authenticate = () => {
-  const accessToken = Cookies.get(LS_KEY);
+  const accessToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
   const auth = accessToken && JSON.parse(accessToken).accessToken;
   console.log(" 🛠 authenticate 🛠");
   console.log(accessToken);
@@ -153,15 +152,15 @@ export const reconnect = () => {
       /*
         배포환경에서 에러
       */
-      // const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
-      // let mainNftData;
-      // if (stakingData.tokenId == 0) {
-      //   mainNftData = null;
-      // } else {
-      //   const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
-      //   const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
-      //   mainNftData = { stakingData: stakingData, mainNftJson: response.data };
-      // }
+      const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
+      let mainNftData;
+      if (stakingData.tokenId == 0) {
+        mainNftData = null;
+      } else {
+        const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+        const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+        mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+      }
       dispatch(
         connectSuccess({
           account: accounts.toString(),
@@ -172,7 +171,7 @@ export const reconnect = () => {
           auctionCreatorContract: auctionCreatorContract,
           claim20_Contract: claim20_Contract,
           stakingContract: stakingContract,
-          // mainNftData: mainNftData,
+          mainNftData: mainNftData,
           web3: web3,
         })
       );
@@ -308,15 +307,15 @@ export const connectWallet = () => {
           ///
 
           const coinbase = await web3.eth.getCoinbase(); //계정
-          // const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
-          // let mainNftData;
-          // if (stakingData.tokenId == 0) {
-          //   mainNftData = null;
-          // } else {
-          //   const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
-          //   const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
-          //   mainNftData = { stakingData: stakingData, mainNftJson: response.data };
-          // }
+          const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
+          let mainNftData;
+          if (stakingData.tokenId == 0) {
+            mainNftData = null;
+          } else {
+            const directoryUri = await nftContract.methods.tokenURI(stakingData.tokenId).call();
+            const response = await axios.get(`${baseUri}${directoryUri.slice(6)}/${stakingData.tokenId}.json`);
+            mainNftData = { stakingData: stakingData, mainNftJson: response.data };
+          }
 
           if (!coinbase) {
             dispatch(connectFailed("메타마스크 로그인이 필요합니다."));
@@ -359,7 +358,7 @@ export const connectWallet = () => {
 
           const handleLoggedIn = (auth) => {
             const one_hour = new Date(new Date().getTime() + 3600 * 1000); // sign token for 1 hour
-            Cookies.set(LS_KEY, JSON.stringify(auth), { expires: one_hour });
+            Cookies.set(NEXT_PUBLIC_LOGIN_KEY, JSON.stringify(auth), { expires: one_hour });
 
             dispatch(authenticate());
           };
@@ -390,7 +389,7 @@ export const connectWallet = () => {
               auctionCreatorContract: auctionCreatorContract,
               claim20_Contract: claim20_Contract,
               stakingContract: stakingContract,
-              // mainNftData: mainNftData,
+              mainNftData: mainNftData,
               web3: web3,
             })
           );
@@ -424,7 +423,7 @@ export const connectWallet = () => {
 
 export const disconnectWallet = () => {
   return async (dispatch) => {
-    Cookies.remove(LS_KEY);
+    Cookies.remove(NEXT_PUBLIC_LOGIN_KEY);
 
     dispatch(authenticate());
     dispatch(connectFailed("로그아웃"));

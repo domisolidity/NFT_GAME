@@ -22,7 +22,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Swal from "sweetalert2";
-import NftHistory from "../../../components/Home/NftHistory";
+import NftHistory from "../../components/Home/NftHistory";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const MarketDetail_sale = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -60,7 +61,7 @@ const MarketDetail_sale = () => {
   }, [account]);
 
   return (
-    <Grid w="70vw" margin="0 auto" templateColumns="repeat(5,1fr)" templateRows="repeat(1,1fr)" gap={2}>
+    <Grid w="70vw" margin="0 auto" templateColumns="repeat(5,1fr)" templateRows="repeat(1,1fr)" gap={2} pt={{ base: "120px", md: "75px" }}>
       <GridItem colSpan={2} bg="whiteAlpha.100">
         <Flex direction="column">
           <Image src={image} borderRadius={10} />
@@ -123,7 +124,9 @@ const MarketDetail_sale = () => {
                 </ModalBody>
                 <ModalFooter>
                   <Button onClick={dealNft}>Confirm</Button>
-                  <Button colorScheme="blue" mr={3} onClick={onClose}>
+                  <Button
+                    // colorScheme="blue" 
+                    mr={3} onClick={onClose}>
                     Close
                   </Button>
                 </ModalFooter>
@@ -140,4 +143,10 @@ const MarketDetail_sale = () => {
   );
 };
 
-export default MarketDetail_sale;
+export default MarketDetail;
+
+// getLayout property
+MarketDetail.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+

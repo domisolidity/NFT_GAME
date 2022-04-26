@@ -66,7 +66,7 @@ const GameItem = ({
   return (
     <Button
       onClick={usingItem}
-      colorScheme={"blue"}
+      // colorScheme={"blue"}
       width={"70px"}
       height={"70px"}
       margin={"10px 5px 0px"}

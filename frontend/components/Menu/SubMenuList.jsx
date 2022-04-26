@@ -1,9 +1,10 @@
 import { Flex, Tabs, TabList, Tab } from "@chakra-ui/react";
 
-const SubMenuList = ({ subMenu, getSelectedSubMenu }) => {
+const SubMenuList = ({ subMenu, getSelectedSubMenu, as, slideInSubMenu }) => {
   return (
     <Flex
-      // shadow="md"
+      as={as}
+      animation={slideInSubMenu}
       w={"100%"}
       alignItems="center"
       justifyContent="center"

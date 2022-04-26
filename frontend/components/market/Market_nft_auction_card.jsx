@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Box, Flex, Image, Button, Text } from "@chakra-ui/react";
-import Countdown from "../utils/Countdown";
+import Countdown from "../../utils/Countdown";
 
 const Market_nft_auction_card = ({ nft }) => {
   const asdf = (data) => {};

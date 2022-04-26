@@ -37,7 +37,24 @@ router.post("/my-token-id", async (req, res) => {
   console.log("미션 등록");
   const account = req.body.account;
 
-  const response = await User.findOne({ where: { publicAddress: account }, attributes: ["mainNft"] });
+  const response = await User.findOne({
+    where: { publicAddress: account },
+    attributes: ["mainNft"],
+  });
+
+  res.send(response);
+});
+
+/* 대표 NFT 등록 */
+router.post("/reg-token-id", async (req, res) => {
+  console.log("server: 대표NFT 등록하기");
+  const account = req.body.account;
+  const tokenId = req.body.tokenId;
+
+  const response = await User.update(
+    { mainNft: tokenId },
+    { where: { publicAddress: account } }
+  );
 
   res.send(response);
 });

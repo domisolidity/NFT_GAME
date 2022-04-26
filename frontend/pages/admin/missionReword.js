@@ -19,6 +19,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 
 const MissionReword = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -136,7 +137,7 @@ const MissionReword = () => {
   }, [account]);
 
   return (
-    <Box w="70vw" bg="blackAlpha.400" margin="0 auto" padding="10" border="2px solid gray" borderRadius="10">
+    <Box pt={{ base: "120px", md: "75px" }}>
       <Flex justify="space-between">
         <Box>
           <Heading display="inline">
@@ -144,7 +145,7 @@ const MissionReword = () => {
             <span>Managing Mission Reward</span>
           </Heading>
           <Text ml="20" mt="5">
-            {" "}
+
             주간 랭킹 정보를 확인하고 랭킹 정보에 따라 클레임 허용여부를 관리할 수 있습니다.
           </Text>
         </Box>
@@ -156,128 +157,132 @@ const MissionReword = () => {
         {/* <Button onClick={test_transferTOContract}>TEST</Button>
         <Button onClick={testtest}>TEST11</Button> */}
       </Flex>
-      {isData ? (
-        <TableContainer align="center" mt="10">
-          <Text fontSize="30"> step 2 </Text> 계정 선택
-          <Table border="1px solid gray" mt="5" w="80%">
-            <TableCaption>
-              <Button bg="#414fa28f" onClick={previousStep} mr="2">
-                뒤로 가기
-              </Button>
-              <Button bg="#414fa28f" onClick={selectRankData}>
-                선택 완료
-              </Button>
-            </TableCaption>
-            <Thead bg="whiteAlpha.200">
-              <Tr>
-                <Th>
-                  <Checkbox
-                    colorScheme="green"
-                    isChecked={allChecked}
-                    isIndeterminate={isIndeterminate}
-                    onChange={(e) => {
-                      let checkedTarget = [];
-                      for (let i = 0; i < dataList.length; i++) {
-                        checkedTarget.push(e.target.checked);
-                      }
-                      setCheckedItems(checkedTarget);
-                    }}
-                  />
-                </Th>
-                <Th>계정 주소</Th>
-                <Th>미션 달성 횟수</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {dataList &&
-                dataList.map((list, index) => {
-                  return (
-                    <Tr key={index}>
-                      <Td>
-                        <Checkbox
-                          colorScheme="green"
-                          isChecked={checkedItems[index]}
-                          onChange={(e) => {
-                            let checkedTarget2 = [];
-                            console.log(e.target.checked, "<<<");
-                            for (let i = 0; i < dataList.length; i++) {
-                              if (i == index) {
-                                checkedTarget2.push(e.target.checked);
-                                continue;
+      {
+        isData ? (
+          <TableContainer align="center" mt="10">
+            <Text fontSize="30"> step 2 </Text> 계정 선택
+            <Table border="1px solid gray" mt="5" w="80%">
+              <TableCaption>
+                <Button bg="#414fa28f" onClick={previousStep} mr="2">
+                  뒤로 가기
+                </Button>
+                <Button bg="#414fa28f" onClick={selectRankData}>
+                  선택 완료
+                </Button>
+              </TableCaption>
+              <Thead bg="whiteAlpha.200">
+                <Tr>
+                  <Th>
+                    <Checkbox
+                      // colorScheme="green"
+                      isChecked={allChecked}
+                      isIndeterminate={isIndeterminate}
+                      onChange={(e) => {
+                        let checkedTarget = [];
+                        for (let i = 0; i < dataList.length; i++) {
+                          checkedTarget.push(e.target.checked);
+                        }
+                        setCheckedItems(checkedTarget);
+                      }}
+                    />
+                  </Th>
+                  <Th>계정 주소</Th>
+                  <Th>미션 달성 횟수</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {dataList &&
+                  dataList.map((list, index) => {
+                    return (
+                      <Tr key={index}>
+                        <Td>
+                          <Checkbox
+                            // colorScheme="green"
+                            isChecked={checkedItems[index]}
+                            onChange={(e) => {
+                              let checkedTarget2 = [];
+                              console.log(e.target.checked, "<<<");
+                              for (let i = 0; i < dataList.length; i++) {
+                                if (i == index) {
+                                  checkedTarget2.push(e.target.checked);
+                                  continue;
+                                }
+                                checkedTarget2.push(checkedItems[i]);
                               }
-                              checkedTarget2.push(checkedItems[i]);
-                            }
-                            setCheckedItems(checkedTarget2);
-                          }}
-                        />
-                      </Td>
-                      <Td>{list[0]}</Td>
-                      <Td>{list[1]}</Td>
-                    </Tr>
-                  );
-                })}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      ) : nextStep ? (
-        <TableContainer align="center" mt="10">
-          <Text fontSize="30">step 3</Text> 클레임 허용
-          <Table border="1px solid gray" mt="5" w="80%" variant="striped" colorScheme="#2C264C">
-            <TableCaption>
-              <Box mt="50" mb="5" fontSize="20">
-                <span> Total Allowance : {totalAllowance} DGT </span>
-              </Box>
-              <Button bg="#414fa28f" onClick={previousStep} mr="2">
-                뒤로 가기
-              </Button>
-              <Button
-                isLoading={loading ? 1 : null}
-                loadingText="approving..."
-                bg="#414fa28f"
-                onClick={approveMissionClaim}
-              >
-                클레임 허용
-              </Button>
-            </TableCaption>
-            <Thead bg="whiteAlpha.200">
-              <Tr>
-                <Th>계정 주소</Th>
-                <Th>미션 달성 횟수</Th>
-                <Th>허용량</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {selectedMissionData &&
-                selectedMissionData.map((list, index) => {
-                  return (
-                    <Tr key={index}>
-                      <Td>{list[0]}</Td>
-                      <Td>{list[1]}</Td>
-                      <Td>{list[1]}</Td>
-                    </Tr>
-                  );
-                })}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      ) : lastStep ? (
-        <Box align="center" mt="10">
-          <Text fontSize="30">step 4</Text> 완료
-          <Box mt="5">
-            <Text mt="5">완료되었습니다.</Text>
-            <Button onClick={initStep}>추가 설정하기</Button>
+                              setCheckedItems(checkedTarget2);
+                            }}
+                          />
+                        </Td>
+                        <Td>{list[0]}</Td>
+                        <Td>{list[1]}</Td>
+                      </Tr>
+                    );
+                  })}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        ) : nextStep ? (
+          <TableContainer align="center" mt="10">
+            <Text fontSize="30">step 3</Text> 클레임 허용
+            <Table border="1px solid gray" mt="5" w="80%" variant="striped"
+            // colorScheme="#2C264C"
+            >
+              <TableCaption>
+                <Box mt="50" mb="5" fontSize="20">
+                  <span> Total Allowance : {totalAllowance} DGT </span>
+                </Box>
+                <Button bg="#414fa28f" onClick={previousStep} mr="2">
+                  뒤로 가기
+                </Button>
+                <Button
+                  isLoading={loading ? 1 : null}
+                  loadingText="approving..."
+                  bg="#414fa28f"
+                  onClick={approveMissionClaim}
+                >
+                  클레임 허용
+                </Button>
+              </TableCaption>
+              <Thead bg="whiteAlpha.200">
+                <Tr>
+                  <Th>계정 주소</Th>
+                  <Th>미션 달성 횟수</Th>
+                  <Th>허용량</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {selectedMissionData &&
+                  selectedMissionData.map((list, index) => {
+                    return (
+                      <Tr key={index}>
+                        <Td>{list[0]}</Td>
+                        <Td>{list[1]}</Td>
+                        <Td>{list[1]}</Td>
+                      </Tr>
+                    );
+                  })}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        ) : lastStep ? (
+          <Box align="center" mt="10">
+            <Text fontSize="30">step 4</Text> 완료
+            <Box mt="5">
+              <Text mt="5">완료되었습니다.</Text>
+              <Button onClick={initStep}>추가 설정하기</Button>
+            </Box>
           </Box>
-        </Box>
-      ) : (
-        <Box align="center" mt="10">
-          <Text fontSize="30">step 1</Text> 미션 보상자 목록
-          <Box mt="5">
-            <Button bg="#414fa28f" onClick={importMissionAchiever} mr="2">
-              보상자 목록 불러오기
-            </Button>
+        ) : (
+          <Box align="center" mt="10">
+            <Text fontSize="30">step 1</Text> 미션 보상자 목록
+            <Box mt="5">
+              <Button bg="#414fa28f" onClick={importMissionAchiever} mr="2">
+                보상자 목록 불러오기
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      )}
+        )
+      }
       <style jsx>{`
         span {
           background: linear-gradient(#f1f1f1 23%, #818181 100%);
@@ -292,3 +297,10 @@ const MissionReword = () => {
 };
 
 export default MissionReword;
+
+// getLayout property
+MissionReword.getLayout = function getLayout(page) {
+  return <SideBarScreen>{page}</SideBarScreen>;
+};
+
+

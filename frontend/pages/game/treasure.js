@@ -112,7 +112,7 @@ const TreasureHunt = () => {
               <div className="App__container">
                 {isPlaying ? (
                   <>
-                    <h1 className="App__heading">상자를 열어요!</h1>
+                    <h1 className="App__heading">Open the Box!</h1>
                     <ChestContainer />
                     <ControlPanel
                       gameStart={gameStart}
@@ -171,7 +171,7 @@ const TreasureHunt = () => {
           </ContextProvider>
         </Box>
       ) : (
-        <BlankComponent receivedText={"로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있읍니다"} />
+        <BlankComponent receivedText={["로그인 및 대표 NFT를 설정하셔야 게임에 참여하실 수 있습니다"]} />
       )}
       <style jsx>{`
         .App {

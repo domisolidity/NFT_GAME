@@ -40,10 +40,18 @@ export default function Navbar(props) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    dispatch(reconnect());
+    dispatch(reconnect())
   }, []);
 
-  const { variant, children, fixed, secondary, brandText, ...rest } = props;
+
+
+  const {
+    variant,
+    children,
+    fixed,
+    brandText,
+    ...rest
+  } = props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue("gray.700", "gray.200");
@@ -67,14 +75,7 @@ export default function Navbar(props) {
       navbarBorder = useColorModeValue("#FFFFFF", "rgba(255, 255, 255, 0.31)");
       navbarFilter = useColorModeValue("none", "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))");
     }
-  if (props.secondary) {
-    navbarBackdrop = "none";
-    navbarPosition = "absolute";
-    mainText = "white";
-    secondaryText = "white";
-    secondaryMargin = "22px";
-    paddingX = "30px";
-  }
+
   const changeNavbar = () => {
     if (window.scrollY > 1) {
       setScrolled(true);
@@ -170,7 +171,6 @@ export default function Navbar(props) {
           <NavbarLinks
             onOpen={props.onOpen}
             logoText={props.logoText}
-            secondary={props.secondary}
             fixed={props.fixed}
           />
         </Box>
@@ -184,7 +184,6 @@ export default function Navbar(props) {
 Navbar.propTypes = {
   brandText: PropTypes.string,
   variant: PropTypes.string,
-  secondary: PropTypes.bool,
   fixed: PropTypes.bool,
   onOpen: PropTypes.func,
 };

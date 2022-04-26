@@ -20,19 +20,16 @@ import IconBox from "../../components/Icons/IconBox";
 import { TimLogo } from "../../components/Icons/Icons";
 import { Separator } from "../../components/Separator/Separator";
 import { SidebarBottom } from "./SidebarBottom";
-import React from "react";
-import {
-  NavLink,
-  // useLocation
-} from "react-router-dom";
+import React, { useRef, useState } from "react";
+import NextLink from "next/link";
 
 function SidebarResponsive(props) {
   // to check for active links and opened collapses
   // let location = useLocation();
 
   // this is for the rest of the collapses
-  const [state, setState] = React.useState({});
-  const mainPanel = React.useRef();
+  const [state, setState] = useState({});
+  const mainPanel = useRef();
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return location.pathname === routeName ? "active" : "";
@@ -46,36 +43,9 @@ function SidebarResponsive(props) {
     const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
-      if (prop.redirect) {
-        return null;
-      }
-      if (prop.category) {
-        var st = {};
-        st[prop["state"]] = !state[prop.state];
-        return (
-          <div key={prop.name}>
-            <Text
-              color={activeColor}
-              fontWeight="bold"
-              mb={{
-                xl: "12px",
-              }}
-              mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
-              py="12px"
-            >
-              {prop.name}
-            </Text>
-            {createLinks(prop.views)}
-          </div>
-        );
-      }
       return (
-        <NavLink to={prop.layout + prop.path} key={prop.name}>
-          {activeRoute(prop.layout + prop.path) === "active" ? (
+        <NextLink href={`${prop.path}`} key={prop.name} passHref>
+          {activeRoute(prop.path) === "active" ? (
             <Button
               boxSize="initial"
               justifyContent="flex-start"
@@ -160,7 +130,7 @@ function SidebarResponsive(props) {
               </Flex>
             </Button>
           )}
-        </NavLink>
+        </NextLink>
       );
     });
   };
@@ -171,43 +141,65 @@ function SidebarResponsive(props) {
   //  BRAND
   //  Chakra Color Mode
   let hamburgerColor = useColorModeValue("gray.500", "gray.200");
-  if (props.secondary === true) {
-    hamburgerColor = "white";
-  }
+
   var brand = (
     <Box pt={"35px"} mb="8px">
-      <Link
-        href={`${process.env.PUBLIC_URL}/#/`}
-        target="_blank"
-        display="flex"
-        lineHeight="100%"
-        mb="30px"
-        fontWeight="bold"
-        justifyContent="center"
-        alignItems="center"
-        fontSize="11px"
-      >
-        <TimLogo w="32px" h="32px" me="10px" />
-        <Text fontSize="sm" mt="3px">
-          {logoText}
-        </Text>
-      </Link>
-      <Separator></Separator>
+      <NextLink href={`${process.env.NEXT_PUBLIC_PUBLIC_URL}/`} passHref>
+        <Link
+          target="_blank"
+          display="flex"
+          lineHeight="100%"
+          mb="30px"
+          fontWeight="bold"
+          justifyContent="center"
+          alignItems="center"
+          fontSize="11px"
+        >
+          <TimLogo w="20px" h="20px" me="10px" />
+          <Text fontSize="sm" mt="3px">
+            {logoText}
+          </Text>
+        </Link>
+      </NextLink>
+      <Separator />
     </Box>
   );
 
   // SIDEBAR
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef();
+  const btnRef = useRef();
   // Color variables
   return (
-    <Flex display={{ sm: "flex", xl: "none" }} ref={mainPanel} alignItems="center">
-      <HamburgerIcon color={hamburgerColor} w="18px" h="18px" ref={btnRef} colorScheme="teal" onClick={onOpen} />
-      <Drawer isOpen={isOpen} onClose={onClose} placement={"left"} finalFocusRef={btnRef}>
+    <Flex
+      display={{ sm: "flex", xl: "none" }}
+      ref={mainPanel}
+      alignItems="center"
+      p="10px"
+      borderRadius={"10px"}
+      transitionDuration="0.5s"
+      cursor="pointer"
+      onClick={onOpen}
+      _hover={{ bgColor: "whiteAlpha.200" }}
+    >
+      <HamburgerIcon
+        color={hamburgerColor}
+        w="18px"
+        h="18px"
+        ref={btnRef}
+      // colorScheme="teal"
+      />
+      <Drawer
+        isOpen={isOpen}
+        onClose={onClose}
+        placement={"left"}
+        finalFocusRef={btnRef}
+        allowPinchZoom
+        preserveScrollBarGap
+      >
         <DrawerOverlay />
         <DrawerContent
-          w="250px"
-          maxW="250px"
+          w="180px"
+          maxW="180px"
           ms={{
             sm: "16px",
           }}
@@ -217,13 +209,13 @@ function SidebarResponsive(props) {
           borderRadius="16px"
         >
           <DrawerCloseButton _focus={{ boxShadow: "none" }} _hover={{ boxShadow: "none" }} />
-          <DrawerBody maxW="250px" px="1rem">
+          <DrawerBody maxW="250px" px="1rem" overflow={"hidden"}>
             <Box maxW="100%" h="100vh">
               <Box>{brand}</Box>
               <Stack direction="column" mb="40px">
                 <Box>{links}</Box>
               </Stack>
-              <SidebarBottom></SidebarBottom>
+              <SidebarBottom />
             </Box>
           </DrawerBody>
         </DrawerContent>

@@ -1,24 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  Flex,
-  Grid,
-  GridItem,
-  Text,
-  Box,
-  Button,
-  SimpleGrid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, Text, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import InventoryCard from "./InventoryCard";
-import Collections from "../Collections";
+import Collections from "./Collections";
 import { Separator } from "../../Separator/Separator";
-import NotFound from "../../utils/NotFound";
 import ItemList from "./ItemList";
 
-const Inventory = () => {
+const Inventory = ({ as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth } = blockchain;
   const { NEXT_PUBLIC_SERVER_URL } = process.env;
@@ -48,7 +37,7 @@ const Inventory = () => {
 
   return (
     <>
-      <SimpleGrid gap="10px">
+      <SimpleGrid as={as} animation={slideIn}>
         <Text
           fontSize={"1.5rem"}
           fontWeight="bold"
@@ -58,10 +47,10 @@ const Inventory = () => {
         >
           Items
         </Text>
-        <Separator h="2px" />
-        <Flex flexDir={"row"}>
-          <ItemList gameItems={gameItems} />
-        </Flex>
+        <Separator />
+
+        <ItemList gameItems={gameItems} />
+
         <Text
           fontSize={"1.5rem"}
           fontWeight="bold"

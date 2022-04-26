@@ -16,6 +16,7 @@ const UpdateProfile = ({
   userName,
   getBeforeUserName,
   beforeUserName,
+  beforeImages,
   update,
 }) => {
   return (
@@ -40,7 +41,7 @@ const UpdateProfile = ({
                 Cover photo
               </FormLabel> */}
         <form onSubmit={onSubmit}>
-          <ImageUpload refreshImg={imgFile} />
+          <ImageUpload refreshImg={imgFile} beforeImages={beforeImages} />
           <InputGroup align="center" justify="center" w={"50%"} m={"25px auto"}>
             <InputLeftAddon
               bg={useColorModeValue("gray.50", "gray.600")}

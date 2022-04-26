@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Image, Button } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 // import Loader from "./Loader";
 
 const NftMint = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, nftContract } = blockchain;
-  console.log("nftContract", nftContract);
   const [loading, setLoading] = useState(false);
   const [redNfts, setRedNft] = useState();
   const [greenNft, setGreenNft] = useState();
@@ -21,6 +21,7 @@ const NftMint = () => {
   // @ 민팅 함수
   const minting = async (grade) => {
     try {
+      // 민팅 개수 확인
       if ((redAmount || greenAmount || purpleAmount) == 0) {
         alert("수량을 지정해주세요");
         return;
@@ -30,7 +31,6 @@ const NftMint = () => {
         setLoading(false);
         return;
       }
-      console.log(grade);
       let price;
       let amount = 0;
       if (grade == 1) {
@@ -43,9 +43,6 @@ const NftMint = () => {
         price = "0.001";
         amount = purpleAmount;
       }
-      console.log(amount);
-      console.log(myNftAmount);
-      console.log(myNftAmount + amount);
       if (Number(myNftAmount) + amount > 3) {
         alert(
           `Nft는 최대 3번(갯수 기준) 까지 민팅 가능합니다. \n 현재 민팅 횟수 (${myNftAmount} / 3)`
@@ -56,10 +53,7 @@ const NftMint = () => {
 
       setLoading(true);
       //민팅 메서드 요청
-      console.log(account);
       console.log(process.env.NEXT_PUBLIC_METADATA);
-      console.log(grade);
-      console.log(amount);
       await nftContract.methods
         .create(
           account,
@@ -170,8 +164,8 @@ const NftMint = () => {
   return (
     <>
       <Box w="400px" mb={70}>
-        <Text mt="30" fontSize="25" w="200px">
-          <span>NFT 구매</span>
+        <Text fontSize="25" w="200px">
+          <span>NFT Minting</span>
         </Text>
         <Text>
           <span className="small">{myNftAmount} / 3</span> <br />
@@ -180,7 +174,7 @@ const NftMint = () => {
       </Box>
       <Box mt="5">
         <Flex justify="space-around" w="70vw">
-          <div className="card red">
+          <div className="card red" as={motion.div}>
             <Text textAlign="left" padding={5} fontWeight="bold" fontSize={18}>
               Nfts : {redNfts} / 60
             </Text>
@@ -404,6 +398,17 @@ const NftMint = () => {
           width: 360px;
           height: 500px;
           border-radius: 10px;
+          opacity: 0;
+        }
+        @keyframes slideIn {
+          0% {
+            opacity: 0;
+            transform: translateY(-100px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .red {
           border: 2px solid #917a7a;
@@ -422,6 +427,7 @@ const NftMint = () => {
             hsl(342deg 74% 37%) 92%,
             hsl(344deg 69% 43%) 100%
           );
+          animation: slideIn 0.3s linear 0s forwards;
         }
         .green {
           border: 2px solid #5c8665;
@@ -438,6 +444,7 @@ const NftMint = () => {
             hsl(117deg 92% 18%) 88%,
             hsl(114deg 100% 20%) 100%
           );
+          animation: slideIn 0.3s linear 0.2s forwards;
         }
 
         .purple {
@@ -457,6 +464,7 @@ const NftMint = () => {
             hsl(253deg 61% 34%) 93%,
             hsl(256deg 64% 39%) 100%
           );
+          animation: slideIn 0.3s linear 0.4s forwards;
         }
       `}</style>
     </>

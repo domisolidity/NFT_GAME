@@ -10,7 +10,6 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   Tooltip,
@@ -19,6 +18,7 @@ import {
   Flex,
   Text,
   Button,
+  Img,
 } from "@chakra-ui/react";
 
 import { Separator } from "../../Separator/Separator";
@@ -27,7 +27,7 @@ import { regMainNft } from "../../../redux/blockchain/blockchainActions";
 import BlankComponent from "../../utils/BlankComponent";
 import RewardHistory from "./RewardHistory";
 
-const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
+const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const blockchain = useSelector((state) => state.blockchain);
@@ -49,12 +49,13 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
   const [grade, setGrade] = useState("");
   const [reward, setReward] = useState("");
   const [stakingEvents, setStakingEvents] = useState([]);
-  const LS_KEY = "login-with-metamask:auth";
-  const baseUri = "https://gateway.pinata.cloud/ipfs";
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
+
+  const baseUri = "https://gateway.pinata.cloud/ipfs/";
   const { NEXT_PUBLIC_SERVER_URL } = process.env;
 
   useEffect(async () => {
-    const getToken = Cookies.get(LS_KEY);
+    const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
     if (!accessToken) return;
@@ -184,6 +185,8 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
 
   return (
     <Box
+      as={as}
+      animation={slideIn}
       minH={"300px"}
       backgoundColor={`var(--chakra-colors-${
         mainNftData && mainNftData.mainNftJson.grade
@@ -197,6 +200,7 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
           <ModalCloseButton />
           <ModalBody>
             <ChoiceNft
+              dateConverter={dateConverter}
               onClose={onClose}
               getCurrentMainNft={getCurrentMainNft}
             />
@@ -222,14 +226,18 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
         <Flex m={"20px 0"}>
           {mainNftData ? (
             <Button h={"auto"} onClick={unStaking}>
-              스테이킹
-              <br />
-              보상받기
+              Unstaking
             </Button>
           ) : (
-            <div className="nft-img plus">
-              <img src={"plus.svg"} className="add-nft" onClick={onOpen} />
-            </div>
+            <Button
+              backgroundColor={"var(--chakra-colors-gray-200)"}
+              minW="150px"
+              minH="150px"
+              borderRadius={"15px"}
+              onClick={onOpen}
+            >
+              <Img src={"plus.svg"} />
+            </Button>
           )}
           {mainNftData ? (
             <Flex
@@ -257,19 +265,21 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
               </Flex>
             </Flex>
           ) : (
-            <BlankComponent receivedText={`대표 NFT를 지정해 주세요!`} />
+            <BlankComponent receivedText={[`대표 NFT를 지정해 주세요!`]} />
           )}
         </Flex>
         <Separator />
-        <Box m={"20px 0"}>
-          <Text fontSize={"1.5rem"} color={"gray.400"} fontWeight="bold">
-            Rewarded History
-          </Text>
-          <RewardHistory
-            stakingEvents={stakingEvents}
-            dateConverter={dateConverter}
-          />
-        </Box>
+        {stakingEvents.length != 0 && (
+          <Box m={"20px 0"}>
+            <Text fontSize={"1.5rem"} color={"gray.400"} fontWeight="bold">
+              Rewarded History
+            </Text>
+            <RewardHistory
+              stakingEvents={stakingEvents}
+              dateConverter={dateConverter}
+            />
+          </Box>
+        )}
       </Flex>
     </Box>
   );

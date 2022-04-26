@@ -1,18 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const { InGameUser, Ranking } = require("../../models");
+const { InGameUser, Ranking, User } = require("../../models");
 
 /* 이번 주 순위 조회 */
 router.post("/current-ranking", async (req, res) => {
   const gameTitle = req.body.gameTitle;
 
   const currentRankData = await InGameUser.findAll({
-    raw: true,
+
     order: [
       ["gameScore", "desc"], // 게임점수 내림차순
       ["updatedAt", "asc"], // 갱신시간 오름차순
     ],
     where: { game_title: gameTitle },
+    include: {
+      model: User,
+      attributes: ["userName", "userImage"],
+    },
   });
 
   res.send(currentRankData);
@@ -23,8 +27,11 @@ router.post("/past-ranking", async (req, res) => {
   const gameTitle = req.body.gameTitle;
 
   const pastRankData = await Ranking.findAll({
-    raw: true,
     where: { game_title: gameTitle },
+    include: {
+      model: User,
+      attributes: ["userName", "userImage"],
+    },
   });
 
   res.send(pastRankData);

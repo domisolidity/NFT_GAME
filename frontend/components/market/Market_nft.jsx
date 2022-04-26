@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Separator } from "../Separator/Separator";
+import { Separator } from "../../Separator/Separator";
 // import FilterNft from "./market/nft/FilterNft";
 
 const Market_nft = () => {
@@ -39,7 +39,7 @@ const Market_nft = () => {
     five: true,
   });
 
-  const baseUrl = "https://gateway.pinata.cloud/ipfs/";
+  const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
   useEffect(() => {
     // if (checkedGrade == 1) return;
@@ -67,7 +67,7 @@ const Market_nft = () => {
             console.log("가격", web3.utils.fromWei(price, "ether"));
             await axios
               .get(
-                `${baseUrl}${process.env.NEXT_PUBLIC_METADATA_HASH}/${result[i]}.json`
+                `${baseUri}${process.env.NEXT_PUBLIC_METADATA_HASH}/${result[i]}.json`
               )
               .then((metadata) => {
                 salenft.push({
@@ -75,7 +75,7 @@ const Market_nft = () => {
                   description: metadata.data.description,
                   grade: metadata.data.grade,
                   attributes: metadata.data.attributes,
-                  image: `${baseUrl}${metadata.data.image.slice(6)}`,
+                  image: `${baseUri}${metadata.data.image.slice(6)}`,
                   tokenId: result[i],
                   price: web3.utils.fromWei(price, "ether"),
                 });
@@ -109,7 +109,7 @@ const Market_nft = () => {
                 grade
               </Text>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 defaultChecked
                 value="red"
                 onChange={() => {
@@ -131,7 +131,7 @@ const Market_nft = () => {
                 </Text>
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 mt="1"
                 defaultChecked
                 onChange={() => {
@@ -153,7 +153,7 @@ const Market_nft = () => {
                 </Text>
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 mt="1"
                 defaultChecked
                 onChange={() => {
@@ -187,7 +187,7 @@ const Market_nft = () => {
                 price(eth)
               </Text>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}
@@ -205,7 +205,7 @@ const Market_nft = () => {
                 ~ 0.5
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}
@@ -223,7 +223,7 @@ const Market_nft = () => {
                 0.5 ~ 1.0
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}
@@ -241,7 +241,7 @@ const Market_nft = () => {
                 1.0 ~ 2.0
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}
@@ -259,7 +259,7 @@ const Market_nft = () => {
                 2.0 ~ 4.0
               </Checkbox>
               <Checkbox
-                colorScheme="teal"
+                // colorScheme="teal"
                 fontWeight="bold"
                 color={txtColor}
                 mr={5}

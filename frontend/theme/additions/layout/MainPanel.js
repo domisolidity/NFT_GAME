@@ -14,9 +14,6 @@ const MainPanel = {
     main: (props) => ({
       float: "right",
     }),
-    rtl: (props) => ({
-      float: "left",
-    }),
   },
   defaultProps: {
     variant: "main",

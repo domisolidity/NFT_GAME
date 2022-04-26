@@ -1,11 +1,11 @@
 // chakra imports
-import { Box, ChakraProvider, Portal } from "@chakra-ui/react";
+import { Box, Portal } from "@chakra-ui/react";
 import Footer from "../../Footer/Footer.js";
 // core components
 import FullScreenNavbar from "../../Navbars/FullScreenNavbar.js";
 import { createRef, useRef } from "react";
 
-export default function Pages({ children }) {
+export default function FullScreen({ children }) {
   // ref for the wrapper div
   const wrapper = createRef();
   const navRef = useRef();
@@ -13,7 +13,6 @@ export default function Pages({ children }) {
     <Box ref={navRef} w="100%">
       <Portal containerRef={navRef}>
         <FullScreenNavbar
-          // secondary={getActiveNavbar(routes)}
           logoText="DOREMI GAMES"
         />
       </Portal>

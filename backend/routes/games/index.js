@@ -1,6 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { Game, InGameUser, Ranking, MissionInUser, DailyMission, ClosingMission } = require("../../models");
+const {
+  Game,
+  InGameUser,
+  Ranking,
+  MissionInUser,
+  DailyMission,
+  ClosingMission,
+} = require("../../models");
 const { missionReg, initChance } = require("../../config");
 const Sequelize = require("sequelize");
 
@@ -91,7 +98,10 @@ router.post("/minus-count", async (req, res) => {
     res.send(false);
   } else {
     // 차감 전 횟수에 -1 해서 DB 갱신
-    await InGameUser.decrement({ gameCount: 1 }, { where: { user_address: account, game_title: gameTitle } });
+    await InGameUser.decrement(
+      { gameCount: 1 },
+      { where: { user_address: account, game_title: gameTitle } }
+    );
     // 차감 했으면 true
     res.send(true);
   }
@@ -117,7 +127,10 @@ router.post("/send-score", async (req, res) => {
   if (before.gameScore >= score) {
     res.send("이전 점수가 더 높음");
   } else {
-    await InGameUser.update({ gameScore: score }, { where: { user_address: account, game_title: gameTitle } });
+    await InGameUser.update(
+      { gameScore: score },
+      { where: { user_address: account, game_title: gameTitle } }
+    );
     res.send("최고점수 갱신");
   }
 });
@@ -219,7 +232,12 @@ router.get("/mission-achiever", async (req, res) => {
   console.log("server : 미션 데이터 요청");
   const completeMission = await ClosingMission.findAll({
     where: { isApproved: false },
-    attributes: ["user_address", [Sequelize.fn("COUNT", "user_address"), "count_mission"], "isApproved", "isRewarded"],
+    attributes: [
+      "user_address",
+      [Sequelize.fn("COUNT", "user_address"), "count_mission"],
+      "isApproved",
+      "isRewarded",
+    ],
     group: "user_address",
   });
   res.send(completeMission);
@@ -228,7 +246,10 @@ router.post("/mission/approved", async (req, res) => {
   console.log("server : 클레임 허용 요청");
   const { mission } = req.body;
   for (let i = 0; i < mission.length; i++) {
-    await ClosingMission.update({ isApproved: true }, { where: { isApproved: mission[i][2] } });
+    await ClosingMission.update(
+      { isApproved: true },
+      { where: { isApproved: mission[i][2] } }
+    );
   }
   res.send(true);
 });

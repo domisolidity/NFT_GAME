@@ -1,21 +1,8 @@
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  Flex,
-  Grid,
-  GridItem,
-  Text,
-  Box,
-  Button,
-  SimpleGrid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import InventoryCard from "./InventoryCard";
-import Collections from "../Collections";
-import { Separator } from "../../Separator/Separator";
 import NotFound from "../../utils/NotFound";
+import { Box, Flex } from "@chakra-ui/react";
 
 const ItemList = ({ gameItems }) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -32,21 +19,25 @@ const ItemList = ({ gameItems }) => {
 
   return (
     <>
-      {hasQuantity.length <= gameItems.length ? (
-        gameItems.map((item, index) => {
-          return (
-            <InventoryCard
-              key={index}
-              img={item.itemId}
-              itemName={item.itemName}
-              itemDescription={item.itemDescription}
-              getQuantity={getQuantity}
-            />
-          );
-        })
-      ) : (
-        <NotFound />
-      )}
+      <Box m={"0 auto"} w="100%">
+        <Flex justifyContent="center" flexWrap={"wrap"}>
+          {hasQuantity.length <= gameItems.length ? (
+            gameItems.map((item, index) => {
+              return (
+                <InventoryCard
+                  key={index}
+                  img={item.itemId}
+                  itemName={item.itemName}
+                  itemDescription={item.itemDescription}
+                  getQuantity={getQuantity}
+                />
+              );
+            })
+          ) : (
+            <NotFound />
+          )}
+        </Flex>
+      </Box>
     </>
   );
 };

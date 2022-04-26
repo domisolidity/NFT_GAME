@@ -2,6 +2,7 @@
 import { BellIcon, SearchIcon } from "@chakra-ui/icons";
 // Chakra Imports
 import {
+  Box,
   Button,
   Flex,
   IconButton,
@@ -22,10 +23,10 @@ import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import React from "react";
 // import { NavLink } from "react-router-dom";
-import routes from "../routes";
+import routes from "../../assets/routes";
 
 export default function HeaderLinks(props) {
-  const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+  const { variant, children, fixed, onOpen, ...rest } = props;
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -34,10 +35,6 @@ export default function HeaderLinks(props) {
   let navbarIcon = useColorModeValue("gray.500", "gray.200");
   let searchIcon = useColorModeValue("gray.700", "gray.200");
 
-  if (secondary) {
-    navbarIcon = "white";
-    mainText = "white";
-  }
   const settingsRef = React.useRef();
   return (
     <Flex pe={{ sm: "0px", md: "16px" }} w={{ sm: "100%", md: "auto" }} alignItems="center" flexDirection="row">
@@ -92,23 +89,35 @@ export default function HeaderLinks(props) {
       </Link> */}
       <SidebarResponsive
         logoText={props.logoText}
-        secondary={props.secondary}
         routes={routes}
         // logo={logo}
         {...rest}
       />
-      <SettingsIcon
+      <Box
+        ml="5px"
+        p="6px 9px 6px 10px"
+        borderRadius={"10px"}
+        transitionDuration="0.5s"
         cursor="pointer"
-        ms={{ base: "16px", xl: "0px" }}
-        me="16px"
-        ref={settingsRef}
+        _hover={{ bgColor: "whiteAlpha.200" }}
+        w="38px"
+        h="38px"
         onClick={props.onOpen}
-        color={navbarIcon}
-        w="18px"
-        h="18px"
-      />
+      >
+        <SettingsIcon ref={settingsRef} color={navbarIcon} w="18px" h="18px" />
+      </Box>
+
       <Menu>
-        <MenuButton>
+        <MenuButton
+          ml="5px"
+          p="4px 9px 6px 10px"
+          borderRadius={"10px"}
+          transitionDuration="0.5s"
+          cursor="pointer"
+          _hover={{ bgColor: "whiteAlpha.200" }}
+          w="38px"
+          h="38px"
+        >
           <BellIcon color={navbarIcon} w="18px" h="18px" />
         </MenuButton>
         <MenuList p="16px 8px">
@@ -132,6 +141,6 @@ export default function HeaderLinks(props) {
 HeaderLinks.propTypes = {
   variant: PropTypes.string,
   fixed: PropTypes.bool,
-  secondary: PropTypes.bool,
+
   onOpen: PropTypes.func,
 };
