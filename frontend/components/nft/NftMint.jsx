@@ -21,6 +21,7 @@ const NftMint = () => {
   // @ 민팅 함수
   const minting = async (grade) => {
     try {
+      // 민팅 개수 확인
       if ((redAmount || greenAmount || purpleAmount) == 0) {
         alert("수량을 지정해주세요");
         return;
@@ -30,7 +31,6 @@ const NftMint = () => {
         setLoading(false);
         return;
       }
-      console.log(grade);
       let price;
       let amount = 0;
       if (grade == 1) {
@@ -43,9 +43,6 @@ const NftMint = () => {
         price = "0.001";
         amount = purpleAmount;
       }
-      console.log(amount);
-      console.log(myNftAmount);
-      console.log(myNftAmount + amount);
       if (Number(myNftAmount) + amount > 3) {
         alert(
           `Nft는 최대 3번(갯수 기준) 까지 민팅 가능합니다. \n 현재 민팅 횟수 (${myNftAmount} / 3)`
@@ -56,10 +53,7 @@ const NftMint = () => {
 
       setLoading(true);
       //민팅 메서드 요청
-      console.log(account);
       console.log(process.env.NEXT_PUBLIC_METADATA);
-      console.log(grade);
-      console.log(amount);
       await nftContract.methods
         .create(
           account,

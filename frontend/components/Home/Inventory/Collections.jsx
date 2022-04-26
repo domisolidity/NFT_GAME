@@ -108,15 +108,12 @@ const Collections = () => {
         ) : null}
       </Flex>
       <Box w="100%">
-        <SimpleGrid
-          justifyContent="center"
-          gridTemplateColumns="repeat(auto-fill, minmax(270px, auto))"
-        >
+        <Flex justifyContent="center" flexWrap={"wrap"}>
           {dataShow[0] ? (
             <>
               {dataShow.map((mynft, index) => {
                 return (
-                  <Box key={index} w="100%">
+                  <Box key={index}>
                     <Link
                       href={{
                         pathname: `home/${mynft.id}`,
@@ -146,7 +143,7 @@ const Collections = () => {
           ) : (
             <NotFound items={"NFT"} />
           )}
-        </SimpleGrid>
+        </Flex>
       </Box>
       <style jsx>{`
         .table__pagination {

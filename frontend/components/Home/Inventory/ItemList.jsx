@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import InventoryCard from "./InventoryCard";
 import NotFound from "../../utils/NotFound";
-import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 const ItemList = ({ gameItems }) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -20,10 +20,7 @@ const ItemList = ({ gameItems }) => {
   return (
     <>
       <Box m={"0 auto"} w="100%">
-        <SimpleGrid
-          justifyContent="center"
-          gridTemplateColumns="repeat(auto-fill, minmax(260px, auto))"
-        >
+        <Flex justifyContent="center" flexWrap={"wrap"}>
           {hasQuantity.length <= gameItems.length ? (
             gameItems.map((item, index) => {
               return (
@@ -39,7 +36,7 @@ const ItemList = ({ gameItems }) => {
           ) : (
             <NotFound />
           )}
-        </SimpleGrid>
+        </Flex>
       </Box>
     </>
   );
