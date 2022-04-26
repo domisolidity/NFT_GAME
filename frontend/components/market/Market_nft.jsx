@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Box,
-  Grid,
-  GridItem,
   Checkbox,
   Flex,
   Image,
@@ -41,7 +39,7 @@ const Market_nft = () => {
     five: true,
   });
 
-  const baseUrl = "http://127.0.0.1:8080/ipfs/";
+  const baseUrl = "https://gateway.pinata.cloud/ipfs/";
 
   useEffect(() => {
     // if (checkedGrade == 1) return;
@@ -349,7 +347,7 @@ const Market_nft = () => {
                   <Box h="10%" mt="25">
                     <Link
                       href={{
-                        pathname: `market/${nft.tokenId}`,
+                        pathname: `market/sale/${nft.tokenId}`,
                         query: {
                           id: nft.tokenId,
                           grade: nft.grade,
@@ -360,7 +358,7 @@ const Market_nft = () => {
                           price: nft.price,
                         },
                       }}
-                      as={`market/${nft.tokenId}`}
+                      as={`market/sale/${nft.tokenId}`}
                     >
                       <a>
                         <Button bg="#247471">Buy now</Button>

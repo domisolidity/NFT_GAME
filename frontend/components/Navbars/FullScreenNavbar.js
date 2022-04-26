@@ -7,18 +7,16 @@ import {
   Link,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
-import {
-  TimLogo,
-  DocumentIcon,
-  HomeIcon,
-  PersonIcon,
-  RocketIcon,
-} from "../Icons/Icons";
+import { TimLogo, DocumentIcon, HomeIcon, PersonIcon, RocketIcon } from "../Icons/Icons";
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
+
 import routes from "../../assets/routes";
-import NextLink from "next/link"
+
+import NextLink from "next/link";
+
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
 
 export default function FullScreenNavbar(props) {
@@ -78,15 +76,14 @@ export default function FullScreenNavbar(props) {
           me={{ sm: "2px", md: "16px" }}
           color={navbarIcon}
           variant="transparent-with-icon"
-          leftIcon={
-            <RocketIcon color={navbarIcon} w="12px" h="12px" me="0px" />
-          }
+          leftIcon={<RocketIcon color={navbarIcon} w="12px" h="12px" me="0px" />}
         >
           <Text>Game</Text>
         </Button>
       </NextLink>
     </HStack>
   );
+
 
   return (
     <Flex
@@ -118,7 +115,7 @@ export default function FullScreenNavbar(props) {
           />
         </Box>
         {links}
-        {true ? <ConnectWallet /> : <div>test</div>}
+        <ConnectWallet />
 
       </Flex>
     </Flex>

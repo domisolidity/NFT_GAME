@@ -49,9 +49,9 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
   const [grade, setGrade] = useState("");
   const [reward, setReward] = useState("");
   const [stakingEvents, setStakingEvents] = useState([]);
-
   const LS_KEY = "login-with-metamask:auth";
-  const baseUri = "http://127.0.0.1:8080/ipfs";
+  const baseUri = "https://gateway.pinata.cloud/ipfs";
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
 
   useEffect(async () => {
     const getToken = Cookies.get(LS_KEY);
@@ -63,7 +63,7 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg }) => {
       payload: { id },
     } = jwtDecode(accessToken);
 
-    await fetch(`/api/users/${id}`, {
+    await fetch(`${NEXT_PUBLIC_SERVER_URL}/users/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

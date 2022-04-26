@@ -1,0 +1,14 @@
+.git/
+.gitignore
+
+nginx/
+
+.dockerignore
+docker-compose.yml
+
+frontend/.next/                
+frontend/Dockerfile
+frontend/node_modules/
+
+backend/Dockerfile
+backend/node_modules/

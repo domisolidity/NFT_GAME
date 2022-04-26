@@ -25,6 +25,13 @@ contract Staking is ERC721Holder {
     uint reward;
   }
 
+  //wook
+  struct tokenStaking {
+    uint amount;
+    uint startTime;
+    uint endTime;
+  }
+
   // 스테이킹 정보 담을 매핑
   mapping(address => StakingData) public stakingData;
 

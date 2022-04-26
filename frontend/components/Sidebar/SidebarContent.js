@@ -1,13 +1,6 @@
 /*eslint-disable*/
 // chakra imports
-import {
-  Box,
-  Button, Flex,
-  Link,
-  Stack,
-  Text,
-  useColorModeValue
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import IconBox from "../Icons/IconBox";
 import { TimLogo } from "../Icons/Icons";
 import { Separator } from "../Separator/Separator";
@@ -17,15 +10,13 @@ import React, { useState } from "react";
 //   NavLink,
 //   useLocation
 // } from "react-router-dom";
-import { useRouter } from 'next/router'
-import NextLink from "next/link"
-
+import { useRouter } from "next/router";
+import NextLink from "next/link";
 
 // this function creates the links and collapses that appear in the sidebar (left menu)
 
-
 const SidebarContent = ({ logoText, routes }) => {
-  console.log({ logoText, routes })
+  console.log({ logoText, routes });
 
   // to check for active links and opened collapses
   // let location = useLocation();
@@ -33,9 +24,8 @@ const SidebarContent = ({ logoText, routes }) => {
   // this is for the rest of the collapses
   const [state, setState] = useState({});
 
-
-  const router = useRouter()
-  console.log(router)
+  const router = useRouter();
+  console.log(router);
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -50,7 +40,6 @@ const SidebarContent = ({ logoText, routes }) => {
     const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
-
       if (prop.redirect) {
         return null;
       }
@@ -124,13 +113,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   {typeof prop.icon === "string" ? (
                     <Icon>{prop.icon}</Icon>
                   ) : (
-                    <IconBox
-                      bg="teal.300"
-                      color="white"
-                      h="30px"
-                      w="30px"
-                      me="12px"
-                    >
+                    <IconBox bg="teal.300" color="white" h="30px" w="30px" me="12px">
                       {prop.icon}
                     </IconBox>
                   )}
@@ -172,13 +155,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   {typeof prop.icon === "string" ? (
                     <Icon>{prop.icon}</Icon>
                   ) : (
-                    <IconBox
-                      bg={inactiveBg}
-                      color="teal.300"
-                      h="30px"
-                      w="30px"
-                      me="12px"
-                    >
+                    <IconBox bg={inactiveBg} color="teal.300" h="30px" w="30px" me="12px">
                       {prop.icon}
                     </IconBox>
                   )}
@@ -188,7 +165,7 @@ const SidebarContent = ({ logoText, routes }) => {
                 </Flex>
               </Button>
             )}
-          </Link >
+          </Link>
         </NextLink>
       );
     });
@@ -223,7 +200,7 @@ const SidebarContent = ({ logoText, routes }) => {
       </Stack>
       <SidebarBottom />
     </>
-  )
-}
+  );
+};
 
-export default SidebarContent
+export default SidebarContent;

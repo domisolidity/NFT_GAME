@@ -38,7 +38,7 @@ const ChoiceNft = (props) => {
   const [currentMainNft, setcurrentMainNft] = useState("");
   const [selectNft, setSelectNft] = useState("");
 
-  const baseUri = "http://127.0.0.1:8080/ipfs";
+  const baseUri = "https://gateway.pinata.cloud/ipfs";
   const LS_KEY = "login-with-metamask:auth";
   const [accessToken, setAccessToken] = useState("");
 
