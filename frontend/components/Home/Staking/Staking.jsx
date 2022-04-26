@@ -50,7 +50,7 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
   const [reward, setReward] = useState("");
   const [stakingEvents, setStakingEvents] = useState([]);
   const LS_KEY = "login-with-metamask:auth";
-  const baseUri = "https://gateway.pinata.cloud/ipfs";
+  const baseUri = "https://gateway.pinata.cloud/ipfs/";
   const { NEXT_PUBLIC_SERVER_URL } = process.env;
 
   useEffect(async () => {

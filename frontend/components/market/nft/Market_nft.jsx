@@ -43,7 +43,6 @@ const Market_nft = ({ as }) => {
     five: true,
   });
 
-  // const baseUrl = "http://127.0.0.1:8080/ipfs/";
   const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
   useEffect(() => {

@@ -24,7 +24,7 @@ const Collections = () => {
 
   const [myNfts, setMyNfts] = useState([]);
 
-  const baseUri = "https://gateway.pinata.cloud/ipfs";
+  const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
   const getMyNfts = async () => {
     try {

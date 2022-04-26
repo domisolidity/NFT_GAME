@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 // import
 
 // ================================================================
-const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+const baseUri = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const LS_KEY = "login-with-metamask:auth";
 
@@ -55,7 +55,7 @@ export const authenticate = () => {
       payload: { id },
     } = jwtDecode(auth);
 
-    const isAuth = fetch(`${baseUrl}/users/${id}`, {
+    const isAuth = fetch(`${baseUri}users/${id}`, {
       headers: {
         Authorization: `Bearer ${auth}`,
       },
@@ -826,7 +826,7 @@ export const updateAccount = (account) => {
 
     if (account) {
       console.log(account);
-      fetch(`${baseUrl}/users?publicAddress=${account}`)
+      fetch(`${baseUri}users?publicAddress=${account}`)
         .then((response) => response.json())
         .then((users) => (users.length ? users[0] : dispatch(disconnectWallet())))
         .catch((err) => {
@@ -1556,7 +1556,7 @@ export const connectWallet = () => {
           dispatch(connectRequest());
 
           const handleAuthenticate = async ({ publicAddress, signature }) =>
-            fetch(`${baseUrl}/auth`, {
+            fetch(`${baseUri}auth`, {
               body: JSON.stringify({ publicAddress, signature }),
               headers: {
                 "Content-Type": "application/json",
@@ -1578,7 +1578,7 @@ export const connectWallet = () => {
           };
 
           const handleSignup = (publicAddress) =>
-            fetch(`${baseUrl}/users`, {
+            fetch(`${baseUri}users`, {
               body: JSON.stringify({ publicAddress }),
               headers: {
                 "Content-Type": "application/json",
@@ -1594,7 +1594,7 @@ export const connectWallet = () => {
           };
 
           // Look if user with current publicAddress is already present on backend
-          fetch(`${baseUrl}/users?publicAddress=${publicAddress}`)
+          fetch(`${baseUri}users?publicAddress=${publicAddress}`)
             .then((response) => response.json())
             // If yes, retrieve it. If no, create it.
             .then((users) => (users.length ? users[0] : handleSignup(publicAddress)))

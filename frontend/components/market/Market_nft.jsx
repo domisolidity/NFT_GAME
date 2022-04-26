@@ -39,7 +39,7 @@ const Market_nft = () => {
     five: true,
   });
 
-  const baseUrl = "https://gateway.pinata.cloud/ipfs/";
+  const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
   useEffect(() => {
     // if (checkedGrade == 1) return;
@@ -67,7 +67,7 @@ const Market_nft = () => {
             console.log("가격", web3.utils.fromWei(price, "ether"));
             await axios
               .get(
-                `${baseUrl}${process.env.NEXT_PUBLIC_METADATA_HASH}/${result[i]}.json`
+                `${baseUri}${process.env.NEXT_PUBLIC_METADATA_HASH}/${result[i]}.json`
               )
               .then((metadata) => {
                 salenft.push({
@@ -75,7 +75,7 @@ const Market_nft = () => {
                   description: metadata.data.description,
                   grade: metadata.data.grade,
                   attributes: metadata.data.attributes,
-                  image: `${baseUrl}${metadata.data.image.slice(6)}`,
+                  image: `${baseUri}${metadata.data.image.slice(6)}`,
                   tokenId: result[i],
                   price: web3.utils.fromWei(price, "ether"),
                 });
