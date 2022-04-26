@@ -5,7 +5,7 @@ import axios from "axios";
 import ClaimHistory from "./ClaimHistory";
 import MissionClaimCard from "./MissionClaimCard";
 import RankingClaimCard from "./RankingClaimCard";
-import Notice from "./Notice";
+import Notice from "../Notice/Notice";
 
 const Claim = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -95,7 +95,6 @@ const Claim = (props) => {
     <>
       <Grid templateColumns="repeat(4, 1fr)" gap={5} mt={5}>
         <GridItem colSpan={1}>
-          <Notice />
           <RankingClaimCard
             claimInfo={claimableRank}
             reward={rewardAmount_rank}
