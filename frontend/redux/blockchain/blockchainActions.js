@@ -13,7 +13,6 @@ import axios from "axios";
 const { NEXT_PUBLIC_SERVER_URL } = process.env;
 const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
 
-const LS_KEY = "login-with-metamask:auth";
 const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
 const connectRequest = () => {
@@ -56,7 +55,7 @@ export const regMainNft = (mainNftData) => {
 };
 
 export const authenticate = () => {
-  const accessToken = Cookies.get(LS_KEY);
+  const accessToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
   const auth = accessToken && JSON.parse(accessToken).accessToken;
   console.log(" 🛠 authenticate 🛠");
   console.log(accessToken);
@@ -359,7 +358,7 @@ export const connectWallet = () => {
 
           const handleLoggedIn = (auth) => {
             const one_hour = new Date(new Date().getTime() + 3600 * 1000); // sign token for 1 hour
-            Cookies.set(LS_KEY, JSON.stringify(auth), { expires: one_hour });
+            Cookies.set(NEXT_PUBLIC_LOGIN_KEY, JSON.stringify(auth), { expires: one_hour });
 
             dispatch(authenticate());
           };
@@ -424,7 +423,7 @@ export const connectWallet = () => {
 
 export const disconnectWallet = () => {
   return async (dispatch) => {
-    Cookies.remove(LS_KEY);
+    Cookies.remove(NEXT_PUBLIC_LOGIN_KEY);
 
     dispatch(authenticate());
     dispatch(connectFailed("로그아웃"));

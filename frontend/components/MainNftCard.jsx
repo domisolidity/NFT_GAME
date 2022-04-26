@@ -9,8 +9,8 @@ const MainNftCard = (props) => {
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, nftContract } = blockchain;
   const [mainNFT, setMainNFT] = useState("");
-  const LS_KEY = "login-with-metamask:auth";
   const baseUri = "https://gateway.pinata.cloud/ipfs/";
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
 
   const [currentImage, setCurrentImage] = useState("");
   const [accessToken, setAccessToken] = useState("");
@@ -26,7 +26,7 @@ const MainNftCard = (props) => {
 
   useEffect(async () => {
     if (!mainNFT) return;
-    const getToken = Cookies.get(LS_KEY);
+    const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
     console.log(getToken);

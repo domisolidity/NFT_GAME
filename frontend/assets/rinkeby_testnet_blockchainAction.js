@@ -8,6 +8,8 @@ import Web3 from "web3";
 import jwtDecode from "jwt-decode";
 import { fetchData } from "../data/dataActions";
 import Cookies from "js-cookie";
+const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
+
 
 // ================================================================
 // import
@@ -15,7 +17,6 @@ import Cookies from "js-cookie";
 // ================================================================
 const baseUri = process.env.NEXT_PUBLIC_SERVER_URL;
 
-const LS_KEY = "login-with-metamask:auth";
 
 const connectRequest = () => {
   return {
@@ -45,7 +46,7 @@ const updateAccountRequest = (payload) => {
 };
 
 export const authenticate = () => {
-  const accessToken = Cookies.get(LS_KEY);
+  const accessToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
   const auth = accessToken && JSON.parse(accessToken).accessToken;
   console.log(" 🛠 authenticate 🛠");
   //토큰이 있을때 if문 실행
@@ -1588,7 +1589,7 @@ export const connectWallet = () => {
 
           const handleLoggedIn = (auth) => {
             const one_hour = new Date(new Date().getTime() + 3600 * 1000); // sign token for 1 hour
-            Cookies.set(LS_KEY, JSON.stringify(auth), { expires: one_hour });
+            Cookies.set(NEXT_PUBLIC_LOGIN_KEY, JSON.stringify(auth), { expires: one_hour });
 
             dispatch(authenticate());
           };
@@ -1651,7 +1652,7 @@ export const connectWallet = () => {
 
 export const disconnectWallet = () => {
   return async (dispatch) => {
-    Cookies.remove(LS_KEY);
+    Cookies.remove(NEXT_PUBLIC_LOGIN_KEY);
 
     dispatch(authenticate());
     dispatch(connectFailed("로그아웃"));

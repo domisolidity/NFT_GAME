@@ -39,12 +39,12 @@ const ProfileCard = ({ as, slideIn }) => {
   const [userName, setUserName] = useState("");
   const [Images, setImages] = useState([]);
 
-  const LS_KEY = "login-with-metamask:auth";
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
 
   const [accessToken, setAccessToken] = useState("");
 
   useEffect(async () => {
-    const getToken = Cookies.get(LS_KEY);
+    const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
 
@@ -85,7 +85,7 @@ const ProfileCard = ({ as, slideIn }) => {
       return alert("빈칸을 채워주세요");
     }
 
-    const getToken = Cookies.get(LS_KEY);
+    const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
     const {

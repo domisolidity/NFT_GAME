@@ -38,11 +38,12 @@ const ChoiceNft = (props) => {
   const [selectNft, setSelectNft] = useState("");
 
   const baseUri = "https://gateway.pinata.cloud/ipfs/";
-  const LS_KEY = "login-with-metamask:auth";
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
+
   const [accessToken, setAccessToken] = useState("");
 
   useEffect(() => {
-    const getToken = Cookies.get(LS_KEY);
+    const getToken = Cookies.get(NEXT_PUBLIC_LOGIN_KEY);
     const parsedToken = getToken && JSON.parse(getToken).accessToken;
     setAccessToken(parsedToken);
   }, [accessToken]);
