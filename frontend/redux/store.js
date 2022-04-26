@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
 const middleware = [thunk];
 
 const composeEnhancers =
-  process.env.NODE_ENV === "production"
+  process.env.NEXT_PUBLIC_APP_ENV === "production"
     ? compose(applyMiddleware(...middleware))
     : composeWithDevTools(applyMiddleware(...middleware));
 
@@ -23,7 +23,7 @@ const configureStore = () => {
 };
 
 const wrapper = createWrapper(configureStore, {
-  debug: process.env.NODE_ENV === "development,",
+  debug: process.env.NEXT_PUBLIC_APP_ENV === "development,",
 });
 
 export default wrapper;

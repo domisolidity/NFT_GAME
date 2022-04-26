@@ -10,12 +10,7 @@ export function ItemContent(props) {
   const spacing = " ";
   return (
     <>
-      <Avatar
-        name={props.aName}
-        src={props.aSrc}
-        borderRadius="12px"
-        me="16px"
-      />
+      <Avatar name={props.aName} src={props.aSrc} borderRadius="12px" me="16px" />
       <Flex flexDirection="column">
         <Text fontSize="14px" mb="5px" color={notificationColor}>
           <Text fontWeight="bold" fontSize="14px" as="span">

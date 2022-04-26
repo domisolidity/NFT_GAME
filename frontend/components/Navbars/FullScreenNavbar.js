@@ -1,11 +1,24 @@
 // Chakra imports
-import { Box, Button, Flex, HStack, Link, Text, useColorModeValue, keyframes } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Link,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+  keyframes
+} from "@chakra-ui/react";
 import { TimLogo, DocumentIcon, HomeIcon, PersonIcon, RocketIcon } from "../Icons/Icons";
 import { motion } from "framer-motion";
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
+
 import routes from "../../assets/routes";
+
 import NextLink from "next/link";
+
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
 
 export default function FullScreenNavbar(props) {
@@ -107,7 +120,7 @@ export default function FullScreenNavbar(props) {
           <SidebarResponsive logoText={props.logoText} routes={routes} logo={logo} {...rest} />
         </Box>
         {links}
-        {true ? <ConnectWallet /> : <div>test</div>}
+        <ConnectWallet />
       </Flex>
     </Flex>
   );

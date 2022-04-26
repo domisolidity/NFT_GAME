@@ -1,5 +1,5 @@
 import axios from "axios";
-
+const { NEXT_PUBLIC_SERVER_URL } = process.env;
 const gameList = [
   {
     gameId: 1,
@@ -25,7 +25,7 @@ const gameList = [
 ];
 
 const getGameList = async () => {
-  const response = await axios.get(`/api/games/game-list`);
+  const response = await axios.get(`${NEXT_PUBLIC_SERVER_URL}/games/game-list`);
   const receivedGameList = response.data;
   if (gameList.length == receivedGameList.length) return;
 
@@ -39,7 +39,7 @@ const setParticipant = async (account, gameTitle) => {
   console.log("참여자 초기화");
   if (!(account && gameTitle)) return;
   const response = await axios
-    .post(`/api/games/set-participant`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/games/set-participant`, {
       account: account,
       gameTitle: gameTitle,
     })
@@ -57,7 +57,7 @@ const initChance = async (account, gameTitle, mainNFT) => {
   console.log("횟수 초기화");
   if (!(account && gameTitle)) return;
   const response = await axios
-    .post(`/api/games/init-chance`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/games/init-chance`, {
       account: account,
       gameTitle: gameTitle,
       mainNFT: mainNFT,
@@ -76,7 +76,10 @@ const getMyChance = async (account, gameTitle) => {
   console.log("횟수 불러오기");
   if (!(account && gameTitle)) return;
   const response = await axios
-    .post(`/api/games/my-count`, { account: account, gameTitle: gameTitle })
+    .post(`${NEXT_PUBLIC_SERVER_URL}/games/my-count`, {
+      account: account,
+      gameTitle: gameTitle,
+    })
     .catch((err) => console.log(err));
 
   return response.data.gameCount;
@@ -86,7 +89,7 @@ const getMyChance = async (account, gameTitle) => {
 const getMyBestScore = async (account, gameTitle) => {
   if (!(account && gameTitle)) return;
   const response = await axios
-    .post(`/api/games/my-best-score`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/games/my-best-score`, {
       account: account,
       gameTitle: gameTitle,
     })
@@ -96,16 +99,21 @@ const getMyBestScore = async (account, gameTitle) => {
 
 /* 아이템 목록 가져오기 */
 const getGameItems = async () => {
-  const response = await axios.get(`/api/items/game-items`);
+  const response = await axios.get(
+    `${NEXT_PUBLIC_SERVER_URL}/items/game-items`
+  );
   return response.data;
 };
 
 /* 내 아이템 개수 불러오기 */
 const getMyItemQuantity = async (account, itemName) => {
-  const response = await axios.post(`/api/items/game-items/my-items-quantity`, {
-    account: account,
-    itemName: itemName,
-  });
+  const response = await axios.post(
+    `${NEXT_PUBLIC_SERVER_URL}/items/game-items/my-items-quantity`,
+    {
+      account: account,
+      itemName: itemName,
+    }
+  );
 
   return response.data.count;
 };
@@ -113,7 +121,7 @@ const getMyItemQuantity = async (account, itemName) => {
 /* 아이템 사용하기 */
 const usingItem = async (account, itemName) => {
   const response = await axios
-    .post(`/api/items/game-items/using-item`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/items/game-items/using-item`, {
       account: account,
       itemName: itemName,
     })
@@ -130,7 +138,7 @@ const usingItem = async (account, itemName) => {
 /* 아이템 효과 받아오기 */
 const getItemEffect = async (account, itemName, gameTitle) => {
   const response = await axios
-    .post(`/api/items/game-items/get-item-effect`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/items/game-items/get-item-effect`, {
       account: account,
       itemName: itemName,
       gameTitle: gameTitle,
@@ -149,7 +157,7 @@ const getItemEffect = async (account, itemName, gameTitle) => {
 const minusGameCount = async (account, gameTitle) => {
   if (!(account && gameTitle)) return;
   const response = await axios
-    .post(`/api/games/minus-count`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/games/minus-count`, {
       account: account,
       gameTitle: gameTitle,
     })
@@ -167,7 +175,7 @@ const sendScore = async (account, gameTitle, score, itemEffect) => {
   if (!(account && gameTitle && score > 0)) return;
 
   const response = await axios
-    .post(`/api/games/send-score`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/games/send-score`, {
       account: account,
       gameTitle: gameTitle,
       score: parseInt(score),
@@ -181,9 +189,12 @@ const sendScore = async (account, gameTitle, score, itemEffect) => {
 const getMyNFT = async (account) => {
   if (!account) return;
 
-  const mainNFT = await axios.post(`/api/users/profile/my-token-id`, {
-    account: account,
-  });
+  const mainNFT = await axios.post(
+    `${NEXT_PUBLIC_SERVER_URL}/users/profile/my-token-id`,
+    {
+      account: account,
+    }
+  );
   const tokenId = mainNFT.data.mainNft;
 
   return tokenId;
@@ -194,7 +205,7 @@ const missionReg = async (account, tokenId) => {
   if (!(account && tokenId)) return;
 
   const response = await axios
-    .post(`/api/games/mission-reg`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/games/mission-reg`, {
       account: account,
       tokenId: tokenId,
     })
@@ -208,7 +219,7 @@ const getMission = async (account, gameTitle) => {
   if (!account) return;
   if (gameTitle) {
     const response = await axios
-      .post(`/api/games/my-mission`, {
+      .post(`${NEXT_PUBLIC_SERVER_URL}/games/my-mission`, {
         account: account,
         gameTitle: gameTitle,
       })
@@ -217,7 +228,7 @@ const getMission = async (account, gameTitle) => {
     return response.data;
   } else {
     const response = await axios
-      .post(`/api/games/my-mission`, {
+      .post(`${NEXT_PUBLIC_SERVER_URL}/games/my-mission`, {
         account: account,
       })
       .catch((err) => console.log(err));
@@ -232,7 +243,7 @@ const updateMission = async (account, missionId) => {
   if (!(account && missionId)) return;
 
   const response = await axios
-    .post(`/api/games/update-mission`, {
+    .post(`${NEXT_PUBLIC_SERVER_URL}/games/update-mission`, {
       account: account,
       missionId: missionId,
     })

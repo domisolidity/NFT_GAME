@@ -21,7 +21,7 @@ const Market_nft_auction = () => {
   });
   const [qqqq, setqqqq] = useState(false);
 
-  const baseUrl = "http://127.0.0.1:8080/ipfs/";
+  const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
   const getAuctionNft = async () => {
     const currentBlockNum = await auctionCreatorContract.methods
@@ -40,7 +40,7 @@ const Market_nft_auction = () => {
         for (let i = 0; i < result.length; i++) {
           await axios
             .get(
-              `${baseUrl}${process.env.NEXT_PUBLIC_METADATA_HASH}/${result[i].tokenId}.json`
+              `${baseUri}${process.env.NEXT_PUBLIC_METADATA_HASH}/${result[i].tokenId}.json`
             )
             .then(async (metadata) => {
               console.log(result[i].endTime);
@@ -49,7 +49,7 @@ const Market_nft_auction = () => {
                 description: metadata.data.description,
                 grade: metadata.data.grade,
                 attributes: _.cloneDeep(metadata.data.attributes),
-                image: `${baseUrl}${metadata.data.image.slice(6)}`,
+                image: `${baseUri}${metadata.data.image.slice(6)}`,
                 tokenId: result[i].tokenId,
                 remainTime: result[i].endTime * 1000,
               });

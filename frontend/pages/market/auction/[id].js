@@ -34,7 +34,7 @@ import Countdown from "../../../components/utils/Countdown";
 import AuctionContract from "../../../contracts/artifacts/Auction.json";
 import SideBarScreen from "../../../components/Layout/Frame/SideBarScreen";
 
-const MarketDetail = () => {
+const MarketDetail_auction = () => {
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account, auctionCreatorContract } = blockchain;
   const router = useRouter();

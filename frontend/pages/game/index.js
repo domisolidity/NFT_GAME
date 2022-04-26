@@ -1,4 +1,4 @@
-import { Box, Flex, keyframes } from "@chakra-ui/react";
+import { Box, Flex, keyframes, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GameCard from "../../components/game/GameCard";
@@ -68,8 +68,30 @@ const Game = () => {
   `;
   const reflect = `${reflectKeyframes} 2s linear alternate 0s infinite`;
 
+  const txtColor = useColorModeValue("gray.600", "white")
+
   return (
-    <Flex direction={"column"} pt={{ base: "120px", md: "75px" }}>
+    <Flex direction={"column"} pt={{ base: "120px", md: "75px" }} align="center">
+      <Box>
+        <Text
+          fontSize={"5rem"}
+          as={'span'}
+          position={'relative'}
+          color={txtColor}
+          _after={{
+            content: "''",
+            width: 'full',
+            height: useBreakpointValue({ base: '20%', md: '30%' }),
+            position: 'absolute',
+            bottom: 1,
+            left: 0,
+            bg: 'teal.400',
+            zIndex: -1,
+          }}
+        >
+          Doremi games 🎮
+        </Text>
+      </Box>
       <Flex w={"100%"} mb={"10px"} textAlign="center" height={"160px"} justifyContent={"center"} alignItems="center">
         {auth ? (
           !mainNftData ? (
