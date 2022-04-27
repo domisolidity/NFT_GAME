@@ -32,12 +32,13 @@ module.exports = {
       skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
     },
     rinkeby: {
+      // provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`),
       provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`),
       network_id: 4,
       gas: 5500000,
       confirmations: 2,
-      networkCheckTimeout: 2000000,
-      timeoutBlocks: 1000,
+      networkCheckTimeout: 3000000,
+      timeoutBlocks: 2000,
       skipDryRun: true,
     },
     // bsc_testnet: {

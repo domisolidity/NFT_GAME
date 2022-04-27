@@ -33,6 +33,7 @@ import Header from "./Header";
 
 const ProfileCard = ({ as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
   const { account } = blockchain;
   const [beforeUserName, setBeforeUserName] = useState("");
   const [beforeImages, setBeforeImages] = useState([]);
@@ -54,7 +55,7 @@ const ProfileCard = ({ as, slideIn }) => {
       payload: { id },
     } = jwtDecode(accessToken);
 
-    await fetch(`/api/users/${id}`, {
+    await fetch(`${NEXT_PUBLIC_SERVER_URL}/users/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -97,7 +98,7 @@ const ProfileCard = ({ as, slideIn }) => {
       userImage: beforeImages[0],
     };
 
-    fetch(`/api/users/profile/${id}`, {
+    fetch(`${NEXT_PUBLIC_SERVER_URL}/users/profile/${id}`, {
       body: JSON.stringify(variables),
       headers: {
         Authorization: `Bearer ${accessToken}`,

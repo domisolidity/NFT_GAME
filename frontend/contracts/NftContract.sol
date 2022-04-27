@@ -53,13 +53,17 @@ contract NftContract is ERC721Enumerable {
   function handOver(
     address _from,
     address _to,
-    uint16 _tokenId,
-    uint _idx
+    uint16 _tokenId
   ) public {
-    safeTransferFrom(_from, _to, _tokenId);
-    delete myNfts[_from][_idx];
     string memory tokenUri = tokenURI(_tokenId);
+
+    for (uint16 i = 0; i < myNfts[_from].length; i++) {
+      if (_tokenId == myNfts[_from][i].id) {
+        myNfts[_from][i] = myNfts[_from][myNfts[_from].length - 1];
+      }
+    }
     myNfts[_to].push(RenderToken(_tokenId, tokenUri));
+    safeTransferFrom(_from, _to, _tokenId);
   }
 
   function getMyToken(address _tokenOwner) public view isOwner(_tokenOwner) returns (RenderToken[] memory) {

@@ -23,8 +23,7 @@ const NftDetail_my = () => {
   const [expirationDate, setExpirationDate] = useState();
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
-
-
+  const [toAddr, setToAddr] = useState();
 
   // 경매 생성 함수
   const createAuction = async () => {
@@ -75,6 +74,20 @@ const NftDetail_my = () => {
     } catch (error) {
       console.error(error);
       setLoading(false);
+    }
+  };
+
+  const present = async () => {
+    try {
+      console.log("sencond");
+      await nftContract.methods
+        .handOver(account, toAddr, id)
+        .send({ from: account })
+        .then((res) => {
+          console.log(res);
+        });
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -292,7 +305,7 @@ const NftDetail_my = () => {
                     <Flex justify="center" mt="10">
                       <Button
                         isLoading={loading2 ? 1 : null}
-                        loadingText="approving.."
+                        loadingText="판매 승인중.."
                         onClick={() => approveSell(isApproved)}
                         // colorScheme="linkedin"
                         disabled={onAuction || loading ? 1 : 0}
@@ -301,7 +314,7 @@ const NftDetail_my = () => {
                       </Button>
                       <Button
                         isLoading={loading ? 1 : null}
-                        loadingText="add marketPlace.."
+                        loadingText="판매 등록중.."
                         ml="5"
                         onClick={submitSell}
                         // colorScheme="linkedin"
@@ -316,7 +329,6 @@ const NftDetail_my = () => {
             ) : (
               <>
                 {onAuction ? (
-
                   <Box align="center">
                     <Text mt="10" align="center">
                       경매가 진행중입니다. 경매 관리는 마켓에 등록된 경매건에서 가능합니다.
@@ -324,15 +336,12 @@ const NftDetail_my = () => {
                     <Link
                       href={{
                         pathname: `market`,
-
                       }}
                       as={`market`}
                     >
-                      <Button >마켓으로 이동</Button>
+                      <Button>마켓으로 이동</Button>
                     </Link>
                   </Box>
-
-
                 ) : (
                   <Box mt="10">
                     <Flex justify="space-between">
@@ -348,13 +357,12 @@ const NftDetail_my = () => {
                     <Flex justify="center" mt="10">
                       <Button
                         isLoading={loading ? 1 : null}
-                        loadingText="adding.."
+                        loadingText="경매 등록중.."
                         ml="5"
                         onClick={createAuction}
                         // colorScheme="linkedin"
                         disabled={onsale ? 1 : 0}
                       >
-
                         경매 등록
                       </Button>
                     </Flex>
@@ -370,10 +378,19 @@ const NftDetail_my = () => {
               <Text lineHeight={10} mr="10">
                 to Address
               </Text>
-              <Input w="200" />
-              <Button ml="2"
+              <Input
+                w="200"
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setToAddr(e.target.value);
+                }}
+              />
+              <Button
+                ml="2"
+                onClick={present}
                 // colorScheme="linkedin"
-                disabled={onAuction || onsale || loading || loading2 ? 1 : 0}>
+                disabled={onAuction || onsale || loading || loading2 ? 1 : 0}
+              >
                 Present
               </Button>
             </Flex>
