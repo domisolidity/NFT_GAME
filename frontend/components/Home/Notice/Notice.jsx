@@ -4,30 +4,30 @@ import {
   Center,
   chakra,
   Flex,
-  Icon,
   SimpleGrid,
-  Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import Clock from "../../utils/Clock";
+import StakingInfo from "./StakingInfo";
+import GameInfo from "./GameInfo";
+import LoadMap from "./LoadMap";
+import WeeklyEndTime from "./WeeklyEndTime";
 
 const Notice = ({ as, slideIn }) => {
   return (
     <Flex
+      direction="column"
       as={as}
       animation={slideIn}
-      w="full"
+      // w="full"
       alignItems="center"
       justifyContent="center"
       mt={5}
+      bg={useColorModeValue("gray.100", "gray.700")}
+      borderRadius="15px"
     >
-      <Box
-        py="64px"
-        px="10"
-        bg={useColorModeValue("gray.100", "gray.700")}
-        borderRadius="15px"
-      >
+      <Box w="100%" py="64px" px="10" borderRadius="15px">
         <Box w="full" px={[10, , 4]} mx="auto" textAlign="center">
           <Text mb={2} fontSize="5xl" fontWeight="bold" lineHeight="tight">
             Tier
@@ -41,6 +41,9 @@ const Notice = ({ as, slideIn }) => {
         </Box>
         <Center fontSize={"30px"} mt={5}>
           <Clock />
+        </Center>
+        <Center fontSize={"30px"} mt={5}>
+          {/* <WeeklyEndTime /> */}
         </Center>
         <Box maxW="7xl" py="10" mx="auto">
           <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} gap={[16, 8]}>
@@ -74,6 +77,9 @@ const Notice = ({ as, slideIn }) => {
           </SimpleGrid>
         </Box>
       </Box>
+      <StakingInfo />
+      <GameInfo />
+      <LoadMap />
     </Flex>
   );
 };
