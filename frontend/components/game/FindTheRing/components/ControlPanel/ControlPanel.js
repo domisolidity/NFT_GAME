@@ -36,17 +36,17 @@ const ControlPanel = (props) => {
   return (
     <div className="ControlPanel">
       <p className="ControlPanel__text">
-        남은 열쇠: {attemptsMade}/{MAX_ATTEMPTS}
+        KEY: {attemptsMade}/{MAX_ATTEMPTS}
       </p>
       <div>
         <Button disabled={gameStatus == GameStatus.IN_PROGRESS} onClick={() => reStart()}>
-          재시작
+          RESTART
         </Button>
         <Button
           disabled={attemptsMade > MAX_ATTEMPTS - MAX_ATTEMPTS / 3 || gameStatus != GameStatus.IN_PROGRESS}
           onClick={() => giveUp()}
         >
-          포기하기
+          GIVE UP
         </Button>
       </div>
       <style jsx>{`
