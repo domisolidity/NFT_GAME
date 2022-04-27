@@ -125,7 +125,7 @@ const ChoiceNft = (props) => {
     // NFT 컨트랙트에 승인여부 확인하기
     const isApprovedForAll = await nftContract.methods
       .isApprovedForAll(account, stakingContract._address)
-      .call();
+      .call({ from: account });
     // 승인되지 않은 상태면 승인상태로 바꾸기
     if (!isApprovedForAll && confirm(`스테이킹을 위한 권한을 부여합니다`)) {
       await nftContract.methods

@@ -40,18 +40,10 @@ export default function Navbar(props) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    dispatch(reconnect())
+    dispatch(reconnect());
   }, []);
 
-
-
-  const {
-    variant,
-    children,
-    fixed,
-    brandText,
-    ...rest
-  } = props;
+  const { variant, children, fixed, brandText, ...rest } = props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue("gray.700", "gray.200");
@@ -168,11 +160,7 @@ export default function Navbar(props) {
         alignItems={{ xl: "center" }}
       >
         <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
-          <NavbarLinks
-            onOpen={props.onOpen}
-            logoText={props.logoText}
-            fixed={props.fixed}
-          />
+          <NavbarLinks onOpen={props.onOpen} logoText={props.logoText} fixed={props.fixed} />
         </Box>
         {/* Connnect to a wallet btn */}
         {!auth ? ConnectWalletBtn() : AccountbarBtn()}
