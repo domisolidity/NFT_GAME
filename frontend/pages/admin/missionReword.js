@@ -81,7 +81,7 @@ const MissionReword = () => {
 
   const approveMissionClaim = async () => {
     try {
-      if (account != owner) {
+      if (account != owner.toLowerCase()) {
         alert("관리자 권한이 없는 계정입니다.");
         return;
       }
