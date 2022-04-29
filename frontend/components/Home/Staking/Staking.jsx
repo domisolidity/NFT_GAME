@@ -133,6 +133,9 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
       alert("스테이킹 된 NFT가 없습니다");
       return;
     }
+    if (stakingContractAmount < reward) {
+      alert("스테이킹 컨트랙트에 잔액이 모자랍니다");
+    }
     const unStaking = await stakingContract.methods
       .exit(currentStakingNftData.tokenId)
       .send({ from: account })
