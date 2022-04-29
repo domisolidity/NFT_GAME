@@ -107,6 +107,7 @@ contract GameToken is Context, IERC20, Ownable {
     return true;
   }
 
+  // 클레임 허용량 증가시켜주기(클레임 하게 될 계정, 추가 허용량)
   function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
     address owner = _msgSender();
     _approve(owner, spender, _allowances[owner][spender] + addedValue);

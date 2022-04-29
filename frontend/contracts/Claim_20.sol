@@ -64,11 +64,16 @@ contract Claim_20 is Ownable {
     Ranking Reward Function 
   */
 
+  // 랭커에게 클레임 허용해주기 - 매개변수는 랭커의 address, 랭킹, 게임명,
+  //                                      클레임 허용상태, 보상수령 상태
   function approveClaim_rank(WeeklyRank[] memory result) external onlyOwner {
     for (uint i = 0; i < result.length; i++) {
+      // 해당 address에게 이미 클레임 허용을 해주었는지 확인
       require(result[i].isApproved == false, "has already been approved");
 
+      // 해당 address의 랭킹에 따라 분기
       if (result[i].ranking == 1) {
+        // 해당 address에게 랭킹에 해당하는 토큰양 허용
         gametoken.increaseAllowance(result[i].account, top1);
       } else if (result[i].ranking == 2) {
         gametoken.increaseAllowance(result[i].account, top2);

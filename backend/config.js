@@ -226,16 +226,16 @@ const getDatabaseConfig = async () => {
         missionDetails: dailyMission[i].missionDetails,
       });
     }
-    // 테스트 계정들 게임별 임의 플레이 기록 추가
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < gameList.length; j++) {
-        await InGameUser.create({
-          user_address: testAddressArray[i],
-          game_title: gameList[j].gameTitle,
-          gameScore: Math.floor(Math.random() * 30),
-        });
-      }
-    }
+    // // 테스트 계정들 게임별 임의 플레이 기록 추가
+    // for (let i = 0; i < 3; i++) {
+    //   for (let j = 0; j < gameList.length; j++) {
+    //     await InGameUser.create({
+    //       user_address: testAddressArray[i],
+    //       game_title: gameList[j].gameTitle,
+    //       gameScore: Math.floor(Math.random() * 30),
+    //     });
+    //   }
+    // }
     // 테스트 0번 계정에 아이템 임의로 추가
     for (let i = 0; i < 50; i++) {
       await UserItem.create({
@@ -259,6 +259,8 @@ const getDatabaseConfig = async () => {
             gameScore: testScore - Math.floor(Math.random() * 10),
             ranking: tempRank,
             user_address: testAddressArray[k],
+            isApproved: true,
+            isRearded: true,
           });
           testScore = testScore - 10;
           tempRank++;
@@ -307,16 +309,16 @@ const rankAggregation = async () => {
   console.log(`순위 집계가 끝났습니다`);
   unlockNFT(); // 모든 사용자 대표 NFT 해제하기
 
-  // 테스트 계정들 게임별 임의 플레이 기록 추가
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < gameList.length; j++) {
-      await InGameUser.create({
-        user_address: testAddressArray[i],
-        game_title: gameList[j].gameTitle,
-        gameScore: Math.floor(Math.random() * 30),
-      });
-    }
-  }
+  // // 테스트 계정들 게임별 임의 플레이 기록 추가
+  // for (let i = 0; i < 3; i++) {
+  //   for (let j = 0; j < gameList.length; j++) {
+  //     await InGameUser.create({
+  //       user_address: testAddressArray[i],
+  //       game_title: gameList[j].gameTitle,
+  //       gameScore: Math.floor(Math.random() * 30),
+  //     });
+  //   }
+  // }
 };
 
 /* 일일미션 집계 */
