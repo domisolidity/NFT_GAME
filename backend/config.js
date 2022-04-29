@@ -226,16 +226,16 @@ const getDatabaseConfig = async () => {
         missionDetails: dailyMission[i].missionDetails,
       });
     }
-    // 테스트 계정들 게임별 임의 플레이 기록 추가
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < gameList.length; j++) {
-        await InGameUser.create({
-          user_address: testAddressArray[i],
-          game_title: gameList[j].gameTitle,
-          gameScore: Math.floor(Math.random() * 30),
-        });
-      }
-    }
+    // // 테스트 계정들 게임별 임의 플레이 기록 추가
+    // for (let i = 0; i < 3; i++) {
+    //   for (let j = 0; j < gameList.length; j++) {
+    //     await InGameUser.create({
+    //       user_address: testAddressArray[i],
+    //       game_title: gameList[j].gameTitle,
+    //       gameScore: Math.floor(Math.random() * 30),
+    //     });
+    //   }
+    // }
     // 테스트 0번 계정에 아이템 임의로 추가
     for (let i = 0; i < 50; i++) {
       await UserItem.create({
@@ -259,6 +259,8 @@ const getDatabaseConfig = async () => {
             gameScore: testScore - Math.floor(Math.random() * 10),
             ranking: tempRank,
             user_address: testAddressArray[k],
+            isApproved: true,
+            isRearded: true,
           });
           testScore = testScore - 10;
           tempRank++;
@@ -305,17 +307,18 @@ const rankAggregation = async () => {
   // 집계 끝났으면 게임 플레이 현황 테이블 비워주기
   await InGameUser.sync({ force: true });
   console.log(`순위 집계가 끝났습니다`);
+  unlockNFT(); // 모든 사용자 대표 NFT 해제하기
 
-  // 테스트 계정들 게임별 임의 플레이 기록 추가
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < gameList.length; j++) {
-      await InGameUser.create({
-        user_address: testAddressArray[i],
-        game_title: gameList[j].gameTitle,
-        gameScore: Math.floor(Math.random() * 30),
-      });
-    }
-  }
+  // // 테스트 계정들 게임별 임의 플레이 기록 추가
+  // for (let i = 0; i < 3; i++) {
+  //   for (let j = 0; j < gameList.length; j++) {
+  //     await InGameUser.create({
+  //       user_address: testAddressArray[i],
+  //       game_title: gameList[j].gameTitle,
+  //       gameScore: Math.floor(Math.random() * 30),
+  //     });
+  //   }
+  // }
 };
 
 /* 일일미션 집계 */
@@ -346,25 +349,30 @@ const unlockNFT = async () => {
 /* 매주 순위 집계 시행하기 */
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
-  rule.dayOfWeek = 3; // 수요일 (0~6 / 일~토)
-  rule.hour = 9;
-  rule.minute = 0;
+  rule.dayOfWeek = AggregationDate.week.dayOfWeek; // 수요일 (0~6 / 일~토)
+  rule.hour = AggregationDate.week.hour;
+  rule.minute = AggregationDate.week.minute;
   const job = schedule.scheduleJob(rule, function () {
     rankAggregation(); // 순위집계 시행
-    unlockNFT(); // 모든 사용자 대표 NFT 해제하기
   });
 };
 /* 하루 한번 일일미션 등록시켜주기 */
 const dailylySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
-  rule.hour = 14;
-  rule.minute = 5;
+  rule.hour = AggregationDate.hour;
+  rule.minute = AggregationDate.day.minute;
   const job = schedule.scheduleJob(rule, function () {
     missionAggregation(); // 일일미션 집계
   });
 };
 
+const AggregationDate = {
+  week: { dayOfWeek: 6, hour: 9, minute: 0 },
+  day: { hour: 9, minute: 0 },
+};
+
 module.exports = {
+  AggregationDate,
   config,
   itemList,
   getDatabaseConfig,

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Heading, Flex, Button, Image, Text, Box, Input } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
+import axios from "axios";
 
 const Admin = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -39,6 +40,19 @@ const Admin = () => {
     await getStakingContractAmount();
     await getOwnerAmount();
     alert(`컨트랙트에 토큰 ${inputAmount}개를 전달하였습니다`);
+  };
+
+  const missionAggregation = async () => {
+    await axios
+      .get(`/api/admins/mission-aggregation`)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+  const rankAggregation = async () => {
+    await axios
+      .get(`/api/admins/rank-aggregation`)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -126,6 +140,15 @@ const Admin = () => {
           </Button>
         </Flex>
       </Button>
+
+      <Flex justify="center" mt="20px" gap={"20px"}>
+        <Button onClick={missionAggregation} minWidth={300} h="60px" p="20px 50px">
+          일일미션집계 실행하기
+        </Button>
+        <Button onClick={rankAggregation} minWidth={300} h="60px" p="20px 50px">
+          주간순위집계 실행하기
+        </Button>
+      </Flex>
       <style jsx>{`
         span {
           background: linear-gradient(#f1f1f1 23%, #818181 100%);
