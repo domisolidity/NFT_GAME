@@ -260,7 +260,7 @@ const getDatabaseConfig = async () => {
             ranking: tempRank,
             user_address: testAddressArray[k],
             isApproved: true,
-            isRearded: true,
+            isRewarded: true,
           });
           testScore = testScore - 10;
           tempRank++;

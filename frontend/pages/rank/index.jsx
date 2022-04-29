@@ -171,21 +171,21 @@ const Rank = ({ gameList }) => {
 
                       <AccordionButton>
                         <Box flex="1" textAlign="left">
-                          {data[i].weeks} 주차 🏆
+                          {data[0].weeks} 주차 🏆
                         </Box>
                         <AccordionIcon />
                       </AccordionButton>
 
                       <AccordionPanel pb={4}>
                         <CurrentRanking
-                          title={`${data[i].game_title} ${data[i].weeks} 주`}
+                          title={`${data[0].game_title} ${data[0].weeks} 주`}
                           currentRankData={data}
                           captions={[
                             "Rnaking",
                             "profile",
                             "player",
                             "score",
-                            `${data[i].updatedAt ? "updated at" : ""}`,
+                            `${data[0].updatedAt ? "updated at" : ""}`,
                             "",
                           ]}
                         />

@@ -28,6 +28,12 @@ export function SidebarBottom(props) {
       setMainNFT(await GameInterface.getMyNFT(account));
     }
 
+  }, [account, auth, mainNftData, updated, mainNFT]);
+
+  useEffect(async () => {
+    if (!(account && auth && mainNftData && mainNFT)) return;
+
+    // if (!mainNFT) return;
     // 대표 NFT가 있으면 일일미션정보 받아오기
     let receivedMissions = await GameInterface.getMission(account);
     // 일일미션이 없으면 새로 받기
@@ -37,7 +43,7 @@ export function SidebarBottom(props) {
     }
     setDailyMission(receivedMissions);
     dispatch(missionUpdate());
-  }, [account, auth, mainNftData, updated]);
+  }, [account, auth, mainNftData, updated, mainNFT]);
 
   const gameIcon = (title) => {
     switch (title) {
@@ -57,7 +63,7 @@ export function SidebarBottom(props) {
   return (
     <>
       <Flex opacity="0" flexDirection="column" textAlign={"center"} w="100%" as={props.as} animation={props.slideIn}>
-        {mainNftData && auth ? (
+        {mainNftData && auth && mainNFT ? (
           <>
             <Flex
               mb={3}
