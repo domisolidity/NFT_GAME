@@ -19,14 +19,19 @@ export function SidebarBottom(props) {
 
   const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
+  const [mainNFT, setMainNFT] = useState("");
   const [dailyMission, setDailyMission] = useState([]);
 
   useEffect(async () => {
     if (!(account && auth && mainNftData)) return;
+    if (!mainNFT) {
+      setMainNFT(await GameInterface.getMyNFT(account, gameTitle));
+    }
+
     // 대표 NFT가 있으면 일일미션정보 받아오기
     let receivedMissions = await GameInterface.getMission(account);
     // 일일미션이 없으면 새로 받기
-    if (receivedMissions.length == 0) {
+    if (receivedMissions.length == 0 && mainNFT) {
       await GameInterface.missionReg(account, mainNftData.stakingData.tokenId);
       receivedMissions = await GameInterface.getMission(account);
     }

@@ -13,6 +13,8 @@ const Admin = () => {
   const [stakingContractAmount, setStakingContractAmount] = useState("-");
   const [ownerAmount, setOwnerAmount] = useState("-");
 
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
+
   useEffect(async () => {
     if (!gameTokenContract) return;
     await getStakingContractAmount();
@@ -44,13 +46,13 @@ const Admin = () => {
 
   const missionAggregation = async () => {
     await axios
-      .get(`/api/admins/mission-aggregation`)
+      .get(`${NEXT_PUBLIC_SERVER_URL}/admins/mission-aggregation`)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
   };
   const rankAggregation = async () => {
     await axios
-      .get(`/api/admins/rank-aggregation`)
+      .get(`${NEXT_PUBLIC_SERVER_URL}/admins/rank-aggregation`)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
   };

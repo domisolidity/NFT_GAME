@@ -24,16 +24,16 @@ const schedule = require("node-schedule");
 
 /* truffle develop 테스트계정 */
 const testAddressArray = [
-    "0xff33a5edfa345846a7041ea31423140ef5c23ec6",
-    "0x74f3f774230b0169b0b9cb720cf3bc038033042f",
-    "0x99b23d3c08f88adcff136a20a7f93ae117a7cf7b",
-    "0x0eff5ffec29a5d4935f179e065af0b402138a949",
-    "0xd9d878b9b8b5f876a0897c7c9eb9889fb5c4eb74",
-    "0xa0b85d90a781194523bda8aa448e23d7a8a47757",
-    "0x5c9dc46f07773c6bdb7b2125ae8466092264f18a",
-    "0xd92b3aba1d3739c88c332a220532194c5c7e5a48",
-    "0x5e1ef1239e1e47f267f4bf23030182dd58b7ffb8",
-    "0xf23ada7af4f60264c8e9e156d0bb65b24cf08627",
+    "0xbe005997cc214577c575cab11d0430777145a7dd",
+    "0x3bfa24aa222b623f91dde9b02cb97452c84daa98",
+    "0xf3a183692d886b2e3f4578e8f27a2ba79051bdaa",
+    "0xdc9412c646837792c4d75edf99eade051452d8c6",
+    "0xdab40e9c5c55ae3dc74aa7946cb823b72531b457",
+    "0x0e7e39a44b2001657fa5166c54a824e28d379081",
+    "0x11ea69fce4e4a9eeea3c910cf2ee5754af922053",
+    "0x5ccb892acae8b4781bc00c61208d981a923b995f",
+    "0xc7c4d7c84a6ac3a6a84e1967ac2f659d0688376e",
+    "0xf49c05cca88331959e4e8e7d4b4d5f8b1007d1fe",
 ];
 
 /* 게임 목록 */
@@ -263,6 +263,8 @@ const getDatabaseConfig = async () => {
                         gameScore: testScore - Math.floor(Math.random() * 10),
                         ranking: tempRank,
                         user_address: testAddressArray[k],
+                        isApproved: true,
+                        isRewarded: true,
                     });
                     testScore = testScore - 10;
                     tempRank++;
@@ -320,8 +322,8 @@ const rankAggregation = async () => {
                 gameScore: Math.floor(Math.random() * 30),
             });
         }
-    };
-}
+    }
+};
 
 /* 일일미션 집계 */
 const missionAggregation = async () => {
