@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 
 const Clock = () => {
@@ -19,7 +20,7 @@ const Clock = () => {
 
   return (
     <>
-      <h1>{timer}</h1>
+      <Box>현재시간 : {timer}</Box>
     </>
   );
 };

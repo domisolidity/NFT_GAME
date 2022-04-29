@@ -2,7 +2,7 @@ import { Box, Flex, Img, Text, useColorModeValue } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { missionUpdate } from "../../redux/dailyMission/dailyMissionActions";
 import GameInterface from "../game/GameInterface";
 import { BlockIcon, DiamondIcon, TetrisIcon } from "../Icons/Icons";
 
@@ -12,6 +12,11 @@ export function SidebarBottom(props) {
 
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, mainNftData } = blockchain;
+  const missionState = useSelector((state) => state.mission);
+  const { updated } = missionState;
+
+  const dispatch = useDispatch();
+
   const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
   const [dailyMission, setDailyMission] = useState([]);
@@ -26,11 +31,8 @@ export function SidebarBottom(props) {
       receivedMissions = await GameInterface.getMission(account);
     }
     setDailyMission(receivedMissions);
-  }, [account, auth, mainNftData]);
-
-  // useEffect(async () => {
-  //   dispatch(metamaskLogin())
-  // }, []);
+    dispatch(missionUpdate());
+  }, [account, auth, mainNftData, updated]);
 
   const gameIcon = (title) => {
     switch (title) {
@@ -39,14 +41,13 @@ export function SidebarBottom(props) {
       case "테트리스":
         return <TetrisIcon />;
       case "보물찾기":
-        return <DiamondIcon />
+        return <DiamondIcon />;
       default:
         break;
     }
   };
 
   const textColor = useColorModeValue("gray.600", "gray.300");
-
 
   return (
     <>
@@ -65,33 +66,41 @@ export function SidebarBottom(props) {
               <Img borderRadius="50%" src={`${baseUri}${mainNftData.mainNftJson.image.slice(6)}`} />
             </Flex>
             <Flex flexDirection="column" fontSize="md">
-              <Text fontSize="md" color={textColor} fontWeight="bold" >
+              <Text fontSize="md" color={textColor} fontWeight="bold">
                 Daily Quest
               </Text>
               {dailyMission.length != 0 &&
                 dailyMission.map((mission, index) => (
-                  <Flex justifyContent={"center"} alignItems="center" bgColor="whiteAlpha.100" m={1} borderRadius="15px">
-                    <Box key={index} color={`var(--chakra-colors-${mainNftData.mainNftJson.grade}-300)`} fontSize="xl" fontWeight="bold" mr={2}>
+                  <Flex
+                    justifyContent={"center"}
+                    alignItems="center"
+                    bgColor="whiteAlpha.100"
+                    m={1}
+                    borderRadius="15px"
+                  >
+                    <Box
+                      key={index}
+                      color={`var(--chakra-colors-${mainNftData.mainNftJson.grade}-300)`}
+                      fontSize="xl"
+                      fontWeight="bold"
+                      mr={2}
+                    >
                       {gameIcon(mission.DailyMission.game_title)}
                     </Box>
-                    <Box color={textColor} fontSize="12px">{mission.attainment ? "Complete" : "Incomplete"}</Box>
+                    <Box color={textColor} fontSize="12px">
+                      {mission.attainment ? "Complete" : "Incomplete"}
+                    </Box>
                   </Flex>
                 ))}
             </Flex>
           </>
         ) : (
           <>
-            <Flex
-              mb={3}
-              borderRadius="50%"
-              justifyContent="flex-start"
-              alignItems="center"
-              boxSize="border-box"
-            >
+            <Flex mb={3} borderRadius="50%" justifyContent="flex-start" alignItems="center" boxSize="border-box">
               <Img borderRadius="50%" src={`/circle.png`} />
             </Flex>
             <Flex flexDirection="column" fontSize="md">
-              <Text fontSize="md" color={textColor} fontWeight="bold" >
+              <Text fontSize="md" color={textColor} fontWeight="bold">
                 Main NFT
               </Text>
 
@@ -99,9 +108,10 @@ export function SidebarBottom(props) {
                 <Box color={`whiteAlpha.300`} fontSize="xl" fontWeight="bold" mr={2}>
                   아이콘
                 </Box>
-                <Box color={textColor} fontSize="12px">선택하러가기</Box>
+                <Box color={textColor} fontSize="12px">
+                  선택하러가기
+                </Box>
               </Flex>
-
             </Flex>
           </>
         )}

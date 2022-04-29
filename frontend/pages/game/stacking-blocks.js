@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Box, Flex } from "@chakra-ui/react";
 import GameInterface from "../../components/game/GameInterface";
 import GameItem from "../../components/game/GameItem";
@@ -9,8 +9,10 @@ import InGameProfile from "../../components/game/InGameProfile";
 
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import MissionCard from "../../components/game/MissionCard";
+import { missionComplete } from "../../redux/dailyMission/dailyMissionActions";
 
 const StackingBlocks = () => {
+  const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, mainNftData } = blockchain;
   const { gameTitle } = GameInterface.gameList[0];
@@ -67,6 +69,8 @@ const StackingBlocks = () => {
           await GameInterface.updateMission(account, hasMission.mission_id);
           const recivedMission = await GameInterface.getMission(account, gameTitle);
           setHasMission(recivedMission);
+          // 미션클리어 정보 사이드바에서 갱신하기 위한 리덕스
+          dispatch(missionComplete());
         }
       }
     }
@@ -127,10 +131,7 @@ const StackingBlocks = () => {
 
   return (
     <Flex mt={"120px"}>
-      <div className="mission-box">
-        <MissionCard filledValue={score} hasMission={hasMission} />
-      </div>
-      {account && auth && mainNftData ? (
+      {account && auth && mainNftData && mainNFT ? (
         <Box w={"100%"}>
           {/* <GameSelectbar /> */}
           <div id="blockGameContainer">
@@ -142,7 +143,7 @@ const StackingBlocks = () => {
                 Restart
               </button>
               <h2>Game Over</h2>
-              <p>대~단합니다</p>
+              <p>Great!</p>
             </div>
             <div className="game-ready">
               <button id="start-button" onClick={playGame} disabled={!gameEnded}>
@@ -157,6 +158,9 @@ const StackingBlocks = () => {
             <div className="chance-box">
               Chance
               <p>{chance}</p>
+            </div>
+            <div className="mission-box">
+              <MissionCard filledValue={score} hasMission={hasMission} />
             </div>
             {resultBonus ? <div className="item-effect-box">x {resultBonus}!</div> : null}
             <button onClick={stackingBlock} disabled={gameEnded} className="placeBlock-button">
