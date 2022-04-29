@@ -391,7 +391,7 @@ const Market_nft = ({ as }) => {
                     <Box h="10%" mt="25">
                       <Link
                         href={{
-                          pathname: `market/${nft.tokenId}`,
+                          pathname: `market/sale/${nft.tokenId}`,
                           query: {
                             id: nft.tokenId,
                             grade: nft.grade,
@@ -402,7 +402,7 @@ const Market_nft = ({ as }) => {
                             price: nft.price,
                           },
                         }}
-                        as={`market/${nft.tokenId}`}
+                        as={`market/sale/${nft.tokenId}`}
                       >
                         <a>
                           <Button

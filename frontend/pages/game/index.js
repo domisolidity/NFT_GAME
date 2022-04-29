@@ -66,7 +66,7 @@ const Game = () => {
      90% { -webkit-box-reflect: below 0px linear-gradient(#00000002, #00000008) }
     100% { -webkit-box-reflect: below 0px linear-gradient(#00000001, #00000004) }
   `;
-  const reflect = `${reflectKeyframes} 2s linear alternate 0s infinite`;
+  const reflect = `${reflectKeyframes} 1s linear alternate 0s infinite`;
 
   const txtColor = useColorModeValue("gray.600", "white")
 

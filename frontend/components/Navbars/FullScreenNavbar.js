@@ -8,7 +8,13 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
-  keyframes
+  keyframes,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody
 } from "@chakra-ui/react";
 import { TimLogo, DocumentIcon, HomeIcon, PersonIcon, RocketIcon } from "../Icons/Icons";
 import { motion } from "framer-motion";
@@ -20,8 +26,27 @@ import routes from "../../assets/routes";
 import NextLink from "next/link";
 
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
+import { useDispatch, useSelector } from "react-redux";
+import { Separator } from "../Separator/Separator";
+import WalletList from "./ConnectWallet/WalletList";
+import AccountModal from "./Accountbar/AccountModal";
+import Accountbar from "./Accountbar/Accountbar";
+import { useEffect } from "react";
+import { reconnect } from "../../redux/blockchain/blockchainActions";
 
 export default function FullScreenNavbar(props) {
+
+  const blockchain = useSelector((state) => state.blockchain);
+  const dispatch = useDispatch();
+
+  const { auth, account } = blockchain;
+
+
+  useEffect(() => {
+    dispatch(reconnect());
+  }, []);
+
+
   const { logo, logoText, ...rest } = props;
 
   // Chakra color mode
@@ -36,6 +61,8 @@ export default function FullScreenNavbar(props) {
   let navbarFilter = useColorModeValue("none", "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))");
   let navbarBackdrop = "blur(21px)";
   let navbarPosition = "fixed";
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const brand = (
     <Link
@@ -86,6 +113,44 @@ export default function FullScreenNavbar(props) {
     </HStack>
   );
 
+  const ConnectWalletBtn = () => {
+    return (
+      <>
+        <ConnectWallet onOpen={onOpen} />
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Connect To A Wallet</ModalHeader>
+            <Separator />
+            <ModalCloseButton />
+            <ModalBody>
+              <WalletList onClose={onClose} />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </>
+    );
+  };
+
+  const AccountbarBtn = () => {
+    return (
+      <>
+        <Accountbar onOpen={onOpen} />
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Account</ModalHeader>
+            <Separator />
+            <ModalCloseButton />
+            <ModalBody>
+              <AccountModal onClose={onClose} />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </>
+    );
+  };
+
   const slideInTopKeyframes = keyframes`
   0% { transform: translate(-50%, -50px); }
   100% { opacity: 1; transform: translate(-50%, 0); }
@@ -120,13 +185,13 @@ export default function FullScreenNavbar(props) {
           <SidebarResponsive logoText={props.logoText} routes={routes} logo={logo} {...rest} />
         </Box>
         {links}
-        <ConnectWallet />
+        {!auth ? ConnectWalletBtn() : AccountbarBtn()}
       </Flex>
     </Flex>
   );
 }
 
-FullScreenNavbar.propTypes = {
-  color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"]),
-  brandText: PropTypes.string,
-};
+// FullScreenNavbar.propTypes = {
+//   color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"]),
+//   brandText: PropTypes.string,
+// };
