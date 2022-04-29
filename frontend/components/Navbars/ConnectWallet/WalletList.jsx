@@ -1,13 +1,10 @@
 // import { useEffect } from "react";
 import { Button, Flex, Image, useColorModeValue } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { connectWallet } from "../../../redux/blockchain/blockchainActions";
 
 const WalletList = ({ onClose }) => {
   const dispatch = useDispatch();
-  const blockchain = useSelector((state) => state.blockchain);
-
-  const { account, auth, nftContract } = blockchain;
 
   const getConnectWallet = () => {
     dispatch(connectWallet());

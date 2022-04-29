@@ -161,7 +161,7 @@ const Rank = ({ gameList }) => {
           // color={"white"}
         >
           <Accordion allowMultiple ref={accordian}>
-            {pastWeeks.map((data, i) => {
+            {processedRankData.map((data, i) => {
               return (
                 <AccordionItem key={i} ref={accordian}>
                   {({ isExpanded }) => (

@@ -3,9 +3,16 @@ import wrapper from "../redux/store";
 import theme from "../theme/theme.js";
 import Seo from "../components/Layout/Seo";
 import { useRouter } from "next/router";
+import Web3 from "web3";
+import { useDispatch } from "react-redux";
+import { connectWeb3 } from "../redux/blockchain/blockchainActions";
+import { useEffect } from "react";
+
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
 
   function matchingTitle(title) {
     if (title.includes("game")) {
@@ -24,6 +31,13 @@ const MyApp = ({ Component, pageProps }) => {
       return "";
     }
   }
+  useEffect(() => {
+    const web3 = new Web3(window.ethereum)
+    dispatch(connectWeb3(web3))
+
+  }, []);
+
+
 
   const getLayout = Component.getLayout || ((page) => page);
 

@@ -79,24 +79,6 @@ export default function Navbar(props) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const ConnectWalletBtn = () => {
-    return (
-      <>
-        <ConnectWallet onOpen={onOpen} />
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Connect To A Wallet</ModalHeader>
-            <Separator />
-            <ModalCloseButton />
-            <ModalBody>
-              <WalletList onClose={onClose} />
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      </>
-    );
-  };
   const AccountbarBtn = () => {
     return (
       <>
@@ -163,7 +145,7 @@ export default function Navbar(props) {
           <NavbarLinks onOpen={props.onOpen} logoText={props.logoText} fixed={props.fixed} />
         </Box>
         {/* Connnect to a wallet btn */}
-        {!auth ? ConnectWalletBtn() : AccountbarBtn()}
+        {!auth ? <ConnectWallet onOpen={onOpen} /> : AccountbarBtn()}
       </Flex>
     </Flex>
   );

@@ -13,7 +13,6 @@ import { Separator } from "../../Separator/Separator";
 import WalletList from "./WalletList";
 
 const ConnectWallet = () => {
-  const txtColor = useColorModeValue("#f47820 ", "orange.500");
   const { isOpen, onOpen, onClose } = useDisclosure();
   let bgButton = useColorModeValue(
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",

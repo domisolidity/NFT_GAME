@@ -15,6 +15,13 @@ const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
 
 const baseUri = "https://gateway.pinata.cloud/ipfs/";
 
+export const connectWeb3 = (payload) => {
+  return {
+    type: "WEB3",
+    payload: payload,
+  };
+};
+
 const connectRequest = () => {
   return {
     type: "CONNECTION_REQUEST",
@@ -182,7 +189,8 @@ export const reconnect = () => {
       });
       // Add listeners start
       window.ethereum.on("accountsChanged", (accounts) => {
-        dispatch(updateAccount(accounts));
+        // dispatch(updateAccount(accounts));
+        console.log(accounts)
       });
       window.ethereum.on("chainChanged", () => {
         window.location.reload();
@@ -402,7 +410,8 @@ export const connectWallet = () => {
           });
           // Add listeners start
           window.ethereum.on("accountsChanged", (accounts) => {
-            dispatch(updateAccount(accounts));
+            console.log(accounts)
+            // dispatch(updateAccount(accounts));
           });
           window.ethereum.on("chainChanged", () => {
             window.location.reload();

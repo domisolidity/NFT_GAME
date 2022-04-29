@@ -17,7 +17,17 @@ const blockchainReducer = (state = initialState, action) => {
   switch (action.type) {
     case "CONNECTION_REQUEST":
       return {
-        ...initialState,
+        ...state,
+        account: null,
+        networkId: null,
+        nftContract: null,
+        nftDealContract: null,
+        gameTokenContract: null,
+        auctionCreatorContract: null,
+        claim20_Contract: null,
+        mainNftData: null,
+        errorMsg: "",
+        auth: false,
         loading: true,
       };
     case "CONNECTION_SUCCESS":
@@ -32,14 +42,22 @@ const blockchainReducer = (state = initialState, action) => {
         auctionCreatorContract: action.payload.auctionCreatorContract,
         claim20_Contract: action.payload.claim20_Contract,
         stakingContract: action.payload.stakingContract,
-        web3: action.payload.web3,
         mainNftData: action.payload.mainNftData,
         errorMsg: "",
       };
     case "CONNECTION_FAILED":
       return {
-        ...initialState,
+        ...state,
         loading: false,
+        account: null,
+        networkId: null,
+        nftContract: null,
+        nftDealContract: null,
+        gameTokenContract: null,
+        auctionCreatorContract: null,
+        claim20_Contract: null,
+        mainNftData: null,
+        auth: false,
         errorMsg: action.payload,
       };
     case "UPDATE_ACCOUNT":
@@ -57,6 +75,11 @@ const blockchainReducer = (state = initialState, action) => {
       return {
         ...state,
         auth: action.payload,
+      };
+    case "WEB3":
+      return {
+        ...state,
+        web3: action.payload,
       };
     default:
       return state;
