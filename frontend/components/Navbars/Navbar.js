@@ -35,12 +35,12 @@ export default function Navbar(props) {
   const blockchain = useSelector((state) => state.blockchain);
   const dispatch = useDispatch();
 
-  const { auth, account } = blockchain;
+  const { auth, account, loading } = blockchain;
 
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    dispatch(reconnect());
+    dispatch(reconnect(account));
   }, []);
 
   const { variant, children, fixed, brandText, ...rest } = props;

@@ -25,9 +25,9 @@ router.get("/", async (req, res, next) => {
 /** GET /api/users/:userId */
 /** Authenticated route */
 router.get("/:userId", jwt(config), async (req, res, next) => {
-  console.log(2);
+  console.log(req.params, "auth 검증", req.user.payload.id);
   if (req.user.payload.id !== +req.params.userId) {
-    return res.status(401).send({ error: "You can can only access yourself" });
+    return res.status(401).send({ error: "You can only access yourself" });
   }
   return User.findByPk(req.params.userId)
     .then((user) => res.json(user))
@@ -62,7 +62,13 @@ router.post("/claimable-rank", async (req, res) => {
       isApproved: true,
       isRewarded: false,
     },
-    attributes: ["user_address", "ranking", "game_title", "isApproved", "isRewarded"],
+    attributes: [
+      "user_address",
+      "ranking",
+      "game_title",
+      "isApproved",
+      "isRewarded",
+    ],
   });
   res.send(rank);
 });

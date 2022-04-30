@@ -69,7 +69,7 @@ const ItemList = ({ as }) => {
               );
             })
           ) : (
-            <NotFound />
+            <NotFound items={"아이템"} />
           )}
         </Flex>
       </Box>

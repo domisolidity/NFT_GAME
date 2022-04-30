@@ -17,8 +17,6 @@ import NextLink from "next/link";
 // this function creates the links and collapses that appear in the sidebar (left menu)
 
 const SidebarContent = ({ logoText, routes }) => {
-  console.log({ logoText, routes });
-
   // to check for active links and opened collapses
   // let location = useLocation();
 
@@ -35,7 +33,6 @@ const SidebarContent = ({ logoText, routes }) => {
   }
 
   const router = useRouter();
-  console.log(router);
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {

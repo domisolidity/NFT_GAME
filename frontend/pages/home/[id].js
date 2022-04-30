@@ -333,14 +333,14 @@ const NftDetail_my = () => {
                     <Text mt="10" align="center">
                       경매가 진행중입니다. 경매 관리는 마켓에 등록된 경매건에서 가능합니다.
                     </Text>
-                    <Link
+                    {/* <Link
                       href={{
                         pathname: `market`,
                       }}
                       as={`market`}
                     >
                       <Button>마켓으로 이동</Button>
-                    </Link>
+                    </Link> */}
                   </Box>
                 ) : (
                   <Box mt="10">

@@ -42,7 +42,6 @@ export default function Home() {
       .balanceOf(account)
       .call({ from: account })
       .then((tokenBalance) => {
-        console.log(tokenBalance);
         setTokenBalance(tokenBalance);
       })
       .catch(console.error());

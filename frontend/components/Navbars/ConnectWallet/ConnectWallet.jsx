@@ -19,21 +19,27 @@ const ConnectWallet = () => {
     "gray.800"
   );
   let colorButton = "white";
+  const txtColor = useColorModeValue("#f47820 ", "orange.500");
 
   return (
     <>
       <Button
         bg={bgButton}
-        color={colorButton}
+        // color={colorButton}
         fontSize="xs"
         onClick={onOpen}
         // variant="no-hover"
+        border={"1px solid"}
         borderRadius="35px"
         px="30px"
         display={{
           sm: "none",
           lg: "flex",
         }}
+        h={"44px"}
+        p={"0 22px"}
+        color={txtColor}
+        boxShadow={"0 2px 10px rgb(0 0 0 / 15%)"}
       >
         Connect to a Wallet
       </Button>

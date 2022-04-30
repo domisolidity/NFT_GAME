@@ -19,8 +19,8 @@ import {
 } from "@chakra-ui/react";
 
 function ImageUpload(props) {
-  const { NEXT_PUBLIC_LOGIN_KEY, NEXT_PUBLIC_SERVER_URL } = process.env;
-
+  const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
   const blockchain = useSelector((state) => state.blockchain);
   const { account } = blockchain;
   const [Images, setImages] = useState([]);

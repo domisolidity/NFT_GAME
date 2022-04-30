@@ -52,15 +52,6 @@ const MarketDetail_auction = () => {
   const [qqqq, setqqqq] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const test = async () => {
-    await auctionContract.methods
-      .getTimestamp()
-      .call({ from: account })
-      .then((res) => {
-        console.log(res);
-      });
-  };
-
   // @ 입찰하기 함수
   const placeBidNft = async () => {
     try {
@@ -262,7 +253,6 @@ const MarketDetail_auction = () => {
                 <Button isLoading={loading ? 1 : null} loadingText="Claiming.." bg="green.600" onClick={claimAuction}>
                   클레임
                 </Button>
-                <Button onClick={test}>test</Button>
               </Flex>
               <Flex justify="center">
                 {/* <WarningIcon w={6} h={6} color="orange.200" /> */}
@@ -348,7 +338,9 @@ const MarketDetail_auction = () => {
                 );
               })
             ) : (
-              <div>음슴</div>
+              <Text m="0 auto" textAlign="center">
+                No data
+              </Text>
             )}
           </Table>
         </TableContainer>

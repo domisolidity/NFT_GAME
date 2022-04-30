@@ -20,7 +20,15 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Divider,
+  List,
+  ListIcon,
+  ListItem,
+  Stack,
+  useColorModeValue,
 } from "@chakra-ui/react";
+
+import { FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import NftHistory from "../../../components/Home/NftHistory";
 import SideBarScreen from "../../../components/Layout/Frame/SideBarScreen";
@@ -59,6 +67,56 @@ const MarketDetail_sale = () => {
     if (!account) return;
     console.log("g");
   }, [account]);
+
+  const options = [
+    { id: 1, desc: "수수료가 발생합니다." },
+    { id: 2, desc: "히스토리는 하단에서 확인 가능합니다." },
+  ];
+
+  const PackageTier = ({ title, options, price, checked = false }) => {
+    const colorTextLight = checked ? "white" : "purple.600";
+    const bgColorLight = checked ? "purple.400" : "gray.300";
+
+    const colorTextDark = checked ? "white" : "purple.500";
+    const bgColorDark = checked ? "purple.400" : "gray.300";
+
+    return (
+      <Stack
+        p={3}
+        py={3}
+        justifyContent={{
+          base: "flex-start",
+          md: "space-around",
+        }}
+        direction={{
+          base: "column",
+          md: "row",
+        }}
+        alignItems={{ md: "center" }}
+      >
+        <Heading size={"md"}>{title}</Heading>
+        <List spacing={3} textAlign="start">
+          {options.map((desc, id) => (
+            <ListItem key={desc.id}>
+              <ListIcon as={FaCheckCircle} color="green.500" />
+              {desc.desc}
+            </ListItem>
+          ))}
+        </List>
+        <Heading size={"xl"}>{price}ETH</Heading>
+        <Stack>
+          <Button
+            size="md"
+            color={useColorModeValue(colorTextLight, colorTextDark)}
+            bgColor={useColorModeValue(bgColorLight, bgColorDark)}
+            onClick={onOpen}
+          >
+            Buy now
+          </Button>
+        </Stack>
+      </Stack>
+    );
+  };
 
   return (
     <Grid
@@ -114,9 +172,9 @@ const MarketDetail_sale = () => {
         </Text>
 
         <Box mt={20}>
-          <Heading>Price</Heading>
-          <Text>{price}</Text>
-          <Button onClick={onOpen}>Buy now</Button>
+          <Divider />
+          <PackageTier title={"NFT"} price={price} options={options} />
+
           <Modal isOpen={isOpen} onClose={onClose} size="xl">
             <ModalOverlay>
               <ModalContent>

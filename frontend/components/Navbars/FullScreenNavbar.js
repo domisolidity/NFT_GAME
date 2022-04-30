@@ -14,7 +14,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  ModalBody
+  ModalBody,
 } from "@chakra-ui/react";
 import { TimLogo, DocumentIcon, HomeIcon, PersonIcon, RocketIcon } from "../Icons/Icons";
 import { motion } from "framer-motion";
@@ -35,17 +35,13 @@ import { useEffect } from "react";
 import { reconnect } from "../../redux/blockchain/blockchainActions";
 
 export default function FullScreenNavbar(props) {
+  const dispatch = useDispatch();
+  const blockchain = useSelector((state) => state.blockchain);
+  const { auth, account } = blockchain;
 
-  // const blockchain = useSelector((state) => state.blockchain);
-  // const dispatch = useDispatch();
-
-  // const { auth, account } = blockchain;
-
-
-  // useEffect(() => {
-  //   dispatch(reconnect());
-  // }, []);
-
+  useEffect(() => {
+    dispatch(reconnect(account));
+  }, []);
 
   const { logo, logoText, ...rest } = props;
 
@@ -166,8 +162,7 @@ export default function FullScreenNavbar(props) {
           <SidebarResponsive logoText={props.logoText} routes={routes} logo={logo} {...rest} />
         </Box>
         {links}
-        {/* {!auth ? ConnectWalletBtn() : AccountbarBtn()} */}
-        {<ConnectWallet onOpen={onOpen} />}
+        {!auth ? <ConnectWallet onOpen={onOpen} /> : AccountbarBtn()}
       </Flex>
     </Flex>
   );

@@ -34,7 +34,7 @@ router.patch("/:userId", jwt(config), async (req, res, next) => {
 
 /* 대표 NFT 토큰id 받아오기 */
 router.post("/my-token-id", async (req, res) => {
-  console.log("미션 등록");
+  console.log("대표 NFT 토큰 id 받아오기");
   const account = req.body.account;
 
   const response = await User.findOne({

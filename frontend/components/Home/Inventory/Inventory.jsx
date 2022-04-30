@@ -18,7 +18,7 @@ const Inventory = ({ as, slideIn }) => {
         >
           Items
         </Text>
-        <Separator />
+        <Separator h={"2px"} />
 
         <ItemList as={as} />
 

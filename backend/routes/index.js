@@ -8,7 +8,6 @@ const item = require("./items");
 const rank = require("./ranks");
 const admin = require("./admins");
 
-
 router.use("/auth", auth);
 router.use("/users", user);
 router.use("/games", game);

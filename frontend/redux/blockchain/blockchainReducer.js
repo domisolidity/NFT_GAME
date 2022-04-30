@@ -18,46 +18,19 @@ const blockchainReducer = (state = initialState, action) => {
     case "CONNECTION_REQUEST":
       return {
         ...state,
-        account: null,
-        networkId: null,
-        nftContract: null,
-        nftDealContract: null,
-        gameTokenContract: null,
-        auctionCreatorContract: null,
-        claim20_Contract: null,
-        mainNftData: null,
-        errorMsg: "",
-        auth: false,
         loading: true,
       };
     case "CONNECTION_SUCCESS":
       return {
         ...state,
         loading: false,
-        account: action.payload.account.toString(),
-        networkId: action.payload.networkId,
-        nftContract: action.payload.nftContract,
-        nftDealContract: action.payload.nftDealContract,
-        gameTokenContract: action.payload.gameTokenContract,
-        auctionCreatorContract: action.payload.auctionCreatorContract,
-        claim20_Contract: action.payload.claim20_Contract,
-        stakingContract: action.payload.stakingContract,
-        mainNftData: action.payload.mainNftData,
+        account: action.payload.account,
         errorMsg: "",
       };
     case "CONNECTION_FAILED":
       return {
         ...state,
         loading: false,
-        account: null,
-        networkId: null,
-        nftContract: null,
-        nftDealContract: null,
-        gameTokenContract: null,
-        auctionCreatorContract: null,
-        claim20_Contract: null,
-        mainNftData: null,
-        auth: false,
         errorMsg: action.payload,
       };
     case "UPDATE_ACCOUNT":
@@ -80,6 +53,18 @@ const blockchainReducer = (state = initialState, action) => {
       return {
         ...state,
         web3: action.payload,
+      };
+    case "CONTRACT":
+      return {
+        ...state,
+        account: action.payload.account.toString(),
+        nftContract: action.payload.nftContract,
+        nftDealContract: action.payload.nftDealContract,
+        gameTokenContract: action.payload.gameTokenContract,
+        auctionCreatorContract: action.payload.auctionCreatorContract,
+        claim20_Contract: action.payload.claim20_Contract,
+        stakingContract: action.payload.stakingContract,
+        mainNftData: action.payload.mainNftData,
       };
     default:
       return state;
