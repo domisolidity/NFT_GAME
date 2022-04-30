@@ -7,6 +7,9 @@ services:
             dockerfile: Dockerfile
         ports:
             - "80:80"
+        depends_on:
+            - node
+            - next
     node:
         container_name: "node"
         build:
@@ -16,8 +19,6 @@ services:
             - ./backend/.env
         ports:
             - "5000:5000"
-        depends_on:
-            - nginx
     next:
         container_name: "next"
         restart: "on-failure"
@@ -26,11 +27,5 @@ services:
             dockerfile: Dockerfile
         env_file:
             - ./frontend/.env
-        volumes:
-            - "./frontend:/usr/src/next"
-            - "/usr/src/next/node_modules"
-            - "/usr/src/next/.next"
         ports:
             - "3000:3000"
-        depends_on:
-            - nginx
