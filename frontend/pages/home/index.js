@@ -124,7 +124,7 @@ export default function Home() {
           slideIn={slideIn[1]}
           title={"Doremi Token"}
           amount={tokenBalance ? tokenBalance : "---"}
-          unit={"DGT"}
+          unit={"REMI"}
           icon={<TimLogo h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
         <MiniStatus

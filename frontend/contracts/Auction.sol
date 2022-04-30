@@ -61,7 +61,7 @@ contract Auction {
     startTime = _startTime;
     endTime = _endTime;
 
-    bidIncrement = 1 * 10**17; // 1*10**17 = 0.1 eth
+    bidIncrement = 1 * 10**16; // 1*10**17 = 0.01 eth
 
     onAuctioning[_tokenId] = true;
   }

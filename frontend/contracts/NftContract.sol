@@ -23,7 +23,7 @@ contract NftContract is ERC721Enumerable {
   uint16 public remainedGreen = 90 - tokenIds_green;
   uint16 public remainedPurple = 100 - tokenIds_purple;
 
-  constructor() ERC721("DoremiGames Nft Token", "DMGN") {}
+  constructor() ERC721("DoremiGames Nft Token", "REMIN") {}
 
   // uint8 public constant totalSupply = 100;
   mapping(uint => string) tokenURIs;

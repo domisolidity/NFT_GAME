@@ -105,7 +105,7 @@ contract Staking is ERC721Holder {
     } else if (_tokenId >= 91 && _tokenId <= 100) {
       classReward = 3;
     }
-    // 스테이킹 시작시간부터 종료되는 시간까지 1일당 리워드로 DGT 1개,
+    // 스테이킹 시작시간부터 종료되는 시간까지 1일당 리워드로 REMI 1개,
     // NFT 등급(red, green, purple)에 따라 1, 2, 3배
     uint reward = ((_endTime - _startTime) / 1 days) * classReward;
     return reward;

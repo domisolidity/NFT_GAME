@@ -164,7 +164,7 @@ const StakingInfo = () => {
                 ></path>
               </Icon>
               메인 NFT를 설정하시면 일일 퀘스트가 주어지며, 일일퀘스트 달성시
-              리워드로 DGT 토큰을 부여 받습니다.
+              리워드로 REMI 토큰을 부여 받습니다.
             </Text>
             <Text ml={19}>
               <Icon
@@ -198,7 +198,7 @@ const StakingInfo = () => {
                   clipRule="evenodd"
                 ></path>
               </Icon>
-              매 주 , 각 게임의 1~3위 플레이어에게는 DGT 토큰이 차등 지급
+              매 주 , 각 게임의 1~3위 플레이어에게는 REMI 토큰이 차등 지급
               됩니다.
             </Text>
             <Text ml={19}>
@@ -233,13 +233,13 @@ const StakingInfo = () => {
                   clipRule="evenodd"
                 ></path>
               </Icon>
-              DGT 은 마켓에서 게임을 위한 아이템 구매시 사용 가능합니다.
+              REMI 은 마켓에서 게임을 위한 아이템 구매시 사용 가능합니다.
             </Text>
 
             {/* <Feature
               icon={<TimLogo color={"purple.500"} w={5} h={5} />}
               iconBg={useColorModeValue("purple.100", "purple.900")}
-              text={"DGT"}
+              text={"REMI"}
             /> */}
           </Stack>
         </Stack>

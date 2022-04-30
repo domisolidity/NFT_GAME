@@ -233,7 +233,7 @@ const RankingReword = () => {
           <Table border="1px solid gray" mt="5" w="80%" variant="striped" colorScheme="#2C264C">
             <TableCaption>
               <Box mt="50" mb="5" fontSize="20">
-                <span> Total Allowance : {totalAllowance} DGT </span>
+                <span> Total Allowance : {totalAllowance} REMI </span>
               </Box>
               <Button bg="#414fa28f" onClick={previousStep} mr="2">
                 뒤로 가기

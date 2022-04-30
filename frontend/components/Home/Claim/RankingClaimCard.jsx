@@ -80,7 +80,7 @@ const RankingClaimCard = (props) => {
             <Text fontSize="30px" m={"0 16px"} color="#87d57e">
               {rewardAmount}
             </Text>
-            <Text fontSize="16px">DGT</Text>
+            <Text fontSize="16px">REMI</Text>
           </Flex>
         </Flex>
         <Button

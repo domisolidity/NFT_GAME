@@ -108,7 +108,7 @@ const itemCard = ({ item, as, slideIn }) => {
               {item.itemPrice}
             </Text>
             <Text fontWeight={600} color={"teal.300"}>
-              DGT
+              REMI
             </Text>
           </Stack>
           {/* <Text color={"gray.500"} fontSize={"sm"}>
