@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 
 const itemCard = ({ item, as, slideIn }) => {
+  const { NEXT_PUBLIC_SERVER_URL } = process.env;
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, gameTokenContract } = blockchain;
 
@@ -25,7 +26,7 @@ const itemCard = ({ item, as, slideIn }) => {
   // 내 아이템 개수 불러오기
   const getMyItemQuantity = async () =>
     await axios
-      .post(`/api/items/game-items/my-items-quantity`, {
+      .post(`${NEXT_PUBLIC_SERVER_URL}/items/game-items/my-items-quantity`, {
         account: account,
         itemName: item.itemName,
       })
@@ -43,10 +44,13 @@ const itemCard = ({ item, as, slideIn }) => {
       .send({ from: account });
 
     // 구입했으면 DB에 아이템 추가해주기
-    const isBought = await axios.post(`/api/items/game-items/buy-item`, {
-      account: response.from,
-      itemName: item.itemName,
-    });
+    const isBought = await axios.post(
+      `${NEXT_PUBLIC_SERVER_URL}/items/game-items/buy-item`,
+      {
+        account: response.from,
+        itemName: item.itemName,
+      }
+    );
     console.log(isBought.data.item_itemName, "구매했어");
     setMyItemQuantity(myItemQuantity + 1);
   };

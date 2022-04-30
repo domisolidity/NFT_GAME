@@ -8,7 +8,7 @@ const Market_item = ({ as }) => {
   // 아이템 목록 가져오기
   const getGameItems = async () =>
     await axios
-      .get(`/api/items/game-items`)
+      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/items/game-items`)
       .then((res) => setGameItems(res.data));
 
   useEffect(() => {

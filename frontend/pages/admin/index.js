@@ -44,13 +44,13 @@ const Admin = () => {
 
   const missionAggregation = async () => {
     await axios
-      .get(`/api/admins/mission-aggregation`)
+      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/admins/mission-aggregation`)
       .then((res) => alert("미션집계완료되었습니다."))
       .catch((err) => console.log(err));
   };
   const rankAggregation = async () => {
     await axios
-      .get(`/api/admins/rank-aggregation`)
+      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/admins/rank-aggregation`)
       .then((res) => alert("순위집계완료되었습니다."))
       .catch((err) => console.log(err));
   };

@@ -2,17 +2,15 @@ version: "3"
 services:
     nginx:
         restart: always
-        image: achievedw/doremi-games-nginx
+        image: achievedw/p2e-game-nginx:3.0
         ports:
             - "80:80"
         depends_on:
             - node
 
     node:
-        image: achievedw/doremi-games-node
-        volumes:
-            - "./backend:/usr/src/node"
-            - "/usr/src/node/node_modules"
+        image: achievedw/p2e-game-node:3.0
+
         ports:
             - "5000:5000"
         env_file:
@@ -20,11 +18,8 @@ services:
 
     next:
         restart: "on-failure"
-        image: achievedw/doremi-games-next
-        volumes:
-            - "./frontend:/usr/src/next"
-            - "/usr/src/next/node_modules"
-            - "/usr/src/next/.next"
+        image: achievedw/p2e-game-next:5.0
+
         ports:
             - "3000:3000"
         env_file:

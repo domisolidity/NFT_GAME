@@ -23,7 +23,7 @@ export function SidebarBottom(props) {
   const [dailyMission, setDailyMission] = useState([]);
 
   useEffect(async () => {
-    if (!(account && auth)) return;
+    if (!(account && auth && mainNftData)) return;
     if (!mainNFT) {
       setMainNFT(await GameInterface.getMyNFT(account));
     }

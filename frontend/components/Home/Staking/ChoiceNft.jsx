@@ -157,10 +157,13 @@ const ChoiceNft = (props) => {
       }
       alert(`${endTime}까지 유지됩니다`);
       await axios
-        .post(`/api/users/profile/reg-token-id`, {
-          account: account,
-          tokenId: selectNft,
-        })
+        .post(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/users/profile/reg-token-id`,
+          {
+            account: account,
+            tokenId: selectNft,
+          }
+        )
         .then((res) => {
           console.log(res);
           dispatch(regMainNft({ mainNftData }));

@@ -357,9 +357,9 @@ export const init = () => {
         }
 
         window.ethereum.on("accountsChanged", () => {
-          // alert(`계정이 변경되어 새로고침합니다`);
-          // window.location.reload();
           dispatch(disconnectWallet());
+          alert(`계정이 변경되어 새로고침합니다`);
+          window.location.reload();
         });
 
         window.ethereum.on("chainChanged", () => {

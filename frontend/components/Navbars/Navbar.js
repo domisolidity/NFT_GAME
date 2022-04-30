@@ -38,10 +38,10 @@ export default function Navbar(props) {
   const { auth, account, loading } = blockchain;
 
   const [scrolled, setScrolled] = useState(false);
-
+  console.log(auth, "어쓰");
   useEffect(() => {
     dispatch(reconnect(account));
-  }, []);
+  }, [auth]);
 
   const { variant, children, fixed, brandText, ...rest } = props;
 
