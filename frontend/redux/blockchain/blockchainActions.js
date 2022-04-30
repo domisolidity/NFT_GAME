@@ -117,7 +117,7 @@ export const authenticate = () => {
 };
 
 /* 쿠키 있으면 자동 로그인을 위한 녀석 */
-export const reconnect = () => {
+export const reconnect = (account) => {
   console.log(" 🛠 reconnect 🛠");
   return async (dispatch) => {
     dispatch(connectRequest()); // 로딩중으로 변경
@@ -357,8 +357,9 @@ export const init = () => {
         }
 
         window.ethereum.on("accountsChanged", () => {
-          alert(`계정이 변경되어 새로고침합니다`);
-          window.location.reload();
+          // alert(`계정이 변경되어 새로고침합니다`);
+          // window.location.reload();
+          dispatch(disconnectWallet());
         });
 
         window.ethereum.on("chainChanged", () => {
@@ -367,7 +368,8 @@ export const init = () => {
         });
       } catch (error) {
         console.log(error);
-        alert("오류가 발생했습니다.");
+        // alert("오류가 발생했습니다.");
+        alert("메타마스크를 확인해주세요");
       }
     } else {
       alert("메타마스크를 설치해주세요");
