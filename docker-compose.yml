@@ -1,0 +1,36 @@
+version: "3"
+services:
+    nginx:
+        container_name: "nginx"
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        ports:
+            - "80:80"
+    node:
+        container_name: "node"
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        env_file:
+            - ./backend/.env
+        ports:
+            - "5000:5000"
+        depends_on:
+            - nginx
+    next:
+        container_name: "next"
+        restart: "on-failure"
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        env_file:
+            - ./frontend/.env
+        volumes:
+            - "./frontend:/usr/src/next"
+            - "/usr/src/next/node_modules"
+            - "/usr/src/next/.next"
+        ports:
+            - "3000:3000"
+        depends_on:
+            - nginx
