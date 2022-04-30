@@ -66,6 +66,11 @@ contract Staking is ERC721Holder {
     require(stakingData[msg.sender].ownerAddress == msg.sender, "you are not token owner");
     // 스테이킹 끝날 시간 이후인지 확인
     // require(stakingData[msg.sender].endTime < block.timestamp, "it's not time yet");
+    // 스테이킹 컨트랙트가 보유한 토큰 충분한지 확인
+    require(
+      stakingData[msg.sender].reward <= gametoken.balanceOf(address(this)),
+      "staking contract is not enough token"
+    );
 
     // 컨트랙트에게서 nft 소유권 돌려받기
     nfttoken.safeTransferFrom(address(this), msg.sender, _tokenId);

@@ -102,13 +102,13 @@ const itemList = [
 const dailyMission = [
   {
     game_title: "블록쌓기",
-    targetValue: 10,
-    missionDetails: "블록 10개 이상 쌓기",
+    targetValue: 3,
+    missionDetails: "블록 3개 이상 쌓기",
   },
   {
     game_title: "테트리스",
-    targetValue: 10,
-    missionDetails: "블록 10줄 이상 제거",
+    targetValue: 1,
+    missionDetails: "블록 1줄 이상 제거",
   },
   {
     game_title: "보물찾기",
@@ -349,11 +349,12 @@ const unlockNFT = async () => {
 /* 매주 순위 집계 시행하기 */
 const weeklySchedule = async () => {
   const rule = new schedule.RecurrenceRule();
-  rule.dayOfWeek = AggregationDate.week.dayOfWeek; // 수요일 (0~6 / 일~토)
+  rule.dayOfWeek = AggregationDate.week.dayOfWeek; // (0~6 / 일~토)
   rule.hour = AggregationDate.week.hour;
   rule.minute = AggregationDate.week.minute;
   const job = schedule.scheduleJob(rule, function () {
     rankAggregation(); // 순위집계 시행
+    unlockNFT(); // 모든 사용자 대표 NFT 해제하기
   });
 };
 /* 하루 한번 일일미션 등록시켜주기 */
