@@ -342,6 +342,7 @@ export const init = () => {
 
           dispatch(
             getContract({
+              networkId: networkId,
               account: accounts[0],
               nftContract: nftContract,
               nftDealContract: nftDealContract,
@@ -358,17 +359,16 @@ export const init = () => {
 
         window.ethereum.on("accountsChanged", () => {
           dispatch(disconnectWallet());
-          alert(`계정이 변경되어 새로고침합니다`);
+          alert(`계정이 변경되어 로그아웃됩니다.`);
           window.location.reload();
         });
 
         window.ethereum.on("chainChanged", () => {
-          alert(`네트워크가 변경되어 새로고침합니다`);
+          alert(`네트워크가 변경되었습니다.`);
           window.location.reload();
         });
       } catch (error) {
         console.log(error);
-        // alert("오류가 발생했습니다.");
         alert("메타마스크를 확인해주세요");
       }
     } else {

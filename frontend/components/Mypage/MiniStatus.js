@@ -22,7 +22,7 @@ const MiniStatus = ({ title, amount, unit, icon, as, slideIn }) => {
               <StatNumber fontSize="lg" color={textColor}>
                 {amount}
               </StatNumber>
-              <StatHelpText
+              <Box
                 alignSelf="flex-end"
                 justifySelf="flex-end"
                 ml="8px"
@@ -33,7 +33,7 @@ const MiniStatus = ({ title, amount, unit, icon, as, slideIn }) => {
                 fontSize="md"
               >
                 {unit ? unit : null}
-              </StatHelpText>
+              </Box>
             </Flex>
           </Stat>
           <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>

@@ -9,16 +9,10 @@ import {
   StackDivider,
   Icon,
   useColorModeValue,
-  Box,
-  Button,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import {
-  IoAnalyticsSharp,
-  IoLogoBitcoin,
-  IoSearchSharp,
-} from "react-icons/io5";
-import { TimLogo } from "../../Icons/Icons";
+
+import { IoAnalyticsSharp } from "react-icons/io5";
+import { TimLogo } from "../Icons/Icons";
 
 const Feature = ({ text, icon, iconBg }) => {
   return (

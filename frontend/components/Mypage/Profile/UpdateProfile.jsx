@@ -1,6 +1,7 @@
 import {
   Button,
   FormControl,
+  FormLabel,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -32,14 +33,6 @@ const UpdateProfile = ({
         Change profile
       </Text>
       <FormControl>
-        {/* <FormLabel
-                fontSize="sm"
-                fontWeight="md"
-                color={useColorModeValue("gray.700", "gray.50")}
-                textAlign="center"
-              >
-                Cover photo
-              </FormLabel> */}
         <form onSubmit={onSubmit}>
           <ImageUpload refreshImg={imgFile} beforeImages={beforeImages} />
           <InputGroup align="center" justify="center" w={"50%"} m={"25px auto"}>
@@ -60,7 +53,6 @@ const UpdateProfile = ({
           </InputGroup>
           <Button
             type="button"
-            ml={5}
             variant="outline"
             size="sm"
             fontWeight="medium"

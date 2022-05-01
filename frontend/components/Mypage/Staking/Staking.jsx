@@ -49,6 +49,8 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
   const [grade, setGrade] = useState("");
   const [reward, setReward] = useState("");
   const [stakingEvents, setStakingEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const { NEXT_PUBLIC_LOGIN_KEY } = process.env;
 
   const baseUri = "https://gateway.pinata.cloud/ipfs/";
@@ -111,42 +113,52 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
 
   /* 스테이킹 끝내기 */
   const unStaking = async () => {
-    const currentTimestamp = Math.floor(Date.now() / 1000);
-    const endTimestamp = parseInt(mainNftData.stakingData.endTime);
+    try {
+      setLoading(true);
+      console.log(loading);
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      const endTimestamp = parseInt(mainNftData.stakingData.endTime);
 
-    if (endTimestamp > currentTimestamp) {
-      alert(
-        `아직 스테이킹 기간이 종료되지 않았습니다\n테스트용으로 무시하고 계속 진행합니다`
-      );
-      // return;
-    }
-    const currentStakingNftData = await stakingContract.methods
-      .getStakingData()
-      .call({ from: account });
+      if (endTimestamp > currentTimestamp) {
+        alert(
+          `아직 스테이킹 기간이 종료되지 않았습니다\n테스트용으로 무시하고 계속 진행합니다`
+        );
 
-    if (
-      !(
-        currentStakingNftData.tokenId > 0 &&
-        currentStakingNftData.tokenId <= 100
-      )
-    ) {
-      alert("스테이킹 된 NFT가 없습니다");
-      return;
-    }
-    if (Number(stakingContractAmount) < Number(reward)) {
-      alert("스테이킹 컨트랙트에 잔액이 모자랍니다");
-      return;
-    }
-    const unStaking = await stakingContract.methods
-      .exit(currentStakingNftData.tokenId)
-      .send({ from: account })
-      .catch((err) => console.log(err));
+        // return;
+      }
+      const currentStakingNftData = await stakingContract.methods
+        .getStakingData()
+        .call({ from: account });
 
-    // 스테이킹 정상적으로 해지 됐으면 대표 NFT의 상태와
-    // 이벤트 상태 업데이트 해주기
-    if (unStaking) {
-      dispatch(regMainNft({ mainNftData: null }));
-      getStakingEvents();
+      if (
+        !(
+          currentStakingNftData.tokenId > 0 &&
+          currentStakingNftData.tokenId <= 100
+        )
+      ) {
+        alert("스테이킹 된 NFT가 없습니다");
+        return;
+      }
+      if (Number(stakingContractAmount) < Number(reward)) {
+        alert("스테이킹 컨트랙트에 잔액이 모자랍니다");
+        return;
+      }
+      const unStaking = await stakingContract.methods
+        .exit(currentStakingNftData.tokenId)
+        .send({ from: account })
+        .catch((err) => console.log(err));
+
+      // 스테이킹 정상적으로 해지 됐으면 대표 NFT의 상태와
+      // 이벤트 상태 업데이트 해주기
+      if (unStaking) {
+        dispatch(regMainNft({ mainNftData: null }));
+        getStakingEvents();
+        alert("언스테이킹 되었습니다.");
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -231,7 +243,12 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
               <Text fontSize="20px" mb={3}>
                 Click for taking reward!
               </Text>
-              <Button onClick={unStaking} mb={10}>
+              <Button
+                onClick={unStaking}
+                mb={10}
+                isLoading={loading ? 1 : null}
+                loadingText="Unstaking.."
+              >
                 Unstaking
               </Button>
             </Flex>
