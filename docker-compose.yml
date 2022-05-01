@@ -1,15 +1,5 @@
 version: "3"
 services:
-    nginx:
-        container_name: "nginx"
-        build:
-            context: ./nginx
-            dockerfile: Dockerfile
-        ports:
-            - "80:80"
-        depends_on:
-            - node
-            - next
     node:
         container_name: "node"
         build:
@@ -29,3 +19,13 @@ services:
             - ./frontend/.env
         ports:
             - "3000:3000"
+    nginx:
+        container_name: "nginx"
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        ports:
+            - "80:80"
+        depends_on:
+            - node
+            - next

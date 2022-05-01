@@ -1,13 +1,5 @@
 version: "3"
 services:
-    nginx:
-        restart: always
-        image: achievedw/p2e-game-nginx:3.0
-        ports:
-            - "80:80"
-        depends_on:
-            - node
-
     node:
         image: achievedw/p2e-game-node:3.0
 
@@ -24,3 +16,11 @@ services:
             - "3000:3000"
         env_file:
             - ./frontend/.env
+    nginx:
+        restart: always
+        image: achievedw/p2e-game-nginx:4.0
+        ports:
+            - "80:80"
+        depends_on:
+            - node
+            - next

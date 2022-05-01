@@ -5,6 +5,7 @@ WORKDIR /usr/src/next
 RUN npm install --global pm2
 
 COPY package*.json ./
+COPY package-lock.json ./
 
 RUN npm install --production 
 
