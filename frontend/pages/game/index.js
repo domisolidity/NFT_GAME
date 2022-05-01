@@ -27,7 +27,7 @@ const Game = () => {
   const selectGame = async (game) => {
     // 메타마스크, 홈페이지 로그인 확인
     if (!(account && auth)) {
-      alert("로그인 안하시면 게임 안 시켜줄겁니다");
+      alert("로그인 후 이용해주세요.");
       return false;
     }
     // 대표 NFT 설정 확인
@@ -68,24 +68,24 @@ const Game = () => {
   `;
   const reflect = `${reflectKeyframes} 1s linear alternate 0s infinite`;
 
-  const txtColor = useColorModeValue("gray.600", "white")
+  const txtColor = useColorModeValue("gray.600", "white");
 
   return (
     <Flex direction={"column"} pt={{ base: "120px", md: "75px" }} align="center">
       <Box>
         <Text
           fontSize={"5rem"}
-          as={'span'}
-          position={'relative'}
+          as={"span"}
+          position={"relative"}
           color={txtColor}
           _after={{
             content: "''",
-            width: 'full',
-            height: useBreakpointValue({ base: '20%', md: '30%' }),
-            position: 'absolute',
+            width: "full",
+            height: useBreakpointValue({ base: "20%", md: "30%" }),
+            position: "absolute",
             bottom: 1,
             left: 0,
-            bg: 'teal.400',
+            bg: "teal.400",
             zIndex: -1,
           }}
         >

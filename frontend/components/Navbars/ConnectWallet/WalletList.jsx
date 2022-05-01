@@ -21,7 +21,7 @@ const WalletList = ({ onClose }) => {
     onClose();
   };
 
-  const txtColor = useColorModeValue("teal.600", "teal.600");
+  const txtColor = useColorModeValue("teal.600", "teal.400");
 
   return (
     <Flex flexDirection={"column"}>

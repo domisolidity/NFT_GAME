@@ -134,7 +134,7 @@ const ProfileCard = ({ as, slideIn }) => {
         align="center"
         justify="center"
       >
-        <GridItem>
+        <GridItem mt={20}>
           <Image
             borderRadius="full"
             boxSize="150px"

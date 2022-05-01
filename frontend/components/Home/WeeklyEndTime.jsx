@@ -26,7 +26,7 @@ const WeeklyEndTime = () => {
     const endTime = dateConverter(endTimestamp);
 
     setWeeklyEndTime(endTime);
-  }, []);
+  }, [weeklyEndTime]);
   return <Box>이번 주 집계 마감 : {weeklyEndTime}</Box>;
 };
 

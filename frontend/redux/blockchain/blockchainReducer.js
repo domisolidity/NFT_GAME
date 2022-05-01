@@ -57,6 +57,7 @@ const blockchainReducer = (state = initialState, action) => {
     case "CONTRACT":
       return {
         ...state,
+        networkId: action.payload.networkId,
         account: action.payload.account.toString(),
         nftContract: action.payload.nftContract,
         nftDealContract: action.payload.nftDealContract,

@@ -5,7 +5,6 @@ import axios from "axios";
 import ClaimHistory from "./ClaimHistory";
 import MissionClaimCard from "./MissionClaimCard";
 import RankingClaimCard from "./RankingClaimCard";
-import Notice from "../Notice/Notice";
 
 const Claim = ({ onUpdate, as, slideIn }) => {
   const blockchain = useSelector((state) => state.blockchain);

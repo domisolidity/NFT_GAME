@@ -14,10 +14,7 @@ import WalletList from "./WalletList";
 
 const ConnectWallet = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  let bgButton = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.800"
-  );
+  let bgButton = useColorModeValue("gray.100", "gray.800");
   let colorButton = "white";
   const txtColor = useColorModeValue("#f47820 ", "orange.500");
 
