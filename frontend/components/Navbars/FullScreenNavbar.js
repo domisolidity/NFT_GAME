@@ -16,7 +16,7 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@chakra-ui/react";
-import { TimLogo, DocumentIcon, HomeIcon, PersonIcon, RocketIcon } from "../Icons/Icons";
+import { TeamLog, DocumentIcon, HomeIcon, PersonIcon, RocketIcon } from "../Icons/Icons";
 import { motion } from "framer-motion";
 import SidebarResponsive from "../Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
@@ -63,7 +63,6 @@ export default function FullScreenNavbar(props) {
   const brand = (
     <Link
       href={`${process.env.NEXT_PUBLIC_PUBLIC_URL}`}
-      target="_blank"
       display="flex"
       lineHeight="100%"
       fontWeight="bold"
@@ -71,7 +70,7 @@ export default function FullScreenNavbar(props) {
       alignItems="center"
       color={mainText}
     >
-      <TimLogo w="32px" h="32px" me="10px" />
+      <TeamLog w="32px" h="32px" me="10px" />
       <Text fontSize="sm" mt="3px">
         {logoText}
       </Text>

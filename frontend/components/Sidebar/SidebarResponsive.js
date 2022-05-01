@@ -17,7 +17,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import IconBox from "../../components/Icons/IconBox";
-import { TimLogo } from "../../components/Icons/Icons";
+import { TeamLog } from "../../components/Icons/Icons";
 import { Separator } from "../../components/Separator/Separator";
 import { SidebarBottom } from "./SidebarBottom";
 import React, { useRef, useState } from "react";
@@ -146,7 +146,6 @@ function SidebarResponsive(props) {
     <Box pt={"35px"} mb="8px">
       <NextLink href={`${process.env.NEXT_PUBLIC_PUBLIC_URL}/`} passHref>
         <Link
-          target="_blank"
           display="flex"
           lineHeight="100%"
           mb="30px"
@@ -155,7 +154,7 @@ function SidebarResponsive(props) {
           alignItems="center"
           fontSize="11px"
         >
-          <TimLogo w="20px" h="20px" me="10px" />
+          <TeamLog w="20px" h="20px" me="10px" />
           <Text fontSize="sm" mt="3px">
             {logoText}
           </Text>
@@ -186,7 +185,7 @@ function SidebarResponsive(props) {
         w="18px"
         h="18px"
         ref={btnRef}
-      // colorScheme="teal"
+        // colorScheme="teal"
       />
       <Drawer
         isOpen={isOpen}

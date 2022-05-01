@@ -2,7 +2,7 @@
 // chakra imports
 import { Box, Button, Flex, Link, Stack, Text, useColorModeValue, keyframes } from "@chakra-ui/react";
 import IconBox from "../Icons/IconBox";
-import { TimLogo } from "../Icons/Icons";
+import { TeamLog } from "../Icons/Icons";
 import { Separator } from "../Separator/Separator";
 import { SidebarBottom } from "./SidebarBottom";
 import React from "react";
@@ -211,7 +211,6 @@ const SidebarContent = ({ logoText, routes }) => {
           <Link
             as={motion.div}
             animation={slideIn[0]}
-            target="_blank"
             display="flex"
             lineHeight="100%"
             mb="30px"
@@ -220,7 +219,7 @@ const SidebarContent = ({ logoText, routes }) => {
             alignItems="center"
             fontSize="11px"
           >
-            <TimLogo w="20px" h="20px" me="10px" />
+            <TeamLog w="20px" h="20px" me="10px" />
             <Text fontSize="sm" mt="3px">
               {logoText}
             </Text>
