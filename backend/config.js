@@ -67,27 +67,27 @@ const itemList = [
   },
   {
     itemName: "기회 5",
-    itemPrice: 2,
+    itemPrice: 5,
     itemDescription: "잔여 횟수가 5 증가합니다",
   },
   {
     itemName: "기회 10",
-    itemPrice: 3,
+    itemPrice: 10,
     itemDescription: "잔여 횟수가 10 증가합니다",
   },
   {
     itemName: "점수 +5%",
-    itemPrice: 0.1,
+    itemPrice: 5,
     itemDescription: "게임결과에 5%만큼 점수가 가산됩니다",
   },
   {
     itemName: "점수 +10%",
-    itemPrice: 0.2,
+    itemPrice: 10,
     itemDescription: "게임결과에 10%만큼 점수가 가산됩니다",
   },
   {
     itemName: "점수 +15%",
-    itemPrice: 0.3,
+    itemPrice: 15,
     itemDescription: "게임결과에 15%만큼 점수가 가산됩니다",
   },
   {

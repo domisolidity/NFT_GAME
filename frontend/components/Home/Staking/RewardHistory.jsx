@@ -41,11 +41,14 @@ const RewardHistory = ({ dateConverter, stakingEvents }) => {
           const endTime = dateConverter(tempEndTime);
           const stakedTime =
             Math.floor(
-              ((parseInt(tempEndTime) - parseInt(tempStartTime)) / 60 / 60) *
+              ((parseInt(tempEndTime) - parseInt(tempStartTime)) /
+                60 /
+                60 /
+                24) *
                 100
             ) /
               100 +
-            " hours";
+            " Days";
           return (
             <Tr pl="0px" fontSize="md" color={textColor} fontWeight="bold">
               <Td textAlign="center">{blockNum}</Td>
