@@ -159,7 +159,7 @@ const Market_nft_auction = ({ as }) => {
       </Flex>
 
       <GridItem colSpan={5} rowSpan={5}>
-        <Grid templateColumns="repeat(4, 1fr)" ml="5" gap={10} padding="5">
+        <SimpleGrid minChildWidth="330px" justifyItems="center">
           {auctionNft[0] &&
             auctionNft
               .filter((nft) => {
@@ -183,7 +183,7 @@ const Market_nft_auction = ({ as }) => {
                   />
                 );
               })}
-        </Grid>
+        </SimpleGrid>
       </GridItem>
     </>
   );
