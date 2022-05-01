@@ -32,6 +32,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import NftHistory from "../../../components/Mypage/NftHistory";
 import SideBarScreen from "../../../components/Layout/Frame/SideBarScreen";
+import { CheckCircleIcon } from "@chakra-ui/icons";
 
 const MarketDetail_sale = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -40,11 +41,21 @@ const MarketDetail_sale = () => {
   const { web3, account, nftDealContract } = blockchain;
   const { id, grade, attr, name, image, description, price } = router.query;
   const [loading, setLoading] = useState(false);
+  const [check, setCheck] = useState(false);
+  const [soldOut, setSoldOut] = useState(false);
 
   const dealNft = async () => {
     try {
       console.log(id);
       console.log("가격", price);
+
+      if (check == false) {
+        alert("동의 여부에 체크해 주세요.");
+        return;
+      }
+
+      setLoading(true);
+
       await nftDealContract.methods
         .buyNft(id, Date.now())
         .send({ from: account.toString(), value: web3.utils.toWei(price, "ether") })
@@ -57,9 +68,12 @@ const MarketDetail_sale = () => {
             footer: `<Link href="/mypage">마이페이지에서 확인</Link>`,
           });
         });
+      setLoading(false);
+      setSoldOut(!soldOut);
       onClose();
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -112,7 +126,7 @@ const MarketDetail_sale = () => {
             bgColor={useColorModeValue(bgColorLight, bgColorDark)}
             onClick={onOpen}
             isLoading={loading ? 1 : null}
-            loadingText="구매중.."
+            loadingText="Buying.."
           >
             Buy now
           </Button>
@@ -178,7 +192,17 @@ const MarketDetail_sale = () => {
 
         <Box mt={20}>
           <Divider />
-          <PackageTier title={"NFT"} price={price} options={options} />
+          {!soldOut ? (
+            <PackageTier title={"NFT"} price={price} options={options} />
+          ) : (
+            <Box textAlign="center" py={10} px={6}>
+              <CheckCircleIcon boxSize={"50px"} color={"green.500"} />
+              <Heading as="h2" size="xl" mt={6} mb={2}>
+                This NFT is sold out
+              </Heading>
+              <Text color={"gray.500"}>Check your inventory.</Text>
+            </Box>
+          )}
 
           <Modal isOpen={isOpen} onClose={onClose} size="xl">
             <ModalOverlay>
@@ -189,14 +213,27 @@ const MarketDetail_sale = () => {
                   name : {name} <br />
                   price : {price} ETH
                   <Box>
-                    <Checkbox onClick={dealNft}>구매 하는데 동의 하십니까</Checkbox>
+                    <Checkbox onChange={() => setCheck(!check)}>구매 하는데 동의 하십니까</Checkbox>
                   </Box>
                 </ModalBody>
                 <ModalFooter>
-                  <Button onClick={dealNft} mr={5} isLoading={loading ? 1 : null} loadingText="구매중..">
+                  <Button
+                    onClick={() => {
+                      dealNft();
+                      onClose();
+                    }}
+                    mr={5}
+                  >
                     Confirm
                   </Button>
-                  <Button onClick={onClose}>Close</Button>
+                  <Button
+                    onClick={() => {
+                      setCheck(false);
+                      onClose();
+                    }}
+                  >
+                    Close
+                  </Button>
                 </ModalFooter>
               </ModalContent>
             </ModalOverlay>

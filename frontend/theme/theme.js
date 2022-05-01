@@ -12,6 +12,11 @@ import { CardHeaderComponent } from "./additions/card/CardHeader";
 import { MainPanelComponent } from "./additions/layout/MainPanel";
 import { PanelContentComponent } from "./additions/layout/PanelContent";
 import { PanelContainerComponent } from "./additions/layout/PanelContainer";
+
+const config = {
+  initialColorMode: "dark",
+};
+
 export default extendTheme(
   { breakpoints },
   globalStyles,
@@ -25,5 +30,6 @@ export default extendTheme(
   CardHeaderComponent,
   MainPanelComponent,
   PanelContentComponent,
-  PanelContainerComponent
+  PanelContainerComponent,
+  config
 );

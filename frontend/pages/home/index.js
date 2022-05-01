@@ -31,7 +31,7 @@ const Home = () => {
           <Clock />
         </Center>
         <Center fontSize={"30px"} mt={5}>
-          {/* <WeeklyEndTime /> */}
+          <WeeklyEndTime />
         </Center>
         <Box maxW="7xl" py="10" mx="auto">
           <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} gap={[16, 8]}>
