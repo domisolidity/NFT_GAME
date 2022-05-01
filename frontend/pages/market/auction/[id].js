@@ -262,10 +262,18 @@ const MarketDetail_auction = () => {
                   클레임
                 </Button>
               </Flex>
-              <Flex justify="center">
+              <Flex flexDirection={"column"} justify="center">
                 {/* <WarningIcon w={6} h={6} color="orange.200" /> */}
-                <Text mr="5" lineHeight="10">
-                  경매 종료시 참여했던 입찰금을 회수해주세요.
+                <Text ml="10" lineHeight="10">
+                  판매자는 낙찰가를 받게 됩니다. <br />
+                </Text>
+                <Text color={"#999999"} ml="10" lineHeight="10">
+                  낙찰자는 입찰 시 입력했던 최대 허용 입찰가에서
+                  <br />
+                  낙찰금액을 제한 나머지 금액과 낙찰받은 NFT를 받게 됩니다.
+                </Text>
+                <Text ml="10" lineHeight="10">
+                  패찰자는 입찰 시 입력했던 최대 허용 입찰가를 돌려받게 됩니다.
                 </Text>
               </Flex>
             </>

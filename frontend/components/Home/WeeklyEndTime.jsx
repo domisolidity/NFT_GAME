@@ -10,23 +10,24 @@ const WeeklyEndTime = () => {
 
   const dateConverter = (date) => {
     const temp = new Date(parseInt(date) * 1000);
-    const tempMonth = temp.getMonth() + 1;
-    const tempDate = temp.getDate();
-    const tempHours = temp.getHours();
-    const tempMinutes = temp.getMinutes();
-    const tempSeconds = temp.getSeconds();
-    const resultDate = `${tempMonth}/${tempDate} ${tempHours}:${tempMinutes}:${tempSeconds}`;
+    const tempMonth = ("0" + (temp.getMonth() + 1).toString()).slice(-2);
+    const tempDate = ("0" + temp.getDate().toString()).slice(-2);
+    const tempHours = ("0" + temp.getHours().toString()).slice(-2);
+    const tempMinutes = ("0" + temp.getMinutes().toString()).slice(-2);
+    const resultDate = `${tempMonth}월 ${tempDate}일  ${tempHours}:${tempMinutes}`;
     return resultDate;
   };
 
   useEffect(async () => {
+    if (!stakingContract) return;
     const endTimestamp = parseInt(
       await stakingContract.methods.setEndTime().call()
     );
     const endTime = dateConverter(endTimestamp);
 
     setWeeklyEndTime(endTime);
-  }, [weeklyEndTime]);
+  }, [stakingContract]);
+
   return <Box>이번 주 집계 마감 : {weeklyEndTime}</Box>;
 };
 
