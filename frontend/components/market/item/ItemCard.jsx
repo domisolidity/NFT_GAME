@@ -14,6 +14,7 @@ import {
 
 import { useSelector } from "react-redux";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
+import Swal from "sweetalert2";
 
 const itemCard = ({ item, as, slideIn }) => {
   const { NEXT_PUBLIC_SERVER_URL } = process.env;
@@ -37,23 +38,37 @@ const itemCard = ({ item, as, slideIn }) => {
 
   // 아이템 구매하기
   const buyItem = async () => {
-    // 판매자(컨트랙트 배포자) address 받아오기
-    const owner = await gameTokenContract.methods.getOwner().call();
-    // 판매자에게 아이템값 보내기
-    const response = await gameTokenContract.methods
-      .transfer(owner, item.itemPrice)
-      .send({ from: account });
+    try {
+      setLoading(true);
 
-    // 구입했으면 DB에 아이템 추가해주기
-    const isBought = await axios.post(
-      `${NEXT_PUBLIC_SERVER_URL}/items/game-items/buy-item`,
-      {
-        account: response.from,
-        itemName: item.itemName,
-      }
-    );
-    console.log(isBought.data.item_itemName, "구매했어");
-    setMyItemQuantity(myItemQuantity + 1);
+      // 판매자(컨트랙트 배포자) address 받아오기
+      const owner = await gameTokenContract.methods.getOwner().call();
+      // 판매자에게 아이템값 보내기
+      const response = await gameTokenContract.methods
+        .transfer(owner, item.itemPrice)
+        .send({ from: account });
+
+      // 구입했으면 DB에 아이템 추가해주기
+      const isBought = await axios
+        .post(`${NEXT_PUBLIC_SERVER_URL}/items/game-items/buy-item`, {
+          account: response.from,
+          itemName: item.itemName,
+        })
+        .then((res) => {
+          Swal.fire({
+            icon: "success",
+            title: "Compelete",
+            text: "구매 완료 하셨습니다.",
+            footer: `<Link href="/mypage">마이페이지에서 확인</Link>`,
+          });
+        });
+      console.log(isBought.data.item_itemName, "구매했어");
+      setMyItemQuantity(myItemQuantity + 1);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -116,9 +131,10 @@ const itemCard = ({ item, as, slideIn }) => {
               REMI
             </Text>
           </Stack>
-          {/* <Text color={"gray.500"} fontSize={"sm"}>
-            {item.description}개 보유 중
-          </Text> */}
+          {console.log(myItemQuantity)}
+          <Text color={"gray.500"} fontSize={"sm"}>
+            {myItemQuantity}개 보유 중
+          </Text>
           <Button
             fontSize={"md"}
             bg={"teal.400"}
@@ -134,9 +150,9 @@ const itemCard = ({ item, as, slideIn }) => {
             }}
             onClick={buyItem}
             isLoading={loading ? 1 : null}
-            loadingText="구매중.."
+            loadingText="Buying.."
           >
-            구매
+            Buy now
           </Button>
         </Stack>
       </Box>
