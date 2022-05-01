@@ -41,16 +41,7 @@ const BlankComponent = ({ receivedText }) => {
           -webkit-text-stroke-color: white;
         }
         .blank-text {
-          background-image: linear-gradient(
-            90deg,
-            red,
-            orange,
-            yellow,
-            lawngreen,
-            blue,
-            navy,
-            purple
-          );
+          background-image: linear-gradient(90deg, #c0f080, #76e4f7, #38b2ac);
           -webkit-background-clip: text;
         }
 

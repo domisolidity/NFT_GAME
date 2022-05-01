@@ -168,12 +168,11 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
   /* 타임스탬프 => 날짜 변환기 */
   const dateConverter = (date) => {
     const temp = new Date(parseInt(date) * 1000);
-    const tempMonth = temp.getMonth() + 1;
-    const tempDate = temp.getDate();
-    const tempHours = temp.getHours();
-    const tempMinutes = temp.getMinutes();
-    const tempSeconds = temp.getSeconds();
-    const resultDate = `${tempMonth}/${tempDate} ${tempHours}:${tempMinutes}:${tempSeconds}`;
+    const tempMonth = ("0" + (temp.getMonth() + 1).toString()).slice(-2);
+    const tempDate = ("0" + temp.getDate().toString()).slice(-2);
+    const tempHours = ("0" + temp.getHours().toString()).slice(-2);
+    const tempMinutes = ("0" + temp.getMinutes().toString()).slice(-2);
+    const resultDate = `${tempMonth}/${tempDate}  ${tempHours}:${tempMinutes}`;
     return resultDate;
   };
 
@@ -226,46 +225,64 @@ const Staking = ({ getCurrentMainNft, currentMainNftImg, as, slideIn }) => {
             스테이킹 기간과 NFT의 등급에 따라 보상토큰을 받으실 수 있습니다
           </Text>
         </Box>
-        <Separator />
-        <Flex m={"20px 0"}>
+        <Flex m={"20px 0"} direction="column" align="center" justify="center">
           {mainNftData ? (
-            <Button h={"auto"} onClick={unStaking}>
-              Unstaking
-            </Button>
+            <Flex align="center" justify="center" direction="column">
+              <Text fontSize="20px" mb={3}>
+                Click for taking reward!
+              </Text>
+              <Button onClick={unStaking} mb={10}>
+                Unstaking
+              </Button>
+            </Flex>
           ) : (
             <Button
               backgroundColor={"var(--chakra-colors-gray-200)"}
               minW="150px"
               minH="150px"
-              borderRadius={"15px"}
+              borderRadius={"50%"}
               onClick={onOpen}
+              bgColor="gray.400"
+              mb={7}
+              fontSize="70px"
             >
-              <Img src={"plus.svg"} />
+              +
             </Button>
           )}
+          {/* <Separator m={"20px 0"} /> */}
           {mainNftData ? (
             <Flex
               p={"10px"}
               w="100%"
+              bgColor={"whiteAlpha.100"}
+              borderRadius={"15px"}
               color={"gray.400"}
               fontWeight="bold"
               justifyContent={"space-around"}
             >
               <Flex flexDirection={"column"}>
-                <Box>GRADE</Box>
-                <Box>{grade}</Box>
+                <Box mb={"16px"}>GRADE</Box>
+                <Box color={"teal.400"} fontSize={"xl"}>
+                  {grade}
+                </Box>
               </Flex>
               <Flex flexDirection={"column"}>
-                <Box>Staking Start Time</Box>
-                <Box>{startTime}</Box>
+                <Box mb={"16px"}>Staking Start Time</Box>
+                <Box color={"teal.400"} fontSize={"xl"}>
+                  {startTime}
+                </Box>
               </Flex>
               <Flex flexDirection={"column"}>
-                <Box>Staking End Time</Box>
-                <Box>{endTime}</Box>
+                <Box mb={"16px"}>Staking End Time</Box>
+                <Box color={"teal.400"} fontSize={"xl"}>
+                  {endTime}
+                </Box>
               </Flex>
               <Flex flexDirection={"column"}>
-                <Box>Expected Reward</Box>
-                <Box>{reward}</Box>
+                <Box mb={"16px"}>Expected Reward</Box>
+                <Box color={"teal.400"} fontSize={"xl"}>
+                  {reward}
+                </Box>
               </Flex>
             </Flex>
           ) : (
