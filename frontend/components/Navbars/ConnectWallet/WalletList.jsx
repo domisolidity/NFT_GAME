@@ -7,6 +7,7 @@ const WalletList = ({ onClose }) => {
   const dispatch = useDispatch();
   const blockchain = useSelector((state) => state.blockchain);
   const { web3, account } = blockchain;
+  const txtColor = useColorModeValue("#f47820 ", "orange.500");
 
   const getConnectWallet = async () => {
     const coinbase = await web3.eth.getCoinbase(); //계정
@@ -20,8 +21,6 @@ const WalletList = ({ onClose }) => {
     dispatch(connectWallet(web3, account));
     onClose();
   };
-
-  const txtColor = useColorModeValue("teal.600", "teal.400");
 
   return (
     <Flex flexDirection={"column"}>

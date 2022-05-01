@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 import { IoAnalyticsSharp } from "react-icons/io5";
-import { TimLogo } from "../Icons/Icons";
+import { TeamLog } from "../Icons/Icons";
 
 const Feature = ({ text, icon, iconBg }) => {
   return (
@@ -138,7 +138,7 @@ const StakingInfo = () => {
             </Text>
 
             <Feature
-              icon={<TimLogo color={"green.500"} w={5} h={5} />}
+              icon={<TeamLog color={"green.500"} w={5} h={5} />}
               iconBg={useColorModeValue("green.100", "green.900")}
               text={"Reward"}
             />
@@ -231,7 +231,7 @@ const StakingInfo = () => {
             </Text>
 
             {/* <Feature
-              icon={<TimLogo color={"purple.500"} w={5} h={5} />}
+              icon={<TeamLog color={"purple.500"} w={5} h={5} />}
               iconBg={useColorModeValue("purple.100", "purple.900")}
               text={"REMI"}
             /> */}
