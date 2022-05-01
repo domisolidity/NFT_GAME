@@ -385,7 +385,7 @@ const Market_nft = ({ as }) => {
                         {nft.price}
                       </Text>
                       <Text fontWeight={600} color={"teal.300"}>
-                        REMI
+                        ETH
                       </Text>
                     </Stack>
                     <Box h="10%" mt="25">

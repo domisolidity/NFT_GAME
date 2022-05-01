@@ -4,12 +4,18 @@ import {
   RocketIcon,
   SupportIcon,
   DocumentIcon,
-  PersonIcon
+  PersonIcon,
+  HomeIcon,
 } from "../components/Icons/Icons";
 
 const routes = [
   {
     path: "/home",
+    name: "Home",
+    icon: <HomeIcon color="inherit" />,
+  },
+  {
+    path: "/mypage",
     name: "My Page",
     icon: <PersonIcon color="inherit" />,
   },

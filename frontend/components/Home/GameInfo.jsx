@@ -10,7 +10,7 @@ import {
   Text,
   Heading,
 } from "@chakra-ui/react";
-import { BlockIcon, DiamondIcon, TetrisIcon } from "../../Icons/Icons";
+import { BlockIcon, DiamondIcon, TetrisIcon } from "../Icons/Icons";
 
 const GameInfo = () => {
   const Feature = (props) => {

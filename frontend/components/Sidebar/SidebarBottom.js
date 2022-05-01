@@ -113,7 +113,7 @@ export function SidebarBottom(props) {
               <Text fontSize="md" color={textColor} fontWeight="bold">
                 Main NFT
               </Text>
-
+              {/* 
               <Flex justifyContent={"center"} alignItems="center" bgColor="whiteAlpha.100" m={1} borderRadius="15px">
                 <Box color={`whiteAlpha.300`} fontSize="xl" fontWeight="bold" mr={2}>
                   아이콘
@@ -121,7 +121,7 @@ export function SidebarBottom(props) {
                 <Box color={textColor} fontSize="12px">
                   선택하러가기
                 </Box>
-              </Flex>
+              </Flex> */}
             </Flex>
           </>
         )}

@@ -1,148 +1,69 @@
-// Chakra imports
-import { Box, Flex, SimpleGrid, useColorModeValue, keyframes } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-// Custom icons
-import { CartIcon, DocumentIcon, TimLogo, WalletIcon } from "../../components/Icons/Icons";
-import MiniStatus from "../../components/Home/MiniStatus";
+import NoticeNft from "../../components/Home/NoticeNft";
+import { Box, Center, chakra, Flex, SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
+import Clock from "../../components/Utils/Clock";
+import StakingInfo from "../../components/Home/StakingInfo";
+import GameInfo from "../../components/Home/GameInfo";
 
+import WeeklyEndTime from "../../components/Home/WeeklyEndTime";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import SubMenuList from "../../components/Menu/SubMenuList";
-import ProfileCard from "../../components/Home/Profile/ProfileCard";
-import Inventory from "../../components/Home/Inventory/Inventory";
-import Notice from "../../components/Home/Notice/Notice";
-import Staking from "../../components/Home/Staking/Staking";
-import ClaimInfoCard from "../../components/Home/Claim/Claim";
 
-export default function Home() {
-  const dispatch = useDispatch();
-
-  const iconBoxInside = useColorModeValue("white", "white");
-
-  const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, auth, nftContract, gameTokenContract } = blockchain;
-
-  const [ethBalance, setEthBalance] = useState();
-  const [tokenBalance, setTokenBalance] = useState();
-  const [selectedSubMenu, setSelectedSubMenu] = useState("NOTICE");
-  const [updateTrigger, setUpdateTrigger] = useState();
-  const [remainNfts, setRemainNfts] = useState([]);
-
-  //잔액
-  const getEthBalance = async () => {
-    let balance;
-    await web3.eth.getBalance(account.toString()).then((balanceInWei) => {
-      balance = web3.utils.fromWei(balanceInWei);
-      setEthBalance(balance.slice(0, 5));
-    });
-  };
-  const getTokenBalance = async () => {
-    await gameTokenContract.methods
-      .balanceOf(account)
-      .call({ from: account })
-      .then((tokenBalance) => {
-        setTokenBalance(tokenBalance);
-      })
-      .catch(console.error());
-  };
-
-  const getSelectedSubMenu = (e) => {
-    setSelectedSubMenu(e.target.value);
-  };
-
-  const updateToken = () => {
-    setUpdateTrigger(!updateTrigger);
-  };
-
-  useEffect(async () => {
-    if (!account) return false;
-    await getEthBalance();
-    await getTokenBalance();
-    await getNftBalance();
-  }, [account, updateTrigger]);
-
-  const getNftBalance = async () => {
-    const recievedRemainNfts = await nftContract.methods.remainNfts().call();
-    if (!recievedRemainNfts) return;
-    setRemainNfts(parseInt(recievedRemainNfts[0]) + parseInt(recievedRemainNfts[1]) + parseInt(recievedRemainNfts[2]));
-  };
-
-  useEffect(() => {
-    returnMenu(selectedSubMenu);
-  }, [selectedSubMenu]);
-
-  const returnMenu = (display) => {
-    switch (display) {
-      case "NOTICE":
-        return <Notice as={motion.div} slideIn={slideIn[5]} />;
-      case "INVENTORY":
-        return <Inventory as={motion.div} slideIn={slideIn[5]} />;
-      case "CLAIM":
-        return <ClaimInfoCard as={motion.div} slideIn={slideIn[5]} onUpdate={updateToken} />;
-      case "STAKING":
-        return <Staking as={motion.div} slideIn={slideIn[5]} />;
-      case "PROFILE":
-        return <ProfileCard as={motion.div} slideIn={slideIn[5]} />;
-      default:
-        break;
-    }
-  };
-
-  const menuList = auth ? ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"] : ["NOTICE"];
-
-  const slideInKeyframes = keyframes`
-  0% { opacity: 0; transform: translateX(-50px); }
-  100% { opacity: 1; transform: translateX(0); }
-  `;
-  const slideInSubKeyframes = keyframes`
-  0% { opacity: 0; transform: translateY(-50px); }
-  100% { opacity: 1; transform: translateY(0); }
-  `;
-  const slideIn = [
-    `${slideInKeyframes} 0.3s linear 0s forwards`,
-    `${slideInKeyframes} 0.3s linear 0.2s forwards`,
-    `${slideInKeyframes} 0.3s linear 0.4s forwards`,
-    `${slideInKeyframes} 0.3s linear 0.6s forwards`,
-    `${slideInSubKeyframes} 0.3s linear 0.8s forwards`,
-    `${slideInSubKeyframes} 0.3s linear 0s forwards`,
-  ];
-
+const Home = () => {
   return (
-    <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} spacing="24px">
-        <MiniStatus
-          as={motion.div}
-          slideIn={slideIn[0]}
-          title={"Etherium"}
-          amount={ethBalance ? ethBalance : "---"}
-          unit={"ETH"}
-          icon={<WalletIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
-        />
-        <MiniStatus
-          as={motion.div}
-          slideIn={slideIn[1]}
-          title={"Doremi Token"}
-          amount={tokenBalance ? tokenBalance : "---"}
-          unit={"REMI"}
-          icon={<TimLogo h={"24px"} w={"24px"} color={iconBoxInside} />}
-        />
-        <MiniStatus
-          as={motion.div}
-          slideIn={slideIn[2]}
-          title={"Remained NFT"}
-          amount={remainNfts ? remainNfts : "---"}
-          unit={"NFTs"}
-          icon={<DocumentIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
-        />
-      </SimpleGrid>
-      <Box mt={10} as={motion.div} animation={slideIn[4]} opacity="0">
-        <SubMenuList subMenu={menuList} getSelectedSubMenu={getSelectedSubMenu} />
-        {returnMenu(selectedSubMenu)}
+    <Flex
+      mt={"80px"}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      bg={useColorModeValue("gray.100", "gray.700")}
+      borderRadius="15px"
+      pt={{ base: "120px", md: "75px" }}
+    >
+      <Box w="100%" py="64px" px="10" borderRadius="15px">
+        <Box w="full" px={[10, , 4]} mx="auto" textAlign="center">
+          <Text mb={2} fontSize="5xl" fontWeight="bold" lineHeight="tight">
+            Tier
+          </Text>
+          <chakra.p fontSize={["lg", , "xl"]} color={useColorModeValue("gray.600", "gray.400")}>
+            About benefits
+          </chakra.p>
+        </Box>
+        <Center fontSize={"30px"} mt={5}>
+          <Clock />
+        </Center>
+        <Center fontSize={"30px"} mt={5}>
+          {/* <WeeklyEndTime /> */}
+        </Center>
+        <Box maxW="7xl" py="10" mx="auto">
+          <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} gap={[16, 8]}>
+            <NoticeNft grade={"red"} price={0.001} times={5} mission={1} duration={1} startNumber={1} endNumber={60} />
+            <NoticeNft
+              grade={"green"}
+              price={0.003}
+              times={10}
+              mission={2}
+              duration={2}
+              startNumber={61}
+              endNumber={90}
+            />
+            <NoticeNft
+              grade={"purple"}
+              price={0.005}
+              times={15}
+              mission={3}
+              duration={3}
+              startNumber={91}
+              endNumber={100}
+            />
+          </SimpleGrid>
+        </Box>
       </Box>
+      <StakingInfo />
+      <GameInfo />
     </Flex>
   );
-}
+};
+
+export default Home;
 
 // getLayout property
 Home.getLayout = function getLayout(page) {

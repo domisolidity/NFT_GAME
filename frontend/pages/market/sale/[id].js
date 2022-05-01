@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import {
@@ -39,6 +39,7 @@ const MarketDetail_sale = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { web3, account, nftDealContract } = blockchain;
   const { id, grade, attr, name, image, description, price } = router.query;
+  const [loading, setLoading] = useState(false);
 
   const dealNft = async () => {
     try {
@@ -57,7 +58,6 @@ const MarketDetail_sale = () => {
           });
         });
       onClose();
-      onOpen();
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +69,7 @@ const MarketDetail_sale = () => {
   }, [account]);
 
   const options = [
-    { id: 1, desc: "수수료가 발생합니다." },
+    { id: 1, desc: "판매금액의 5% 만큼의 수수료가 발생합니다." },
     { id: 2, desc: "히스토리는 하단에서 확인 가능합니다." },
   ];
 
@@ -103,13 +103,16 @@ const MarketDetail_sale = () => {
             </ListItem>
           ))}
         </List>
-        <Heading size={"xl"}>{price}ETH</Heading>
+        <Heading size={"xl"}>{price}</Heading>
+        <Text>ETH</Text>
         <Stack>
           <Button
             size="md"
             color={useColorModeValue(colorTextLight, colorTextDark)}
             bgColor={useColorModeValue(bgColorLight, bgColorDark)}
             onClick={onOpen}
+            isLoading={loading ? 1 : null}
+            loadingText="구매중.."
           >
             Buy now
           </Button>
@@ -127,36 +130,38 @@ const MarketDetail_sale = () => {
       gap={2}
       pt={{ base: "120px", md: "75px" }}
     >
-      <GridItem colSpan={2} bg="whiteAlpha.100">
+      <GridItem colSpan={2} bg="whiteAlpha.100" borderRadius={"15px"}>
         <Flex direction="column">
-          <Image src={image} borderRadius={10} />
-          <Box borderRadius={10} border="1px solid #302f2f" mt="2">
-            <Heading size="sm" bg="#182749" padding="3">
-              Description
-            </Heading>
-            <Text fontSize="15" padding="3">
-              {description}
-            </Text>
-          </Box>
-          <Box borderRadius={10} bg="##1E315F" border="1px solid #302f2f">
-            <Heading size="sm" bg="#182749" padding="3">
-              Properties
-            </Heading>
-            <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}>
-              {attr &&
-                JSON.parse(attr).map((attr, i) => {
-                  return (
-                    <GridItem key={i} align="center" border="2px solid #2b7997" borderRadius={15}>
-                      <Text fontWeight="bold">{attr.trait_type}</Text>
-                      <Text>{attr.value}</Text>
-                    </GridItem>
-                  );
-                })}
-            </Grid>
+          <Box border="1px solid #302f2f" borderRadius={"15px"}>
+            <Image src={image} borderRadius={"15px 15px 0 0"} />
+            <Box borderRadius={10} border="1px solid #302f2f">
+              <Heading size="sm" bg="#182749" padding="3">
+                Description
+              </Heading>
+              <Text fontSize="15" padding="3">
+                {description}
+              </Text>
+            </Box>
+            <Box borderRadius={10} bg="##1E315F" border="1px solid #302f2f">
+              <Heading size="sm" bg="#182749" padding="3">
+                Properties
+              </Heading>
+              <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}>
+                {attr &&
+                  JSON.parse(attr).map((attr, i) => {
+                    return (
+                      <GridItem key={i} align="center" border="2px solid #2b7997" borderRadius={15}>
+                        <Text fontWeight="bold">{attr.trait_type}</Text>
+                        <Text>{attr.value}</Text>
+                      </GridItem>
+                    );
+                  })}
+              </Grid>
+            </Box>
           </Box>
         </Flex>
       </GridItem>
-      <GridItem colSpan={3} bg="whiteAlpha.100" padding="5">
+      <GridItem colSpan={3} bg="whiteAlpha.100" padding="5" borderRadius={"15px"} border="1px solid #302f2f">
         <Text
           borderRadius={20}
           bg={grade == "red" ? "red.700" : grade == "green" ? "green.700" : "purple.700"}
@@ -188,14 +193,10 @@ const MarketDetail_sale = () => {
                   </Box>
                 </ModalBody>
                 <ModalFooter>
-                  <Button onClick={dealNft}>Confirm</Button>
-                  <Button
-                    // colorScheme="blue"
-                    mr={3}
-                    onClick={onClose}
-                  >
-                    Close
+                  <Button onClick={dealNft} mr={5} isLoading={loading ? 1 : null} loadingText="구매중..">
+                    Confirm
                   </Button>
+                  <Button onClick={onClose}>Close</Button>
                 </ModalFooter>
               </ModalContent>
             </ModalOverlay>
@@ -203,7 +204,7 @@ const MarketDetail_sale = () => {
         </Box>
       </GridItem>
 
-      <GridItem colSpan={5} bg="whiteAlpha.100" padding={5}>
+      <GridItem colSpan={5} borderRadius={"15px"}>
         <NftHistory tokenId={id} />
       </GridItem>
     </Grid>
