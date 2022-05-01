@@ -158,8 +158,8 @@ export const updateAccount = (account) => {
 
     // const nft_Network = await NftContract.networks[networkId];
     // const stakingNetworkData = await Staking.networks[networkId];
-    const nftContract = new web3.eth.Contract(NftContract.abi, "0x11fE4C9c50479529bFc600D33ebE6e1A5DA9C756");
-    const stakingContract = new web3.eth.Contract(Staking.abi, "0x53f635b35aae6C01E20bd1fe42b840dC21C3660b");
+    const nftContract = new web3.eth.Contract(NftContract.abi, "0x06D117746dB7163F40bD60A316B34a571D674CDa");
+    const stakingContract = new web3.eth.Contract(Staking.abi, "0x12C2c95fBB5e126f87533F4E5003eA77c4698e68");
     const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
     let mainNftData;
     if (stakingData.tokenId == 0) {
@@ -311,24 +311,24 @@ export const init = () => {
           /*
           option 2: 배포 환경
           */
-          const nftContract = new web3.eth.Contract(NftContract.abi, "0x11fE4C9c50479529bFc600D33ebE6e1A5DA9C756");
+          const nftContract = new web3.eth.Contract(NftContract.abi, "0x06D117746dB7163F40bD60A316B34a571D674CDa");
           const nftDealContract = new web3.eth.Contract(
             NftDealContract.abi,
-            "0xf58C30c2490113F219Cf9F9ab75BB9ac010F2156"
+            "0x80919e99B7868DFFC7bD9Ca2a8AfC748B2906304"
           );
           const auctionCreatorContract = new web3.eth.Contract(
             AuctionCreatorContract.abi,
-            "0xFe6E6c2428D507E6e1DC3d7e5feb250203A71f7a"
+            "0xbd42962daB2bfF4a72Bb4F230475AB5E430247be"
           );
           const gameTokenContract = new web3.eth.Contract(
             GameTokenContract.abi,
-            "0xD50Dc505C3b96574D70E52BBe8CC18Da0153ec6b"
+            "0x2c547Ccade56c59D16b54C03b9FC3aCFeCafDf5F"
           );
           const claim20_Contract = new web3.eth.Contract(
             Claim20_Contract.abi,
-            "0xBf4ba7dc2997c8478aB5EAA608E3546F8D4eB53c"
+            "0xb555E44d392A5F1468311451B30166980a046110"
           );
-          const stakingContract = new web3.eth.Contract(Staking.abi, "0x53f635b35aae6C01E20bd1fe42b840dC21C3660b");
+          const stakingContract = new web3.eth.Contract(Staking.abi, "0x12C2c95fBB5e126f87533F4E5003eA77c4698e68");
 
           const stakingData = await stakingContract.methods.getStakingData().call({ from: accounts.toString() });
           let mainNftData;
