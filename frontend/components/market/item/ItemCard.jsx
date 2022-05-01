@@ -19,6 +19,7 @@ const itemCard = ({ item, as, slideIn }) => {
   const { NEXT_PUBLIC_SERVER_URL } = process.env;
   const blockchain = useSelector((state) => state.blockchain);
   const { account, auth, gameTokenContract } = blockchain;
+  const [loading, setLoading] = useState(false);
 
   // 내 소유 아이템 목록
   const [myItemQuantity, setMyItemQuantity] = useState(0);
@@ -132,6 +133,8 @@ const itemCard = ({ item, as, slideIn }) => {
               bg: "blue.500",
             }}
             onClick={buyItem}
+            isLoading={loading ? 1 : null}
+            loadingText="구매중.."
           >
             구매
           </Button>

@@ -197,7 +197,7 @@ const MarketDetail_auction = () => {
     >
       <GridItem colSpan={2} bg="whiteAlpha.100" borderRadius={"15px"}>
         <Flex direction="column">
-          <Box border="1px solid #302f2f" borderRadius={"15px"}>
+          <Box borderRadius={"15px"}>
             <Image src={image} borderRadius={"15px 15px 0 0"} />
             <Box borderRadius={10} border="1px solid #302f2f">
               <Heading size="sm" bg="#182749" padding="3">
@@ -300,7 +300,14 @@ const MarketDetail_auction = () => {
                   </Box>
                 </ModalBody>
                 <ModalFooter>
-                  <Button onClick={placeBidNft}>Confirm</Button>
+                  <Button
+                    onClick={() => {
+                      placeBidNft();
+                      onClose();
+                    }}
+                  >
+                    Confirm
+                  </Button>
                   <Button
                     // colorScheme="blue"
                     mr={3}
