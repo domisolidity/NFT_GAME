@@ -20,7 +20,7 @@ const Clock = () => {
 
   return (
     <>
-      <Box>현재시간 : {timer}</Box>
+      {/* <Box>현재시간 : {timer}</Box> */}
     </>
   );
 };

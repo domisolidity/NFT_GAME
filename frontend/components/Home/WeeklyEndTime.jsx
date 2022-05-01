@@ -1,4 +1,4 @@
-import { Box, Text, useInterval } from "@chakra-ui/react";
+import { Box, Center, Text, useInterval } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -55,8 +55,8 @@ const WeeklyEndTime = () => {
 
   return (
     <Box>
-      <Text>이번 주 집계 마감 : {weeklyEndTime}</Text>
-      <Text>집계까지 남은 시간 : {countdown}</Text>
+      <Center>이번 주 집계 마감 : {weeklyEndTime}</Center>
+      <Center>집계까지 남은 시간 : {countdown}</Center>
     </Box>
   );
 };
