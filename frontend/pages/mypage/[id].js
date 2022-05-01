@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { addAuctionList } from "../../redux/data/dataActions";
 import { Box, Grid, GridItem, Flex, Image, Button, Heading, Text, Input, useColorModeValue } from "@chakra-ui/react";
-import NftHistory from "../../components/Home/NftHistory";
+import NftHistory from "../../components/Mypage/NftHistory";
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 import Link from "next/link";
 

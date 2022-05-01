@@ -1,6 +1,6 @@
 import NoticeNft from "../../components/Home/NoticeNft";
 import { Box, Center, chakra, Flex, SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
-import Clock from "../../components/Utils/Clock";
+import Clock from "../../components/utils/Clock";
 import StakingInfo from "../../components/Home/StakingInfo";
 import GameInfo from "../../components/Home/GameInfo";
 
