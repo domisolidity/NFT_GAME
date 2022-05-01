@@ -9,10 +9,6 @@ import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
 contract NftContract is ERC721Enumerable {
   using Counters for Counters.Counter;
   using SafeMath for uint;
-  // Counters.Counter private tokenIds; //잠깐만 public 사용중
-  // Counters.Counter private tokenIds_red; //잠깐만 public 사용중
-  // Counters.Counter private tokenIds_green; //잠깐만 public 사용중
-  // Counters.Counter private tokenIds_purple; //잠깐만 public 사용중
 
   event NftHistory(uint indexed tokenId, address from, address to, uint time, string historyType);
 
