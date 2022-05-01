@@ -397,29 +397,30 @@ const MarketDetail_auction = () => {
                 </Th>
               </Tr>
             </Thead>
-            {bidHistory[0] ? (
-              bidHistory.map((history, i) => {
-                return (
-                  <Tbody key={i}>
-                    <Tr>
-                      <Td textAlign="center">{todayTimeFormal(Number(history.timestamp))}</Td>
-                      <Td textAlign="center">{`${history.account.substr(0, 7)} ...... ${history.account.substr(
-                        38,
-                        41
-                      )}`}</Td>
-                      <Td textAlign="center">{web3.utils.fromWei(history.highestBindingBid, "ether")} eth</Td>
-                      <Td textAlign="center">{web3.utils.fromWei(history.currentBid, "ether")} eth</Td>
-                    </Tr>
-                  </Tbody>
-                );
-              })
-            ) : (
-              <Text m="0 auto" textAlign="center">
-                No data
-              </Text>
-            )}
+            {bidHistory[0]
+              ? bidHistory.map((history, i) => {
+                  return (
+                    <Tbody key={i}>
+                      <Tr>
+                        <Td textAlign="center">{todayTimeFormal(Number(history.timestamp))}</Td>
+                        <Td textAlign="center">{`${history.account.substr(0, 7)} ...... ${history.account.substr(
+                          38,
+                          41
+                        )}`}</Td>
+                        <Td textAlign="center">{web3.utils.fromWei(history.highestBindingBid, "ether")} eth</Td>
+                        <Td textAlign="center">{web3.utils.fromWei(history.currentBid, "ether")} eth</Td>
+                      </Tr>
+                    </Tbody>
+                  );
+                })
+              : null}
           </Table>
         </TableContainer>
+        {!bidHistory[0] ? (
+          <Text mt={5} textAlign="center">
+            No data
+          </Text>
+        ) : null}
       </GridItem>
     </Grid>
   );
