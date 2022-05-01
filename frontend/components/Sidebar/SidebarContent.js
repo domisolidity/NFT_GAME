@@ -51,47 +51,10 @@ const SidebarContent = ({ logoText, routes }) => {
     const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
-      if (prop.redirect) {
-        return null;
-      }
-
-      // if (prop.name && prop.subName) {
-      //   return (
-      //     <div key={prop.name}>
-      //       {createLinks(prop.subName)}
-      //     </div>
-      //   )
-      // }
-
-      if (prop.category) {
-        var st = {};
-        st[prop["state"]] = !state[prop.state];
-        return (
-          <div key={prop.name}>
-            <Text
-              color={activeColor}
-              fontWeight="bold"
-              mb={{
-                xl: "12px",
-              }}
-              mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
-              py="12px"
-            >
-              {prop.name}
-            </Text>
-            {createLinks(prop.views)}
-          </div>
-        );
-      }
-
       const createButton = (prop) => {
         return (
           <NextLink href={`${prop.path}`} key={prop.name} passHref>
-            <Link>
+            <Link key={key}>
               {activeRoute(prop.path) === "active" ? (
                 <Button
                   opacity="0"
