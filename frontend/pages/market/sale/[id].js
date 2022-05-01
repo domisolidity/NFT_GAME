@@ -30,7 +30,7 @@ import {
 
 import { FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
-import NftHistory from "../../../components/Home/NftHistory";
+import NftHistory from "../../../components/Mypage/NftHistory";
 import SideBarScreen from "../../../components/Layout/Frame/SideBarScreen";
 
 const MarketDetail_sale = () => {

@@ -195,37 +195,39 @@ const MarketDetail_auction = () => {
       gap={2}
       pt={{ base: "120px", md: "75px" }}
     >
-      <GridItem colSpan={2} bg="whiteAlpha.100">
+      <GridItem colSpan={2} bg="whiteAlpha.100" borderRadius={"15px"}>
         <Flex direction="column">
-          <Image src={image} borderRadius={10} />
-          <Box borderRadius={10} border="1px solid #302f2f" mt="2">
-            <Heading size="sm" bg="#182749" padding="3">
-              Description
-            </Heading>
-            <Text fontSize="15" padding="3">
-              {description}
-            </Text>
-          </Box>
-          <Box borderRadius={10} bg="##1E315F" border="1px solid #302f2f">
-            <Heading size="sm" bg="#182749" padding="3">
-              Properties
-            </Heading>
-            <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}>
-              {attributes &&
-                JSON.parse(attributes).map((attr, i) => {
-                  return (
-                    <GridItem key={i} align="center" border="2px solid #2b7997" borderRadius={15}>
-                      <Text fontWeight="bold">{attr.trait_type}</Text>
-                      <Text>{attr.value}</Text>
-                    </GridItem>
-                  );
-                })}
-            </Grid>
+          <Box border="1px solid #302f2f" borderRadius={"15px"}>
+            <Image src={image} borderRadius={"15px 15px 0 0"} />
+            <Box borderRadius={10} border="1px solid #302f2f">
+              <Heading size="sm" bg="#182749" padding="3">
+                Description
+              </Heading>
+              <Text fontSize="15" padding="3">
+                {description}
+              </Text>
+            </Box>
+            <Box borderRadius={10} bg="##1E315F" border="1px solid #302f2f">
+              <Heading size="sm" bg="#182749" padding="3">
+                Properties
+              </Heading>
+              <Grid templateColumns="repeat(3,1fr)" padding="5" gap={1}>
+                {attributes &&
+                  JSON.parse(attributes).map((attr, i) => {
+                    return (
+                      <GridItem key={i} align="center" border="2px solid #2b7997" borderRadius={15}>
+                        <Text fontWeight="bold">{attr.trait_type}</Text>
+                        <Text>{attr.value}</Text>
+                      </GridItem>
+                    );
+                  })}
+              </Grid>
+            </Box>
           </Box>
         </Flex>
       </GridItem>
 
-      <GridItem colSpan={3} bg="whiteAlpha.100" padding="5">
+      <GridItem colSpan={3} bg="whiteAlpha.100" padding="5" borderRadius={"15px"} border="1px solid #302f2f">
         <Text
           borderRadius="10"
           p="1"
@@ -250,14 +252,20 @@ const MarketDetail_auction = () => {
           {auctionState == "경매 종료" ? (
             <>
               <Flex mt={20} justify="center">
-                <Button isLoading={loading ? 1 : null} loadingText="Claiming.." bg="green.600" onClick={claimAuction}>
+                <Button
+                  isLoading={loading ? 1 : null}
+                  loadingText="Claiming.."
+                  bg="green.600"
+                  onClick={claimAuction}
+                  mb={4}
+                >
                   클레임
                 </Button>
               </Flex>
               <Flex justify="center">
                 {/* <WarningIcon w={6} h={6} color="orange.200" /> */}
                 <Text mr="5" lineHeight="10">
-                  경매 종료시 참여했던 입찰금을 회수해주세요
+                  경매 종료시 참여했던 입찰금을 회수해주세요.
                 </Text>
               </Flex>
             </>
@@ -311,17 +319,25 @@ const MarketDetail_auction = () => {
         </Box>
       </GridItem>
 
-      <GridItem colSpan={5} bg="whiteAlpha.100" padding={5}>
+      <GridItem colSpan={5} bg="whiteAlpha.100" padding={5} borderRadius={"15px"}>
         {/* history */}
 
         <TableContainer>
           <Table>
             <Thead>
               <Tr>
-                <Th>입찰 시간</Th>
-                <Th>입찰자</Th>
-                <Th>입찰가 현재 시세</Th>
-                <Th>입찰한 가격 합산</Th>
+                <Th textAlign="center" fontSize="16px">
+                  입찰 시간
+                </Th>
+                <Th textAlign="center" fontSize="16px">
+                  입찰자
+                </Th>
+                <Th textAlign="center" fontSize="16px">
+                  입찰가 현재 시세
+                </Th>
+                <Th textAlign="center" fontSize="16px">
+                  입찰한 가격 합산
+                </Th>
               </Tr>
             </Thead>
             {bidHistory[0] ? (
@@ -329,10 +345,13 @@ const MarketDetail_auction = () => {
                 return (
                   <Tbody key={i}>
                     <Tr>
-                      <Td>{todayTimeFormal(Number(history.timestamp))}</Td>
-                      <Td>{`${history.account.substr(0, 7)} ...... ${history.account.substr(38, 41)}`}</Td>
-                      <Td>{web3.utils.fromWei(history.highestBindingBid, "ether")} eth</Td>
-                      <Td>{web3.utils.fromWei(history.currentBid, "ether")} eth</Td>
+                      <Td textAlign="center">{todayTimeFormal(Number(history.timestamp))}</Td>
+                      <Td textAlign="center">{`${history.account.substr(0, 7)} ...... ${history.account.substr(
+                        38,
+                        41
+                      )}`}</Td>
+                      <Td textAlign="center">{web3.utils.fromWei(history.highestBindingBid, "ether")} eth</Td>
+                      <Td textAlign="center">{web3.utils.fromWei(history.currentBid, "ether")} eth</Td>
                     </Tr>
                   </Tbody>
                 );
