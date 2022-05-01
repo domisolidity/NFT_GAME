@@ -360,12 +360,12 @@ export const init = () => {
         window.ethereum.on("accountsChanged", () => {
           dispatch(disconnectWallet());
           alert(`계정이 변경되어 로그아웃됩니다.`);
-          // window.location.reload();
+          window.location.reload();
         });
 
         window.ethereum.on("chainChanged", () => {
           alert(`네트워크가 변경되었습니다.`);
-          // window.location.reload();
+          window.location.reload();
         });
       } catch (error) {
         console.log(error);

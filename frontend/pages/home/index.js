@@ -10,7 +10,7 @@ import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
 const Home = () => {
   return (
     <Flex
-      mt={"80px"}
+      mt={"75px"}
       direction="column"
       alignItems="center"
       justifyContent="center"
