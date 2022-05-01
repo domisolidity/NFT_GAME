@@ -21,7 +21,7 @@ export default function Home() {
   const iconBoxInside = useColorModeValue("white", "white");
 
   const blockchain = useSelector((state) => state.blockchain);
-  const { web3, account, nftContract, gameTokenContract } = blockchain;
+  const { web3, account, auth, nftContract, gameTokenContract } = blockchain;
 
   const [ethBalance, setEthBalance] = useState();
   const [tokenBalance, setTokenBalance] = useState();
@@ -89,7 +89,7 @@ export default function Home() {
     }
   };
 
-  const menuList = ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"];
+  const menuList = auth ? ["NOTICE", "INVENTORY", "CLAIM", "STAKING", "PROFILE"] : ["NOTICE"];
 
   const slideInKeyframes = keyframes`
   0% { opacity: 0; transform: translateX(-50px); }
