@@ -7,23 +7,23 @@
 
 
 ## Schedule / 개발일정
-#
-#
+  
+  
 ![image](https://user-images.githubusercontent.com/88923210/166204271-ca6a6adb-12a9-486c-8fcc-cdb3f5d05fbf.png)
 
-#
-#
+  
+  
 ## Built With / [김동욱](https://github.com/pier101) , [이상민](https://github.com/KimchiChamchi), [이민주](https://github.com/codecocos)
-#
-#
+  
+  
 ![image](https://user-images.githubusercontent.com/88923210/166203609-ac6e57be-85f4-4743-8c12-31337e7367c5.png)
 
 
 
 ## Architecture & Deployment / 앱 시스템 구조도 및 배포
-#
-#
-#
+  
+  
+  
 
 * web3.js로 작성한 내용들을  json-rpc 통신을 통해 인퓨라 노드에 의해 채굴됨. 
 * 그 결과 발생한 트랙잭션에 해당하는 내용들을 응답받아 클라이언트와 상호작용
@@ -32,23 +32,23 @@
 
 ![image](https://user-images.githubusercontent.com/88923210/166205086-60131970-6fb1-4856-b9af-265a19a68b7b.png)
 
-#
-#
-#
+  
+  
+  
 ## Contract / 컨트랙트 구성
-#
+  
 **메인 컨트랙트 : ERC-20 , ERC-721**
 **기능단위 컨트랙트 : Claim, Staking, Sale, Auction 기능**
 
 * 오픈제플린에서 제공하는 표준 컨트랙트를 메인으로 두고 전역적으로 사용하는 메소드들만 메인컨트랙트에 작성
 
 ![image](https://user-images.githubusercontent.com/88923210/166207162-cd09293b-d63e-41f4-8431-28f70220d6f4.png)
-#
-#
+  
+  
 ## DB Schema / ERD
-#
-#
-#
+  
+  
+  
 ![image](https://user-images.githubusercontent.com/88923210/166346038-68e7ffb0-5d25-498c-a2df-10ea47fde472.png)
 
 * 회원정보는 컨트랙트에서 관리하기엔 블록체인의 지연시간과 가스비용 영향이 크기 때문에 db를 통해 관리
