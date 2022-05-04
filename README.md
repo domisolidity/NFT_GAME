@@ -2,6 +2,8 @@
 
 
 ##### - Nft 홀더들이 게임에 참여하고, 게임 참여자들이 Token을 보상으로 얻을 수 있는 시스템 구현
+![doremi_games](https://user-images.githubusercontent.com/90792916/166610784-0c71db7b-3c4d-45f6-b63c-94182cadd558.gif)
+
   
   
 
