@@ -1,4 +1,4 @@
-# Doremi Games - Ethereum Testnet 기반 P2E 게임 프로젝트
+# Doremi Games - Ethereum Testnet 기반 P2E 게임 프로젝트 
 
 
 ##### - Nft 홀더들이 게임에 참여하고, 게임 참여자들이 Token을 보상으로 얻을 수 있는 시스템 구현
