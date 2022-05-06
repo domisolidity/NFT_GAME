@@ -20,6 +20,13 @@ const fetchDataFailed = (payload) => {
   };
 };
 
+const addAuctioningList = (payload) => {
+  return {
+    type: "ADD_AUCTION",
+    payload: payload,
+  };
+};
+
 export const fetchData = (account) => {
   return async (dispatch) => {
     dispatch(fetchDataRequest());

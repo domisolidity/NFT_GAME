@@ -1,8 +1,12 @@
 const initialState = {
   loading: false,
   account: null,
+  networkId: null,
   nftContract: null,
   nftDealContract: null,
+  gameTokenContract: null,
+  auctionCreatorContract: null,
+  claim20_Contract: null,
   web3: null,
   mainNftData: null,
   errorMsg: "",
