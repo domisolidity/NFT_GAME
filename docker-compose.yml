@@ -1,0 +1,39 @@
+version: "3"
+services:
+    nginx:
+        depends_on:
+            - node
+            - next
+        restart: always
+        container_name: "nginx"
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        ports:
+            - "80:80"
+    node:
+        container_name: "node"
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        env_file:
+            - ./backend/.env
+        volumes:
+            - "./backend:/usr/src/node"
+            - "/usr/src/node/node_modules"
+        ports:
+            - "5000:5000"
+    next:
+        container_name: "next"
+        restart: "on-failure"
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        volumes:
+            - "./frontend:/usr/src/next"
+            - "/usr/src/next/node_modules"
+            - "/usr/src/next/.next"
+        env_file:
+            - ./frontend/.env
+        ports:
+            - "3000:3000"
