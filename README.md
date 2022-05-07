@@ -10,7 +10,9 @@
   
 ![image](https://user-images.githubusercontent.com/88923210/166204271-ca6a6adb-12a9-486c-8fcc-cdb3f5d05fbf.png)
 
-  
+
+## WBS (일정관리)  : [WBS (google-docs)](https://docs.google.com/spreadsheets/d/1tTswu6dq9Afke436TUOURWnRc2FUhqDP_tO5c0YXavc/edit#gid=1417021269)
+  <br/>
   
 ## Built With / [김동욱](https://github.com/pier101) , [이상민](https://github.com/KimchiChamchi), [이민주](https://github.com/codecocos)
   
@@ -55,7 +57,7 @@
 * 로그아웃을 하지 않으면 재접속시 jwt토큰을 통해 로그인 상태가 유지 됨.
 * 스테이킹된 nft에 따라 부여받은 게임 참여횟수와 아이템, 미션, 랭킹 등을 관리할 수 있도록 관계설정
 
-## Details
+## 주요기능
 ### * 민팅
   
 ![image](https://user-images.githubusercontent.com/88923210/166195022-3144f240-5e99-4c65-a6f0-b128b8bea565.png)
