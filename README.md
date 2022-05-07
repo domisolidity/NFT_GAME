@@ -56,36 +56,36 @@
 * 스테이킹된 nft에 따라 부여받은 게임 참여횟수와 아이템, 미션, 랭킹 등을 관리할 수 있도록 관계설정
 
 ## Details
-* 민팅
+### * 민팅
   
 ![image](https://user-images.githubusercontent.com/88923210/166195022-3144f240-5e99-4c65-a6f0-b128b8bea565.png)
 ![image](https://user-images.githubusercontent.com/88923210/166346784-dd3dcfd4-b0f5-4408-9d49-9de942b28bcc.png)
 
-* 스테이킹
+### * 스테이킹
   
 ![image](https://user-images.githubusercontent.com/88923210/166390083-22da9c5a-a03f-4b6e-997b-3bcfd788d826.png)
 ![image](https://user-images.githubusercontent.com/88923210/166347827-4b552789-3810-4b92-bc75-0f2209538d82.png)
 ![image](https://user-images.githubusercontent.com/88923210/166350425-04e5d0d3-31e9-4e93-a20e-11b1c1912f5a.png)
 
-* 게임과 미션, 아이템 적용
+### * 게임과 미션, 아이템 적용
   
 ![image](https://user-images.githubusercontent.com/88923210/166374479-c9fc2ce7-396f-4d65-a89d-b7b66e58b263.png)
 
-* 토큰으로 아이템 상점 이용
+### * 토큰으로 아이템 상점 이용
   
 ![image](https://user-images.githubusercontent.com/88923210/166380355-2bbb0c7e-1167-4e51-ada2-2710e69de59b.png)
 
-* 클레임
+### * 클레임
   
 ![image](https://user-images.githubusercontent.com/88923210/166390942-6f10730f-dc73-4d50-b9d3-64c99245ef85.png)
 
-* NFT 판매 및 구매
+### * NFT 판매 및 구매
   
 ![image](https://user-images.githubusercontent.com/88923210/166390195-91d1e55a-9a3a-465f-8e96-db594cf91711.png)
 ![image](https://user-images.githubusercontent.com/88923210/166390352-c1267286-6e72-49b2-bc53-d1d68b54bd83.png)
 ![image](https://user-images.githubusercontent.com/88923210/166390452-81ac350f-16ea-41fc-9574-b7139cec1588.png)
 
-* NFT 경매 
+### * NFT 경매 
   
 ![image](https://user-images.githubusercontent.com/88923210/166390539-57add4af-e0a4-4117-8789-661e19b877d3.png)
 ![image](https://user-images.githubusercontent.com/88923210/166390727-db0bc1de-f1c6-4d85-9918-b4414f2ceee6.png)
