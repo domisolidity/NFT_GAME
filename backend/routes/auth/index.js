@@ -13,7 +13,9 @@ router.post("/", (req, res, next) => {
   const { signature, publicAddress } = req.body;
 
   if (!signature || !publicAddress) {
-    return res.status(400).send({ error: "Request should have signature and publicAddress" });
+    return res
+      .status(400)
+      .send({ error: "Request should have signature and publicAddress" });
   }
 
   return (
@@ -70,7 +72,9 @@ router.post("/", (req, res, next) => {
         if (!user) {
           // Should not happen, we should have already sent the response
 
-          throw new Error('User is not defined in "Generate a new nonce for the user".');
+          throw new Error(
+            'User is not defined in "Generate a new nonce for the user".'
+          );
         }
 
         user.nonce = Math.floor(Math.random() * 10 ** 5);
@@ -106,10 +110,6 @@ router.post("/", (req, res, next) => {
         );
       })
       .then((accessToken) => {
-        // res.cookie('AccessToken', accessToken, {
-        //   httpOnly: true,
-        //   expires: 0 // 브라우저를 닫을시 사라짐
-        // })
         res.json({ accessToken });
       })
       .catch(next)

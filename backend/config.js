@@ -14,6 +14,9 @@ const {
   Item,
   UserItem,
   Ranking,
+  DailyMission,
+  MissionInUser,
+  ClosingMission,
 } = require("./models");
 const schedule = require("node-schedule");
 
@@ -193,6 +196,12 @@ const getDatabaseConfig = async () => {
     (await UserItem.findAll()).length == 0 &&
     (await Ranking.findAll()).length == 0
   ) {
+    // 테스트 계정 1,2,3 가입시키기
+    for (let i = 0; i < 3; i++) {
+      await User.create({
+        publicAddress: testAddressArray[i],
+      });
+    }
     // 아이템 추가
     for (let i = 0; i < itemList.length; i++) {
       await Item.create({
@@ -205,19 +214,16 @@ const getDatabaseConfig = async () => {
     for (let i = 0; i < gameList.length; i++) {
       await Game.create({
         gameTitle: gameList[i].gameTitle,
+        gameUrl: gameList[i].gameUrl,
         description: gameList[i].description,
       });
     }
-    // 테스트 계정 추가
-    for (let i = 0; i < testAddressArray.length; i++) {
-      await User.create({
-        publicAddress: testAddressArray[i],
-      });
-      // 테스트 계정들 0번인덱스 게임(블록쌓기)에 임의로 참여 기록 입력
-      await InGameUser.create({
-        user_address: testAddressArray[i],
-        game_title: gameList[0].gameTitle,
-        gameScore: Math.floor(Math.random() * 10),
+    // 일일미션 추가
+    for (let i = 0; i < dailyMission.length; i++) {
+      await DailyMission.create({
+        game_title: dailyMission[i].game_title,
+        targetValue: dailyMission[i].targetValue,
+        missionDetails: dailyMission[i].missionDetails,
       });
     }
     // // 테스트 계정들 게임별 임의 플레이 기록 추가
@@ -231,7 +237,7 @@ const getDatabaseConfig = async () => {
     //   }
     // }
     // 테스트 0번 계정에 아이템 임의로 추가
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 50; i++) {
       await UserItem.create({
         user_address: testAddressArray[0],
         item_itemName:
@@ -266,7 +272,7 @@ const getDatabaseConfig = async () => {
 };
 
 /* 순위 집계 */
-/* InGameUser 테이블에서 게임별로 TOP 5를 찾아 순위 테이블에 기록하고 
+/* InGameUser 테이블에서 게임별로 TOP 3를 찾아 순위 테이블에 기록하고 
    InGameUser 테이블 초기화하기                                     */
 const rankAggregation = async () => {
   const latestWeekData = await Ranking.findOne({
@@ -276,17 +282,11 @@ const rankAggregation = async () => {
   const latestWeek = latestWeekData.weeks; // 최신 주(week)
   // 게임별 TOP 3 찾기
   for (let i = 0; i < gameList.length; i++) {
-    const latestWeekData = await Ranking.findOne({
-      attributes: ["weeks"],
-      limit: 1,
-      order: [["weeks", "desc"]],
-    });
-    const latestWeek = latestWeekData.weeks; // 최신 주(week)
     const gameTitle = gameList[i].gameTitle; // 게임명
-    // 이번 주 차 TOP 5 정보
+    // 이번 주 차 TOP 3 정보
     const thisWeekRankData = await InGameUser.findAll({
       raw: true,
-      limit: 5, // 결과로 5개만 가져올 것.
+      limit: 3, // 결과로 3개만 가져올 것.
       order: [
         ["gameScore", "desc"], // 게임점수 내림차순
         ["updatedAt", "asc"], // 갱신시간 오름차순
@@ -294,7 +294,7 @@ const rankAggregation = async () => {
       where: { game_title: gameTitle },
     });
 
-    // 찾은 TOP 5를 순위테이블에 넣어주기
+    // 찾은 TOP 3를 순위테이블에 넣어주기
     for (let i = 0; i < thisWeekRankData.length; i++)
       await Ranking.create({
         weeks: latestWeek + 1,
@@ -304,6 +304,7 @@ const rankAggregation = async () => {
         user_address: thisWeekRankData[i].user_address,
       });
   }
+  // 집계 끝났으면 게임 플레이 현황 테이블 비워주기
   await InGameUser.sync({ force: true });
   console.log(`순위 집계가 끝났습니다`);
   unlockNFT(); // 모든 사용자 대표 NFT 해제하기

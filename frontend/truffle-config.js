@@ -1,3 +1,6 @@
+require("dotenv").config();
+const fs = require("fs");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 const path = require("path");
 const { INFURA_API_KEY, MORALIS_API_KEY, ETHERSCAN_API_KEY } = process.env;
 const mnemonic = fs.readFileSync("migrations/.secret").toString().trim();
