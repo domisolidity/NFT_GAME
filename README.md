@@ -31,7 +31,7 @@
 * erc-721기반으로 만들어진 nft의 메타데이터 정보는 ipfs에 저장 axios요청으로 저장 데이터 수신
 * ipfs저장 서비스는 피나타를 이용
 
-![image](https://user-images.githubusercontent.com/88923210/166205086-60131970-6fb1-4856-b9af-265a19a68b7b.png)
+![architecture](https://user-images.githubusercontent.com/85658044/167664300-87e0deda-9f30-43de-8c34-aef5a404f82c.png)
 
   
   
