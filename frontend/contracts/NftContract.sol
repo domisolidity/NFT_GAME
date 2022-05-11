@@ -8,16 +8,16 @@ import "../node_modules/@openzeppelin/contracts/utils/Math/SafeMath.sol";
 
 contract NftContract is ERC721Enumerable {
   using Counters for Counters.Counter;
-  using SafeMath for uint;
+  using SafeMath for uint256;
 
   event NftHistory(uint indexed tokenId, address from, address to, uint time, string historyType);
 
-  uint16 public tokenIds_red;
-  uint16 public tokenIds_green = 60;
-  uint16 public tokenIds_purple = 90;
-  uint16 public remainedRed = 60 - tokenIds_red;
-  uint16 public remainedGreen = 90 - tokenIds_green;
-  uint16 public remainedPurple = 100 - tokenIds_purple;
+  uint256 public tokenIds_red;
+  uint256 public tokenIds_green = 60;
+  uint256 public tokenIds_purple = 90;
+  uint256 public remainedRed = 60 - tokenIds_red;
+  uint256 public remainedGreen = 90 - tokenIds_green;
+  uint256 public remainedPurple = 100 - tokenIds_purple;
 
   constructor() ERC721("DoremiGames Nft Token", "REMIN") {}
 
@@ -89,9 +89,9 @@ contract NftContract is ERC721Enumerable {
     public
     view
     returns (
-      uint16,
-      uint16,
-      uint16
+      uint,
+      uint,
+      uint
     )
   {
     return (remainedRed, remainedGreen, remainedPurple);
@@ -106,33 +106,33 @@ contract NftContract is ERC721Enumerable {
     uint _amount,
     uint _timestamp
   ) external payable returns (RenderToken[] memory) {
-    require(remainedRed > 0 || remainedGreen > 0 || remainedPurple > 0, "All quantities have been exhausted.");
+    // require(remainedRed > 0 || remainedGreen > 0 || remainedPurple > 0, "All quantities have been exhausted.");
     require(balanceOf(_to) <= 3, "You can purchase up to 3");
 
     RenderToken[] memory renderToken = new RenderToken[](_amount);
     for (uint i = 0; i < _amount; i++) {
       require(_grade == 1 || _grade == 2 || _grade == 3, "This is the wrong approach.");
 
-      uint16 tokenId;
+      uint256 tokenId;
 
       if (_grade == 1) {
         require(msg.value == 0.0003 ether * _amount, "value error");
-        tokenIds_red++;
+        tokenIds_red = tokenIds_red.add(1);
         tokenId = tokenIds_red;
-        remainedRed = 60 - tokenIds_red;
+        remainedRed = 60 - tokenId;
       } else if (_grade == 2) {
         require(msg.value == 0.0005 ether * _amount, "value error");
-        tokenIds_green++;
+        tokenIds_green = tokenIds_green.add(1);
         tokenId = tokenIds_green;
-        remainedGreen = 90 - tokenIds_green;
+        remainedGreen = 90 - tokenId;
       } else if (_grade == 3) {
         require(msg.value == 0.001 ether * _amount, "value error");
-        tokenIds_purple++;
+        tokenIds_purple = tokenIds_purple.add(1);
         tokenId = tokenIds_purple;
-        remainedPurple = 100 - tokenIds_purple;
+        remainedPurple = 100 - tokenId;
       }
-      myNfts[msg.sender].push(RenderToken(tokenId, _tokenURI));
-      renderToken[i] = RenderToken(tokenId, _tokenURI);
+      myNfts[msg.sender].push(RenderToken(uint16(tokenId), _tokenURI));
+      renderToken[i] = RenderToken(uint16(tokenId), _tokenURI);
 
       _mint(_to, tokenId);
       _setTokenURI(tokenId, _tokenURI);
