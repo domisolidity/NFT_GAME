@@ -116,7 +116,7 @@ const Collections = () => {
                   <Box key={index}>
                     <Link
                       href={{
-                        pathname: `home/${mynft.id}`,
+                        pathname: `mypage/${mynft.id}`,
                         query: {
                           id: mynft.id,
                           grade: mynft.grade,
@@ -126,7 +126,7 @@ const Collections = () => {
                           description: mynft.description,
                         },
                       }}
-                      as={`home/${mynft.id}`}
+                      as={`mypage/${mynft.id}`}
                     >
                       <a>
                         <MyNftsCard

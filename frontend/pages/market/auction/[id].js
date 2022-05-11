@@ -27,12 +27,18 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Stack,
+  List,
+  ListItem,
+  ListIcon,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { todayTimeFormal } from "../../../hooks/currentTime";
 import AuctionInfo from "../../../components/market/auction/AuctionInfo.jsx";
 import Countdown from "../../../components/utils/Countdown";
 import AuctionContract from "../../../contracts/artifacts/Auction.json";
 import SideBarScreen from "../../../components/Layout/Frame/SideBarScreen";
+import { FaCheckCircle } from "react-icons/fa";
 
 const MarketDetail_auction = () => {
   const blockchain = useSelector((state) => state.blockchain);
@@ -186,6 +192,49 @@ const MarketDetail_auction = () => {
     console.log(bidHistory);
   }, [account, bidHistory]);
 
+  const options = [
+    { id: 1, desc: "옥션 경매 수수료는 판매 확정 금액의 5% 만큼 발생합니다." },
+    { id: 2, desc: "수수료는 판매자 부담입니다." },
+    { id: 3, desc: "히스토리는 하단에서 확인 가능합니다." },
+    { id: 4, desc: " 판매자는 낙찰가를 받게 됩니다." },
+    {
+      id: 5,
+      desc: "낙찰자는 입찰 시 입력했던 최대 허용 입찰가에서,",
+    },
+    {
+      id: 6,
+      desc: "낙찰금액을 제외한 나머지 금액과 낙찰받은 NFT를 받게 됩니다.",
+    },
+    { id: 7, desc: "패찰자는 입찰 시 입력했던 최대 허용 입찰가를 돌려받게 됩니다." },
+  ];
+
+  const PackageTier = ({ options }) => {
+    return (
+      <Stack
+        p={3}
+        py={3}
+        justifyContent={{
+          base: "flex-start",
+          md: "space-around",
+        }}
+        direction={{
+          base: "column",
+          md: "row",
+        }}
+        alignItems={{ md: "center" }}
+      >
+        <List spacing={3} textAlign="start">
+          {options.map((desc, id) => (
+            <ListItem key={desc.id}>
+              <ListIcon as={FaCheckCircle} color="green.500" />
+              {desc.desc}
+            </ListItem>
+          ))}
+        </List>
+      </Stack>
+    );
+  };
+
   return (
     <Grid
       w="70vw"
@@ -197,7 +246,7 @@ const MarketDetail_auction = () => {
     >
       <GridItem colSpan={2} bg="whiteAlpha.100" borderRadius={"15px"}>
         <Flex direction="column">
-          <Box border="1px solid #302f2f" borderRadius={"15px"}>
+          <Box borderRadius={"15px"}>
             <Image src={image} borderRadius={"15px 15px 0 0"} />
             <Box borderRadius={10} border="1px solid #302f2f">
               <Heading size="sm" bg="#182749" padding="3">
@@ -251,40 +300,41 @@ const MarketDetail_auction = () => {
         <Box mt={15}>
           {auctionState == "경매 종료" ? (
             <>
-              <Flex mt={20} justify="center">
+              <Flex mt={10} justify="center">
                 <Button
                   isLoading={loading ? 1 : null}
                   loadingText="Claiming.."
                   bg="green.600"
                   onClick={claimAuction}
-                  mb={4}
+                  mb={10}
                 >
-                  클레임
+                  Claim
                 </Button>
               </Flex>
-              <Flex justify="center">
-                {/* <WarningIcon w={6} h={6} color="orange.200" /> */}
-                <Text mr="5" lineHeight="10">
-                  경매 종료시 참여했던 입찰금을 회수해주세요.
-                </Text>
-              </Flex>
+
+              <PackageTier title={"NFT"} price={"가격"} options={options} />
             </>
           ) : (
-            <Flex justify="center">
-              <Text mr="5" lineHeight="10">
-                max bid
-              </Text>
-              <Input
-                mr="1"
-                w="30"
-                type="number"
-                placeholder="최대 허용 입찰가"
-                onChange={(e) => setMaxBid(e.target.value)}
-              />
-              <Button isLoading={loading ? 1 : null} loadingText="Bidding.." bg="red.600" onClick={onOpen}>
-                입찰하기
-              </Button>
-            </Flex>
+            <>
+              <Flex justify="center">
+                <Text mr="5" lineHeight="10">
+                  max bid
+                </Text>
+                <Input
+                  mr="3"
+                  w="30"
+                  type="number"
+                  placeholder="최대 허용 입찰가"
+                  onChange={(e) => setMaxBid(e.target.value)}
+                  mb={10}
+                />
+                <Button isLoading={loading ? 1 : null} loadingText="Bidding.." bg="red.600" onClick={onOpen}>
+                  입찰하기
+                </Button>
+              </Flex>
+
+              <PackageTier title={"NFT"} price={"가격"} options={options} />
+            </>
           )}
           {/* 모달창 */}
           <Modal isOpen={isOpen} onClose={onClose} size="xl">
@@ -300,7 +350,14 @@ const MarketDetail_auction = () => {
                   </Box>
                 </ModalBody>
                 <ModalFooter>
-                  <Button onClick={placeBidNft}>Confirm</Button>
+                  <Button
+                    onClick={() => {
+                      placeBidNft();
+                      onClose();
+                    }}
+                  >
+                    Confirm
+                  </Button>
                   <Button
                     // colorScheme="blue"
                     mr={3}
@@ -340,29 +397,30 @@ const MarketDetail_auction = () => {
                 </Th>
               </Tr>
             </Thead>
-            {bidHistory[0] ? (
-              bidHistory.map((history, i) => {
-                return (
-                  <Tbody key={i}>
-                    <Tr>
-                      <Td textAlign="center">{todayTimeFormal(Number(history.timestamp))}</Td>
-                      <Td textAlign="center">{`${history.account.substr(0, 7)} ...... ${history.account.substr(
-                        38,
-                        41
-                      )}`}</Td>
-                      <Td textAlign="center">{web3.utils.fromWei(history.highestBindingBid, "ether")} eth</Td>
-                      <Td textAlign="center">{web3.utils.fromWei(history.currentBid, "ether")} eth</Td>
-                    </Tr>
-                  </Tbody>
-                );
-              })
-            ) : (
-              <Text m="0 auto" textAlign="center">
-                No data
-              </Text>
-            )}
+            {bidHistory[0]
+              ? bidHistory.map((history, i) => {
+                  return (
+                    <Tbody key={i}>
+                      <Tr>
+                        <Td textAlign="center">{todayTimeFormal(Number(history.timestamp))}</Td>
+                        <Td textAlign="center">{`${history.account.substr(0, 7)} ...... ${history.account.substr(
+                          38,
+                          41
+                        )}`}</Td>
+                        <Td textAlign="center">{web3.utils.fromWei(history.highestBindingBid, "ether")} eth</Td>
+                        <Td textAlign="center">{web3.utils.fromWei(history.currentBid, "ether")} eth</Td>
+                      </Tr>
+                    </Tbody>
+                  );
+                })
+              : null}
           </Table>
         </TableContainer>
+        {!bidHistory[0] ? (
+          <Text mt={5} textAlign="center">
+            No data
+          </Text>
+        ) : null}
       </GridItem>
     </Grid>
   );

@@ -4,8 +4,6 @@ import React from "react";
 function TablesTableRow(props) {
   const { player, score, date, ranking, profile } = props;
   const textColor = useColorModeValue("gray.700", "white");
-  const bgStatus = useColorModeValue("gray.400", "#1a202c");
-  const colorStatus = useColorModeValue("white", "gray.400");
 
   return (
     <Tr>
@@ -26,13 +24,7 @@ function TablesTableRow(props) {
         </Flex>
       </Td>
       <Td textAlign="center">
-        <Badge
-          // bg={status === "Online" ? "green.400" : bgStatus}
-          // color={status === "Online" ? "white" : colorStatus}
-          fontSize="16px"
-          p="3px 10px"
-          borderRadius="8px"
-        >
+        <Badge fontSize="16px" p="3px 10px" borderRadius="8px">
           {score}
         </Badge>
       </Td>
@@ -41,18 +33,6 @@ function TablesTableRow(props) {
           {date}
         </Text>
       </Td>
-      {/* <Td>
-        <Button p="0px" bg="transparent" variant="no-hover">
-          <Text
-            fontSize="md"
-            color="gray.400"
-            fontWeight="bold"
-            cursor="pointer"
-          >
-            claim
-          </Text>
-        </Button>
-      </Td> */}
     </Tr>
   );
 }

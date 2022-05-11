@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Flex, Text, Box } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { TimLogo } from "../../Icons/Icons";
+import { TeamLog } from "../../Icons/Icons";
 
 const RankingClaimCard = (props) => {
   const claimInfo = props.claimInfo;
@@ -76,7 +76,7 @@ const RankingClaimCard = (props) => {
         <Text>클레임 가능 수량</Text>
         <Flex direction="row" align="center" justify="center">
           <Flex align="center" justify="center">
-            <TimLogo fontSize="20px" />
+            <TeamLog fontSize="20px" />
             <Text fontSize="30px" m={"0 16px"} color="#87d57e">
               {rewardAmount}
             </Text>

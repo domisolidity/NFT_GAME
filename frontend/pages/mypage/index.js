@@ -2,7 +2,7 @@
 import { Box, Flex, SimpleGrid, useColorModeValue, keyframes } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 // Custom icons
-import { CartIcon, DocumentIcon, GlobeIcon, TimLogo, WalletIcon } from "../../components/Icons/Icons";
+import { CartIcon, DocumentIcon, GlobeIcon, TeamLog, WalletIcon } from "../../components/Icons/Icons";
 import MiniStatus from "../../components/Mypage/MiniStatus";
 
 import SideBarScreen from "../../components/Layout/Frame/SideBarScreen";
@@ -122,7 +122,7 @@ export default function Mypage() {
           title={"Doremi Token"}
           amount={tokenBalance ? tokenBalance : "---"}
           unit={"REMI"}
-          icon={<TimLogo h={"24px"} w={"24px"} color={iconBoxInside} />}
+          icon={<TeamLog h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
         <MiniStatus
           as={motion.div}

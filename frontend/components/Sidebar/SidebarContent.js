@@ -2,7 +2,7 @@
 // chakra imports
 import { Box, Button, Flex, Link, Stack, Text, useColorModeValue, keyframes } from "@chakra-ui/react";
 import IconBox from "../Icons/IconBox";
-import { TimLogo } from "../Icons/Icons";
+import { TeamLog } from "../Icons/Icons";
 import { Separator } from "../Separator/Separator";
 import { SidebarBottom } from "./SidebarBottom";
 import React from "react";
@@ -51,47 +51,10 @@ const SidebarContent = ({ logoText, routes }) => {
     const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
-      if (prop.redirect) {
-        return null;
-      }
-
-      // if (prop.name && prop.subName) {
-      //   return (
-      //     <div key={prop.name}>
-      //       {createLinks(prop.subName)}
-      //     </div>
-      //   )
-      // }
-
-      if (prop.category) {
-        var st = {};
-        st[prop["state"]] = !state[prop.state];
-        return (
-          <div key={prop.name}>
-            <Text
-              color={activeColor}
-              fontWeight="bold"
-              mb={{
-                xl: "12px",
-              }}
-              mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
-              py="12px"
-            >
-              {prop.name}
-            </Text>
-            {createLinks(prop.views)}
-          </div>
-        );
-      }
-
       const createButton = (prop) => {
         return (
           <NextLink href={`${prop.path}`} key={prop.name} passHref>
-            <Link>
+            <Link key={key}>
               {activeRoute(prop.path) === "active" ? (
                 <Button
                   opacity="0"
@@ -211,7 +174,6 @@ const SidebarContent = ({ logoText, routes }) => {
           <Link
             as={motion.div}
             animation={slideIn[0]}
-            target="_blank"
             display="flex"
             lineHeight="100%"
             mb="30px"
@@ -220,7 +182,7 @@ const SidebarContent = ({ logoText, routes }) => {
             alignItems="center"
             fontSize="11px"
           >
-            <TimLogo w="20px" h="20px" me="10px" />
+            <TeamLog w="20px" h="20px" me="10px" />
             <Text fontSize="sm" mt="3px">
               {logoText}
             </Text>

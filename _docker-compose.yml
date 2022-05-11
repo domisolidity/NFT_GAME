@@ -1,26 +1,30 @@
 version: "3"
 services:
-    node:
-        image: achievedw/p2e-game-node:3.0
-
-        ports:
-            - "5000:5000"
-        env_file:
-            - ./backend/.env
-
-    next:
-        restart: "on-failure"
-        image: achievedw/p2e-game-next:5.0
-
-        ports:
-            - "3000:3000"
-        env_file:
-            - ./frontend/.env
     nginx:
+        image: achievedw/p2e-game-nginx:5.0
         restart: always
-        image: achievedw/p2e-game-nginx:4.0
         ports:
             - "80:80"
         depends_on:
             - node
-            - next
+            - nexts
+    node:
+        image: achievedw/p2e-game-node:4.0
+        volumes:
+            - "./backend:/usr/src/node"
+            - "/usr/src/node/node_modules"
+        ports:
+            - "5000:5000"
+        env_file:
+            - ./backend/.env
+    next:
+        restart: "on-failure"
+        image: achievedw/p2e-game-next:6.0
+        volumes:
+            - "./frontend:/usr/src/next"
+            - "/usr/src/next/node_modules"
+            - "/usr/src/next/.next"
+        ports:
+            - "3000:3000"
+        env_file:
+            - ./frontend/.env

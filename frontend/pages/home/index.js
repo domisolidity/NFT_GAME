@@ -1,6 +1,6 @@
 import NoticeNft from "../../components/Home/NoticeNft";
 import { Box, Center, chakra, Flex, SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
-import Clock from "../../components/Utils/Clock";
+import Clock from "../../components/utils/Clock";
 import StakingInfo from "../../components/Home/StakingInfo";
 import GameInfo from "../../components/Home/GameInfo";
 
@@ -31,7 +31,7 @@ const Home = () => {
           <Clock />
         </Center>
         <Center fontSize={"30px"} mt={5}>
-          {/* <WeeklyEndTime /> */}
+          <WeeklyEndTime />
         </Center>
         <Box maxW="7xl" py="10" mx="auto">
           <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} gap={[16, 8]}>
